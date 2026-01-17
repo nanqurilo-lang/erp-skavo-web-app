@@ -1122,7 +1122,10 @@ fd.append(
           );
           setUcNoDeadline(Boolean(data.noDeadline));
           setUcCategory(data.category ? String(data.category) : "none");
-          setUcDepartment(data.department ?? "none");
+          // setUcDepartment(data.department ?? "none");
+
+          setUcDepartment(data.department ? String(data.department) : "none");
+
           setUcClient(
             data.client?.clientId
               ? String(data.client.clientId)
@@ -1130,11 +1133,19 @@ fd.append(
           );
           setUcSummary(data.summary ?? "");
           setUcNeedsApproval(Boolean(data.tasksNeedAdminApproval ?? true));
-          setUcMembers(
-            Array.isArray(data.assignedEmployees)
-              ? data.assignedEmployees.map((e: any) => e.name).join(",")
-              : data.members ?? ""
-          );
+          // setUcMembers(
+          //   Array.isArray(data.assignedEmployees)
+          //     ? data.assignedEmployees.map((e: any) => e.name).join(",")
+          //     : data.members ?? ""
+          // );
+
+setUcMembers(
+  Array.isArray(data.assignedEmployees)
+    ? data.assignedEmployees.map((e: any) => e.employeeId).join(",")
+    : ""
+);
+
+
           setUcCurrency(data.currency ?? "USD");
           setUcBudget(data.budget != null ? String(data.budget) : "");
           setUcHours(
@@ -1165,103 +1176,243 @@ fd.append(
     const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) =>
       setUcFile(e.target.files?.[0] ?? null);
 
-    const saveUpdate = async () => {
-      if (!projectId) return;
-      if (!ucProjectName.trim()) return alert("Project name required");
-      setSaving(true);
-      try {
-        const fd = new FormData();
-        if (ucShortCode) fd.append("shortCode", ucShortCode);
-        fd.append("name", ucProjectName);
-        if (ucStartDate) fd.append("startDate", ucStartDate);
-        // always append deadline key
-        if (ucNoDeadline) fd.append("deadline", "");
-        else fd.append("deadline", ucDeadline || "");
-        fd.append("noDeadline", String(Boolean(ucNoDeadline)));
-        fd.append("category", ucCategory === "none" ? "" : ucCategory);
-        fd.append("department", ucDepartment === "none" ? "" : ucDepartment);
-        fd.append("clientId", ucClient === "none" ? "" : ucClient);
-        fd.append("summary", ucSummary || "");
-        fd.append("tasksNeedAdminApproval", String(Boolean(ucNeedsApproval)));
-        const assignedArray = Array.isArray(ucMembers)
-          ? ucMembers
-          : String(ucMembers || "")
-              .split(",")
-              .map((s) => s.trim())
-              .filter(Boolean);
-        fd.append("assignedEmployeeIds", JSON.stringify(assignedArray));
+//     const saveUpdate = async () => {
+//       if (!projectId) return;
+//       if (!ucProjectName.trim()) return alert("Project name required");
+//       setSaving(true);
+//       try {
+//         const fd = new FormData();
+//         if (ucShortCode) fd.append("shortCode", ucShortCode);
+//         fd.append("name", ucProjectName);
+//         if (ucStartDate) fd.append("startDate", ucStartDate);
+//         // always append deadline key
+//         if (ucNoDeadline) fd.append("deadline", "");
+//         else fd.append("deadline", ucDeadline || "");
+//         fd.append("noDeadline", String(Boolean(ucNoDeadline)));
+//         // fd.append("category", ucCategory === "none" ? "" : ucCategory);
+//         // fd.append("department", ucDepartment === "none" ? "" : ucDepartment);
+//         // fd.append("clientId", ucClient === "none" ? "" : ucClient);
 
-        if (ucFile) fd.append("companyFile", ucFile);
-        fd.append("currency", ucCurrency || "");
-        fd.append("budget", ucBudget || "0");
-        fd.append("hoursEstimate", ucHours || "0");
-        fd.append("allowManualTimeLogs", String(Boolean(ucAllowManualTime)));
 
-        if (ucProjectStatus && ucProjectStatus !== "none")
-          fd.append("projectStatus", String(ucProjectStatus));
-        if (
-          typeof ucProgress !== "undefined" &&
-          ucProgress !== null &&
-          !Number.isNaN(Number(ucProgress))
-        ) {
-          fd.append(
-            "progressPercent",
-            String(Math.max(0, Math.min(100, Math.round(ucProgress || 0))))
-          );
-        }
-        fd.append(
-          "calculateProgressThroughTasks",
-          String(Boolean(ucCalculateThroughTasks))
-        );
 
-        fd.append("addedBy", String(ucAddedBy || ""));
+// fd.append(
+//   "projectCategory",
+//   ucCategory === "none" ? "" : ucCategory
+// );
 
-        const resolvedToken =
-          token ||
-          (typeof window !== "undefined"
-            ? localStorage.getItem("accessToken")
-            : null);
+// fd.append(
+//   "department",
+//   ucDepartment === "none" ? "" : ucDepartment
+// );
 
-        const res = await fetch(`${MAIN}/api/projects/${projectId}`, {
-          method: "PUT",
-          body: fd,
-          headers: resolvedToken
-            ? { Authorization: `Bearer ${resolvedToken}` }
-            : undefined,
-        });
+// fd.append(
+//   "clientId",
+//   ucClient === "none" ? "" : ucClient
+// );
 
-        if (!res.ok) {
-          const text = await res.text().catch(() => "");
-          console.error("Update failed", res.status, text);
-          alert("Failed to update project");
-          return;
-        }
+// fd.append("projectSummary", ucSummary || "");
 
-        let json: any = null;
-        try {
-          json = await res.json();
-        } catch {
-          json = null;
-        }
+// fd.append(
+//   "projectBudget",
+//   ucBudget !== "" ? String(ucBudget) : "0"
+// );
 
-        if (json && json.id) {
-          setProjects((ps) =>
-            ps.map((p) => (p.id === json.id ? { ...p, ...json } : p))
-          );
-        } else {
-          await getProjects(resolvedToken);
-        }
+// fd.append("currency", ucCurrency || "USD");
 
-        onSaved();
-        onClose();
-        resetLocal();
-      } catch (err) {
-        console.error("Update error:", err);
-        alert("Failed to update project");
-      } finally {
-        setSaving(false);
-      }
-    };
+
+
+//         fd.append("summary", ucSummary || "");
+//         fd.append("tasksNeedAdminApproval", String(Boolean(ucNeedsApproval)));
+//         const assignedArray = Array.isArray(ucMembers)
+//           ? ucMembers
+//           : String(ucMembers || "")
+//               .split(",")
+//               .map((s) => s.trim())
+//               .filter(Boolean);
+//         fd.append("assignedEmployeeIds", JSON.stringify(assignedArray));
+
+//         if (ucFile) fd.append("companyFile", ucFile);
+//         fd.append("currency", ucCurrency || "");
+//         fd.append("budget", ucBudget || "0");
+//         fd.append("hoursEstimate", ucHours || "0");
+//         fd.append("allowManualTimeLogs", String(Boolean(ucAllowManualTime)));
+
+//         if (ucProjectStatus && ucProjectStatus !== "none")
+//           fd.append("projectStatus", String(ucProjectStatus));
+//         if (
+//           typeof ucProgress !== "undefined" &&
+//           ucProgress !== null &&
+//           !Number.isNaN(Number(ucProgress))
+//         ) {
+//           fd.append(
+//             "progressPercent",
+//             String(Math.max(0, Math.min(100, Math.round(ucProgress || 0))))
+//           );
+//         }
+//         fd.append(
+//           "calculateProgressThroughTasks",
+//           String(Boolean(ucCalculateThroughTasks))
+//         );
+
+//         fd.append("addedBy", String(ucAddedBy || ""));
+
+//         const resolvedToken =
+//           token ||
+//           (typeof window !== "undefined"
+//             ? localStorage.getItem("accessToken")
+//             : null);
+
+//         const res = await fetch(`${MAIN}/api/projects/${projectId}`, {
+//           method: "PUT",
+//           body: fd,
+//           headers: resolvedToken
+//             ? { Authorization: `Bearer ${resolvedToken}` }
+//             : undefined,
+//         });
+
+//         if (!res.ok) {
+//           const text = await res.text().catch(() => "");
+//           console.error("Update failed", res.status, text);
+//           alert("Failed to update project");
+//           return;
+//         }
+
+//         let json: any = null;
+//         try {
+//           json = await res.json();
+//         } catch {
+//           json = null;
+//         }
+
+//         if (json && json.id) {
+//           setProjects((ps) =>
+//             ps.map((p) => (p.id === json.id ? { ...p, ...json } : p))
+//           );
+//         } else {
+//           await getProjects(resolvedToken);
+//         }
+
+//         onSaved();
+//         onClose();
+//         resetLocal();
+//       } catch (err) {
+//         console.error("Update error:", err);
+//         alert("Failed to update project");
+//       } finally {
+//         setSaving(false);
+//       }
+//     };
+
+
+
+const saveUpdate = async () => {
+  if (!projectId) return;
+  if (!ucProjectName.trim()) return alert("Project name required");
+
+  setSaving(true);
+  try {
+    const fd = new FormData();
+
+    fd.append("shortCode", ucShortCode);
+    fd.append("name", ucProjectName);
+    fd.append("projectName", ucProjectName);
+
+    fd.append("startDate", ucStartDate || "");
+    fd.append("deadline", ucNoDeadline ? "" : ucDeadline || "");
+    fd.append("noDeadline", String(ucNoDeadline));
+
+    // ✅ REQUIRED BACKEND KEYS
+    fd.append(
+      "projectCategory",
+      ucCategory === "none" ? "" : ucCategory
+    );
+    fd.append(
+      "department",
+      ucDepartment === "none" ? "" : ucDepartment
+    );
+    fd.append(
+      "clientId",
+      ucClient === "none" ? "" : ucClient
+    );
+
+    fd.append("projectSummary", ucSummary || "");
+    fd.append(
+      "projectBudget",
+      ucBudget !== "" ? String(ucBudget) : "0"
+    );
+    fd.append("currency", ucCurrency || "USD");
+
+    fd.append(
+      "tasksNeedAdminApproval",
+      String(Boolean(ucNeedsApproval))
+    );
+
+    const assignedIds = String(ucMembers || "")
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+
+    fd.append("assignedEmployeeIds", JSON.stringify(assignedIds));
+
+    if (ucFile) fd.append("companyFile", ucFile);
+
+    fd.append(
+      "hoursEstimate",
+      ucHours !== "" ? String(ucHours) : "0"
+    );
+    fd.append(
+      "allowManualTimeLogs",
+      String(Boolean(ucAllowManualTime))
+    );
+
+    if (ucProjectStatus !== "none") {
+      fd.append("projectStatus", ucProjectStatus);
+    }
+
+    fd.append(
+      "progressPercent",
+      String(Math.max(0, Math.min(100, ucProgress)))
+    );
+
+    fd.append(
+      "calculateProgressThroughTasks",
+      String(Boolean(ucCalculateThroughTasks))
+    );
+
+    fd.append("addedBy", ucAddedBy || "you");
+
+    const resolvedToken =
+      token || localStorage.getItem("accessToken");
+
+    const res = await fetch(`${MAIN}/api/projects/${projectId}`, {
+      method: "PUT",
+      body: fd,
+      headers: resolvedToken
+        ? { Authorization: `Bearer ${resolvedToken}` }
+        : undefined,
+    });
+
+    if (!res.ok) {
+      const text = await res.text();
+      console.error(text);
+      alert("Failed to update project");
+      return;
+    }
+
+    await res.json().catch(() => {});
+    onSaved();
+    onClose();
+    resetLocal();
+  } catch (err) {
+    console.error(err);
+    alert("Update failed");
+  } finally {
+    setSaving(false);
+  }
+};
+
+
+
 
     const getProgressColor = (p?: number | null) => {
       if (p === undefined || p === null) return "bg-gray-300";
@@ -1271,10 +1422,8 @@ fd.append(
     };
 
     return (
-      <div
-        className="fixed inset-0 z-[12000] flex items-start justify-center pt-12 px-4 overflow-y-auto;
-"
-      >
+   <div className="fixed inset-0 z-[12000] flex items-start justify-center px-4 py-8 overflow-y-auto">
+
         <div
           className="fixed inset-0 bg-black/40"
           onClick={() => {
@@ -1282,7 +1431,11 @@ fd.append(
             resetLocal();
           }}
         />
-        <div className="relative w-full max-w-4xl bg-white rounded-xl shadow-2xl overflow-y-auto z-10">
+        {/* <div className="relative w-full max-w-4xl bg-white rounded-xl shadow-2xl overflow-y-auto z-10"> */}
+
+<div className="relative w-full max-w-4xl bg-white rounded-xl shadow-2xl z-10 max-h-[90vh] flex flex-col">
+
+
           <div className="flex items-center justify-between p-4 border-b">
             <h3 className="text-lg font-semibold">Update Project</h3>
             <button
@@ -1296,7 +1449,11 @@ fd.append(
             </button>
           </div>
 
-          <div className="p-6 space-y-6">
+          {/* <div className="p-6 space-y-6"> */}
+
+<div className="p-6 space-y-6 overflow-y-auto flex-1">
+
+
             {loadingLocal ? (
               <p className="p-4 text-center">Loading project...</p>
             ) : (
@@ -1369,7 +1526,7 @@ fd.append(
                         Project Category *
                       </label>
                       <div className="flex gap-2">
-                        <Select
+                        {/* <Select
                           value={ucCategory}
                           onValueChange={(v) => setUcCategory(v)}
                         >
@@ -1384,7 +1541,29 @@ fd.append(
                               </SelectItem>
                             ))}
                           </SelectContent>
-                        </Select>
+                        </Select> */}
+
+
+<Select
+  modal={false}
+  value={ucCategory}
+  onValueChange={(v) => setUcCategory(v)}
+>
+  <SelectTrigger className="w-full">
+    <SelectValue placeholder="--" />
+  </SelectTrigger>
+
+  <SelectContent className="z-[99999] pointer-events-auto">
+    <SelectItem value="none">--</SelectItem>
+    {categoryOptions.map((c) => (
+      <SelectItem key={c.id} value={String(c.id)}>
+        {c.name}
+      </SelectItem>
+    ))}
+  </SelectContent>
+</Select>
+
+
                         <Button variant="outline" onClick={openCategoryModal}>
                           Add
                         </Button>
@@ -1395,7 +1574,7 @@ fd.append(
                       <label className="text-sm text-gray-600">
                         Department *
                       </label>
-                      <Select
+                      {/* <Select
                         value={ucDepartment}
                         onValueChange={(v) => setUcDepartment(v)}
                       >
@@ -1410,12 +1589,34 @@ fd.append(
                             </SelectItem>
                           ))}
                         </SelectContent>
-                      </Select>
+                      </Select> */}
+
+
+<Select
+  modal={false}
+  value={ucDepartment}
+  onValueChange={(v) => setUcDepartment(v)}
+>
+  <SelectTrigger className="w-full">
+    <SelectValue placeholder="--" />
+  </SelectTrigger>
+
+  <SelectContent className="z-[99999] pointer-events-auto">
+    <SelectItem value="none">--</SelectItem>
+    {departmentOptions.map((d) => (
+      <SelectItem key={d.id} value={String(d.id)}>
+        {d.name}
+      </SelectItem>
+    ))}
+  </SelectContent>
+</Select>
+
+
                     </div>
 
                     <div>
                       <label className="text-sm text-gray-600">Client *</label>
-                      <Select
+                      {/* <Select
                         value={ucClient}
                         onValueChange={(v) => setUcClient(v)}
                       >
@@ -1430,7 +1631,30 @@ fd.append(
                             </SelectItem>
                           ))}
                         </SelectContent>
-                      </Select>
+                      </Select> */}
+
+
+<Select
+  modal={false}
+  value={ucClient}
+  onValueChange={(v) => setUcClient(v)}
+>
+  <SelectTrigger className="w-full">
+    <SelectValue placeholder="--" />
+  </SelectTrigger>
+
+  <SelectContent className="z-[99999] pointer-events-auto">
+    <SelectItem value="none">--</SelectItem>
+    {clientOptions.map((c) => (
+      <SelectItem key={c.id} value={String(c.id)}>
+        {c.name}
+      </SelectItem>
+    ))}
+  </SelectContent>
+</Select>
+
+
+
                     </div>
 
                     <div className="col-span-2">
@@ -1602,7 +1826,7 @@ fd.append(
                   <div className="grid grid-cols-3 gap-4">
                     <div>
                       <label className="text-sm text-gray-600">Currency</label>
-                      <Select
+                      {/* <Select
                         value={ucCurrency}
                         onValueChange={(v) => setUcCurrency(v)}
                       >
@@ -1639,7 +1863,35 @@ fd.append(
                             RON lei (Romanian Leu)
                           </SelectItem>
                         </SelectContent>
-                      </Select>
+                      </Select> */}
+
+
+<Select
+  modal={false}
+  value={ucCurrency}
+  onValueChange={(v) => setUcCurrency(v)}
+>
+  <SelectTrigger className="w-full">
+    <SelectValue placeholder="USD" />
+  </SelectTrigger>
+
+  <SelectContent className="z-[99999] pointer-events-auto">
+    <SelectItem value="USD">USD $ (US Dollar)</SelectItem>
+    <SelectItem value="INR">INR ₹ (Indian Rupee)</SelectItem>
+    <SelectItem value="EUR">EUR € (Euro)</SelectItem>
+    <SelectItem value="GBP">GBP £ (British Pound)</SelectItem>
+    <SelectItem value="CHF">CHF ₣ (Swiss Franc)</SelectItem>
+    <SelectItem value="SEK">SEK kr</SelectItem>
+    <SelectItem value="NOK">NOK kr</SelectItem>
+    <SelectItem value="DKK">DKK kr</SelectItem>
+    <SelectItem value="PLN">PLN zł</SelectItem>
+    <SelectItem value="CZK">CZK Kč</SelectItem>
+    <SelectItem value="HUF">HUF Ft</SelectItem>
+    <SelectItem value="RON">RON lei</SelectItem>
+  </SelectContent>
+</Select>
+
+
                     </div>
 
                     <div>

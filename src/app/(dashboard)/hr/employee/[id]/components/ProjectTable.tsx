@@ -864,254 +864,614 @@ fd.append("assignedEmployeeIds", JSON.stringify(assignedArray));
     };
 
     // ---------- UPDATE (Edit) modal logic ----------
+    function UpdateProjectModal({
+        projectId,
+        onClose,
+        onSaved,
+    }: {
+        projectId: number | null;
+        onClose: () => void;
+        onSaved: () => void;
+    }) {
+        const [loadingLocal, setLoadingLocal] = useState(false);
+        const [saving, setSaving] = useState(false);
+
+        const [ucShortCode, setUcShortCode] = useState("");
+        const [ucProjectName, setUcProjectName] = useState("");
+        const [ucStartDate, setUcStartDate] = useState("");
+        const [ucDeadline, setUcDeadline] = useState("");
+        const [ucNoDeadline, setUcNoDeadline] = useState(false);
+        const [ucCategory, setUcCategory] = useState("none");
+        const [ucDepartment, setUcDepartment] = useState("none");
+        const [ucClient, setUcClient] = useState("none");
+        const [ucSummary, setUcSummary] = useState("");
+        const [ucNeedsApproval, setUcNeedsApproval] = useState(true);
+        const [ucMembers, setUcMembers] = useState<string | string[]>("");
+
+        const [ucFile, setUcFile] = useState<File | null>(null);
+        const ucFileRef = useRef<HTMLInputElement | null>(null);
+        const [ucCurrency, setUcCurrency] = useState("USD");
+        const [ucBudget, setUcBudget] = useState("");
+        const [ucHours, setUcHours] = useState("");
+        const [ucAllowManualTime, setUcAllowManualTime] = useState(false);
+
+        const [ucProjectStatus, setUcProjectStatus] = useState<StatusOption | "none">("none");
+        const [ucProgress, setUcProgress] = useState<number>(0);
+        const [ucCalculateThroughTasks, setUcCalculateThroughTasks] = useState<boolean>(false);
+
+        const [ucAddedBy, setUcAddedBy] = useState<string>("you");
+
+        const resetLocal = () => {
+            setUcShortCode("");
+            setUcProjectName("");
+            setUcStartDate("");
+            setUcDeadline("");
+            setUcNoDeadline(false);
+            setUcCategory("none");
+            setUcDepartment("none");
+            setUcClient("none");
+            setUcSummary("");
+            setUcNeedsApproval(true);
+            setUcMembers("");
+            setUcFile(null);
+            setUcCurrency("USD");
+            setUcBudget("");
+            setUcHours("");
+            setUcAllowManualTime(false);
+            setUcProjectStatus("none");
+            setUcProgress(0);
+            setUcCalculateThroughTasks(false);
+            setUcAddedBy("you");
+        };
+
+        useEffect(() => {
+            if (!projectId) return;
+            let mounted = true;
+            (async () => {
+                setLoadingLocal(true);
+                try {
+                    const resolvedToken = token || (typeof window !== "undefined" ? localStorage.getItem("accessToken") : null);
+                    const res = await fetch(`${MAIN}/api/projects/${projectId}`, {
+                        headers: resolvedToken ? { Authorization: `Bearer ${resolvedToken}` } : undefined,
+                        cache: "no-store",
+                    });
+                    if (!res.ok) {
+                        const text = await res.text().catch(() => "");
+                        console.error("Failed to fetch project", res.status, text);
+                        if (mounted) alert("Failed to load project details");
+                        return;
+                    }
+                    const data = await res.json();
+                    if (!mounted) return;
+                    setUcShortCode(data.shortCode ?? data.code ?? data.projectCode ?? "");
+                    setUcProjectName(data.name ?? "");
+                    setUcStartDate(data.startDate ? data.startDate.split("T")[0] : (data.startDate ?? ""));
+                    setUcDeadline(data.deadline ? (data.deadline.split("T")[0]) : (data.deadline ?? ""));
+                    setUcNoDeadline(Boolean(data.noDeadline));
+                    setUcCategory(data.category ? String(data.category) : "none");
+                    setUcDepartment(data.department ?? "none");
+                    setUcClient(data.client?.clientId ? String(data.client.clientId) : (data.client?.name ?? data.client ?? "none"));
+                    setUcSummary(data.summary ?? "");
+                    setUcNeedsApproval(Boolean(data.tasksNeedAdminApproval ?? true));
+                    // setUcMembers(Array.isArray(data.assignedEmployees) ? data.assignedEmployees.map((e: any) => e.name).join(",") : (data.members ?? ""));
+                   
+                   setUcMembers(
+  Array.isArray(data.assignedEmployees)
+    ? data.assignedEmployees.map((e: any) => e.employeeId).join(",")
+    : ""
+);
+
+                   
+                    setUcCurrency(data.currency ?? "USD");
+                    setUcBudget(data.budget != null ? String(data.budget) : "");
+                    setUcHours(data.hoursEstimate != null ? String(data.hoursEstimate) : "");
+                    setUcAllowManualTime(Boolean(data.allowManualTimeLogs ?? false));
+                    setUcProjectStatus((data.projectStatus ?? "none") as StatusOption | "none");
+                    setUcProgress(Number(data.progressPercent ?? 0));
+                    setUcCalculateThroughTasks(Boolean(data.calculateProgressThroughTasks ?? false));
+                    setUcAddedBy(data.addedBy ?? "you");
+                } catch (err) {
+                    console.error("Error loading project:", err);
+                    if (mounted) alert("Failed to load project details");
+                } finally {
+                    if (mounted) setLoadingLocal(false);
+                }
+            })();
+            return () => { mounted = false; };
+        }, [projectId, token]);
+
+        const pickFile = () => ucFileRef.current?.click();
+        const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => setUcFile(e.target.files?.[0] ?? null);
+
+        // const saveUpdate = async () => {
+        //     if (!projectId) return;
+        //     if (!ucProjectName.trim()) return alert("Project name required");
+        //     setSaving(true);
+        //     try {
+        //         const fd = new FormData();
+        //         if (ucShortCode) fd.append("shortCode", ucShortCode);
+        //         fd.append("name", ucProjectName);
+        //         if (ucStartDate) fd.append("startDate", ucStartDate);
+        //         // always append deadline key
+        //         if (ucNoDeadline) fd.append("deadline", "");
+        //         else fd.append("deadline", ucDeadline || "");
+        //         fd.append("noDeadline", String(Boolean(ucNoDeadline)));
+        //         fd.append("category", ucCategory === "none" ? "" : ucCategory);
+        //         fd.append("department", ucDepartment === "none" ? "" : ucDepartment);
+        //         fd.append("clientId", ucClient === "none" ? "" : ucClient);
+        //         fd.append("summary", ucSummary || "");
+        //         fd.append("tasksNeedAdminApproval", String(Boolean(ucNeedsApproval)));
+        //         const assignedArray = Array.isArray(ucMembers) ? ucMembers : String(ucMembers || "").split(",").map((s) => s.trim()).filter(Boolean);
+        //         fd.append("assignedEmployeeIds", JSON.stringify(assignedArray));
+
+        //         if (ucFile) fd.append("companyFile", ucFile);
+        //         fd.append("currency", ucCurrency || "");
+        //         fd.append("budget", ucBudget || "0");
+        //         fd.append("hoursEstimate", ucHours || "0");
+        //         fd.append("allowManualTimeLogs", String(Boolean(ucAllowManualTime)));
+
+        //         if (ucProjectStatus && ucProjectStatus !== "none") fd.append("projectStatus", String(ucProjectStatus));
+        //         if (typeof ucProgress !== "undefined" && ucProgress !== null && !Number.isNaN(Number(ucProgress))) {
+        //             fd.append("progressPercent", String(Math.max(0, Math.min(100, Math.round(ucProgress || 0)))));
+        //         }
+        //         fd.append("calculateProgressThroughTasks", String(Boolean(ucCalculateThroughTasks)));
+
+        //         fd.append("addedBy", String(ucAddedBy || ""));
+
+        //         const resolvedToken = token || (typeof window !== "undefined" ? localStorage.getItem("accessToken") : null);
+
+        //         const res = await fetch(`${MAIN}/api/projects/${projectId}`, {
+        //             method: "PUT",
+        //             body: fd,
+        //             headers: resolvedToken ? { Authorization: `Bearer ${resolvedToken}` } : undefined,
+        //         });
+
+        //         if (!res.ok) {
+        //             const text = await res.text().catch(() => "");
+        //             console.error("Update failed", res.status, text);
+        //             alert("Failed to update project");
+        //             return;
+        //         }
+
+        //         let json: any = null;
+        //         try { json = await res.json(); } catch { json = null; }
+
+        //         if (json && json.id) {
+        //             setProjects((ps) => ps.map((p) => (p.id === json.id ? { ...p, ...json } : p)));
+        //         } else {
+        //             await getProjects(resolvedToken);
+        //         }
+
+        //         onSaved();
+        //         onClose();
+        //         resetLocal();
+        //     } catch (err) {
+        //         console.error("Update error:", err);
+        //         alert("Failed to update project");
+        //     } finally {
+        //         setSaving(false);
+        //     }
+        // };
 
 
-function UpdateProjectModal({
-  projectId,
-  onClose,
-  onSaved,
-}: {
-  projectId: number | null;
-  onClose: () => void;
-  onSaved: () => void;
-}) {
-  const [loadingLocal, setLoadingLocal] = useState(false);
-  const [saving, setSaving] = useState(false);
+const saveUpdate = async () => {
+  if (!projectId) return;
+  if (!ucProjectName.trim()) return alert("Project name required");
 
-  const [ucShortCode, setUcShortCode] = useState("");
-  const [ucProjectName, setUcProjectName] = useState("");
-  const [ucStartDate, setUcStartDate] = useState("");
-  const [ucDeadline, setUcDeadline] = useState("");
-  const [ucNoDeadline, setUcNoDeadline] = useState(false);
+  setSaving(true);
+  try {
+    const fd = new FormData();
 
-  const [ucCategory, setUcCategory] = useState("none");
-  const [ucDepartment, setUcDepartment] = useState("none");
-  const [ucClient, setUcClient] = useState("none");
-  const [ucSummary, setUcSummary] = useState("");
+    fd.append("shortCode", ucShortCode);
+    fd.append("name", ucProjectName);
+    fd.append("projectName", ucProjectName);
 
-  const [ucNeedsApproval, setUcNeedsApproval] = useState(true);
-  const [ucMembers, setUcMembers] = useState<string>("");
+    fd.append("startDate", ucStartDate || "");
+    fd.append("deadline", ucNoDeadline ? "" : ucDeadline || "");
+    fd.append("noDeadline", String(ucNoDeadline));
 
-  const [ucCurrency, setUcCurrency] = useState("USD");
-  const [ucBudget, setUcBudget] = useState("");
-  const [ucHours, setUcHours] = useState("");
-  const [ucAllowManualTime, setUcAllowManualTime] = useState(false);
+    fd.append("projectCategory", ucCategory === "none" ? "" : ucCategory);
+    fd.append("department", ucDepartment === "none" ? "" : ucDepartment);
+    fd.append("clientId", ucClient === "none" ? "" : ucClient);
 
-  /* ================= PREFILL ================= */
-  useEffect(() => {
-    if (!projectId) return;
+    fd.append("projectSummary", ucSummary || "");
+    fd.append("projectBudget", ucBudget !== "" ? ucBudget : "0");
+    fd.append("currency", ucCurrency || "USD");
 
-    let mounted = true;
-    (async () => {
-      setLoadingLocal(true);
-      try {
-        const resolvedToken =
-          token || localStorage.getItem("accessToken");
+    fd.append(
+      "tasksNeedAdminApproval",
+      String(Boolean(ucNeedsApproval))
+    );
 
-        const res = await fetch(`${MAIN}/api/projects/${projectId}`, {
-          headers: resolvedToken
-            ? { Authorization: `Bearer ${resolvedToken}` }
-            : undefined,
-        });
+    const assignedIds = String(ucMembers || "")
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
 
-        const data = await res.json();
-        if (!mounted) return;
+    fd.append("assignedEmployeeIds", JSON.stringify(assignedIds));
 
-        setUcShortCode(data.shortCode ?? "");
-        setUcProjectName(data.name ?? "");
+    if (ucFile) fd.append("companyFile", ucFile);
 
-        setUcStartDate(data.startDate ? data.startDate.split("T")[0] : "");
-        setUcDeadline(data.deadline ? data.deadline.split("T")[0] : "");
-        setUcNoDeadline(Boolean(data.noDeadline));
+    fd.append("hoursEstimate", ucHours !== "" ? ucHours : "0");
+    fd.append(
+      "allowManualTimeLogs",
+      String(Boolean(ucAllowManualTime))
+    );
 
-        setUcCategory(data.category ? String(data.category) : "none");
-        setUcDepartment(data.department ? String(data.department) : "none");
-        setUcClient(
-          data.client?.clientId ? String(data.client.clientId) : "none"
-        );
-
-        setUcSummary(data.summary ?? "");
-        setUcNeedsApproval(Boolean(data.tasksNeedAdminApproval ?? true));
-
-        setUcMembers(
-          Array.isArray(data.assignedEmployees)
-            ? data.assignedEmployees.map((e: any) => e.employeeId).join(",")
-            : ""
-        );
-
-        setUcCurrency(data.currency ?? "USD");
-        setUcBudget(data.budget != null ? String(data.budget) : "");
-        setUcHours(data.hoursEstimate != null ? String(data.hoursEstimate) : "");
-        setUcAllowManualTime(Boolean(data.allowManualTimeLogs ?? false));
-      } catch (err) {
-        console.error(err);
-        alert("Failed to load project");
-      } finally {
-        if (mounted) setLoadingLocal(false);
-      }
-    })();
-
-    return () => {
-      mounted = false;
-    };
-  }, [projectId]);
-
-  /* ================= SAVE ================= */
-  const saveUpdate = async () => {
-    if (!projectId) return;
-    if (!ucProjectName.trim()) return alert("Project name required");
-
-    setSaving(true);
-    try {
-      const fd = new FormData();
-
-      fd.append("shortCode", ucShortCode);
-      fd.append("projectName", ucProjectName);
-      fd.append("name", ucProjectName);
-
-      fd.append("startDate", ucStartDate || "");
-      fd.append("deadline", ucNoDeadline ? "" : ucDeadline || "");
-      fd.append("noDeadline", String(Boolean(ucNoDeadline)));
-
-      fd.append(
-        "projectCategory",
-        ucCategory === "none" ? "" : ucCategory
-      );
-      fd.append(
-        "department",
-        ucDepartment === "none" ? "" : ucDepartment
-      );
-      fd.append(
-        "clientId",
-        ucClient === "none" ? "" : ucClient
-      );
-
-      fd.append("projectSummary", ucSummary || "");
-      fd.append("tasksNeedAdminApproval", String(Boolean(ucNeedsApproval)));
-
-      const assignedArray = ucMembers
-        .split(",")
-        .map((s) => s.trim())
-        .filter(Boolean);
-
-      fd.append("assignedEmployeeIds", JSON.stringify(assignedArray));
-
-      fd.append("currency", ucCurrency || "USD");
-      fd.append(
-        "projectBudget",
-        ucBudget !== "" ? String(ucBudget) : "0"
-      );
-      fd.append(
-        "hoursEstimate",
-        ucHours !== "" ? String(ucHours) : "0"
-      );
-      fd.append(
-        "allowManualTimeLogs",
-        String(Boolean(ucAllowManualTime))
-      );
-
-      const resolvedToken =
-        token || localStorage.getItem("accessToken");
-
-      const res = await fetch(`${MAIN}/api/projects/${projectId}`, {
-        method: "PUT",
-        body: fd,
-        headers: resolvedToken
-          ? { Authorization: `Bearer ${resolvedToken}` }
-          : undefined,
-      });
-
-      if (!res.ok) {
-        const t = await res.text();
-        console.error(t);
-        alert("Update failed");
-        return;
-      }
-
-      await res.json().catch(() => {});
-      onSaved();
-      onClose();
-    } catch (err) {
-      console.error(err);
-      alert("Update failed");
-    } finally {
-      setSaving(false);
+    if (ucProjectStatus !== "none") {
+      fd.append("projectStatus", ucProjectStatus);
     }
-  };
 
-  if (loadingLocal) {
-    return <div className="p-6 text-center">Loading...</div>;
+    fd.append(
+      "progressPercent",
+      String(Math.max(0, Math.min(100, ucProgress)))
+    );
+
+    fd.append(
+      "calculateProgressThroughTasks",
+      String(Boolean(ucCalculateThroughTasks))
+    );
+
+    fd.append("addedBy", ucAddedBy || "you");
+
+    const resolvedToken =
+      token || localStorage.getItem("accessToken");
+
+    const res = await fetch(`${MAIN}/api/projects/${projectId}`, {
+      method: "PUT",
+      body: fd,
+      headers: resolvedToken
+        ? { Authorization: `Bearer ${resolvedToken}` }
+        : undefined,
+    });
+
+    if (!res.ok) {
+      const text = await res.text();
+      console.error(text);
+      alert("Failed to update project");
+      return;
+    }
+
+    await res.json().catch(() => {});
+    onSaved();
+    onClose();
+    resetLocal();
+  } catch (err) {
+    console.error(err);
+    alert("Update failed");
+  } finally {
+    setSaving(false);
   }
+};
 
-  /* ================= UI ================= */
-  return (
-    <div className="fixed inset-0 z-[12000] flex items-start justify-center pt-12 px-4">
-      <div className="fixed inset-0 bg-black/40" onClick={onClose} />
 
-      <div className="relative w-full max-w-4xl bg-white rounded-xl shadow-xl z-10 p-6 space-y-4">
-        <h3 className="text-lg font-semibold">Update Project</h3>
+        const getProgressColor = (p?: number | null) => {
+            if (p === undefined || p === null) return "bg-gray-300";
+            if (p < 33) return "bg-red-500";
+            if (p < 66) return "bg-yellow-400";
+            return "bg-green-500";
+        };
 
-        {/* CATEGORY */}
-        <Select modal={false} value={ucCategory} onValueChange={setUcCategory}>
-          <SelectTrigger><SelectValue placeholder="Category" /></SelectTrigger>
-          <SelectContent className="z-[99999] pointer-events-auto">
-            <SelectItem value="none">--</SelectItem>
-            {categoryOptions.map((c) => (
-              <SelectItem key={c.id} value={String(c.id)}>
-                {c.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        return (
+<div className="fixed inset-0 z-[12000] flex items-start justify-center px-4 py-8 overflow-y-auto">
 
-        {/* DEPARTMENT */}
-        <Select modal={false} value={ucDepartment} onValueChange={setUcDepartment}>
-          <SelectTrigger><SelectValue placeholder="Department" /></SelectTrigger>
-          <SelectContent className="z-[99999] pointer-events-auto">
-            <SelectItem value="none">--</SelectItem>
-            {departmentOptions.map((d) => (
-              <SelectItem key={d.id} value={String(d.id)}>
-                {d.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+                <div className="fixed inset-0 bg-black/40" onClick={() => { onClose(); resetLocal(); }} />
+                {/* <div className="relative w-full max-w-4xl bg-white rounded-xl shadow-2xl overflow-y-auto z-10"> */}
+                 
+                 <div className="relative w-full max-w-4xl bg-white rounded-xl shadow-2xl z-10 max-h-[90vh] flex flex-col">
 
-        {/* CLIENT */}
-        <Select modal={false} value={ucClient} onValueChange={setUcClient}>
-          <SelectTrigger><SelectValue placeholder="Client" /></SelectTrigger>
-          <SelectContent className="z-[99999] pointer-events-auto">
-            <SelectItem value="none">--</SelectItem>
-            {clientOptions.map((c) => (
-              <SelectItem key={c.id} value={String(c.id)}>
-                {c.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+                 
+                    <div className="flex items-center justify-between p-4 border-b">
+                        <h3 className="text-lg font-semibold">Update Project</h3>
+                        <button onClick={() => { onClose(); resetLocal(); }} className="p-2 rounded hover:bg-gray-100"><X className="w-5 h-5" /></button>
+                    </div>
 
-        {/* CURRENCY */}
-        <Select modal={false} value={ucCurrency} onValueChange={setUcCurrency}>
-          <SelectTrigger><SelectValue placeholder="USD" /></SelectTrigger>
-          <SelectContent className="z-[99999] pointer-events-auto">
-            <SelectItem value="USD">USD $</SelectItem>
-            <SelectItem value="INR">INR ₹</SelectItem>
-            <SelectItem value="EUR">EUR €</SelectItem>
-            <SelectItem value="GBP">GBP £</SelectItem>
-            <SelectItem value="CHF">CHF ₣</SelectItem>
-          </SelectContent>
-        </Select>
+                    {/* <div className="p-6 space-y-6"> */}
 
-        <div className="flex justify-end gap-3 pt-4">
-          <Button variant="outline" onClick={onClose}>Cancel</Button>
-          <Button onClick={saveUpdate} disabled={saving}>
-            {saving ? "Updating..." : "Update"}
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
-}
+
+<div className="p-6 space-y-6 overflow-y-auto flex-1">
+
+
+                        {loadingLocal ? (
+                            <p className="p-4 text-center">Loading project...</p>
+                        ) : (
+                            <>
+                                {/* Project Details */}
+                                <div className="rounded-lg border p-4">
+                                    <h4 className="font-medium mb-3">Project Details    hdf </h4>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label className="text-sm text-gray-600">Short Code *</label>
+                                            <Input value={ucShortCode} onChange={(e) => setUcShortCode(e.target.value)} />
+                                        </div>
+                                        <div>
+                                            <label className="text-sm text-gray-600">Project Name  *</label>
+                                            <Input value={ucProjectName} onChange={(e) => setUcProjectName(e.target.value)} />
+                                        </div>
+
+                                        <div>
+                                            <label className="text-sm text-gray-600">Start Date *</label>
+                                            <Input type="date" value={ucStartDate} onChange={(e) => setUcStartDate(e.target.value)} />
+                                        </div>
+                                        <div>
+                                            <div className="flex items-center gap-3">
+                                                <div className="flex-1">
+                                                    <label className="text-sm text-gray-600">Deadline *</label>
+                                                    <Input type="date" value={ucDeadline} onChange={(e) => setUcDeadline(e.target.value)} disabled={ucNoDeadline} />
+                                                </div>
+                                                <div className="pt-6">
+                                                    <label className="inline-flex items-center gap-2 text-sm text-gray-600">
+                                                        <input type="checkbox" checked={ucNoDeadline} onChange={(e) => setUcNoDeadline(e.target.checked)} />
+                                                        <span className="text-xs">There is no project deadline</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <label className="text-sm text-gray-600">Project Category *</label>
+                                            <div className="flex gap-2">
+                                                {/* <Select value={ucCategory} onValueChange={(v) => setUcCategory(v)}>
+                                                    <SelectTrigger className="w-full"><SelectValue placeholder="--" /></SelectTrigger>
+                                                    <SelectContent>
+                                                        <SelectItem value="none">--</SelectItem>
+                                                        {categoryOptions.map((c) => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
+                                                    </SelectContent>
+                                                </Select> */}
+
+
+<Select
+  modal={false}
+  value={ucCategory}
+  onValueChange={setUcCategory}
+>
+  <SelectTrigger className="w-full">
+    <SelectValue placeholder="--" />
+  </SelectTrigger>
+  <SelectContent className="z-[99999] pointer-events-auto">
+    <SelectItem value="none">--</SelectItem>
+    {categoryOptions.map((c) => (
+      <SelectItem key={c.id} value={String(c.id)}>
+        {c.name}
+      </SelectItem>
+    ))}
+  </SelectContent>
+</Select>
+
+
+                                                <Button variant="outline" onClick={openCategoryModal}>Add</Button>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <label className="text-sm text-gray-600">Department *</label>
+                                            {/* <Select value={ucDepartment} onValueChange={(v) => setUcDepartment(v)}>
+                                                <SelectTrigger className="w-full"><SelectValue placeholder="--" /></SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="none">--</SelectItem>
+                                                    {departmentOptions.map((d) => <SelectItem key={d.id} value={d.id}>{d.name}</SelectItem>)}
+                                                </SelectContent>
+                                            </Select> */}
+
+
+<Select
+  modal={false}
+  value={ucDepartment}
+  onValueChange={setUcDepartment}
+>
+  <SelectTrigger className="w-full">
+    <SelectValue placeholder="--" />
+  </SelectTrigger>
+  <SelectContent className="z-[99999] pointer-events-auto">
+    <SelectItem value="none">--</SelectItem>
+    {departmentOptions.map((d) => (
+      <SelectItem key={d.id} value={String(d.id)}>
+        {d.name}
+      </SelectItem>
+    ))}
+  </SelectContent>
+</Select>
+
+
+                                        </div>
+
+                                        <div>
+                                            <label className="text-sm text-gray-600">Client *</label>
+                                            {/* <Select value={ucClient} onValueChange={(v) => setUcClient(v)}>
+                                                <SelectTrigger className="w-full"><SelectValue placeholder="--" /></SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="none">--</SelectItem>
+                                                    {clientOptions.map((c) => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
+                                                </SelectContent>
+                                            </Select> */}
+
+<Select
+  modal={false}
+  value={ucClient}
+  onValueChange={setUcClient}
+>
+  <SelectTrigger className="w-full">
+    <SelectValue placeholder="--" />
+  </SelectTrigger>
+  <SelectContent className="z-[99999] pointer-events-auto">
+    <SelectItem value="none">--</SelectItem>
+    {clientOptions.map((c) => (
+      <SelectItem key={c.id} value={String(c.id)}>
+        {c.name}
+      </SelectItem>
+    ))}
+  </SelectContent>
+</Select>
+
+
+                                        </div>
+
+                                        <div className="col-span-2">
+                                            <label className="text-sm text-gray-600">Project Summary</label>
+                                            <textarea rows={4} value={ucSummary} onChange={(e) => setUcSummary(e.target.value)} className="w-full p-2 border rounded" />
+                                        </div>
+
+                                        <div>
+                                            <div className="text-sm text-gray-600 mb-1">Tasks needs approval by Admin</div>
+                                            <div className="flex items-center gap-4">
+                                                <label className="inline-flex items-center gap-2">
+                                                    <input type="radio" name="ucApproval" checked={ucNeedsApproval === true} onChange={() => setUcNeedsApproval(true)} />
+                                                    <span className="text-sm">Yes</span>
+                                                </label>
+                                                <label className="inline-flex items-center gap-2">
+                                                    <input type="radio" name="ucApproval" checked={ucNeedsApproval === false} onChange={() => setUcNeedsApproval(false)} />
+                                                    <span className="text-sm">No</span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <label className="text-sm text-gray-600">Assigned to *</label>
+                                            <Input placeholder="Comma separated names or ids" value={Array.isArray(ucMembers) ? ucMembers.join(",") : ucMembers} onChange={(e) => setUcMembers(e.target.value)} />
+                                        </div>
+
+                                        {/* NEW: Project Status + Project Progress Status row (spans two columns) */}
+                                        <div className="col-span-2">
+                                            <div className="flex items-center justify-between gap-4">
+                                                <div className="flex-1">
+                                                    <label className="text-sm text-gray-600">Project Status</label>
+                                                    <Select value={ucProjectStatus} onValueChange={(v) => setUcProjectStatus(v as StatusOption | "none")}>
+                                                        <SelectTrigger className="w-full"><SelectValue placeholder="Select status" /></SelectTrigger>
+                                                        <SelectContent>
+                                                            <SelectItem value="none">--</SelectItem>
+                                                            <SelectItem value="IN_PROGRESS">In Progress</SelectItem>
+                                                            <SelectItem value="NOT_STARTED">Not Started</SelectItem>
+                                                            <SelectItem value="ON_HOLD">On Hold</SelectItem>
+                                                            <SelectItem value="CANCELLED">Cancelled</SelectItem>
+                                                            <SelectItem value="FINISHED">Finished</SelectItem>
+                                                        </SelectContent>
+                                                    </Select>
+                                                </div>
+
+                                                <div className="w-1/2">
+                                                    <label className="text-sm text-gray-600">Project Progress Status</label>
+                                                    <div className="mt-2">
+                                                        <div className="relative bg-gray-200 h-4 rounded-full overflow-hidden">
+                                                            <div className={`h-4 rounded-full ${getProgressColor(ucProgress)}`} style={{ width: `${Math.max(0, Math.min(100, ucProgress))}%` }} />
+                                                            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                                                <span className="text-xs font-semibold text-white drop-shadow-sm">{Math.round(ucProgress)}%</span>
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex items-center gap-2 mt-2">
+                                                            <input type="range" min={0} max={100} value={ucProgress} onChange={(e) => setUcProgress(Number(e.target.value))} className="flex-1" />
+                                                            <label className="inline-flex items-center gap-2 text-sm">
+                                                                <input type="checkbox" checked={ucCalculateThroughTasks} onChange={(e) => setUcCalculateThroughTasks(e.target.checked)} />
+                                                                <span className="text-xs">Calculate Progress through tasks</span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                {/* Company Details (single) */}
+                                <div className="rounded-lg border p-4">
+                                    <h4 className="font-medium mb-3">Company Details</h4>
+
+                                    <div className="mb-4">
+                                        <label className="text-sm text-gray-600 mb-2 block">Add File</label>
+                                        <div onClick={pickFile} className="border-2 border-dashed rounded-lg h-28 flex items-center justify-center cursor-pointer text-gray-500">
+                                            {ucFile ? <div>{ucFile.name}</div> : <div>Choose File</div>}
+                                            <input ref={ucFileRef} type="file" className="hidden" onChange={onFileChange} />
+                                        </div>
+                                    </div>
+
+                                    <div className="grid grid-cols-3 gap-4">
+                                        <div>
+                                            <label className="text-sm text-gray-600">Currency</label>
+                                            {/* <Select value={ucCurrency} onValueChange={(v) => setUcCurrency(v)}>
+                                                <SelectTrigger className="w-full"><SelectValue placeholder="USD" /></SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="USD">USD $</SelectItem>
+                                                    <SelectItem value="USD">USD ₹</SelectItem>
+                                                    <SelectItem value="EUR">EUR €</SelectItem>
+                                                </SelectContent>
+                                            </Select> */}
+
+<Select
+  modal={false}
+  value={ucCurrency}
+  onValueChange={(v) => setUcCurrency(v)}
+>
+  <SelectTrigger className="w-full">
+    <SelectValue placeholder="USD" />
+  </SelectTrigger>
+
+  <SelectContent className="z-[99999] pointer-events-auto">
+    <SelectItem value="USD">USD $ (US Dollar)</SelectItem>
+    <SelectItem value="INR">INR ₹ (Indian Rupee)</SelectItem>
+    <SelectItem value="EUR">EUR € (Euro)</SelectItem>
+    <SelectItem value="GBP">GBP £ (British Pound)</SelectItem>
+    <SelectItem value="CHF">CHF ₣ (Swiss Franc)</SelectItem>
+    <SelectItem value="SEK">SEK kr</SelectItem>
+    <SelectItem value="NOK">NOK kr</SelectItem>
+    <SelectItem value="DKK">DKK kr</SelectItem>
+    <SelectItem value="PLN">PLN zł</SelectItem>
+    <SelectItem value="CZK">CZK Kč</SelectItem>
+    <SelectItem value="HUF">HUF Ft</SelectItem>
+    <SelectItem value="RON">RON lei</SelectItem>
+  </SelectContent>
+</Select>
+
+
+                                        </div>
+
+                                        <div>
+                                            <label className="text-sm text-gray-600">Project Budget</label>
+                                            <Input value={ucBudget} onChange={(e) => setUcBudget(e.target.value)} />
+                                        </div>
+
+                                        <div>
+                                            <label className="text-sm text-gray-600">Hours Estimate (In Hours)</label>
+                                            <Input value={ucHours} onChange={(e) => setUcHours(e.target.value)} />
+                                        </div>
+                                    </div>
+
+                                    <div className="mt-3 flex items-center justify-between">
+                                        <div className="flex items-center gap-4">
+                                            <label className="inline-flex items-center gap-2">
+                                                <input type="checkbox" checked={ucAllowManualTime} onChange={(e) => setUcAllowManualTime(e.target.checked)} />
+                                                <span className="text-sm text-gray-600">Allow manual time logs </span>
+                                            </label>
+                                        </div>
+
+                                        {/* NEW: Added by select (right aligned) */}
+                                        <div className="flex items-center gap-2">
+                                            <label className="text-sm text-gray-600 mr-2">Added by*</label>
+                                            <Select value={ucAddedBy} onValueChange={(v) => setUcAddedBy(v)}>
+                                                <SelectTrigger className="w-44"><SelectValue placeholder="You" /></SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="you">You</SelectItem>
+                                                    {memberOptions.map((m) => <SelectItem key={m} value={m}>{m}</SelectItem>)}
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Actions */}
+                                <div className="flex items-center justify-end gap-3">
+                                    <Button variant="outline" onClick={() => { onClose(); resetLocal(); }}>Cancel</Button>
+                                    <Button className="bg-blue-600 text-white" onClick={saveUpdate} disabled={saving}>
+                                        {saving ? "Updating..." : "Update"}
+                                    </Button>
+                                </div>
+                            </>
+                        )}
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
 
 
 
@@ -1122,6 +1482,8 @@ function UpdateProjectModal({
     // ---------- end CalendarView ----------
 
     // ---------- UI helpers ----------
+  
+  
     const getProgressColor = (p?: number | null) => {
         if (p === undefined || p === null) return "bg-gray-300";
         if (p < 33) return "bg-red-500";
