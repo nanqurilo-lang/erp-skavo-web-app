@@ -1226,7 +1226,7 @@ function AddEditNoteModal({
     </div>
   );
 }
-
+//test
 /* ---------------- NEW: ViewNoteModal (keeps same UI) ---------------- */
 function ViewNoteModal({ note, onClose }: { note: Note; onClose: () => void }) {
   return (
