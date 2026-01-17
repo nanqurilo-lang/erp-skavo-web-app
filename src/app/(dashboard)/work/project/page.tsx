@@ -947,14 +947,6 @@ fd.append(
   client === "none" ? "" : String(client)
 );
 
-
-
-
-      // fd.append("summary", summary || "");
-
-
-
-
       fd.append("projectSummary", summary || "");
 
       fd.append("tasksNeedAdminApproval", String(Boolean(needsApproval)));

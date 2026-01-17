@@ -763,19 +763,62 @@ export default function AllProjectsPage({ employeeId, }: { employeeId: string })
             fd.append("noDeadline", String(Boolean(noDeadline)));
 
             // basic fields
-            fd.append("category", category === "none" ? "" : String(category));
-            fd.append("department", department === "none" ? "" : String(department));
-            fd.append("clientId", client === "none" ? "" : String(client));
+            // fd.append("category", category === "none" ? "" : String(category));
+            // fd.append("department", department === "none" ? "" : String(department));
+            // fd.append("clientId", client === "none" ? "" : String(client));
 
-            fd.append("summary", summary || "");
+            // fd.append("summary", summary || "");
+
+
+
+
+fd.append(
+  "projectCategory",
+  category === "none" ? "" : String(category)
+);
+
+fd.append(
+  "department",
+  department === "none" ? "" : String(department)
+);
+
+fd.append(
+  "projectBudget",
+  budget !== "" ? String(budget) : "0"
+);
+
+
+// client
+fd.append(
+  "clientId",
+  client === "none" ? "" : String(client)
+);
+
+fd.append("projectSummary", summary || "");
+
+
             fd.append("tasksNeedAdminApproval", String(Boolean(needsApproval)));
 
-            const assignedArray = Array.isArray(members)
-                ? members
-                : String(members || "").split(",").map((s) => s.trim()).filter(Boolean);
+            // const assignedArray = Array.isArray(members)
+            //     ? members
+            //     : String(members || "").split(",").map((s) => s.trim()).filter(Boolean);
+
+
+const assignedArray = [
+  employeeId, // 👈 VERY IMPORTANT
+  ...(
+    Array.isArray(members)
+      ? members
+      : String(members || "")
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean)
+  ),
+];
+fd.append("assignedEmployeeIds", JSON.stringify(assignedArray));
 
             // backend expects a Set<String> — send JSON array under 'assignedEmployeeIds'
-            fd.append("assignedEmployeeIds", JSON.stringify(assignedArray));
+            // fd.append("assignedEmployeeIds", JSON.stringify(assignedArray));
 
             if (file) fd.append("companyFile", file);
 
@@ -1673,37 +1716,104 @@ export default function AllProjectsPage({ employeeId, }: { employeeId: string })
                                     <div>
                                         <label className="text-sm text-gray-600">Project Category *</label>
                                         <div className="flex gap-2">
-                                            <Select value={category} onValueChange={(v) => setCategory(v)}>
+                                            {/* <Select value={category} onValueChange={(v) => setCategory(v)}>
+
+
+
+
                                                 <SelectTrigger className="w-full"><SelectValue placeholder="--" /></SelectTrigger>
                                                 <SelectContent>
                                                     <SelectItem value="none">--</SelectItem>
                                                     {categoryOptions.map((c) => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
                                                 </SelectContent>
-                                            </Select>
+                                            </Select> */}
+
+
+
+<Select modal={false} value={category} onValueChange={(v) => setCategory(v)}>
+  <SelectTrigger className="w-full">
+    <SelectValue placeholder="--" />
+  </SelectTrigger>
+
+  <SelectContent className="z-[99999] pointer-events-auto">
+    <SelectItem value="none">--</SelectItem>
+    {categoryOptions.map((c) => (
+      <SelectItem key={c.id} value={String(c.id)}>
+        {c.name}
+      </SelectItem>
+    ))}
+  </SelectContent>
+</Select>
+
+
                                             <Button variant="outline" onClick={openCategoryModal}>Add</Button>
                                         </div>
                                     </div>
 
                                     <div>
                                         <label className="text-sm text-gray-600">Department *</label>
-                                        <Select value={department} onValueChange={(v) => setDepartment(v)}>
+                                        {/* <Select value={department} onValueChange={(v) => setDepartment(v)}>
                                             <SelectTrigger className="w-full"><SelectValue placeholder="--" /></SelectTrigger>
                                             <SelectContent>
                                                 <SelectItem value="none">--</SelectItem>
                                                 {departmentOptions.map((d) => <SelectItem key={d.id} value={d.id}>{d.name}</SelectItem>)}
                                             </SelectContent>
-                                        </Select>
+                                        </Select> */}
+
+
+<Select
+  modal={false}
+  value={department}
+  onValueChange={(v) => setDepartment(v)}
+>
+  <SelectTrigger className="w-full">
+    <SelectValue placeholder="--" />
+  </SelectTrigger>
+
+  <SelectContent className="z-[99999] pointer-events-auto">
+    <SelectItem value="none">--</SelectItem>
+    {departmentOptions.map((d) => (
+      <SelectItem key={d.id} value={String(d.id)}>
+        {d.name}
+      </SelectItem>
+    ))}
+  </SelectContent>
+</Select>
+
+
                                     </div>
 
                                     <div>
                                         <label className="text-sm text-gray-600">Client *</label>
-                                        <Select value={client} onValueChange={(v) => setClientField(v)}>
+                                        {/* <Select value={client} onValueChange={(v) => setClientField(v)}>
                                             <SelectTrigger className="w-full"><SelectValue placeholder="--" /></SelectTrigger>
                                             <SelectContent>
                                                 <SelectItem value="none">--</SelectItem>
                                                 {clientOptions.map((c) => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
                                             </SelectContent>
-                                        </Select>
+                                        </Select> */}
+
+
+<Select
+  modal={false}
+  value={client}
+  onValueChange={(v) => setClientField(v)}
+>
+  <SelectTrigger className="w-full">
+    <SelectValue placeholder="--" />
+  </SelectTrigger>
+
+  <SelectContent className="z-[99999] pointer-events-auto">
+    <SelectItem value="none">--</SelectItem>
+    {clientOptions.map((c) => (
+      <SelectItem key={c.id} value={String(c.id)}>
+        {c.name}
+      </SelectItem>
+    ))}
+  </SelectContent>
+</Select>
+
+
                                     </div>
 
                                     <div className="col-span-2">
@@ -1747,14 +1857,36 @@ export default function AllProjectsPage({ employeeId, }: { employeeId: string })
                                 <div className="grid grid-cols-3 gap-4">
                                     <div>
                                         <label className="text-sm text-gray-600">Currency</label>
-                                        <Select value={currency} onValueChange={(v) => setCurrency(v)}>
+                                        {/* <Select value={currency} onValueChange={(v) => setCurrency(v)}>
                                             <SelectTrigger className="w-full"><SelectValue placeholder="USD" /></SelectTrigger>
                                             <SelectContent>
                                                 <SelectItem value="USD">USD $</SelectItem>
                                                 <SelectItem value="USD">USD ₹</SelectItem>
                                                 <SelectItem value="EUR">EUR €</SelectItem>
                                             </SelectContent>
-                                        </Select>
+                                        </Select> */}
+
+
+
+<Select
+  modal={false}
+  value={currency}
+  onValueChange={(v) => setCurrency(v)}
+>
+  <SelectTrigger className="w-full">
+    <SelectValue placeholder="USD" />
+  </SelectTrigger>
+
+  <SelectContent className="z-[99999] pointer-events-auto">
+    <SelectItem value="USD">USD $ (US Dollar)</SelectItem>
+    <SelectItem value="INR">INR ₹ (Indian Rupee)</SelectItem>
+    <SelectItem value="EUR">EUR € (Euro)</SelectItem>
+    <SelectItem value="GBP">GBP £ (British Pound)</SelectItem>
+    <SelectItem value="CHF">CHF ₣ (Swiss Franc)</SelectItem>
+  </SelectContent>
+</Select>
+
+                                        
                                     </div>
 
                                     <div>
@@ -1793,7 +1925,7 @@ export default function AllProjectsPage({ employeeId, }: { employeeId: string })
                             {/* ACTIONS */}
                             <div className="flex items-center justify-end gap-3">
                                 <Button variant="outline" onClick={() => { setShowAddModal(false); resetAddForm(); }}>Cancel</Button>
-                                <Button className="bg-blue-600 text-white" onClick={createProject} disabled={submitting}>{submitting ? "Saving..." : "Save"}</Button>
+                                <Button className="bg-blue-600 text-white" onClick={createProject} disabled={submitting}>{submitting ? "Saving..." : "Save   "}</Button>
                             </div>
                         </div>
                     </div>
