@@ -1731,6 +1731,13 @@ fd.append(
     );
   }
 
+
+
+
+
+
+
+
   // ---------- Calendar view component (kept as you had) ----------
   // ... (omitted here for brevity in this paste; use your CalendarView implementation from earlier)
   // For brevity in this reply I kept the earlier CalendarView logic — if you want, I can paste the same CalendarView back in here unchanged.
