@@ -924,11 +924,39 @@ export default function AllProjectsPage() {
       fd.append("noDeadline", String(Boolean(noDeadline)));
 
       // basic fields
-      fd.append("category", category === "none" ? "" : String(category));
-      fd.append("department", department === "none" ? "" : String(department));
-      fd.append("clientId", client === "none" ? "" : String(client));
+      // fd.append("category", category === "none" ? "" : String(category));
+      // fd.append("department", department === "none" ? "" : String(department));
+      // fd.append("clientId", client === "none" ? "" : String(client));
 
-      fd.append("summary", summary || "");
+
+// ✅ REQUIRED by backend
+fd.append(
+  "projectCategory",
+  category === "none" ? "" : String(category)
+);
+
+// department
+fd.append(
+  "department",
+  department === "none" ? "" : String(department)
+);
+
+// client
+fd.append(
+  "clientId",
+  client === "none" ? "" : String(client)
+);
+
+
+
+
+      // fd.append("summary", summary || "");
+
+
+
+
+      fd.append("projectSummary", summary || "");
+
       fd.append("tasksNeedAdminApproval", String(Boolean(needsApproval)));
 
       const assignedArray = Array.isArray(members)
@@ -945,7 +973,15 @@ export default function AllProjectsPage() {
 
       fd.append("currency", currency || "");
       // budget may be optional — send "0" if empty to avoid parse issues
-      fd.append("budget", budget !== "" ? String(budget) : "0");
+      // fd.append("budget", budget !== "" ? String(budget) : "0");
+
+
+fd.append(
+  "projectBudget",
+  budget !== "" ? String(budget) : "0"
+);
+
+
       fd.append(
         "hoursEstimate",
         hoursEstimate !== "" ? String(hoursEstimate) : "0"
@@ -2625,7 +2661,7 @@ export default function AllProjectsPage() {
                       Project Category *
                     </label>
                     <div className="flex gap-2">
-                      <Select
+                      {/* <Select
                         value={category}
                         onValueChange={(v) => setCategory(v)}
                       >
@@ -2640,7 +2676,29 @@ export default function AllProjectsPage() {
                             </SelectItem>
                           ))}
                         </SelectContent>
-                      </Select>
+                      </Select> */}
+
+
+<Select
+  modal={false}
+  value={category}
+  onValueChange={(v) => setCategory(v)}
+>
+  <SelectTrigger className="w-full">
+    <SelectValue placeholder="--" />
+  </SelectTrigger>
+
+  <SelectContent className="z-[99999]">
+    <SelectItem value="none">--</SelectItem>
+    {categoryOptions.map((c) => (
+      <SelectItem key={c.id} value={String(c.id)}>
+        {c.name}
+      </SelectItem>
+    ))}
+  </SelectContent>
+</Select>
+
+
                       <Button variant="outline" onClick={openCategoryModal}>
                         Add
                       </Button>
@@ -2651,7 +2709,7 @@ export default function AllProjectsPage() {
                     <label className="text-sm text-gray-600">
                       Department *
                     </label>
-                    <Select
+                    {/* <Select
                       value={department}
                       onValueChange={(v) => setDepartment(v)}
                     >
@@ -2666,12 +2724,35 @@ export default function AllProjectsPage() {
                           </SelectItem>
                         ))}
                       </SelectContent>
-                    </Select>
+                    </Select> */}
+
+
+
+<Select
+  modal={false}
+  value={department}
+  onValueChange={(v) => setDepartment(v)}
+>
+  <SelectTrigger className="w-full">
+    <SelectValue placeholder="--" />
+  </SelectTrigger>
+
+  <SelectContent className="z-[99999]">
+    <SelectItem value="none">--</SelectItem>
+    {departmentOptions.map((d) => (
+      <SelectItem key={d.id} value={String(d.id)}>
+        {d.name}
+      </SelectItem>
+    ))}
+  </SelectContent>
+</Select>
+
+
                   </div>
 
                   <div>
                     <label className="text-sm text-gray-600">Client *</label>
-                    <Select
+                    {/* <Select
                       value={client}
                       onValueChange={(v) => setClientField(v)}
                     >
@@ -2686,7 +2767,32 @@ export default function AllProjectsPage() {
                           </SelectItem>
                         ))}
                       </SelectContent>
-                    </Select>
+                    </Select> */}
+
+
+
+
+
+<Select
+  modal={false}
+  value={client}
+  onValueChange={(v) => setClientField(v)}
+>
+  <SelectTrigger className="w-full">
+    <SelectValue placeholder="--" />
+  </SelectTrigger>
+
+  <SelectContent className="z-[99999]">
+    <SelectItem value="none">--</SelectItem>
+    {clientOptions.map((c) => (
+      <SelectItem key={c.id} value={String(c.id)}>
+        {c.name}
+      </SelectItem>
+    ))}
+  </SelectContent>
+</Select>
+
+
                   </div>
 
                   <div className="col-span-2">
@@ -2767,7 +2873,7 @@ export default function AllProjectsPage() {
                 <div className="grid grid-cols-3 gap-4">
                   <div>
                     <label className="text-sm text-gray-600">Currency</label>
-                    <Select
+                    {/* <Select
                       value={currency}
                       onValueChange={(v) => setCurrency(v)}
                     >
@@ -2779,7 +2885,39 @@ export default function AllProjectsPage() {
                         <SelectItem value="USD">USD ₹</SelectItem>
                         <SelectItem value="EUR">EUR €</SelectItem>
                       </SelectContent>
-                    </Select>
+                    </Select> */}
+
+
+<Select
+  modal={false}
+  value={currency}
+  onValueChange={(v) => setCurrency(v)}
+>
+  <SelectTrigger className="w-full">
+    <SelectValue placeholder="Select currency" />
+  </SelectTrigger>
+
+  <SelectContent className="z-[99999] pointer-events-auto">
+    <SelectItem value="USD">USD $ (US Dollar)</SelectItem>
+    <SelectItem value="INR">INR ₹ (Indian Rupee)</SelectItem>
+    <SelectItem value="EUR">EUR € (Euro)</SelectItem>
+    <SelectItem value="GBP">GBP £ (British Pound)</SelectItem>
+    <SelectItem value="CHF">CHF ₣ (Swiss Franc)</SelectItem>
+    <SelectItem value="SEK">SEK kr (Swedish Krona)</SelectItem>
+    <SelectItem value="NOK">NOK kr (Norwegian Krone)</SelectItem>
+    <SelectItem value="DKK">DKK kr (Danish Krone)</SelectItem>
+    <SelectItem value="PLN">PLN zł (Polish Złoty)</SelectItem>
+    <SelectItem value="CZK">CZK Kč (Czech Koruna)</SelectItem>
+    <SelectItem value="HUF">HUF Ft (Hungarian Forint)</SelectItem>
+    <SelectItem value="RON">RON lei (Romanian Leu)</SelectItem>
+  </SelectContent>
+</Select>
+
+
+
+
+
+
                   </div>
 
                   <div>
