@@ -157,6 +157,21 @@ export default function AllProjectsPage() {
   const [client, setClientField] = useState("none");
   const [summary, setSummary] = useState("");
   const [needsApproval, setNeedsApproval] = useState(true);
+
+type EmployeeItem = {
+  employeeId: string
+  name: string
+  profilePictureUrl?: string | null
+};
+
+const [employees, setEmployees] = useState<EmployeeItem[]>([]);
+const [employeeLoading, setEmployeeLoading] = useState(false);
+
+// members already hai
+// const [members, setMembers] = useState<string[] | string>("")
+
+
+
   const [members, setMembers] = useState<string[] | string>("");
 
   // Company Details
@@ -267,6 +282,53 @@ export default function AllProjectsPage() {
     else map[key] = percent;
     writeProgressOverrides(map);
   };
+
+
+
+//assign employee
+
+const EMP_BASE = "https://6jnqmj85-80.inc1.devtunnels.ms";
+
+const loadEmployees = useCallback(async () => {
+  setEmployeeLoading(true);
+  try {
+    const token =
+      typeof window !== "undefined"
+        ? localStorage.getItem("accessToken")
+        : null;
+
+    const res = await fetch(`${EMP_BASE}/employee/all`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+      cache: "no-store",
+    });
+
+    if (!res.ok) {
+      console.error("Failed to load employees", res.status);
+      setEmployees([]);
+      return;
+    }
+
+    const data = await res.json();
+    if (Array.isArray(data)) {
+      setEmployees(
+        data.map((e: any) => ({
+          employeeId: e.employeeId,
+          name: e.name,
+          profilePictureUrl: e.profilePictureUrl ?? null,
+        }))
+      );
+    } else {
+      setEmployees([]);
+    }
+  } catch (err) {
+    console.error("Employee load error", err);
+    setEmployees([]);
+  } finally {
+    setEmployeeLoading(false);
+  }
+}, []);
+
+
 
   // fetch projects
   const getProjects = useCallback(
@@ -623,6 +685,8 @@ export default function AllProjectsPage() {
       loadDepartments(savedToken || null);
       if (savedToken) getProjects(savedToken);
       else setLoading(false);
+
+      loadEmployees(); 
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -923,11 +987,7 @@ export default function AllProjectsPage() {
       }
       fd.append("noDeadline", String(Boolean(noDeadline)));
 
-      // basic fields
-      // fd.append("category", category === "none" ? "" : String(category));
-      // fd.append("department", department === "none" ? "" : String(department));
-      // fd.append("clientId", client === "none" ? "" : String(client));
-
+     
 
       // ✅ REQUIRED by backend
       fd.append(
@@ -964,9 +1024,7 @@ export default function AllProjectsPage() {
       if (file) fd.append("companyFile", file);
 
       fd.append("currency", currency || "");
-      // budget may be optional — send "0" if empty to avoid parse issues
-      // fd.append("budget", budget !== "" ? String(budget) : "0");
-
+      
 
       fd.append(
         "projectBudget",
@@ -1133,11 +1191,7 @@ export default function AllProjectsPage() {
           );
           setUcSummary(data.summary ?? "");
           setUcNeedsApproval(Boolean(data.tasksNeedAdminApproval ?? true));
-          // setUcMembers(
-          //   Array.isArray(data.assignedEmployees)
-          //     ? data.assignedEmployees.map((e: any) => e.name).join(",")
-          //     : data.members ?? ""
-          // );
+        
 
           setUcMembers(
             Array.isArray(data.assignedEmployees)
@@ -1175,134 +1229,6 @@ export default function AllProjectsPage() {
     const pickFile = () => ucFileRef.current?.click();
     const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) =>
       setUcFile(e.target.files?.[0] ?? null);
-
-    //     const saveUpdate = async () => {
-    //       if (!projectId) return;
-    //       if (!ucProjectName.trim()) return alert("Project name required");
-    //       setSaving(true);
-    //       try {
-    //         const fd = new FormData();
-    //         if (ucShortCode) fd.append("shortCode", ucShortCode);
-    //         fd.append("name", ucProjectName);
-    //         if (ucStartDate) fd.append("startDate", ucStartDate);
-    //         // always append deadline key
-    //         if (ucNoDeadline) fd.append("deadline", "");
-    //         else fd.append("deadline", ucDeadline || "");
-    //         fd.append("noDeadline", String(Boolean(ucNoDeadline)));
-    //         // fd.append("category", ucCategory === "none" ? "" : ucCategory);
-    //         // fd.append("department", ucDepartment === "none" ? "" : ucDepartment);
-    //         // fd.append("clientId", ucClient === "none" ? "" : ucClient);
-
-
-
-    // fd.append(
-    //   "projectCategory",
-    //   ucCategory === "none" ? "" : ucCategory
-    // );
-
-    // fd.append(
-    //   "department",
-    //   ucDepartment === "none" ? "" : ucDepartment
-    // );
-
-    // fd.append(
-    //   "clientId",
-    //   ucClient === "none" ? "" : ucClient
-    // );
-
-    // fd.append("projectSummary", ucSummary || "");
-
-    // fd.append(
-    //   "projectBudget",
-    //   ucBudget !== "" ? String(ucBudget) : "0"
-    // );
-
-    // fd.append("currency", ucCurrency || "USD");
-
-
-
-    //         fd.append("summary", ucSummary || "");
-    //         fd.append("tasksNeedAdminApproval", String(Boolean(ucNeedsApproval)));
-    //         const assignedArray = Array.isArray(ucMembers)
-    //           ? ucMembers
-    //           : String(ucMembers || "")
-    //               .split(",")
-    //               .map((s) => s.trim())
-    //               .filter(Boolean);
-    //         fd.append("assignedEmployeeIds", JSON.stringify(assignedArray));
-
-    //         if (ucFile) fd.append("companyFile", ucFile);
-    //         fd.append("currency", ucCurrency || "");
-    //         fd.append("budget", ucBudget || "0");
-    //         fd.append("hoursEstimate", ucHours || "0");
-    //         fd.append("allowManualTimeLogs", String(Boolean(ucAllowManualTime)));
-
-    //         if (ucProjectStatus && ucProjectStatus !== "none")
-    //           fd.append("projectStatus", String(ucProjectStatus));
-    //         if (
-    //           typeof ucProgress !== "undefined" &&
-    //           ucProgress !== null &&
-    //           !Number.isNaN(Number(ucProgress))
-    //         ) {
-    //           fd.append(
-    //             "progressPercent",
-    //             String(Math.max(0, Math.min(100, Math.round(ucProgress || 0))))
-    //           );
-    //         }
-    //         fd.append(
-    //           "calculateProgressThroughTasks",
-    //           String(Boolean(ucCalculateThroughTasks))
-    //         );
-
-    //         fd.append("addedBy", String(ucAddedBy || ""));
-
-    //         const resolvedToken =
-    //           token ||
-    //           (typeof window !== "undefined"
-    //             ? localStorage.getItem("accessToken")
-    //             : null);
-
-    //         const res = await fetch(`${MAIN}/api/projects/${projectId}`, {
-    //           method: "PUT",
-    //           body: fd,
-    //           headers: resolvedToken
-    //             ? { Authorization: `Bearer ${resolvedToken}` }
-    //             : undefined,
-    //         });
-
-    //         if (!res.ok) {
-    //           const text = await res.text().catch(() => "");
-    //           console.error("Update failed", res.status, text);
-    //           alert("Failed to update project");
-    //           return;
-    //         }
-
-    //         let json: any = null;
-    //         try {
-    //           json = await res.json();
-    //         } catch {
-    //           json = null;
-    //         }
-
-    //         if (json && json.id) {
-    //           setProjects((ps) =>
-    //             ps.map((p) => (p.id === json.id ? { ...p, ...json } : p))
-    //           );
-    //         } else {
-    //           await getProjects(resolvedToken);
-    //         }
-
-    //         onSaved();
-    //         onClose();
-    //         resetLocal();
-    //       } catch (err) {
-    //         console.error("Update error:", err);
-    //         alert("Failed to update project");
-    //       } finally {
-    //         setSaving(false);
-    //       }
-    //     };
-
 
 
     const saveUpdate = async () => {
@@ -1526,22 +1452,7 @@ export default function AllProjectsPage() {
                         Project Category *
                       </label>
                       <div className="flex gap-2">
-                        {/* <Select
-                          value={ucCategory}
-                          onValueChange={(v) => setUcCategory(v)}
-                        >
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder="--" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="none">--</SelectItem>
-                            {categoryOptions.map((c) => (
-                              <SelectItem key={c.id} value={c.id}>
-                                {c.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select> */}
+                       
 
 
                         <Select
@@ -1574,23 +1485,7 @@ export default function AllProjectsPage() {
                       <label className="text-sm text-gray-600">
                         Department *
                       </label>
-                      {/* <Select
-                        value={ucDepartment}
-                        onValueChange={(v) => setUcDepartment(v)}
-                      >
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="--" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="none">--</SelectItem>
-                          {departmentOptions.map((d) => (
-                            <SelectItem key={d.id} value={d.id}>
-                              {d.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select> */}
-
+                    
 
                       <Select
                         modal={false}
@@ -1616,22 +1511,7 @@ export default function AllProjectsPage() {
 
                     <div>
                       <label className="text-sm text-gray-600">Client *</label>
-                      {/* <Select
-                        value={ucClient}
-                        onValueChange={(v) => setUcClient(v)}
-                      >
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="--" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="none">--</SelectItem>
-                          {clientOptions.map((c) => (
-                            <SelectItem key={c.id} value={c.id}>
-                              {c.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select> */}
+                      
 
 
                       <Select
@@ -1699,15 +1579,97 @@ export default function AllProjectsPage() {
                       <label className="text-sm text-gray-600">
                         Assigned to *
                       </label>
-                      <Input
-                        placeholder="Comma separated names or ids"
-                        value={
-                          Array.isArray(ucMembers)
-                            ? ucMembers.join(",")
-                            : ucMembers
-                        }
-                        onChange={(e) => setUcMembers(e.target.value)}
-                      />
+                    <div>
+ 
+
+  <Select
+    modal={false}
+    value=""
+    onValueChange={(val) => {
+      setMembers((prev) => {
+        const arr = Array.isArray(prev) ? prev : [];
+        if (arr.includes(val)) return arr;
+        return [...arr, val];
+      });
+    }}
+  >
+    <SelectTrigger className="w-full">
+      <SelectValue
+        placeholder={
+          Array.isArray(members) && members.length > 0
+            ? `${members.length} members selected`
+            : "Select members"
+        }
+      />
+    </SelectTrigger>
+
+    <SelectContent className="z-[99999] pointer-events-auto max-h-72 overflow-auto">
+      {employeeLoading ? (
+        <div className="px-3 py-2 text-sm text-gray-500">
+          Loading...
+        </div>
+      ) : employees.length === 0 ? (
+        <div className="px-3 py-2 text-sm text-gray-500">
+          No employees found
+        </div>
+      ) : (
+        employees.map((emp) => (
+          <SelectItem
+            key={emp.employeeId}
+            value={emp.employeeId}
+          >
+            <div className="flex items-center gap-2">
+              {emp.profilePictureUrl ? (
+                <img
+                  src={emp.profilePictureUrl}
+                  className="w-6 h-6 rounded-full"
+                  alt={emp.name}
+                />
+              ) : (
+                <div className="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center text-xs text-white">
+                  {emp.name.charAt(0)}
+                </div>
+              )}
+              <span className="text-sm">
+                {emp.name} ({emp.employeeId})
+              </span>
+            </div>
+          </SelectItem>
+        ))
+      )}
+    </SelectContent>
+  </Select>
+
+  {/* Selected members chips */}
+  {Array.isArray(members) && members.length > 0 && (
+    <div className="mt-2 flex flex-wrap gap-2">
+      {members.map((id) => {
+        const emp = employees.find((e) => e.employeeId === id);
+        return (
+          <span
+            key={id}
+            className="flex items-center gap-1 bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs"
+          >
+            {emp?.name ?? id}
+            <button
+              className="ml-1 text-red-500"
+              onClick={() =>
+                setMembers((prev) =>
+                  Array.isArray(prev)
+                    ? prev.filter((x) => x !== id)
+                    : prev
+                )
+              }
+            >
+              ×
+            </button>
+          </span>
+        );
+      })}
+    </div>
+  )}
+</div>
+
                     </div>
 
                     {/* NEW: Project Status + Project Progress Status row (spans two columns) */}
@@ -1826,46 +1788,7 @@ export default function AllProjectsPage() {
                   <div className="grid grid-cols-3 gap-4">
                     <div>
                       <label className="text-sm text-gray-600">Currency</label>
-                      {/* <Select
-                        value={ucCurrency}
-                        onValueChange={(v) => setUcCurrency(v)}
-                      >
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="USD" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="EUR">EUR € (Euro)</SelectItem>
-                          <SelectItem value="GBP">
-                            GBP £ (British Pound)
-                          </SelectItem>
-                          <SelectItem value="CHF">
-                            CHF ₣ (Swiss Franc)
-                          </SelectItem>
-                          <SelectItem value="SEK">
-                            SEK kr (Swedish Krona)
-                          </SelectItem>
-                          <SelectItem value="NOK">
-                            NOK kr (Norwegian Krone)
-                          </SelectItem>
-                          <SelectItem value="DKK">
-                            DKK kr (Danish Krone)
-                          </SelectItem>
-                          <SelectItem value="PLN">
-                            PLN zł (Polish Złoty)
-                          </SelectItem>
-                          <SelectItem value="CZK">
-                            CZK Kč (Czech Koruna)
-                          </SelectItem>
-                          <SelectItem value="HUF">
-                            HUF Ft (Hungarian Forint)
-                          </SelectItem>
-                          <SelectItem value="RON">
-                            RON lei (Romanian Leu)
-                          </SelectItem>
-                        </SelectContent>
-                      </Select> */}
-
-
+                     
                       <Select
                         modal={false}
                         value={ucCurrency}
@@ -1990,10 +1913,6 @@ export default function AllProjectsPage() {
 
 
 
-  // ---------- Calendar view component (kept as you had) ----------
-  // ... (omitted here for brevity in this paste; use your CalendarView implementation from earlier)
-  // For brevity in this reply I kept the earlier CalendarView logic — if you want, I can paste the same CalendarView back in here unchanged.
-  // ---------- end CalendarView ----------
 
   // ---------- UI helpers ----------
   const getProgressColor = (p?: number | null) => {
@@ -2460,9 +2379,6 @@ export default function AllProjectsPage() {
               </Select>
             </div>
 
-            {/* <div className="ml-auto flex items-center gap-4">
-              <button onClick={openFilters} className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-800"><Filter className="w-5 h-5" /> Filters</button>
-            </div> */}
           </div>
 
           {/* ROW: Add Project + Search + Top-right icons */}
@@ -2576,10 +2492,7 @@ export default function AllProjectsPage() {
 
             <div className="overflow-auto p-4">
               {viewMode === "calendar" || calendarOpen ? (
-                // Using a simple calendar view component - you had a complex CalendarView earlier.
-                // If you want the rich CalendarView re-insert here (I kept it out of the pasted block for brevity).
-                // <div>
-
+                
                 <ProjectCalendarMonth />
               ) : // {/* </div> */}
                 viewMode === "list" ? (
@@ -2904,22 +2817,7 @@ export default function AllProjectsPage() {
                       Project Category *
                     </label>
                     <div className="flex gap-2">
-                      {/* <Select
-                        value={category}
-                        onValueChange={(v) => setCategory(v)}
-                      >
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="--" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="none">--</SelectItem>
-                          {categoryOptions.map((c) => (
-                            <SelectItem key={c.id} value={c.id}>
-                              {c.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select> */}
+                      
 
 
                       <Select
@@ -2952,22 +2850,7 @@ export default function AllProjectsPage() {
                     <label className="text-sm text-gray-600">
                       Department *
                     </label>
-                    {/* <Select
-                      value={department}
-                      onValueChange={(v) => setDepartment(v)}
-                    >
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="--" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="none">--</SelectItem>
-                        {departmentOptions.map((d) => (
-                          <SelectItem key={d.id} value={d.id}>
-                            {d.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select> */}
+                    
 
 
 
@@ -2995,22 +2878,7 @@ export default function AllProjectsPage() {
 
                   <div>
                     <label className="text-sm text-gray-600">Client *</label>
-                    {/* <Select
-                      value={client}
-                      onValueChange={(v) => setClientField(v)}
-                    >
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="--" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="none">--</SelectItem>
-                        {clientOptions.map((c) => (
-                          <SelectItem key={c.id} value={c.id}>
-                            {c.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select> */}
+                    
 
 
 
@@ -3080,13 +2948,97 @@ export default function AllProjectsPage() {
                     <label className="text-sm text-gray-600">
                       Add Project Members *
                     </label>
-                    <Input
-                      placeholder="Comma separated names"
-                      value={
-                        Array.isArray(members) ? members.join(",") : members
-                      }
-                      onChange={(e) => setMembers(e.target.value)}
-                    />
+                   <div>
+  
+
+  <Select
+    modal={false}
+    value=""
+    onValueChange={(val) => {
+      setMembers((prev) => {
+        const arr = Array.isArray(prev) ? prev : [];
+        if (arr.includes(val)) return arr;
+        return [...arr, val];
+      });
+    }}
+  >
+    <SelectTrigger className="w-full">
+      <SelectValue
+        placeholder={
+          Array.isArray(members) && members.length > 0
+            ? `${members.length} members selected`
+            : "Select members"
+        }
+      />
+    </SelectTrigger>
+
+    <SelectContent className="z-[99999] pointer-events-auto max-h-72 overflow-auto">
+      {employeeLoading ? (
+        <div className="px-3 py-2 text-sm text-gray-500">
+          Loading...
+        </div>
+      ) : employees.length === 0 ? (
+        <div className="px-3 py-2 text-sm text-gray-500">
+          No employees found
+        </div>
+      ) : (
+        employees.map((emp) => (
+          <SelectItem
+            key={emp.employeeId}
+            value={emp.employeeId}
+          >
+            <div className="flex items-center gap-2">
+              {emp.profilePictureUrl ? (
+                <img
+                  src={emp.profilePictureUrl}
+                  className="w-6 h-6 rounded-full"
+                  alt={emp.name}
+                />
+              ) : (
+                <div className="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center text-xs text-white">
+                  {emp.name.charAt(0)}
+                </div>
+              )}
+              <span className="text-sm">
+                {emp.name} ({emp.employeeId})
+              </span>
+            </div>
+          </SelectItem>
+        ))
+      )}
+    </SelectContent>
+  </Select>
+
+  {/* Selected members chips */}
+  {Array.isArray(members) && members.length > 0 && (
+    <div className="mt-2 flex flex-wrap gap-2">
+      {members.map((id) => {
+        const emp = employees.find((e) => e.employeeId === id);
+        return (
+          <span
+            key={id}
+            className="flex items-center gap-1 bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs"
+          >
+            {emp?.name ?? id}
+            <button
+              className="ml-1 text-red-500"
+              onClick={() =>
+                setMembers((prev) =>
+                  Array.isArray(prev)
+                    ? prev.filter((x) => x !== id)
+                    : prev
+                )
+              }
+            >
+              ×
+            </button>
+          </span>
+        );
+      })}
+    </div>
+  )}
+</div>
+
                   </div>
                 </div>
               </div>
@@ -3116,19 +3068,7 @@ export default function AllProjectsPage() {
                 <div className="grid grid-cols-3 gap-4">
                   <div>
                     <label className="text-sm text-gray-600">Currency</label>
-                    {/* <Select
-                      value={currency}
-                      onValueChange={(v) => setCurrency(v)}
-                    >
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="USD" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="USD">USD $</SelectItem>
-                        <SelectItem value="USD">USD ₹</SelectItem>
-                        <SelectItem value="EUR">EUR €</SelectItem>
-                      </SelectContent>
-                    </Select> */}
+                 
 
 
                     <Select
