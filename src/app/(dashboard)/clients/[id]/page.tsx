@@ -107,9 +107,23 @@ type Category = { id: string | number; name: string };
 type ClientItem = { id: number; clientId?: string; name?: string };
 type DepartmentItem = { id: number; departmentName: string };
 
+  type EmployeeItem = {
+  employeeId: string
+  name: string
+  profilePictureUrl?: string | null
+};
+
 export default function ClientDetailPage() {
   const { id } = useParams() as { id?: string };
   const router = useRouter();
+
+
+const [employees, setEmployees] = useState<EmployeeItem[]>([]);
+const [employeeLoading, setEmployeeLoading] = useState(false);
+
+// members already hai
+// const [members, setMembers] = useState<string[] | string>("")
+
 
   // ---- client
   const [client, setClient] = useState<any | null>(null);
@@ -175,6 +189,47 @@ export default function ClientDetailPage() {
       setLoading(false);
     }
   }, [id]);
+  const EMP_BASE = "https://6jnqmj85-80.inc1.devtunnels.ms";
+
+const loadEmployees = useCallback(async () => {
+  setEmployeeLoading(true);
+  try {
+    const token =
+      typeof window !== "undefined"
+        ? localStorage.getItem("accessToken")
+        : null;
+
+    const res = await fetch(`${EMP_BASE}/employee/all`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+      cache: "no-store",
+    });
+
+    if (!res.ok) {
+      console.error("Failed to load employees", res.status);
+      setEmployees([]);
+      return;
+    }
+
+    const data = await res.json();
+    if (Array.isArray(data)) {
+      setEmployees(
+        data.map((e: any) => ({
+          employeeId: e.employeeId,
+          name: e.name,
+          profilePictureUrl: e.profilePictureUrl ?? null,
+        }))
+      );
+    } else {
+      setEmployees([]);
+    }
+  } catch (err) {
+    console.error("Employee load error", err);
+    setEmployees([]);
+  } finally {
+    setEmployeeLoading(false);
+  }
+}, []);
+
 
   // ---------- helpers to load selects ----------
   const loadCategories = useCallback(async () => {
@@ -788,6 +843,7 @@ fd.append(
     loadCategories();
     loadClients();
     loadDepartments();
+    loadEmployees();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
@@ -1530,13 +1586,97 @@ useEffect(() => {
                     <label className="text-sm text-gray-600">
                       Add Project Members *
                     </label>
-                    <Input
-                      placeholder="Comma separated names"
-                      value={
-                        Array.isArray(members) ? members.join(",") : members
-                      }
-                      onChange={(e) => setMembers(e.target.value)}
-                    />
+                   <div>
+  
+
+  <Select
+    modal={false}
+    value=""
+    onValueChange={(val) => {
+      setMembers((prev) => {
+        const arr = Array.isArray(prev) ? prev : [];
+        if (arr.includes(val)) return arr;
+        return [...arr, val];
+      });
+    }}
+  >
+    <SelectTrigger className="w-full">
+      <SelectValue
+        placeholder={
+          Array.isArray(members) && members.length > 0
+            ? `${members.length} members selected`
+            : "Select members"
+        }
+      />
+    </SelectTrigger>
+
+    <SelectContent className="z-[99999] pointer-events-auto max-h-72 overflow-auto">
+      {employeeLoading ? (
+        <div className="px-3 py-2 text-sm text-gray-500">
+          Loading...
+        </div>
+      ) : employees.length === 0 ? (
+        <div className="px-3 py-2 text-sm text-gray-500">
+          No employees found
+        </div>
+      ) : (
+        employees.map((emp) => (
+          <SelectItem
+            key={emp.employeeId}
+            value={emp.employeeId}
+          >
+            <div className="flex items-center gap-2">
+              {emp.profilePictureUrl ? (
+                <img
+                  src={emp.profilePictureUrl}
+                  className="w-6 h-6 rounded-full"
+                  alt={emp.name}
+                />
+              ) : (
+                <div className="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center text-xs text-white">
+                  {emp.name.charAt(0)}
+                </div>
+              )}
+              <span className="text-sm">
+                {emp.name} ({emp.employeeId})
+              </span>
+            </div>
+          </SelectItem>
+        ))
+      )}
+    </SelectContent>
+  </Select>
+
+  {/* Selected members chips */}
+  {Array.isArray(members) && members.length > 0 && (
+    <div className="mt-2 flex flex-wrap gap-2">
+      {members.map((id) => {
+        const emp = employees.find((e) => e.employeeId === id);
+        return (
+          <span
+            key={id}
+            className="flex items-center gap-1 bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs"
+          >
+            {emp?.name ?? id}
+            <button
+              className="ml-1 text-red-500"
+              onClick={() =>
+                setMembers((prev) =>
+                  Array.isArray(prev)
+                    ? prev.filter((x) => x !== id)
+                    : prev
+                )
+              }
+            >
+              ×
+            </button>
+          </span>
+        );
+      })}
+    </div>
+  )}
+</div>
+
                   </div>
                 </div>
               </div>

@@ -73,11 +73,11 @@ function ProjectCategoryModal({
       }
       const res = await fetch(`${GATEWAY}/api/projects/category`, { headers: { Authorization: `Bearer ${token}` } })
       let data: any = await res.json().catch(() => null)
-      if (typeof data === "string") {
-        try {
-          data = JSON.parse(data)
-        } catch {}
-      }
+      // if (typeof data === "string") {
+      //   try {
+      //     data = JSON.parse(data)
+      //   } catch {}
+      // }
       if (!res.ok) {
         setMessage({ type: "error", text: `Failed to load categories (${res.status})` })
         setCategories([])
@@ -578,6 +578,21 @@ export default function EditProjectPage() {
 
     // write assignedEmployeeIds from selectedEmployeeIds array (comma-separated)
     fd.set("assignedEmployeeIds", selectedEmployeeIds.join(","))
+    // write assignedEmployeeIds from selectedEmployeeIds array
+fd.set("assignedEmployeeIds", selectedEmployeeIds.join(","))
+
+// 🔥 ADD THIS BLOCK
+const budget = fd.get("projectBudget")
+if (!budget || String(budget).trim() === "") {
+  fd.set("projectBudget", "0")
+}
+
+const hours = fd.get("hoursEstimate")
+if (!hours || String(hours).trim() === "") {
+  fd.set("hoursEstimate", "0")
+}
+
+
 
     if (projectStatus && projectStatus !== "none") fd.set("projectStatus", String(projectStatus))
     fd.set("progressPercent", String(Math.max(0, Math.min(100, Math.round(progressPercent || 0)))))
@@ -837,7 +852,6 @@ export default function EditProjectPage() {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="USD">USD $</SelectItem>
-                        <SelectItem value="USD">USD ₹</SelectItem>
                         <SelectItem value="EUR">EUR €</SelectItem>
                       </SelectContent>
                     </Select>

@@ -110,6 +110,12 @@ interface DepartmentItem {
     createAt?: string;
 }
 
+    type EmployeeItem = {
+  employeeId: string
+  name: string
+  profilePictureUrl?: string | null
+};
+
 const OVERRIDES_KEY = "projectProgressOverrides";
 
 export default function AllProjectsPage({ employeeId, }: { employeeId: string }) {
@@ -117,6 +123,11 @@ export default function AllProjectsPage({ employeeId, }: { employeeId: string })
     const [projects, setProjects] = useState<Project[]>([]);
     const [loading, setLoading] = useState(true);
     const [token, setToken] = useState<string | null>(null);
+
+
+
+const [employees, setEmployees] = useState<EmployeeItem[]>([]);
+const [employeeLoading, setEmployeeLoading] = useState(false);
 
     // Filters & UI
     const [searchInput, setSearchInput] = useState("");
@@ -399,6 +410,48 @@ export default function AllProjectsPage({ employeeId, }: { employeeId: string })
         }
     };
 
+    const EMP_BASE = "https://6jnqmj85-80.inc1.devtunnels.ms";
+
+const loadEmployees = useCallback(async () => {
+  setEmployeeLoading(true);
+  try {
+    const token =
+      typeof window !== "undefined"
+        ? localStorage.getItem("accessToken")
+        : null;
+
+    const res = await fetch(`${EMP_BASE}/employee/all`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+      cache: "no-store",
+    });
+
+    if (!res.ok) {
+      console.error("Failed to load employees", res.status);
+      setEmployees([]);
+      return;
+    }
+
+    const data = await res.json();
+    if (Array.isArray(data)) {
+      setEmployees(
+        data.map((e: any) => ({
+          employeeId: e.employeeId,
+          name: e.name,
+          profilePictureUrl: e.profilePictureUrl ?? null,
+        }))
+      );
+    } else {
+      setEmployees([]);
+    }
+  } catch (err) {
+    console.error("Employee load error", err);
+    setEmployees([]);
+  } finally {
+    setEmployeeLoading(false);
+  }
+}, []);
+
+
     const deleteCategory = async (catId: string | number) => {
         if (!confirm("Delete this category?")) return;
         const prev = categories.slice();
@@ -508,6 +561,7 @@ export default function AllProjectsPage({ employeeId, }: { employeeId: string })
             loadCategories(savedToken || null);
             loadClients(savedToken || null);
             loadDepartments(savedToken || null);
+            loadEmployees();
             if (savedToken) getProjects(savedToken);
             else setLoading(false);
         }
@@ -1327,7 +1381,99 @@ export default function AllProjectsPage({ employeeId, }: { employeeId: string })
 
                                         <div>
                                             <label className="text-sm text-gray-600">Assigned to *</label>
-                                            <Input placeholder="Comma separated names or ids" value={Array.isArray(ucMembers) ? ucMembers.join(",") : ucMembers} onChange={(e) => setUcMembers(e.target.value)} />
+<div>
+
+<Select
+  modal={false}
+  value=""
+  onValueChange={(val) => {
+    setUcMembers((prev) => {
+      const arr = Array.isArray(prev)
+        ? prev
+        : String(prev || "").split(",").filter(Boolean);
+
+      if (arr.includes(val)) return arr;
+      return [...arr, val];
+    });
+  }}
+>
+
+
+    <SelectTrigger className="w-full">
+      <SelectValue
+        placeholder={
+          Array.isArray(members) && members.length > 0
+            ? `${members.length} members selected`
+            : "Select members"
+        }
+      />
+    </SelectTrigger>
+
+    <SelectContent className="z-[99999] pointer-events-auto max-h-72 overflow-auto">
+      {employeeLoading ? (
+        <div className="px-3 py-2 text-sm text-gray-500">
+          Loading...
+        </div>
+      ) : employees.length === 0 ? (
+        <div className="px-3 py-2 text-sm text-gray-500">
+          No employees found
+        </div>
+      ) : (
+        employees.map((emp) => (
+          <SelectItem
+            key={emp.employeeId}
+            value={emp.employeeId}
+          >
+            <div className="flex items-center gap-2">
+              {emp.profilePictureUrl ? (
+                <img
+                  src={emp.profilePictureUrl}
+                  className="w-6 h-6 rounded-full"
+                  alt={emp.name}
+                />
+              ) : (
+                <div className="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center text-xs text-white">
+                  {emp.name.charAt(0)}
+                </div>
+              )}
+              <span className="text-sm">
+                {emp.name} ({emp.employeeId})
+              </span>
+            </div>
+          </SelectItem>
+        ))
+      )}
+    </SelectContent>
+  </Select>
+
+  {/* Selected members chips */}
+ {Array.isArray(ucMembers) && ucMembers.length > 0 && (
+
+    <div className="mt-2 flex flex-wrap gap-2">
+      {ucMembers.map((id) => {
+  const emp = employees.find((e) => e.employeeId === id);
+  return (
+    <span key={id} className="flex items-center gap-1 bg-blue-100 px-2 py-1 rounded text-xs">
+      {emp?.name ?? id}
+      <button
+        className="ml-1 text-red-500"
+        onClick={() =>
+          setUcMembers((prev) =>
+            Array.isArray(prev)
+              ? prev.filter((x) => x !== id)
+              : prev
+          )
+        }
+      >
+        ×
+      </button>
+    </span>
+  );
+})}
+
+    </div>
+  )}
+</div>
                                         </div>
 
                                         {/* NEW: Project Status + Project Progress Status row (spans two columns) */}
@@ -2041,7 +2187,96 @@ export default function AllProjectsPage({ employeeId, }: { employeeId: string })
 
                                     <div>
                                         <label className="text-sm text-gray-600">Add Project Members *</label>
-                                        <Input placeholder="Comma separated names" value={Array.isArray(members) ? members.join(",") : members} onChange={(e) => setMembers(e.target.value)} />
+<div>
+  
+
+  <Select
+    modal={false}
+    value=""
+    onValueChange={(val) => {
+      setMembers((prev) => {
+        const arr = Array.isArray(prev) ? prev : [];
+        if (arr.includes(val)) return arr;
+        return [...arr, val];
+      });
+    }}
+  >
+    <SelectTrigger className="w-full">
+      <SelectValue
+        placeholder={
+          Array.isArray(members) && members.length > 0
+            ? `${members.length} members selected`
+            : "Select members"
+        }
+      />
+    </SelectTrigger>
+
+    <SelectContent className="z-[99999] pointer-events-auto max-h-72 overflow-auto">
+      {employeeLoading ? (
+        <div className="px-3 py-2 text-sm text-gray-500">
+          Loading...
+        </div>
+      ) : employees.length === 0 ? (
+        <div className="px-3 py-2 text-sm text-gray-500">
+          No employees found
+        </div>
+      ) : (
+        employees.map((emp) => (
+          <SelectItem
+            key={emp.employeeId}
+            value={emp.employeeId}
+          >
+            <div className="flex items-center gap-2">
+              {emp.profilePictureUrl ? (
+                <img
+                  src={emp.profilePictureUrl}
+                  className="w-6 h-6 rounded-full"
+                  alt={emp.name}
+                />
+              ) : (
+                <div className="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center text-xs text-white">
+                  {emp.name.charAt(0)}
+                </div>
+              )}
+              <span className="text-sm">
+                {emp.name} ({emp.employeeId})
+              </span>
+            </div>
+          </SelectItem>
+        ))
+      )}
+    </SelectContent>
+  </Select>
+
+  {/* Selected members chips */}
+  {Array.isArray(members) && members.length > 0 && (
+    <div className="mt-2 flex flex-wrap gap-2">
+      {members.map((id) => {
+        const emp = employees.find((e) => e.employeeId === id);
+        return (
+          <span
+            key={id}
+            className="flex items-center gap-1 bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs"
+          >
+            {emp?.name ?? id}
+            <button
+              className="ml-1 text-red-500"
+              onClick={() =>
+                setMembers((prev) =>
+                  Array.isArray(prev)
+                    ? prev.filter((x) => x !== id)
+                    : prev
+                )
+              }
+            >
+              ×
+            </button>
+          </span>
+        );
+      })}
+    </div>
+  )}
+</div>
                                     </div>
                                 </div>
                             </div>
