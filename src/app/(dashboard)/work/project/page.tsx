@@ -1583,16 +1583,20 @@ const loadEmployees = useCallback(async () => {
  
 
   <Select
-    modal={false}
-    value=""
-    onValueChange={(val) => {
-      setMembers((prev) => {
-        const arr = Array.isArray(prev) ? prev : [];
-        if (arr.includes(val)) return arr;
-        return [...arr, val];
-      });
-    }}
-  >
+  modal={false}
+  value=""
+  onValueChange={(val) => {
+    setUcMembers((prev) => {
+      const arr = Array.isArray(prev)
+        ? prev
+        : String(prev || "").split(",").filter(Boolean);
+
+      if (arr.includes(val)) return arr;
+      return [...arr, val];
+    });
+  }}
+>
+
     <SelectTrigger className="w-full">
       <SelectValue
         placeholder={
@@ -1641,31 +1645,30 @@ const loadEmployees = useCallback(async () => {
   </Select>
 
   {/* Selected members chips */}
-  {Array.isArray(members) && members.length > 0 && (
+  {Array.isArray(ucMembers) && ucMembers.length > 0 && (
+
     <div className="mt-2 flex flex-wrap gap-2">
-      {members.map((id) => {
-        const emp = employees.find((e) => e.employeeId === id);
-        return (
-          <span
-            key={id}
-            className="flex items-center gap-1 bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs"
-          >
-            {emp?.name ?? id}
-            <button
-              className="ml-1 text-red-500"
-              onClick={() =>
-                setMembers((prev) =>
-                  Array.isArray(prev)
-                    ? prev.filter((x) => x !== id)
-                    : prev
-                )
-              }
-            >
-              ×
-            </button>
-          </span>
-        );
-      })}
+     {ucMembers.map((id) => {
+  const emp = employees.find((e) => e.employeeId === id);
+  return (
+    <span key={id} className="flex items-center gap-1 bg-blue-100 px-2 py-1 rounded text-xs">
+      {emp?.name ?? id}
+      <button
+        className="ml-1 text-red-500"
+        onClick={() =>
+          setUcMembers((prev) =>
+            Array.isArray(prev)
+              ? prev.filter((x) => x !== id)
+              : prev
+          )
+        }
+      >
+        ×
+      </button>
+    </span>
+  );
+})}
+
     </div>
   )}
 </div>
