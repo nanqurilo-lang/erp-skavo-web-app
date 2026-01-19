@@ -162,6 +162,8 @@ function TaskStatistics({ projectId }: { projectId: number }) {
       setError(null);
       try {
         // fetch statuses
+          const token = localStorage.getItem("accessToken") || "";
+
         const statusUrl = `${MAIN}/status`;
         const [sRes, tRes] = await Promise.all([
           axios.get(statusUrl, {

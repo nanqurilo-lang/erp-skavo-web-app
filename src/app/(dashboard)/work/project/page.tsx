@@ -200,10 +200,10 @@ export default function AllProjectsPage() {
   useEffect(() => {
     document.body.style.overflow =
       showFilters ||
-      showAddModal ||
-      showCategoryModal ||
-      showUpdateModal ||
-      calendarOpen
+        showAddModal ||
+        showCategoryModal ||
+        showUpdateModal ||
+        calendarOpen
         ? "hidden"
         : "auto";
   }, [
@@ -255,7 +255,7 @@ export default function AllProjectsPage() {
   const writeProgressOverrides = (map: Record<string, number>) => {
     try {
       localStorage.setItem(OVERRIDES_KEY, JSON.stringify(map));
-    } catch {}
+    } catch { }
   };
   const setProgressOverrideFor = (
     projectId: number,
@@ -307,7 +307,7 @@ export default function AllProjectsPage() {
         if (res.status === 401) {
           try {
             localStorage.removeItem("accessToken");
-          } catch {}
+          } catch { }
           setToken(null);
           setProjects([]);
           setTotalPages(1);
@@ -328,10 +328,10 @@ export default function AllProjectsPage() {
           fetched = data.projects || data.items || [];
           setTotalPages(
             data.totalPages ||
-              Math.max(
-                1,
-                Math.ceil((data.total || itemsPerPage) / itemsPerPage)
-              )
+            Math.max(
+              1,
+              Math.ceil((data.total || itemsPerPage) / itemsPerPage)
+            )
           );
         }
 
@@ -461,9 +461,9 @@ export default function AllProjectsPage() {
           cur.map((c) =>
             c.id === temp.id
               ? {
-                  id: created.id ?? created.name ?? Math.random(),
-                  name: created.name ?? name,
-                }
+                id: created.id ?? created.name ?? Math.random(),
+                name: created.name ?? name,
+              }
               : c
           )
         );
@@ -929,23 +929,23 @@ export default function AllProjectsPage() {
       // fd.append("clientId", client === "none" ? "" : String(client));
 
 
-// ✅ REQUIRED by backend
-fd.append(
-  "projectCategory",
-  category === "none" ? "" : String(category)
-);
+      // ✅ REQUIRED by backend
+      fd.append(
+        "projectCategory",
+        category === "none" ? "" : String(category)
+      );
 
-// department
-fd.append(
-  "department",
-  department === "none" ? "" : String(department)
-);
+      // department
+      fd.append(
+        "department",
+        department === "none" ? "" : String(department)
+      );
 
-// client
-fd.append(
-  "clientId",
-  client === "none" ? "" : String(client)
-);
+      // client
+      fd.append(
+        "clientId",
+        client === "none" ? "" : String(client)
+      );
 
       fd.append("projectSummary", summary || "");
 
@@ -954,9 +954,9 @@ fd.append(
       const assignedArray = Array.isArray(members)
         ? members
         : String(members || "")
-            .split(",")
-            .map((s) => s.trim())
-            .filter(Boolean);
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean);
 
       // backend expects a Set<String> — send JSON array under 'assignedEmployeeIds'
       fd.append("assignedEmployeeIds", JSON.stringify(assignedArray));
@@ -968,10 +968,10 @@ fd.append(
       // fd.append("budget", budget !== "" ? String(budget) : "0");
 
 
-fd.append(
-  "projectBudget",
-  budget !== "" ? String(budget) : "0"
-);
+      fd.append(
+        "projectBudget",
+        budget !== "" ? String(budget) : "0"
+      );
 
 
       fd.append(
@@ -1003,7 +1003,7 @@ fd.append(
         try {
           const json = JSON.parse(text || "{}");
           if (json && json.message) message = json.message;
-        } catch {}
+        } catch { }
         alert(message);
         setSubmitting(false);
         return;
@@ -1011,7 +1011,7 @@ fd.append(
 
       try {
         await res.json();
-      } catch {}
+      } catch { }
       await getProjects(resolvedToken);
       setShowAddModal(false);
       resetAddForm();
@@ -1139,11 +1139,11 @@ fd.append(
           //     : data.members ?? ""
           // );
 
-setUcMembers(
-  Array.isArray(data.assignedEmployees)
-    ? data.assignedEmployees.map((e: any) => e.employeeId).join(",")
-    : ""
-);
+          setUcMembers(
+            Array.isArray(data.assignedEmployees)
+              ? data.assignedEmployees.map((e: any) => e.employeeId).join(",")
+              : ""
+          );
 
 
           setUcCurrency(data.currency ?? "USD");
@@ -1176,240 +1176,240 @@ setUcMembers(
     const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) =>
       setUcFile(e.target.files?.[0] ?? null);
 
-//     const saveUpdate = async () => {
-//       if (!projectId) return;
-//       if (!ucProjectName.trim()) return alert("Project name required");
-//       setSaving(true);
-//       try {
-//         const fd = new FormData();
-//         if (ucShortCode) fd.append("shortCode", ucShortCode);
-//         fd.append("name", ucProjectName);
-//         if (ucStartDate) fd.append("startDate", ucStartDate);
-//         // always append deadline key
-//         if (ucNoDeadline) fd.append("deadline", "");
-//         else fd.append("deadline", ucDeadline || "");
-//         fd.append("noDeadline", String(Boolean(ucNoDeadline)));
-//         // fd.append("category", ucCategory === "none" ? "" : ucCategory);
-//         // fd.append("department", ucDepartment === "none" ? "" : ucDepartment);
-//         // fd.append("clientId", ucClient === "none" ? "" : ucClient);
+    //     const saveUpdate = async () => {
+    //       if (!projectId) return;
+    //       if (!ucProjectName.trim()) return alert("Project name required");
+    //       setSaving(true);
+    //       try {
+    //         const fd = new FormData();
+    //         if (ucShortCode) fd.append("shortCode", ucShortCode);
+    //         fd.append("name", ucProjectName);
+    //         if (ucStartDate) fd.append("startDate", ucStartDate);
+    //         // always append deadline key
+    //         if (ucNoDeadline) fd.append("deadline", "");
+    //         else fd.append("deadline", ucDeadline || "");
+    //         fd.append("noDeadline", String(Boolean(ucNoDeadline)));
+    //         // fd.append("category", ucCategory === "none" ? "" : ucCategory);
+    //         // fd.append("department", ucDepartment === "none" ? "" : ucDepartment);
+    //         // fd.append("clientId", ucClient === "none" ? "" : ucClient);
 
 
 
-// fd.append(
-//   "projectCategory",
-//   ucCategory === "none" ? "" : ucCategory
-// );
+    // fd.append(
+    //   "projectCategory",
+    //   ucCategory === "none" ? "" : ucCategory
+    // );
 
-// fd.append(
-//   "department",
-//   ucDepartment === "none" ? "" : ucDepartment
-// );
+    // fd.append(
+    //   "department",
+    //   ucDepartment === "none" ? "" : ucDepartment
+    // );
 
-// fd.append(
-//   "clientId",
-//   ucClient === "none" ? "" : ucClient
-// );
+    // fd.append(
+    //   "clientId",
+    //   ucClient === "none" ? "" : ucClient
+    // );
 
-// fd.append("projectSummary", ucSummary || "");
+    // fd.append("projectSummary", ucSummary || "");
 
-// fd.append(
-//   "projectBudget",
-//   ucBudget !== "" ? String(ucBudget) : "0"
-// );
+    // fd.append(
+    //   "projectBudget",
+    //   ucBudget !== "" ? String(ucBudget) : "0"
+    // );
 
-// fd.append("currency", ucCurrency || "USD");
-
-
-
-//         fd.append("summary", ucSummary || "");
-//         fd.append("tasksNeedAdminApproval", String(Boolean(ucNeedsApproval)));
-//         const assignedArray = Array.isArray(ucMembers)
-//           ? ucMembers
-//           : String(ucMembers || "")
-//               .split(",")
-//               .map((s) => s.trim())
-//               .filter(Boolean);
-//         fd.append("assignedEmployeeIds", JSON.stringify(assignedArray));
-
-//         if (ucFile) fd.append("companyFile", ucFile);
-//         fd.append("currency", ucCurrency || "");
-//         fd.append("budget", ucBudget || "0");
-//         fd.append("hoursEstimate", ucHours || "0");
-//         fd.append("allowManualTimeLogs", String(Boolean(ucAllowManualTime)));
-
-//         if (ucProjectStatus && ucProjectStatus !== "none")
-//           fd.append("projectStatus", String(ucProjectStatus));
-//         if (
-//           typeof ucProgress !== "undefined" &&
-//           ucProgress !== null &&
-//           !Number.isNaN(Number(ucProgress))
-//         ) {
-//           fd.append(
-//             "progressPercent",
-//             String(Math.max(0, Math.min(100, Math.round(ucProgress || 0))))
-//           );
-//         }
-//         fd.append(
-//           "calculateProgressThroughTasks",
-//           String(Boolean(ucCalculateThroughTasks))
-//         );
-
-//         fd.append("addedBy", String(ucAddedBy || ""));
-
-//         const resolvedToken =
-//           token ||
-//           (typeof window !== "undefined"
-//             ? localStorage.getItem("accessToken")
-//             : null);
-
-//         const res = await fetch(`${MAIN}/api/projects/${projectId}`, {
-//           method: "PUT",
-//           body: fd,
-//           headers: resolvedToken
-//             ? { Authorization: `Bearer ${resolvedToken}` }
-//             : undefined,
-//         });
-
-//         if (!res.ok) {
-//           const text = await res.text().catch(() => "");
-//           console.error("Update failed", res.status, text);
-//           alert("Failed to update project");
-//           return;
-//         }
-
-//         let json: any = null;
-//         try {
-//           json = await res.json();
-//         } catch {
-//           json = null;
-//         }
-
-//         if (json && json.id) {
-//           setProjects((ps) =>
-//             ps.map((p) => (p.id === json.id ? { ...p, ...json } : p))
-//           );
-//         } else {
-//           await getProjects(resolvedToken);
-//         }
-
-//         onSaved();
-//         onClose();
-//         resetLocal();
-//       } catch (err) {
-//         console.error("Update error:", err);
-//         alert("Failed to update project");
-//       } finally {
-//         setSaving(false);
-//       }
-//     };
+    // fd.append("currency", ucCurrency || "USD");
 
 
 
-const saveUpdate = async () => {
-  if (!projectId) return;
-  if (!ucProjectName.trim()) return alert("Project name required");
+    //         fd.append("summary", ucSummary || "");
+    //         fd.append("tasksNeedAdminApproval", String(Boolean(ucNeedsApproval)));
+    //         const assignedArray = Array.isArray(ucMembers)
+    //           ? ucMembers
+    //           : String(ucMembers || "")
+    //               .split(",")
+    //               .map((s) => s.trim())
+    //               .filter(Boolean);
+    //         fd.append("assignedEmployeeIds", JSON.stringify(assignedArray));
 
-  setSaving(true);
-  try {
-    const fd = new FormData();
+    //         if (ucFile) fd.append("companyFile", ucFile);
+    //         fd.append("currency", ucCurrency || "");
+    //         fd.append("budget", ucBudget || "0");
+    //         fd.append("hoursEstimate", ucHours || "0");
+    //         fd.append("allowManualTimeLogs", String(Boolean(ucAllowManualTime)));
 
-    fd.append("shortCode", ucShortCode);
-    fd.append("name", ucProjectName);
-    fd.append("projectName", ucProjectName);
+    //         if (ucProjectStatus && ucProjectStatus !== "none")
+    //           fd.append("projectStatus", String(ucProjectStatus));
+    //         if (
+    //           typeof ucProgress !== "undefined" &&
+    //           ucProgress !== null &&
+    //           !Number.isNaN(Number(ucProgress))
+    //         ) {
+    //           fd.append(
+    //             "progressPercent",
+    //             String(Math.max(0, Math.min(100, Math.round(ucProgress || 0))))
+    //           );
+    //         }
+    //         fd.append(
+    //           "calculateProgressThroughTasks",
+    //           String(Boolean(ucCalculateThroughTasks))
+    //         );
 
-    fd.append("startDate", ucStartDate || "");
-    fd.append("deadline", ucNoDeadline ? "" : ucDeadline || "");
-    fd.append("noDeadline", String(ucNoDeadline));
+    //         fd.append("addedBy", String(ucAddedBy || ""));
 
-    // ✅ REQUIRED BACKEND KEYS
-    fd.append(
-      "projectCategory",
-      ucCategory === "none" ? "" : ucCategory
-    );
-    fd.append(
-      "department",
-      ucDepartment === "none" ? "" : ucDepartment
-    );
-    fd.append(
-      "clientId",
-      ucClient === "none" ? "" : ucClient
-    );
+    //         const resolvedToken =
+    //           token ||
+    //           (typeof window !== "undefined"
+    //             ? localStorage.getItem("accessToken")
+    //             : null);
 
-    fd.append("projectSummary", ucSummary || "");
-    fd.append(
-      "projectBudget",
-      ucBudget !== "" ? String(ucBudget) : "0"
-    );
-    fd.append("currency", ucCurrency || "USD");
+    //         const res = await fetch(`${MAIN}/api/projects/${projectId}`, {
+    //           method: "PUT",
+    //           body: fd,
+    //           headers: resolvedToken
+    //             ? { Authorization: `Bearer ${resolvedToken}` }
+    //             : undefined,
+    //         });
 
-    fd.append(
-      "tasksNeedAdminApproval",
-      String(Boolean(ucNeedsApproval))
-    );
+    //         if (!res.ok) {
+    //           const text = await res.text().catch(() => "");
+    //           console.error("Update failed", res.status, text);
+    //           alert("Failed to update project");
+    //           return;
+    //         }
 
-    const assignedIds = String(ucMembers || "")
-      .split(",")
-      .map((s) => s.trim())
-      .filter(Boolean);
+    //         let json: any = null;
+    //         try {
+    //           json = await res.json();
+    //         } catch {
+    //           json = null;
+    //         }
 
-    fd.append("assignedEmployeeIds", JSON.stringify(assignedIds));
+    //         if (json && json.id) {
+    //           setProjects((ps) =>
+    //             ps.map((p) => (p.id === json.id ? { ...p, ...json } : p))
+    //           );
+    //         } else {
+    //           await getProjects(resolvedToken);
+    //         }
 
-    if (ucFile) fd.append("companyFile", ucFile);
+    //         onSaved();
+    //         onClose();
+    //         resetLocal();
+    //       } catch (err) {
+    //         console.error("Update error:", err);
+    //         alert("Failed to update project");
+    //       } finally {
+    //         setSaving(false);
+    //       }
+    //     };
 
-    fd.append(
-      "hoursEstimate",
-      ucHours !== "" ? String(ucHours) : "0"
-    );
-    fd.append(
-      "allowManualTimeLogs",
-      String(Boolean(ucAllowManualTime))
-    );
 
-    if (ucProjectStatus !== "none") {
-      fd.append("projectStatus", ucProjectStatus);
-    }
 
-    fd.append(
-      "progressPercent",
-      String(Math.max(0, Math.min(100, ucProgress)))
-    );
+    const saveUpdate = async () => {
+      if (!projectId) return;
+      if (!ucProjectName.trim()) return alert("Project name required");
 
-    fd.append(
-      "calculateProgressThroughTasks",
-      String(Boolean(ucCalculateThroughTasks))
-    );
+      setSaving(true);
+      try {
+        const fd = new FormData();
 
-    fd.append("addedBy", ucAddedBy || "you");
+        fd.append("shortCode", ucShortCode);
+        fd.append("name", ucProjectName);
+        fd.append("projectName", ucProjectName);
 
-    const resolvedToken =
-      token || localStorage.getItem("accessToken");
+        fd.append("startDate", ucStartDate || "");
+        fd.append("deadline", ucNoDeadline ? "" : ucDeadline || "");
+        fd.append("noDeadline", String(ucNoDeadline));
 
-    const res = await fetch(`${MAIN}/api/projects/${projectId}`, {
-      method: "PUT",
-      body: fd,
-      headers: resolvedToken
-        ? { Authorization: `Bearer ${resolvedToken}` }
-        : undefined,
-    });
+        // ✅ REQUIRED BACKEND KEYS
+        fd.append(
+          "projectCategory",
+          ucCategory === "none" ? "" : ucCategory
+        );
+        fd.append(
+          "department",
+          ucDepartment === "none" ? "" : ucDepartment
+        );
+        fd.append(
+          "clientId",
+          ucClient === "none" ? "" : ucClient
+        );
 
-    if (!res.ok) {
-      const text = await res.text();
-      console.error(text);
-      alert("Failed to update project");
-      return;
-    }
+        fd.append("projectSummary", ucSummary || "");
+        fd.append(
+          "projectBudget",
+          ucBudget !== "" ? String(ucBudget) : "0"
+        );
+        fd.append("currency", ucCurrency || "USD");
 
-    await res.json().catch(() => {});
-    onSaved();
-    onClose();
-    resetLocal();
-  } catch (err) {
-    console.error(err);
-    alert("Update failed");
-  } finally {
-    setSaving(false);
-  }
-};
+        fd.append(
+          "tasksNeedAdminApproval",
+          String(Boolean(ucNeedsApproval))
+        );
+
+        const assignedIds = String(ucMembers || "")
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean);
+
+        fd.append("assignedEmployeeIds", JSON.stringify(assignedIds));
+
+        if (ucFile) fd.append("companyFile", ucFile);
+
+        fd.append(
+          "hoursEstimate",
+          ucHours !== "" ? String(ucHours) : "0"
+        );
+        fd.append(
+          "allowManualTimeLogs",
+          String(Boolean(ucAllowManualTime))
+        );
+
+        if (ucProjectStatus !== "none") {
+          fd.append("projectStatus", ucProjectStatus);
+        }
+
+        fd.append(
+          "progressPercent",
+          String(Math.max(0, Math.min(100, ucProgress)))
+        );
+
+        fd.append(
+          "calculateProgressThroughTasks",
+          String(Boolean(ucCalculateThroughTasks))
+        );
+
+        fd.append("addedBy", ucAddedBy || "you");
+
+        const resolvedToken =
+          token || localStorage.getItem("accessToken");
+
+        const res = await fetch(`${MAIN}/api/projects/${projectId}`, {
+          method: "PUT",
+          body: fd,
+          headers: resolvedToken
+            ? { Authorization: `Bearer ${resolvedToken}` }
+            : undefined,
+        });
+
+        if (!res.ok) {
+          const text = await res.text();
+          console.error(text);
+          alert("Failed to update project");
+          return;
+        }
+
+        await res.json().catch(() => { });
+        onSaved();
+        onClose();
+        resetLocal();
+      } catch (err) {
+        console.error(err);
+        alert("Update failed");
+      } finally {
+        setSaving(false);
+      }
+    };
 
 
 
@@ -1422,7 +1422,7 @@ const saveUpdate = async () => {
     };
 
     return (
-   <div className="fixed inset-0 z-[12000] flex items-start justify-center px-4 py-8 overflow-y-auto">
+      <div className="fixed inset-0 z-[12000] flex items-start justify-center px-4 py-8 overflow-y-auto">
 
         <div
           className="fixed inset-0 bg-black/40"
@@ -1433,7 +1433,7 @@ const saveUpdate = async () => {
         />
         {/* <div className="relative w-full max-w-4xl bg-white rounded-xl shadow-2xl overflow-y-auto z-10"> */}
 
-<div className="relative w-full max-w-4xl bg-white rounded-xl shadow-2xl z-10 max-h-[90vh] flex flex-col">
+        <div className="relative w-full max-w-4xl bg-white rounded-xl shadow-2xl z-10 max-h-[90vh] flex flex-col">
 
 
           <div className="flex items-center justify-between p-4 border-b">
@@ -1451,7 +1451,7 @@ const saveUpdate = async () => {
 
           {/* <div className="p-6 space-y-6"> */}
 
-<div className="p-6 space-y-6 overflow-y-auto flex-1">
+          <div className="p-6 space-y-6 overflow-y-auto flex-1">
 
 
             {loadingLocal ? (
@@ -1544,24 +1544,24 @@ const saveUpdate = async () => {
                         </Select> */}
 
 
-<Select
-  modal={false}
-  value={ucCategory}
-  onValueChange={(v) => setUcCategory(v)}
->
-  <SelectTrigger className="w-full">
-    <SelectValue placeholder="--" />
-  </SelectTrigger>
+                        <Select
+                          modal={false}
+                          value={ucCategory}
+                          onValueChange={(v) => setUcCategory(v)}
+                        >
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="--" />
+                          </SelectTrigger>
 
-  <SelectContent className="z-[99999] pointer-events-auto">
-    <SelectItem value="none">--</SelectItem>
-    {categoryOptions.map((c) => (
-      <SelectItem key={c.id} value={String(c.id)}>
-        {c.name}
-      </SelectItem>
-    ))}
-  </SelectContent>
-</Select>
+                          <SelectContent className="z-[99999] pointer-events-auto">
+                            <SelectItem value="none">--</SelectItem>
+                            {categoryOptions.map((c) => (
+                              <SelectItem key={c.id} value={String(c.id)}>
+                                {c.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
 
 
                         <Button variant="outline" onClick={openCategoryModal}>
@@ -1592,24 +1592,24 @@ const saveUpdate = async () => {
                       </Select> */}
 
 
-<Select
-  modal={false}
-  value={ucDepartment}
-  onValueChange={(v) => setUcDepartment(v)}
->
-  <SelectTrigger className="w-full">
-    <SelectValue placeholder="--" />
-  </SelectTrigger>
+                      <Select
+                        modal={false}
+                        value={ucDepartment}
+                        onValueChange={(v) => setUcDepartment(v)}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="--" />
+                        </SelectTrigger>
 
-  <SelectContent className="z-[99999] pointer-events-auto">
-    <SelectItem value="none">--</SelectItem>
-    {departmentOptions.map((d) => (
-      <SelectItem key={d.id} value={String(d.id)}>
-        {d.name}
-      </SelectItem>
-    ))}
-  </SelectContent>
-</Select>
+                        <SelectContent className="z-[99999] pointer-events-auto">
+                          <SelectItem value="none">--</SelectItem>
+                          {departmentOptions.map((d) => (
+                            <SelectItem key={d.id} value={String(d.id)}>
+                              {d.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
 
 
                     </div>
@@ -1634,24 +1634,24 @@ const saveUpdate = async () => {
                       </Select> */}
 
 
-<Select
-  modal={false}
-  value={ucClient}
-  onValueChange={(v) => setUcClient(v)}
->
-  <SelectTrigger className="w-full">
-    <SelectValue placeholder="--" />
-  </SelectTrigger>
+                      <Select
+                        modal={false}
+                        value={ucClient}
+                        onValueChange={(v) => setUcClient(v)}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="--" />
+                        </SelectTrigger>
 
-  <SelectContent className="z-[99999] pointer-events-auto">
-    <SelectItem value="none">--</SelectItem>
-    {clientOptions.map((c) => (
-      <SelectItem key={c.id} value={String(c.id)}>
-        {c.name}
-      </SelectItem>
-    ))}
-  </SelectContent>
-</Select>
+                        <SelectContent className="z-[99999] pointer-events-auto">
+                          <SelectItem value="none">--</SelectItem>
+                          {clientOptions.map((c) => (
+                            <SelectItem key={c.id} value={String(c.id)}>
+                              {c.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
 
 
 
@@ -1866,30 +1866,30 @@ const saveUpdate = async () => {
                       </Select> */}
 
 
-<Select
-  modal={false}
-  value={ucCurrency}
-  onValueChange={(v) => setUcCurrency(v)}
->
-  <SelectTrigger className="w-full">
-    <SelectValue placeholder="USD" />
-  </SelectTrigger>
+                      <Select
+                        modal={false}
+                        value={ucCurrency}
+                        onValueChange={(v) => setUcCurrency(v)}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="USD" />
+                        </SelectTrigger>
 
-  <SelectContent className="z-[99999] pointer-events-auto">
-    <SelectItem value="USD">USD $ (US Dollar)</SelectItem>
-    <SelectItem value="INR">INR ₹ (Indian Rupee)</SelectItem>
-    <SelectItem value="EUR">EUR € (Euro)</SelectItem>
-    <SelectItem value="GBP">GBP £ (British Pound)</SelectItem>
-    <SelectItem value="CHF">CHF ₣ (Swiss Franc)</SelectItem>
-    <SelectItem value="SEK">SEK kr</SelectItem>
-    <SelectItem value="NOK">NOK kr</SelectItem>
-    <SelectItem value="DKK">DKK kr</SelectItem>
-    <SelectItem value="PLN">PLN zł</SelectItem>
-    <SelectItem value="CZK">CZK Kč</SelectItem>
-    <SelectItem value="HUF">HUF Ft</SelectItem>
-    <SelectItem value="RON">RON lei</SelectItem>
-  </SelectContent>
-</Select>
+                        <SelectContent className="z-[99999] pointer-events-auto">
+                          <SelectItem value="USD">USD $ (US Dollar)</SelectItem>
+                          <SelectItem value="INR">INR ₹ (Indian Rupee)</SelectItem>
+                          <SelectItem value="EUR">EUR € (Euro)</SelectItem>
+                          <SelectItem value="GBP">GBP £ (British Pound)</SelectItem>
+                          <SelectItem value="CHF">CHF ₣ (Swiss Franc)</SelectItem>
+                          <SelectItem value="SEK">SEK kr</SelectItem>
+                          <SelectItem value="NOK">NOK kr</SelectItem>
+                          <SelectItem value="DKK">DKK kr</SelectItem>
+                          <SelectItem value="PLN">PLN zł</SelectItem>
+                          <SelectItem value="CZK">CZK Kč</SelectItem>
+                          <SelectItem value="HUF">HUF Ft</SelectItem>
+                          <SelectItem value="RON">RON lei</SelectItem>
+                        </SelectContent>
+                      </Select>
 
 
                     </div>
@@ -2121,8 +2121,8 @@ const saveUpdate = async () => {
     const dl = p.noDeadline
       ? "No Deadline"
       : p.deadline
-      ? new Date(p.deadline).toLocaleDateString()
-      : "-";
+        ? new Date(p.deadline).toLocaleDateString()
+        : "-";
     const progress = Math.max(0, Math.min(100, p.progressPercent ?? 0));
     const barColor = getProgressColor(progress);
 
@@ -2245,9 +2245,8 @@ const saveUpdate = async () => {
                         <button
                           key={s}
                           onClick={() => patchStatus(p.id, s)}
-                          className={`w-full text-left px-3 py-2 rounded text-sm hover:bg-gray-50 ${
-                            s === p.projectStatus ? "font-medium" : ""
-                          }`}
+                          className={`w-full text-left px-3 py-2 rounded text-sm hover:bg-gray-50 ${s === p.projectStatus ? "font-medium" : ""
+                            }`}
                         >
                           {s}
                         </button>
@@ -2498,9 +2497,8 @@ const saveUpdate = async () => {
                 {/* List */}
                 <button
                   onClick={() => toggleView("list")}
-                  className={`px-3 py-2 hover:bg-gray-50 ${
-                    viewMode === "list" && !calendarOpen ? "bg-gray-100" : ""
-                  }`}
+                  className={`px-3 py-2 hover:bg-gray-50 ${viewMode === "list" && !calendarOpen ? "bg-gray-100" : ""
+                    }`}
                   title="List view"
                 >
                   <List className="w-4 h-4" />
@@ -2509,11 +2507,10 @@ const saveUpdate = async () => {
                 {/* Grid / Table (default) */}
                 <button
                   onClick={() => toggleView("grid")}
-                  className={`px-3 py-2 hover:bg-gray-50 ${
-                    viewMode === "grid" && !calendarOpen
+                  className={`px-3 py-2 hover:bg-gray-50 ${viewMode === "grid" && !calendarOpen
                       ? "bg-violet-600 text-white"
                       : ""
-                  }`}
+                    }`}
                   title="Grid / Table view"
                 >
                   <Grid className="w-4 h-4" />
@@ -2524,9 +2521,8 @@ const saveUpdate = async () => {
                   onClick={() => {
                     toggleArchivedOnly();
                   }}
-                  className={`px-3 py-2 hover:bg-gray-50 ${
-                    showArchivedOnly ? "bg-gray-100" : ""
-                  }`}
+                  className={`px-3 py-2 hover:bg-gray-50 ${showArchivedOnly ? "bg-gray-100" : ""
+                    }`}
                   title={
                     showArchivedOnly
                       ? "Showing archived projects"
@@ -2541,9 +2537,8 @@ const saveUpdate = async () => {
                   onClick={() => {
                     togglePinnedOnly();
                   }}
-                  className={`px-3 py-2 hover:bg-gray-50 ${
-                    showPinnedOnly ? "bg-gray-100" : ""
-                  }`}
+                  className={`px-3 py-2 hover:bg-gray-50 ${showPinnedOnly ? "bg-gray-100" : ""
+                    }`}
                   title={
                     showPinnedOnly ? "Showing pinned only" : "Show pinned only"
                   }
@@ -2555,9 +2550,8 @@ const saveUpdate = async () => {
               {/* Calendar toggle (separate button to the right) */}
               <button
                 onClick={() => toggleView("calendar")}
-                className={`w-10 h-10 rounded bg-white border flex items-center justify-center ${
-                  calendarOpen ? "ring-2 ring-indigo-300" : ""
-                }`}
+                className={`w-10 h-10 rounded bg-white border flex items-center justify-center ${calendarOpen ? "ring-2 ring-indigo-300" : ""
+                  }`}
                 title="Calendar view"
               >
                 <Calendar className="w-4 h-4 text-gray-600" />
@@ -2575,8 +2569,8 @@ const saveUpdate = async () => {
                 {showArchivedOnly
                   ? "Viewing: Archived"
                   : showPinnedOnly
-                  ? "Viewing: Pinned"
-                  : "All active"}
+                    ? "Viewing: Pinned"
+                    : "All active"}
               </div>
             </div>
 
@@ -2588,88 +2582,88 @@ const saveUpdate = async () => {
 
                 <ProjectCalendarMonth />
               ) : // {/* </div> */}
-              viewMode === "list" ? (
-                // Compact list
-                <div>
-                  {filteredProjects.length === 0 ? (
-                    <div className="p-6 text-center text-gray-500">
-                      No projects found
-                    </div>
-                  ) : (
-                    <div className="space-y-3">
-                      {filteredProjects.map((p) => (
-                        <div
-                          key={p.id}
-                          className="flex items-center justify-between border rounded p-3 bg-white"
-                        >
-                          <div className="flex items-center gap-4">
-                            <div className="text-sm font-medium w-28">
-                              {projectCodeFor(p)}
-                            </div>
-                            <div className="font-medium">{p.name}</div>
-                            <div className="text-xs text-gray-500">
-                              {p.client?.name ?? "Client"}
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <div className="text-sm">
-                              {p.progressPercent ?? 0}%
-                            </div>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() =>
-                                window.location.assign(`/work/project/${p.id}`)
-                              }
-                            >
-                              View
-                            </Button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ) : (
-                // grid / table (default)
-                <div>
-                  <Table>
-                    <TableHeader>
-                      <TableRow className="bg-blue-50">
-                        <TableHead className="px-4 py-3">Code</TableHead>
-                        <TableHead className="px-4 py-3">
-                          Project Name
-                        </TableHead>
-                        <TableHead className="px-4 py-3">Members</TableHead>
-                        <TableHead className="px-4 py-3">Start Date</TableHead>
-                        <TableHead className="px-4 py-3">Deadline</TableHead>
-                        <TableHead className="px-4 py-3">Client</TableHead>
-                        <TableHead className="px-4 py-3">Status</TableHead>
-                        <TableHead className="px-4 py-3 text-right">
-                          Action
-                        </TableHead>
-                      </TableRow>
-                    </TableHeader>
-
-                    <TableBody>
-                      {filteredProjects.length === 0 ? (
-                        <TableRow>
-                          <TableCell
-                            colSpan={8}
-                            className="py-8 text-center text-gray-500"
+                viewMode === "list" ? (
+                  // Compact list
+                  <div>
+                    {filteredProjects.length === 0 ? (
+                      <div className="p-6 text-center text-gray-500">
+                        No projects found
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        {filteredProjects.map((p) => (
+                          <div
+                            key={p.id}
+                            className="flex items-center justify-between border rounded p-3 bg-white"
                           >
-                            No projects found
-                          </TableCell>
+                            <div className="flex items-center gap-4">
+                              <div className="text-sm font-medium w-28">
+                                {projectCodeFor(p)}
+                              </div>
+                              <div className="font-medium">{p.name}</div>
+                              <div className="text-xs text-gray-500">
+                                {p.client?.name ?? "Client"}
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-3">
+                              <div className="text-sm">
+                                {p.progressPercent ?? 0}%
+                              </div>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() =>
+                                  window.location.assign(`/work/project/${p.id}`)
+                                }
+                              >
+                                View
+                              </Button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  // grid / table (default)
+                  <div>
+                    <Table>
+                      <TableHeader>
+                        <TableRow className="bg-blue-50">
+                          <TableHead className="px-4 py-3">Code</TableHead>
+                          <TableHead className="px-4 py-3">
+                            Project Name
+                          </TableHead>
+                          <TableHead className="px-4 py-3">Members</TableHead>
+                          <TableHead className="px-4 py-3">Start Date</TableHead>
+                          <TableHead className="px-4 py-3">Deadline</TableHead>
+                          <TableHead className="px-4 py-3">Client</TableHead>
+                          <TableHead className="px-4 py-3">Status</TableHead>
+                          <TableHead className="px-4 py-3 text-right">
+                            Action
+                          </TableHead>
                         </TableRow>
-                      ) : (
-                        filteredProjects.map((p) => (
-                          <ProjectRow key={p.id} p={p} />
-                        ))
-                      )}
-                    </TableBody>
-                  </Table>
-                </div>
-              )}
+                      </TableHeader>
+
+                      <TableBody>
+                        {filteredProjects.length === 0 ? (
+                          <TableRow>
+                            <TableCell
+                              colSpan={8}
+                              className="py-8 text-center text-gray-500"
+                            >
+                              No projects found
+                            </TableCell>
+                          </TableRow>
+                        ) : (
+                          filteredProjects.map((p) => (
+                            <ProjectRow key={p.id} p={p} />
+                          ))
+                        )}
+                      </TableBody>
+                    </Table>
+                  </div>
+                )}
             </div>
           </div>
 
@@ -2712,20 +2706,18 @@ const saveUpdate = async () => {
       <div
         aria-hidden={!showFilters}
         onClick={closeFilters}
-        className={`fixed inset-0 transition-opacity duration-300 z-[9990] ${
-          showFilters
+        className={`fixed inset-0 transition-opacity duration-300 z-[9990] ${showFilters
             ? "opacity-100 pointer-events-auto"
             : "opacity-0 pointer-events-none"
-        }`}
+          }`}
         style={{ backgroundColor: "rgba(0,0,0,0.3)" }}
       />
 
       {/* DRAWER */}
       <aside
         aria-hidden={!showFilters}
-        className={`fixed right-0 top-0 h-full w-[360px] bg-white shadow-xl transform transition-transform duration-300 z-[9999] ${
-          showFilters ? "translate-x-0" : "translate-x-full"
-        }`}
+        className={`fixed right-0 top-0 h-full w-[360px] bg-white shadow-xl transform transition-transform duration-300 z-[9999] ${showFilters ? "translate-x-0" : "translate-x-full"
+          }`}
         role="dialog"
         aria-modal="true"
       >
@@ -2930,24 +2922,24 @@ const saveUpdate = async () => {
                       </Select> */}
 
 
-<Select
-  modal={false}
-  value={category}
-  onValueChange={(v) => setCategory(v)}
->
-  <SelectTrigger className="w-full">
-    <SelectValue placeholder="--" />
-  </SelectTrigger>
+                      <Select
+                        modal={false}
+                        value={category}
+                        onValueChange={(v) => setCategory(v)}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="--" />
+                        </SelectTrigger>
 
-  <SelectContent className="z-[99999]">
-    <SelectItem value="none">--</SelectItem>
-    {categoryOptions.map((c) => (
-      <SelectItem key={c.id} value={String(c.id)}>
-        {c.name}
-      </SelectItem>
-    ))}
-  </SelectContent>
-</Select>
+                        <SelectContent className="z-[99999]">
+                          <SelectItem value="none">--</SelectItem>
+                          {categoryOptions.map((c) => (
+                            <SelectItem key={c.id} value={String(c.id)}>
+                              {c.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
 
 
                       <Button variant="outline" onClick={openCategoryModal}>
@@ -2979,24 +2971,24 @@ const saveUpdate = async () => {
 
 
 
-<Select
-  modal={false}
-  value={department}
-  onValueChange={(v) => setDepartment(v)}
->
-  <SelectTrigger className="w-full">
-    <SelectValue placeholder="--" />
-  </SelectTrigger>
+                    <Select
+                      modal={false}
+                      value={department}
+                      onValueChange={(v) => setDepartment(v)}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="--" />
+                      </SelectTrigger>
 
-  <SelectContent className="z-[99999]">
-    <SelectItem value="none">--</SelectItem>
-    {departmentOptions.map((d) => (
-      <SelectItem key={d.id} value={String(d.id)}>
-        {d.name}
-      </SelectItem>
-    ))}
-  </SelectContent>
-</Select>
+                      <SelectContent className="z-[99999]">
+                        <SelectItem value="none">--</SelectItem>
+                        {departmentOptions.map((d) => (
+                          <SelectItem key={d.id} value={String(d.id)}>
+                            {d.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
 
 
                   </div>
@@ -3024,24 +3016,24 @@ const saveUpdate = async () => {
 
 
 
-<Select
-  modal={false}
-  value={client}
-  onValueChange={(v) => setClientField(v)}
->
-  <SelectTrigger className="w-full">
-    <SelectValue placeholder="--" />
-  </SelectTrigger>
+                    <Select
+                      modal={false}
+                      value={client}
+                      onValueChange={(v) => setClientField(v)}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="--" />
+                      </SelectTrigger>
 
-  <SelectContent className="z-[99999]">
-    <SelectItem value="none">--</SelectItem>
-    {clientOptions.map((c) => (
-      <SelectItem key={c.id} value={String(c.id)}>
-        {c.name}
-      </SelectItem>
-    ))}
-  </SelectContent>
-</Select>
+                      <SelectContent className="z-[99999]">
+                        <SelectItem value="none">--</SelectItem>
+                        {clientOptions.map((c) => (
+                          <SelectItem key={c.id} value={String(c.id)}>
+                            {c.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
 
 
                   </div>
@@ -3139,30 +3131,30 @@ const saveUpdate = async () => {
                     </Select> */}
 
 
-<Select
-  modal={false}
-  value={currency}
-  onValueChange={(v) => setCurrency(v)}
->
-  <SelectTrigger className="w-full">
-    <SelectValue placeholder="Select currency" />
-  </SelectTrigger>
+                    <Select
+                      modal={false}
+                      value={currency}
+                      onValueChange={(v) => setCurrency(v)}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select currency" />
+                      </SelectTrigger>
 
-  <SelectContent className="z-[99999] pointer-events-auto">
-    <SelectItem value="USD">USD $ (US Dollar)</SelectItem>
-    <SelectItem value="INR">INR ₹ (Indian Rupee)</SelectItem>
-    <SelectItem value="EUR">EUR € (Euro)</SelectItem>
-    <SelectItem value="GBP">GBP £ (British Pound)</SelectItem>
-    <SelectItem value="CHF">CHF ₣ (Swiss Franc)</SelectItem>
-    <SelectItem value="SEK">SEK kr (Swedish Krona)</SelectItem>
-    <SelectItem value="NOK">NOK kr (Norwegian Krone)</SelectItem>
-    <SelectItem value="DKK">DKK kr (Danish Krone)</SelectItem>
-    <SelectItem value="PLN">PLN zł (Polish Złoty)</SelectItem>
-    <SelectItem value="CZK">CZK Kč (Czech Koruna)</SelectItem>
-    <SelectItem value="HUF">HUF Ft (Hungarian Forint)</SelectItem>
-    <SelectItem value="RON">RON lei (Romanian Leu)</SelectItem>
-  </SelectContent>
-</Select>
+                      <SelectContent className="z-[99999] pointer-events-auto">
+                        <SelectItem value="USD">USD $ (US Dollar)</SelectItem>
+                        <SelectItem value="INR">INR ₹ (Indian Rupee)</SelectItem>
+                        <SelectItem value="EUR">EUR € (Euro)</SelectItem>
+                        <SelectItem value="GBP">GBP £ (British Pound)</SelectItem>
+                        <SelectItem value="CHF">CHF ₣ (Swiss Franc)</SelectItem>
+                        <SelectItem value="SEK">SEK kr (Swedish Krona)</SelectItem>
+                        <SelectItem value="NOK">NOK kr (Norwegian Krone)</SelectItem>
+                        <SelectItem value="DKK">DKK kr (Danish Krone)</SelectItem>
+                        <SelectItem value="PLN">PLN zł (Polish Złoty)</SelectItem>
+                        <SelectItem value="CZK">CZK Kč (Czech Koruna)</SelectItem>
+                        <SelectItem value="HUF">HUF Ft (Hungarian Forint)</SelectItem>
+                        <SelectItem value="RON">RON lei (Romanian Leu)</SelectItem>
+                      </SelectContent>
+                    </Select>
 
 
 

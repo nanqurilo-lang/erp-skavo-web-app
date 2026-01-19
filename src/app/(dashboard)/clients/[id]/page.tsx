@@ -142,6 +142,7 @@ export default function ClientDetailPage() {
 
   const [clients, setClients] = useState<ClientItem[]>([]);
   const [clientLoading, setClientLoading] = useState(false);
+  
 
   const [departments, setDepartments] = useState<DepartmentItem[]>([]);
   const [deptLoading, setDeptLoading] = useState(false);
@@ -151,7 +152,8 @@ export default function ClientDetailPage() {
     "profile" | "projects" | "invoices" |"creditnotes"| "payments"| "documents"|"notes"| string
   >("profile");
 
-  const token =localStorage.getItem("accessToken") 
+  
+      const token = typeof window !== "undefined" ? localStorage.getItem("accessToken") || "" : "";
 
   // ---------- fetch client ----------
   const fetchClient = useCallback(async () => {
@@ -703,13 +705,24 @@ export default function ClientDetailPage() {
       if (noDeadline) fd.append("deadline", "");
       else fd.append("deadline", deadline || "");
       fd.append("noDeadline", String(Boolean(noDeadline)));
-      fd.append("category", category === "none" ? "" : String(category));
+      // fd.append("category", category === "none" ? "" : String(category));
+
+
+fd.append(
+  "projectCategory",
+  category !== "none" ? String(category) : ""
+)
+
+
       fd.append("department", department === "none" ? "" : String(department));
       fd.append(
         "clientId",
         clientField === "none" ? client?.clientId ?? "" : String(clientField)
       );
-      fd.append("summary", summary || "");
+      // fd.append("summary", summary || "");
+fd.append("projectSummary", summary || "")
+
+
       fd.append("tasksNeedAdminApproval", String(Boolean(needsApproval)));
 
       const assignedArray = Array.isArray(members)
@@ -722,7 +735,13 @@ export default function ClientDetailPage() {
       fd.append("assignedEmployeeIds", JSON.stringify(assignedArray));
       if (file) fd.append("companyFile", file);
       fd.append("currency", currency || "");
-      fd.append("budget", budget !== "" ? String(budget) : "0");
+      // fd.append("budget", budget !== "" ? String(budget) : "0");
+fd.append(
+  "projectBudget",
+  budget !== "" ? String(budget) : "0"
+)
+
+
       fd.append(
         "hoursEstimate",
         hoursEstimate !== "" ? String(hoursEstimate) : "0"
@@ -1254,7 +1273,7 @@ useEffect(() => {
           />
           <div className="relative w-full max-w-4xl bg-white rounded-xl shadow-2xl overflow-y-auto z-10">
             <div className="flex items-center justify-between p-4 border-b">
-              <h3 className="text-lg font-semibold">Add Project</h3>
+              <h3 className="text-lg font-semibold">Add Project </h3>
               <button
                 onClick={() => {
                   setShowAddModal(false);
@@ -1333,7 +1352,7 @@ useEffect(() => {
                       Project Category *
                     </label>
                     <div className="flex gap-2">
-                      <Select
+                      {/* <Select
                         value={category}
                         onValueChange={(v) => setCategory(v)}
                       >
@@ -1348,7 +1367,31 @@ useEffect(() => {
                             </SelectItem>
                           ))}
                         </SelectContent>
-                      </Select>
+                      </Select> */}
+
+
+
+<Select
+  modal={false}
+  value={category}
+  onValueChange={setCategory}
+>
+  <SelectTrigger className="w-full">
+    <SelectValue placeholder="--" />
+  </SelectTrigger>
+
+  <SelectContent className="z-[99999] pointer-events-auto">
+    <SelectItem value="none">--</SelectItem>
+    {categories.map((c) => (
+      <SelectItem key={c.id} value={String(c.id)}>
+        {c.name}
+      </SelectItem>
+    ))}
+  </SelectContent>
+</Select>
+
+
+
                     </div>
                   </div>
 
@@ -1356,7 +1399,7 @@ useEffect(() => {
                     <label className="text-sm text-gray-600">
                       Department *
                     </label>
-                    <Select
+                    {/* <Select
                       value={department}
                       onValueChange={(v) => setDepartment(v)}
                     >
@@ -1371,12 +1414,35 @@ useEffect(() => {
                           </SelectItem>
                         ))}
                       </SelectContent>
-                    </Select>
+                    </Select> */}
+
+
+<Select
+  modal={false}
+  value={department}
+  onValueChange={setDepartment}
+>
+  <SelectTrigger className="w-full">
+    <SelectValue placeholder="--" />
+  </SelectTrigger>
+
+  <SelectContent className="z-[99999] pointer-events-auto">
+    <SelectItem value="none">--</SelectItem>
+    {departments.map((d) => (
+      <SelectItem key={d.id} value={String(d.id)}>
+        {d.departmentName}
+      </SelectItem>
+    ))}
+  </SelectContent>
+</Select>
+
+
+
                   </div>
 
                   <div>
                     <label className="text-sm text-gray-600">Client *</label>
-                    <Select
+                    {/* <Select
                       value={clientField}
                       onValueChange={(v) => setClientField(v)}
                     >
@@ -1394,7 +1460,32 @@ useEffect(() => {
                           </SelectItem>
                         ))}
                       </SelectContent>
-                    </Select>
+                    </Select> */}
+
+<Select
+  modal={false}
+  value={clientField}
+  onValueChange={setClientField}
+>
+  <SelectTrigger className="w-full">
+    <SelectValue placeholder="--" />
+  </SelectTrigger>
+
+  <SelectContent className="z-[99999] pointer-events-auto">
+    <SelectItem value="none">--</SelectItem>
+    {clients.map((c) => (
+      <SelectItem
+        key={c.id}
+        value={String(c.clientId ?? c.id)}
+      >
+        {c.name}
+      </SelectItem>
+    ))}
+  </SelectContent>
+</Select>
+
+
+
                   </div>
 
                   <div className="col-span-2">
@@ -1475,7 +1566,7 @@ useEffect(() => {
                 <div className="grid grid-cols-3 gap-4">
                   <div>
                     <label className="text-sm text-gray-600">Currency</label>
-                    <Select
+                    {/* <Select
                       value={currency}
                       onValueChange={(v) => setCurrency(v)}
                     >
@@ -1487,7 +1578,36 @@ useEffect(() => {
                         <SelectItem value="USD">USD ₹</SelectItem>
                         <SelectItem value="EUR">EUR €</SelectItem>
                       </SelectContent>
-                    </Select>
+                    </Select> */}
+
+
+
+                                            <Select
+                                                modal={false}
+                                                value={currency}
+                                                onValueChange={(v) => setCurrency(v)}
+                                            >
+                                                <SelectTrigger className="w-full">
+                                                    <SelectValue placeholder="USD" />
+                                                </SelectTrigger>
+
+                                                <SelectContent className="z-[99999] pointer-events-auto">
+                                                    <SelectItem value="USD">USD $ (US Dollar)</SelectItem>
+                                                    <SelectItem value="INR">INR ₹ (Indian Rupee)</SelectItem>
+                                                    <SelectItem value="EUR">EUR € (Euro)</SelectItem>
+                                                    <SelectItem value="GBP">GBP £ (British Pound)</SelectItem>
+                                                    <SelectItem value="CHF">CHF ₣ (Swiss Franc)</SelectItem>
+                                                    <SelectItem value="SEK">SEK kr</SelectItem>
+                                                    <SelectItem value="NOK">NOK kr</SelectItem>
+                                                    <SelectItem value="DKK">DKK kr</SelectItem>
+                                                    <SelectItem value="PLN">PLN zł</SelectItem>
+                                                    <SelectItem value="CZK">CZK Kč</SelectItem>
+                                                    <SelectItem value="HUF">HUF Ft</SelectItem>
+                                                    <SelectItem value="RON">RON lei</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+
+
                   </div>
 
                   <div>

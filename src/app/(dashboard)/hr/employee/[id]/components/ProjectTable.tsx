@@ -46,7 +46,7 @@ import {
 } from "lucide-react";
 // import ProjectCalendarMonth from "./ProjectCalendarMonth";
 
-const MAIN = process.env.NEXT_PUBLIC_MAIN ;
+const MAIN = process.env.NEXT_PUBLIC_MAIN;
 const STATUS_OPTIONS = [
     "IN_PROGRESS",
     "NOT_STARTED",
@@ -772,29 +772,29 @@ export default function AllProjectsPage({ employeeId, }: { employeeId: string })
 
 
 
-fd.append(
-  "projectCategory",
-  category === "none" ? "" : String(category)
-);
+            fd.append(
+                "projectCategory",
+                category === "none" ? "" : String(category)
+            );
 
-fd.append(
-  "department",
-  department === "none" ? "" : String(department)
-);
+            fd.append(
+                "department",
+                department === "none" ? "" : String(department)
+            );
 
-fd.append(
-  "projectBudget",
-  budget !== "" ? String(budget) : "0"
-);
+            fd.append(
+                "projectBudget",
+                budget !== "" ? String(budget) : "0"
+            );
 
 
-// client
-fd.append(
-  "clientId",
-  client === "none" ? "" : String(client)
-);
+            // client
+            fd.append(
+                "clientId",
+                client === "none" ? "" : String(client)
+            );
 
-fd.append("projectSummary", summary || "");
+            fd.append("projectSummary", summary || "");
 
 
             fd.append("tasksNeedAdminApproval", String(Boolean(needsApproval)));
@@ -804,18 +804,18 @@ fd.append("projectSummary", summary || "");
             //     : String(members || "").split(",").map((s) => s.trim()).filter(Boolean);
 
 
-const assignedArray = [
-  employeeId, // 👈 VERY IMPORTANT
-  ...(
-    Array.isArray(members)
-      ? members
-      : String(members || "")
-          .split(",")
-          .map((s) => s.trim())
-          .filter(Boolean)
-  ),
-];
-fd.append("assignedEmployeeIds", JSON.stringify(assignedArray));
+            const assignedArray = [
+                employeeId, // 👈 VERY IMPORTANT
+                ...(
+                    Array.isArray(members)
+                        ? members
+                        : String(members || "")
+                            .split(",")
+                            .map((s) => s.trim())
+                            .filter(Boolean)
+                ),
+            ];
+            fd.append("assignedEmployeeIds", JSON.stringify(assignedArray));
 
             // backend expects a Set<String> — send JSON array under 'assignedEmployeeIds'
             // fd.append("assignedEmployeeIds", JSON.stringify(assignedArray));
@@ -954,14 +954,14 @@ fd.append("assignedEmployeeIds", JSON.stringify(assignedArray));
                     setUcSummary(data.summary ?? "");
                     setUcNeedsApproval(Boolean(data.tasksNeedAdminApproval ?? true));
                     // setUcMembers(Array.isArray(data.assignedEmployees) ? data.assignedEmployees.map((e: any) => e.name).join(",") : (data.members ?? ""));
-                   
-                   setUcMembers(
-  Array.isArray(data.assignedEmployees)
-    ? data.assignedEmployees.map((e: any) => e.employeeId).join(",")
-    : ""
-);
 
-                   
+                    setUcMembers(
+                        Array.isArray(data.assignedEmployees)
+                            ? data.assignedEmployees.map((e: any) => e.employeeId).join(",")
+                            : ""
+                    );
+
+
                     setUcCurrency(data.currency ?? "USD");
                     setUcBudget(data.budget != null ? String(data.budget) : "");
                     setUcHours(data.hoursEstimate != null ? String(data.hoursEstimate) : "");
@@ -1054,95 +1054,95 @@ fd.append("assignedEmployeeIds", JSON.stringify(assignedArray));
         // };
 
 
-const saveUpdate = async () => {
-  if (!projectId) return;
-  if (!ucProjectName.trim()) return alert("Project name required");
+        const saveUpdate = async () => {
+            if (!projectId) return;
+            if (!ucProjectName.trim()) return alert("Project name required");
 
-  setSaving(true);
-  try {
-    const fd = new FormData();
+            setSaving(true);
+            try {
+                const fd = new FormData();
 
-    fd.append("shortCode", ucShortCode);
-    fd.append("name", ucProjectName);
-    fd.append("projectName", ucProjectName);
+                fd.append("shortCode", ucShortCode);
+                fd.append("name", ucProjectName);
+                fd.append("projectName", ucProjectName);
 
-    fd.append("startDate", ucStartDate || "");
-    fd.append("deadline", ucNoDeadline ? "" : ucDeadline || "");
-    fd.append("noDeadline", String(ucNoDeadline));
+                fd.append("startDate", ucStartDate || "");
+                fd.append("deadline", ucNoDeadline ? "" : ucDeadline || "");
+                fd.append("noDeadline", String(ucNoDeadline));
 
-    fd.append("projectCategory", ucCategory === "none" ? "" : ucCategory);
-    fd.append("department", ucDepartment === "none" ? "" : ucDepartment);
-    fd.append("clientId", ucClient === "none" ? "" : ucClient);
+                fd.append("projectCategory", ucCategory === "none" ? "" : ucCategory);
+                fd.append("department", ucDepartment === "none" ? "" : ucDepartment);
+                fd.append("clientId", ucClient === "none" ? "" : ucClient);
 
-    fd.append("projectSummary", ucSummary || "");
-    fd.append("projectBudget", ucBudget !== "" ? ucBudget : "0");
-    fd.append("currency", ucCurrency || "USD");
+                fd.append("projectSummary", ucSummary || "");
+                fd.append("projectBudget", ucBudget !== "" ? ucBudget : "0");
+                fd.append("currency", ucCurrency || "USD");
 
-    fd.append(
-      "tasksNeedAdminApproval",
-      String(Boolean(ucNeedsApproval))
-    );
+                fd.append(
+                    "tasksNeedAdminApproval",
+                    String(Boolean(ucNeedsApproval))
+                );
 
-    const assignedIds = String(ucMembers || "")
-      .split(",")
-      .map((s) => s.trim())
-      .filter(Boolean);
+                const assignedIds = String(ucMembers || "")
+                    .split(",")
+                    .map((s) => s.trim())
+                    .filter(Boolean);
 
-    fd.append("assignedEmployeeIds", JSON.stringify(assignedIds));
+                fd.append("assignedEmployeeIds", JSON.stringify(assignedIds));
 
-    if (ucFile) fd.append("companyFile", ucFile);
+                if (ucFile) fd.append("companyFile", ucFile);
 
-    fd.append("hoursEstimate", ucHours !== "" ? ucHours : "0");
-    fd.append(
-      "allowManualTimeLogs",
-      String(Boolean(ucAllowManualTime))
-    );
+                fd.append("hoursEstimate", ucHours !== "" ? ucHours : "0");
+                fd.append(
+                    "allowManualTimeLogs",
+                    String(Boolean(ucAllowManualTime))
+                );
 
-    if (ucProjectStatus !== "none") {
-      fd.append("projectStatus", ucProjectStatus);
-    }
+                if (ucProjectStatus !== "none") {
+                    fd.append("projectStatus", ucProjectStatus);
+                }
 
-    fd.append(
-      "progressPercent",
-      String(Math.max(0, Math.min(100, ucProgress)))
-    );
+                fd.append(
+                    "progressPercent",
+                    String(Math.max(0, Math.min(100, ucProgress)))
+                );
 
-    fd.append(
-      "calculateProgressThroughTasks",
-      String(Boolean(ucCalculateThroughTasks))
-    );
+                fd.append(
+                    "calculateProgressThroughTasks",
+                    String(Boolean(ucCalculateThroughTasks))
+                );
 
-    fd.append("addedBy", ucAddedBy || "you");
+                fd.append("addedBy", ucAddedBy || "you");
 
-    const resolvedToken =
-      token || localStorage.getItem("accessToken");
+                const resolvedToken =
+                    token || localStorage.getItem("accessToken");
 
-    const res = await fetch(`${MAIN}/api/projects/${projectId}`, {
-      method: "PUT",
-      body: fd,
-      headers: resolvedToken
-        ? { Authorization: `Bearer ${resolvedToken}` }
-        : undefined,
-    });
+                const res = await fetch(`${MAIN}/api/projects/${projectId}`, {
+                    method: "PUT",
+                    body: fd,
+                    headers: resolvedToken
+                        ? { Authorization: `Bearer ${resolvedToken}` }
+                        : undefined,
+                });
 
-    if (!res.ok) {
-      const text = await res.text();
-      console.error(text);
-      alert("Failed to update project");
-      return;
-    }
+                if (!res.ok) {
+                    const text = await res.text();
+                    console.error(text);
+                    alert("Failed to update project");
+                    return;
+                }
 
-    await res.json().catch(() => {});
-    onSaved();
-    onClose();
-    resetLocal();
-  } catch (err) {
-    console.error(err);
-    alert("Update failed");
-  } finally {
-    setSaving(false);
-  }
-};
+                await res.json().catch(() => { });
+                onSaved();
+                onClose();
+                resetLocal();
+            } catch (err) {
+                console.error(err);
+                alert("Update failed");
+            } finally {
+                setSaving(false);
+            }
+        };
 
 
         const getProgressColor = (p?: number | null) => {
@@ -1153,14 +1153,14 @@ const saveUpdate = async () => {
         };
 
         return (
-<div className="fixed inset-0 z-[12000] flex items-start justify-center px-4 py-8 overflow-y-auto">
+            <div className="fixed inset-0 z-[12000] flex items-start justify-center px-4 py-8 overflow-y-auto">
 
                 <div className="fixed inset-0 bg-black/40" onClick={() => { onClose(); resetLocal(); }} />
                 {/* <div className="relative w-full max-w-4xl bg-white rounded-xl shadow-2xl overflow-y-auto z-10"> */}
-                 
-                 <div className="relative w-full max-w-4xl bg-white rounded-xl shadow-2xl z-10 max-h-[90vh] flex flex-col">
 
-                 
+                <div className="relative w-full max-w-4xl bg-white rounded-xl shadow-2xl z-10 max-h-[90vh] flex flex-col">
+
+
                     <div className="flex items-center justify-between p-4 border-b">
                         <h3 className="text-lg font-semibold">Update Project</h3>
                         <button onClick={() => { onClose(); resetLocal(); }} className="p-2 rounded hover:bg-gray-100"><X className="w-5 h-5" /></button>
@@ -1169,7 +1169,7 @@ const saveUpdate = async () => {
                     {/* <div className="p-6 space-y-6"> */}
 
 
-<div className="p-6 space-y-6 overflow-y-auto flex-1">
+                    <div className="p-6 space-y-6 overflow-y-auto flex-1">
 
 
                         {loadingLocal ? (
@@ -1220,23 +1220,23 @@ const saveUpdate = async () => {
                                                 </Select> */}
 
 
-<Select
-  modal={false}
-  value={ucCategory}
-  onValueChange={setUcCategory}
->
-  <SelectTrigger className="w-full">
-    <SelectValue placeholder="--" />
-  </SelectTrigger>
-  <SelectContent className="z-[99999] pointer-events-auto">
-    <SelectItem value="none">--</SelectItem>
-    {categoryOptions.map((c) => (
-      <SelectItem key={c.id} value={String(c.id)}>
-        {c.name}
-      </SelectItem>
-    ))}
-  </SelectContent>
-</Select>
+                                                <Select
+                                                    modal={false}
+                                                    value={ucCategory}
+                                                    onValueChange={setUcCategory}
+                                                >
+                                                    <SelectTrigger className="w-full">
+                                                        <SelectValue placeholder="--" />
+                                                    </SelectTrigger>
+                                                    <SelectContent className="z-[99999] pointer-events-auto">
+                                                        <SelectItem value="none">--</SelectItem>
+                                                        {categoryOptions.map((c) => (
+                                                            <SelectItem key={c.id} value={String(c.id)}>
+                                                                {c.name}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
 
 
                                                 <Button variant="outline" onClick={openCategoryModal}>Add</Button>
@@ -1254,23 +1254,23 @@ const saveUpdate = async () => {
                                             </Select> */}
 
 
-<Select
-  modal={false}
-  value={ucDepartment}
-  onValueChange={setUcDepartment}
->
-  <SelectTrigger className="w-full">
-    <SelectValue placeholder="--" />
-  </SelectTrigger>
-  <SelectContent className="z-[99999] pointer-events-auto">
-    <SelectItem value="none">--</SelectItem>
-    {departmentOptions.map((d) => (
-      <SelectItem key={d.id} value={String(d.id)}>
-        {d.name}
-      </SelectItem>
-    ))}
-  </SelectContent>
-</Select>
+                                            <Select
+                                                modal={false}
+                                                value={ucDepartment}
+                                                onValueChange={setUcDepartment}
+                                            >
+                                                <SelectTrigger className="w-full">
+                                                    <SelectValue placeholder="--" />
+                                                </SelectTrigger>
+                                                <SelectContent className="z-[99999] pointer-events-auto">
+                                                    <SelectItem value="none">--</SelectItem>
+                                                    {departmentOptions.map((d) => (
+                                                        <SelectItem key={d.id} value={String(d.id)}>
+                                                            {d.name}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
 
 
                                         </div>
@@ -1285,23 +1285,23 @@ const saveUpdate = async () => {
                                                 </SelectContent>
                                             </Select> */}
 
-<Select
-  modal={false}
-  value={ucClient}
-  onValueChange={setUcClient}
->
-  <SelectTrigger className="w-full">
-    <SelectValue placeholder="--" />
-  </SelectTrigger>
-  <SelectContent className="z-[99999] pointer-events-auto">
-    <SelectItem value="none">--</SelectItem>
-    {clientOptions.map((c) => (
-      <SelectItem key={c.id} value={String(c.id)}>
-        {c.name}
-      </SelectItem>
-    ))}
-  </SelectContent>
-</Select>
+                                            <Select
+                                                modal={false}
+                                                value={ucClient}
+                                                onValueChange={setUcClient}
+                                            >
+                                                <SelectTrigger className="w-full">
+                                                    <SelectValue placeholder="--" />
+                                                </SelectTrigger>
+                                                <SelectContent className="z-[99999] pointer-events-auto">
+                                                    <SelectItem value="none">--</SelectItem>
+                                                    {clientOptions.map((c) => (
+                                                        <SelectItem key={c.id} value={String(c.id)}>
+                                                            {c.name}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
 
 
                                         </div>
@@ -1396,30 +1396,30 @@ const saveUpdate = async () => {
                                                 </SelectContent>
                                             </Select> */}
 
-<Select
-  modal={false}
-  value={ucCurrency}
-  onValueChange={(v) => setUcCurrency(v)}
->
-  <SelectTrigger className="w-full">
-    <SelectValue placeholder="USD" />
-  </SelectTrigger>
+                                            <Select
+                                                modal={false}
+                                                value={ucCurrency}
+                                                onValueChange={(v) => setUcCurrency(v)}
+                                            >
+                                                <SelectTrigger className="w-full">
+                                                    <SelectValue placeholder="USD" />
+                                                </SelectTrigger>
 
-  <SelectContent className="z-[99999] pointer-events-auto">
-    <SelectItem value="USD">USD $ (US Dollar)</SelectItem>
-    <SelectItem value="INR">INR ₹ (Indian Rupee)</SelectItem>
-    <SelectItem value="EUR">EUR € (Euro)</SelectItem>
-    <SelectItem value="GBP">GBP £ (British Pound)</SelectItem>
-    <SelectItem value="CHF">CHF ₣ (Swiss Franc)</SelectItem>
-    <SelectItem value="SEK">SEK kr</SelectItem>
-    <SelectItem value="NOK">NOK kr</SelectItem>
-    <SelectItem value="DKK">DKK kr</SelectItem>
-    <SelectItem value="PLN">PLN zł</SelectItem>
-    <SelectItem value="CZK">CZK Kč</SelectItem>
-    <SelectItem value="HUF">HUF Ft</SelectItem>
-    <SelectItem value="RON">RON lei</SelectItem>
-  </SelectContent>
-</Select>
+                                                <SelectContent className="z-[99999] pointer-events-auto">
+                                                    <SelectItem value="USD">USD $ (US Dollar)</SelectItem>
+                                                    <SelectItem value="INR">INR ₹ (Indian Rupee)</SelectItem>
+                                                    <SelectItem value="EUR">EUR € (Euro)</SelectItem>
+                                                    <SelectItem value="GBP">GBP £ (British Pound)</SelectItem>
+                                                    <SelectItem value="CHF">CHF ₣ (Swiss Franc)</SelectItem>
+                                                    <SelectItem value="SEK">SEK kr</SelectItem>
+                                                    <SelectItem value="NOK">NOK kr</SelectItem>
+                                                    <SelectItem value="DKK">DKK kr</SelectItem>
+                                                    <SelectItem value="PLN">PLN zł</SelectItem>
+                                                    <SelectItem value="CZK">CZK Kč</SelectItem>
+                                                    <SelectItem value="HUF">HUF Ft</SelectItem>
+                                                    <SelectItem value="RON">RON lei</SelectItem>
+                                                </SelectContent>
+                                            </Select>
 
 
                                         </div>
@@ -1482,8 +1482,8 @@ const saveUpdate = async () => {
     // ---------- end CalendarView ----------
 
     // ---------- UI helpers ----------
-  
-  
+
+
     const getProgressColor = (p?: number | null) => {
         if (p === undefined || p === null) return "bg-gray-300";
         if (p < 33) return "bg-red-500";
@@ -1934,20 +1934,20 @@ const saveUpdate = async () => {
 
 
 
-<Select modal={false} value={category} onValueChange={(v) => setCategory(v)}>
-  <SelectTrigger className="w-full">
-    <SelectValue placeholder="--" />
-  </SelectTrigger>
+                                            <Select modal={false} value={category} onValueChange={(v) => setCategory(v)}>
+                                                <SelectTrigger className="w-full">
+                                                    <SelectValue placeholder="--" />
+                                                </SelectTrigger>
 
-  <SelectContent className="z-[99999] pointer-events-auto">
-    <SelectItem value="none">--</SelectItem>
-    {categoryOptions.map((c) => (
-      <SelectItem key={c.id} value={String(c.id)}>
-        {c.name}
-      </SelectItem>
-    ))}
-  </SelectContent>
-</Select>
+                                                <SelectContent className="z-[99999] pointer-events-auto">
+                                                    <SelectItem value="none">--</SelectItem>
+                                                    {categoryOptions.map((c) => (
+                                                        <SelectItem key={c.id} value={String(c.id)}>
+                                                            {c.name}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
 
 
                                             <Button variant="outline" onClick={openCategoryModal}>Add</Button>
@@ -1965,24 +1965,24 @@ const saveUpdate = async () => {
                                         </Select> */}
 
 
-<Select
-  modal={false}
-  value={department}
-  onValueChange={(v) => setDepartment(v)}
->
-  <SelectTrigger className="w-full">
-    <SelectValue placeholder="--" />
-  </SelectTrigger>
+                                        <Select
+                                            modal={false}
+                                            value={department}
+                                            onValueChange={(v) => setDepartment(v)}
+                                        >
+                                            <SelectTrigger className="w-full">
+                                                <SelectValue placeholder="--" />
+                                            </SelectTrigger>
 
-  <SelectContent className="z-[99999] pointer-events-auto">
-    <SelectItem value="none">--</SelectItem>
-    {departmentOptions.map((d) => (
-      <SelectItem key={d.id} value={String(d.id)}>
-        {d.name}
-      </SelectItem>
-    ))}
-  </SelectContent>
-</Select>
+                                            <SelectContent className="z-[99999] pointer-events-auto">
+                                                <SelectItem value="none">--</SelectItem>
+                                                {departmentOptions.map((d) => (
+                                                    <SelectItem key={d.id} value={String(d.id)}>
+                                                        {d.name}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
 
 
                                     </div>
@@ -1998,24 +1998,24 @@ const saveUpdate = async () => {
                                         </Select> */}
 
 
-<Select
-  modal={false}
-  value={client}
-  onValueChange={(v) => setClientField(v)}
->
-  <SelectTrigger className="w-full">
-    <SelectValue placeholder="--" />
-  </SelectTrigger>
+                                        <Select
+                                            modal={false}
+                                            value={client}
+                                            onValueChange={(v) => setClientField(v)}
+                                        >
+                                            <SelectTrigger className="w-full">
+                                                <SelectValue placeholder="--" />
+                                            </SelectTrigger>
 
-  <SelectContent className="z-[99999] pointer-events-auto">
-    <SelectItem value="none">--</SelectItem>
-    {clientOptions.map((c) => (
-      <SelectItem key={c.id} value={String(c.id)}>
-        {c.name}
-      </SelectItem>
-    ))}
-  </SelectContent>
-</Select>
+                                            <SelectContent className="z-[99999] pointer-events-auto">
+                                                <SelectItem value="none">--</SelectItem>
+                                                {clientOptions.map((c) => (
+                                                    <SelectItem key={c.id} value={String(c.id)}>
+                                                        {c.name}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
 
 
                                     </div>
@@ -2072,25 +2072,25 @@ const saveUpdate = async () => {
 
 
 
-<Select
-  modal={false}
-  value={currency}
-  onValueChange={(v) => setCurrency(v)}
->
-  <SelectTrigger className="w-full">
-    <SelectValue placeholder="USD" />
-  </SelectTrigger>
+                                        <Select
+                                            modal={false}
+                                            value={currency}
+                                            onValueChange={(v) => setCurrency(v)}
+                                        >
+                                            <SelectTrigger className="w-full">
+                                                <SelectValue placeholder="USD" />
+                                            </SelectTrigger>
 
-  <SelectContent className="z-[99999] pointer-events-auto">
-    <SelectItem value="USD">USD $ (US Dollar)</SelectItem>
-    <SelectItem value="INR">INR ₹ (Indian Rupee)</SelectItem>
-    <SelectItem value="EUR">EUR € (Euro)</SelectItem>
-    <SelectItem value="GBP">GBP £ (British Pound)</SelectItem>
-    <SelectItem value="CHF">CHF ₣ (Swiss Franc)</SelectItem>
-  </SelectContent>
-</Select>
+                                            <SelectContent className="z-[99999] pointer-events-auto">
+                                                <SelectItem value="USD">USD $ (US Dollar)</SelectItem>
+                                                <SelectItem value="INR">INR ₹ (Indian Rupee)</SelectItem>
+                                                <SelectItem value="EUR">EUR € (Euro)</SelectItem>
+                                                <SelectItem value="GBP">GBP £ (British Pound)</SelectItem>
+                                                <SelectItem value="CHF">CHF ₣ (Swiss Franc)</SelectItem>
+                                            </SelectContent>
+                                        </Select>
 
-                                        
+
                                     </div>
 
                                     <div>

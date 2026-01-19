@@ -7,7 +7,9 @@ import { X, CheckCircle, AlertCircle, ArrowRight } from "lucide-react";
 import ClientDetailPage from "../[id]/page";
 import { CommonNavbar } from "@/components/Navbar";
 
-const API_BASE = "https";
+// const API_BASE = "https";
+const API_BASE = process.env.NEXT_PUBLIC_MAIN!;
+
 
 export default function AddClientDetails() {
   const router = useRouter();
@@ -24,7 +26,11 @@ export default function AddClientDetails() {
   const [receiveEmail, setReceiveEmail] = useState(false);
 
   // Category/subcategory (value = name)
-  const [category, setCategory] = useState("");
+  // const [category, setCategory] = useState("");
+
+  const [categoryId, setCategoryId] = useState<number | null>(null);
+const [category, setCategory] = useState("");
+
   const [subCategory, setSubCategory] = useState("");
 
   // Company
@@ -94,41 +100,83 @@ export default function AddClientDetails() {
   //     );
   // }, []);
 
-  useEffect(() => {
-    if (!leadId) return;
+  // useEffect(() => {
+  //   if (!leadId) return;
 
-    const token = localStorage.getItem("accessToken");
-    if (!token) return;
+  //   const token = localStorage.getItem("accessToken");
+  //   if (!token) return;
 
-    (async () => {
-      try {
-        const res = await fetch(`${API_BASE}/leads/${leadId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        if (!res.ok) throw new Error("Failed to load lead");
-        const lead = await res.json();
+  //   (async () => {
+  //     try {
+  //       const res = await fetch(`${API_BASE}/leads/${leadId}`, {
+  //         headers: { Authorization: `Bearer ${token}` },
+  //       });
+  //       if (!res.ok) throw new Error("Failed to load lead");
+  //       const lead = await res.json();
 
-        // Prefill basic details
-        setName(lead.name || "");
-        setEmail(lead.email || "");
-        setMobile(lead.mobileNumber || "");
-        setCountry(lead.country || "");
-        setCompanyName(lead.companyName || "");
-        setWebsite(lead.officialWebsite || "");
-        setOfficePhone(lead.officePhone || "");
-        setAddress(lead.companyAddress || "");
-        setCity(lead.city || "");
-        setStateVal(lead.state || "");
-        setPostalCode(lead.postalCode || "");
+  //       // Prefill basic details
+  //       setName(lead.name || "");
+  //       setEmail(lead.email || "");
+  //       setMobile(lead.mobileNumber || "");
+  //       setCountry(lead.country || "");
+  //       setCompanyName(lead.companyName || "");
+  //       setWebsite(lead.officialWebsite || "");
+  //       setOfficePhone(lead.officePhone || "");
+  //       setAddress(lead.companyAddress || "");
+  //       setCity(lead.city || "");
+  //       setStateVal(lead.state || "");
+  //       setPostalCode(lead.postalCode || "");
 
-        // If your lead has these fields:
-        if (lead.clientCategory) setCategory(lead.clientCategory);
-        if (lead.subCategory) setSubCategory(lead.subCategory);
-      } catch (err) {
-        console.error("Failed to prefill from lead", err);
+  //       // If your lead has these fields:
+  //       if (lead.clientCategory) setCategory(lead.clientCategory);
+  //       if (lead.subCategory) setSubCategory(lead.subCategory);
+  //     } catch (err) {
+  //       console.error("Failed to prefill from lead", err);
+  //     }
+  //   })();
+  // }, [leadId]);
+
+
+
+
+useEffect(() => {
+  if (!leadId) return;
+
+  const token = localStorage.getItem("accessToken");
+  if (!token) {
+    console.warn("No access token found");
+    return;
+  }
+
+  (async () => {
+    try {
+      const url = `${API_BASE}/leads/${leadId}`;
+      console.log("Loading lead:", url);
+
+      const res = await fetch(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!res.ok) {
+        const err = await res.text();
+        throw new Error(err || "Failed to load lead");
       }
-    })();
-  }, [leadId]);
+
+      const lead = await res.json();
+
+      setName(lead.name || "");
+      setEmail(lead.email || "");
+      setMobile(lead.mobileNumber || "");
+      setCountry(lead.country || "");
+    } catch (err) {
+      console.error("Failed to prefill from lead:", err);
+    }
+  })();
+}, [leadId]);
+
+
 
   const getAuthHeader = () => ({
     Authorization: `Bearer ${localStorage.getItem("accessToken") || ""}`,
@@ -356,30 +404,82 @@ export default function AddClientDetails() {
     }
   };
 
-  const saveSubCategory = async () => {
-    if (!newSubCategoryName.trim()) return;
-    try {
-      const res = await fetch(`${API_BASE}/clients/category/subcategory`, {
-        method: "POST",
-        headers: { ...getAuthHeader(), "Content-Type": "application/json" },
-        body: JSON.stringify({ subCategoryName: newSubCategoryName.trim() }),
-      });
-      if (!res.ok) throw new Error("Failed to save subcategory");
-      const created = await res.json();
-      await fetchSubcategories();
-      setSubCategory(created?.subCategoryName ?? newSubCategoryName.trim());
-      setNewSubCategoryName("");
-      setShowSubCategoryModal(false);
-    } catch (e) {
-      console.error(e);
-      alert("Could not save subcategory");
-    }
-  };
+  // const saveSubCategory = async () => {
+  //   if (!newSubCategoryName.trim()) return;
+  //   try {
+  //     const res = await fetch(`${API_BASE}/clients/category/subcategory`, {
+  //       method: "POST",
+  //       headers: { ...getAuthHeader(), "Content-Type": "application/json" },
+  //       body: JSON.stringify({ subCategoryName: newSubCategoryName.trim() }),
+  //     });
+  //     if (!res.ok) throw new Error("Failed to save subcategory");
+  //     const created = await res.json();
+  //     await fetchSubcategories();
+  //     setSubCategory(created?.subCategoryName ?? newSubCategoryName.trim());
+  //     setNewSubCategoryName("");
+  //     setShowSubCategoryModal(false);
+  //   } catch (e) {
+  //     console.error(e);
+  //     alert("Could not save subcategory");
+  //   }
+  // };
 
-  const pickCategory = (c: { id: number; categoryName: string }) => {
-    setCategory(c.categoryName);
-    setShowCategoryModal(false);
-  };
+  // const pickCategory = (c: { id: number; categoryName: string }) => {
+  //   setCategory(c.categoryName);
+  //   setShowCategoryModal(false);
+  // };
+
+
+
+
+const saveSubCategory = async () => {
+  if (!newSubCategoryName.trim()) return;
+
+  if (!categoryId) {
+    alert("Please select a category first");
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API_BASE}/clients/category/subcategory`, {
+      method: "POST",
+      headers: {
+        ...getAuthHeader(),
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        subCategoryName: newSubCategoryName.trim(),
+        categoryId: categoryId, // ✅ REQUIRED
+      }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data?.message || "Failed to save subcategory");
+    }
+
+    await fetchSubcategories();
+    setSubCategory(data?.subCategoryName ?? newSubCategoryName.trim());
+    setNewSubCategoryName("");
+    setShowSubCategoryModal(false);
+  } catch (e: any) {
+    console.error(e);
+    alert(e.message || "Could not save subcategory");
+  }
+};
+
+
+
+
+const pickCategory = (c: { id: number; categoryName: string }) => {
+  setCategory(c.categoryName);
+  setCategoryId(c.id); // ✅ IMPORTANT
+  setShowCategoryModal(false);
+};
+
+
+
   const pickSubCategory = (s: { id: number; subCategoryName: string }) => {
     setSubCategory(s.subCategoryName);
     setShowSubCategoryModal(false);
@@ -572,18 +672,58 @@ export default function AddClientDetails() {
                       Client Category
                     </label>
                     <div className="flex items-center rounded-full border border-slate-200 overflow-hidden">
-                      <select
+                      {/* <select
                         value={category}
                         onChange={(e) => setCategory(e.target.value)}
                         className="appearance-none px-4 py-2 w-full border-none rounded-none focus:outline-none"
-                      >
-                        <option value="">--</option>
-                        {categories.map((c) => (
-                          <option key={c.id} value={c.categoryName}>
-                            {c.categoryName}
-                          </option>
-                        ))}
-                      </select>
+                      > */}
+
+
+<select
+
+
+//   value={category}
+//   onChange={(e) => {
+//     const selected = categories.find(
+//       (c) => c.categoryName === e.target.value
+//     );
+//     setCategory(e.target.value);
+//     setCategoryId(selected?.id ?? null);
+    
+//   }}
+// >
+
+
+//                         <option value="">--</option>
+//                         {categories.map((c) => (
+//                           <option key={c.id} value={c.categoryName}>
+//                             {c.categoryName}
+//                           </option>
+//                         ))}
+//                       </select>
+
+
+
+value={category}
+  onChange={(e) => {
+    const selectedCategory = categories.find(
+      (c) => c.categoryName === e.target.value
+    );
+
+    setCategory(e.target.value);
+    setCategoryId(selectedCategory?.id ?? null); // 🔥 MOST IMPORTANT
+  }}
+  className="appearance-none px-4 py-2 w-full border-none rounded-none focus:outline-none"
+>
+  <option value="">--</option>
+  {categories.map((c) => (
+    <option key={c.id} value={c.categoryName}>
+      {c.categoryName}
+    </option>
+  ))}
+</select>
+
+
                       <button
                         type="button"
                         onClick={() => {
