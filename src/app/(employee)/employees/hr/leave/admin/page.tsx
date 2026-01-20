@@ -1,5 +1,3 @@
-
-
 "use client";
 import { useEffect, useMemo, useState } from "react";
 import LeaveActionMenu from "./LeaveActionMenu";
@@ -86,10 +84,9 @@ export default function LeavesList() {
     const token = localStorage.getItem("accessToken");
     if (!empId || !token) return;
 
-    const res = await fetch(
-      `${BASE_URL}/employee/leave-quota/me`,
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
+    const res = await fetch(`${BASE_URL}/employee/leave-quota/me`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
     setQuota(await res.json());
   };
 
@@ -126,7 +123,8 @@ export default function LeavesList() {
       if (filters.toDate && date > filters.toDate) return false;
       if (filters.status && l.status !== filters.status) return false;
       if (filters.leaveType && l.leaveType !== filters.leaveType) return false;
-      if (filters.paid !== "" && String(l.isPaid) !== filters.paid) return false;
+      if (filters.paid !== "" && String(l.isPaid) !== filters.paid)
+        return false;
 
       return true;
     });
@@ -160,7 +158,7 @@ export default function LeavesList() {
   /* ================= HELPERS ================= */
   const remainingLeaves = useMemo(
     () => quota.reduce((s, q) => s + q.remainingLeaves, 0),
-    [quota]
+    [quota],
   );
 
   const getDisplayDates = (leave: Leave) => {
@@ -218,7 +216,6 @@ export default function LeavesList() {
 
   return (
     <div className="p-6 bg-white rounded-lg shadow-md">
-
       {/* ================= TOP BAR ================= */}
       <div className="flex justify-between items-center mb-4">
         {view !== "PROFILE" && (
@@ -238,35 +235,33 @@ export default function LeavesList() {
           </>
         )}
 
+        {/* ================= PROFILE HEADER ================= */}
+        {view === "PROFILE" && employee && (
+          <div className="flex gap-6 mb-6">
+            <div className="flex items-center gap-4 border rounded-xl p-4 w-1/2">
+              <img
+                src={employee.profilePictureUrl || "/avatar.png"}
+                className="w-14 h-14 rounded-full object-cover"
+              />
+              <div>
+                <h3 className="font-semibold">{employee.name}</h3>
+                <p className="text-sm text-gray-500">
+                  {employee.designationName} · {employee.departmentName}
+                </p>
+                <p className="text-xs text-gray-400">
+                  Last login: {employee.createdAt?.split("T")[0]}
+                </p>
+              </div>
+            </div>
 
-         {/* ================= PROFILE HEADER ================= */}
-      {view === "PROFILE" && employee && (
-        <div className="flex gap-6 mb-6">
-          <div className="flex items-center gap-4 border rounded-xl p-4 w-1/2">
-            <img
-              src={employee.profilePictureUrl || "/avatar.png"}
-              className="w-14 h-14 rounded-full object-cover"
-            />
-            <div>
-              <h3 className="font-semibold">{employee.name}</h3>
-              <p className="text-sm text-gray-500">
-                {employee.designationName} · {employee.departmentName}
-              </p>
-              <p className="text-xs text-gray-400">
-                Last login: {employee.createdAt?.split("T")[0]}
+            <div className="border rounded-xl p-4 w-1/2">
+              <p className="text-sm text-gray-500">Remaining Leaves</p>
+              <p className="text-2xl font-semibold text-blue-600">
+                {remainingLeaves}
               </p>
             </div>
           </div>
-
-          <div className="border rounded-xl p-4 w-1/2">
-            <p className="text-sm text-gray-500">Remaining Leaves</p>
-            <p className="text-2xl font-semibold text-blue-600">
-              {remainingLeaves}
-            </p>
-          </div>
-        </div>
-      )}
-
+        )}
 
         <div className="flex gap-2">
           <List onClick={() => setView("LIST")} />
@@ -275,21 +270,18 @@ export default function LeavesList() {
         </div>
       </div>
 
-     
-
-
- {/* ================= LEAVE QUOTA TABLE (RESTORED) ================= */}
+      {/* ================= LEAVE QUOTA TABLE (RESTORED) ================= */}
       {view === "PROFILE" && (
         <div className="overflow-x-auto">
           <table className="min-w-full border">
             <thead className="bg-gray-50">
               <tr>
                 <th className="p-3 text-left">Leave Type</th>
-                <th className="p-3">Total</th>
-                <th className="p-3">Monthly</th>
-                <th className="p-3">Taken</th>
-                <th className="p-3">Over</th>
-                <th className="p-3">Remaining</th>
+                <th className="p-3 text-left">Total</th>
+                <th className="p-3 text-left">Monthly</th>
+                <th className="p-3 text-left">Taken</th>
+                <th className="p-3 text-left">Over</th>
+                <th className="p-3 text-left">Remaining</th>
               </tr>
             </thead>
             <tbody>
@@ -308,34 +300,53 @@ export default function LeavesList() {
         </div>
       )}
 
-
-
-
       {/* ================= LIST VIEW ================= */}
       {view === "LIST" && (
         <>
           {/* FILTERS */}
           <div className="flex flex-wrap gap-3 mb-6">
-            <input type="date" className="border py-3 px-6 rounded-2xl"
-              onChange={(e) => setFilters(f => ({ ...f, fromDate: e.target.value }))} />
-            <input type="date" className="border py-3 px-6 rounded-2xl"
-              onChange={(e) => setFilters(f => ({ ...f, toDate: e.target.value }))} />
-            <select className="border py-3 px-6 rounded-2xl"
-              onChange={(e) => setFilters(f => ({ ...f, status: e.target.value }))}>
+            <input
+              type="date"
+              className="border py-3 px-6 rounded-2xl"
+              onChange={(e) =>
+                setFilters((f) => ({ ...f, fromDate: e.target.value }))
+              }
+            />
+            <input
+              type="date"
+              className="border py-3 px-6 rounded-2xl"
+              onChange={(e) =>
+                setFilters((f) => ({ ...f, toDate: e.target.value }))
+              }
+            />
+            <select
+              className="border py-3 px-6 rounded-2xl"
+              onChange={(e) =>
+                setFilters((f) => ({ ...f, status: e.target.value }))
+              }
+            >
               <option value="">Status</option>
               <option value="APPROVED">Approved</option>
               <option value="PENDING">Pending</option>
               <option value="REJECTED">Rejected</option>
             </select>
-            <select className="border py-3 px-6 rounded-2xl"
-              onChange={(e) => setFilters(f => ({ ...f, leaveType: e.target.value }))}>
+            <select
+              className="border py-3 px-6 rounded-2xl"
+              onChange={(e) =>
+                setFilters((f) => ({ ...f, leaveType: e.target.value }))
+              }
+            >
               <option value="">Leave Type</option>
               <option value="SICK">Sick</option>
               <option value="CASUAL">Casual</option>
               <option value="EARNED">Earned</option>
             </select>
-            <select className="border py-3 px-6 rounded-2xl"
-              onChange={(e) => setFilters(f => ({ ...f, paid: e.target.value }))}>
+            <select
+              className="border py-3 px-6 rounded-2xl"
+              onChange={(e) =>
+                setFilters((f) => ({ ...f, paid: e.target.value }))
+              }
+            >
               <option value="">Paid</option>
               <option value="true">Paid</option>
               <option value="false">Unpaid</option>
@@ -347,13 +358,27 @@ export default function LeavesList() {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium">Employee</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium">Leave Type</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium">Duration</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium">Dates</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium">Paid</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium">Status</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium">Actions</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium">
+                    Employee
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium">
+                    Leave Type
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium">
+                    Duration
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium">
+                    Dates
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium">
+                    Paid
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium">
+                    Status
+                  </th>
+                  <th className="px-6 py-3 text-right text-xs font-medium">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -365,20 +390,16 @@ export default function LeavesList() {
                     <td className="px-6 py-4">{getDisplayDates(leave)}</td>
                     {/* <td className="px-6 py-4 max-w-xs truncate">{leave.reason}</td> */}
 
-
-<td className="px-6 py-4">
-  <span
-    className={`px-2 py-1 text-xs rounded-full font-medium
-      ${leave.isPaid
-        ? "bg-green-100 text-green-700"
-        : "bg-red-100 text-red-700"
+                    <td className="px-6 py-4">
+                      <span
+                        className={`px-2 py-1 text-xs rounded-full font-medium
+      ${
+        leave.isPaid ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
       }`}
-  >
-    {leave.isPaid ? "Paid" : "Unpaid"}
-  </span>
-</td>
-
-
+                      >
+                        {leave.isPaid ? "Paid" : "Unpaid"}
+                      </span>
+                    </td>
 
                     <td className="px-6 py-4">
                       <span className={getStatusClass(leave.status)}>
@@ -389,12 +410,14 @@ export default function LeavesList() {
                       <LeaveActionMenu
                         status={leave.status}
                         loading={loadingId === leave.id}
-                        onView={() => Router.push(`/hr/leave/admin/${leave.id}`)}
+                        onView={() =>
+                          Router.push(`/employees/hr/leave/admin/${leave.id}`)
+                        }
                         onApprove={() => approveLeave(leave.id)}
                         onReject={() => {
                           const reason = prompt("Enter rejection reason");
                           if (reason) rejectLeave(leave.id, reason);
-                        }}  
+                        }}
                         onDelete={() => confirm("Delete this leave?")}
                       />
                     </td>
@@ -410,27 +433,38 @@ export default function LeavesList() {
       {view === "CALENDAR" && (
         <div>
           <div className="flex justify-between mb-4">
-            <button onClick={() => setCurrentMonth(new Date(year, month - 1))}>←</button>
+            <button onClick={() => setCurrentMonth(new Date(year, month - 1))}>
+              ←
+            </button>
             <h2 className="font-semibold">
               {currentMonth.toLocaleString("default", { month: "long" })} {year}
             </h2>
-            <button onClick={() => setCurrentMonth(new Date(year, month + 1))}>→</button>
+            <button onClick={() => setCurrentMonth(new Date(year, month + 1))}>
+              →
+            </button>
           </div>
 
           <div className="grid grid-cols-7 text-center font-medium mb-2">
-            {["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].map(d => <div key={d}>{d}</div>)}
+            {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
+              <div key={d}>{d}</div>
+            ))}
           </div>
 
           <div className="grid grid-cols-7 gap-2">
-            {Array.from({ length: startDay }).map((_, i) => <div key={i} />)}
+            {Array.from({ length: startDay }).map((_, i) => (
+              <div key={i} />
+            ))}
             {Array.from({ length: daysInMonth }).map((_, i) => {
               const day = i + 1;
-              const key = `${year}-${String(month + 1).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+              const key = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
               return (
                 <div key={key} className="border rounded p-1 min-h-[90px]">
                   <div className="font-semibold">{day}</div>
-                  {calendarMap[key]?.map(l => (
-                    <div key={l.id} className="text-xs bg-blue-100 rounded px-1 mt-1">
+                  {calendarMap[key]?.map((l) => (
+                    <div
+                      key={l.id}
+                      className="text-xs bg-blue-100 rounded px-1 mt-1"
+                    >
                       {l.employeeName} ({l.leaveType})
                     </div>
                   ))}

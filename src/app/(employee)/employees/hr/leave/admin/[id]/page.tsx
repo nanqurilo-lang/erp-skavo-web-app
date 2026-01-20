@@ -80,7 +80,10 @@ export default function LeaveDetail() {
         <div className="flex justify-center items-center h-64">
           <p className="text-red-500">{error || "Leave not found."}</p>
         </div>
-        <Link href="/hr/leaves" className="block text-center mt-4 text-blue-600 hover:underline">
+        <Link
+          href="/hr/leaves"
+          className="block text-center mt-4 text-blue-600 hover:underline"
+        >
           Back to Leaves List
         </Link>
       </div>
@@ -117,7 +120,7 @@ export default function LeaveDetail() {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-800">Leave Details</h1>
         <Link
-          href="/hr/leaves"
+          href="/employees/hr/leave/admin"
           className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors"
         >
           Back to List
@@ -127,33 +130,47 @@ export default function LeaveDetail() {
       <div className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-500 mb-1">Employee</label>
-            <p className="text-lg font-semibold text-gray-900">{leave.employeeName}</p>
+            <label className="block text-sm font-medium text-gray-500 mb-1">
+              Employee
+            </label>
+            <p className="text-lg font-semibold text-gray-900">
+              {leave.employeeName}
+            </p>
             <p className="text-sm text-gray-500">{leave.employeeId}</p>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-500 mb-1">Leave Type</label>
-            <p className="text-lg font-semibold text-gray-900">{leave.leaveType}</p>
+            <label className="block text-sm font-medium text-gray-500 mb-1">
+              Leave Type
+            </label>
+            <p className="text-lg font-semibold text-gray-900">
+              {leave.leaveType}
+            </p>
             <p className="text-sm text-gray-500">{leave.durationType}</p>
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-500 mb-1">Dates</label>
+          <label className="block text-sm font-medium text-gray-500 mb-1">
+            Dates
+          </label>
           <p className="text-lg text-gray-900">{getDisplayDates()}</p>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-500 mb-1">Reason</label>
+          <label className="block text-sm font-medium text-gray-500 mb-1">
+            Reason
+          </label>
           <p className="text-gray-900">{leave.reason}</p>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-500 mb-1">Status</label>
+          <label className="block text-sm font-medium text-gray-500 mb-1">
+            Status
+          </label>
           <span
             className={`inline-flex px-3 py-1 text-sm font-semibold rounded-full ${getStatusClass(
-              leave.status
+              leave.status,
             )}`}
           >
             {leave.status}
@@ -162,10 +179,14 @@ export default function LeaveDetail() {
 
         {leave.status === "REJECTED" && leave.rejectionReason && (
           <div>
-            <label className="block text-sm font-medium text-gray-500 mb-1">Rejection Reason</label>
+            <label className="block text-sm font-medium text-gray-500 mb-1">
+              Rejection Reason
+            </label>
             <p className="text-red-600">{leave.rejectionReason}</p>
             {leave.rejectedAt && (
-              <p className="text-xs text-gray-500 mt-1">Rejected at: {new Date(leave.rejectedAt).toLocaleString()}</p>
+              <p className="text-xs text-gray-500 mt-1">
+                Rejected at: {new Date(leave.rejectedAt).toLocaleString()}
+              </p>
             )}
           </div>
         )}
@@ -174,18 +195,26 @@ export default function LeaveDetail() {
           <div>
             {leave.approvedByName && (
               <div>
-                <label className="block text-sm font-medium text-gray-500 mb-1">Approved By</label>
+                <label className="block text-sm font-medium text-gray-500 mb-1">
+                  Approved By
+                </label>
                 <p className="text-green-600">{leave.approvedByName}</p>
               </div>
             )}
             {leave.approvedAt && (
               <div>
-                <label className="block text-sm font-medium text-gray-500 mb-1">Approved At</label>
-                <p className="text-xs text-gray-500">{new Date(leave.approvedAt).toLocaleString()}</p>
+                <label className="block text-sm font-medium text-gray-500 mb-1">
+                  Approved At
+                </label>
+                <p className="text-xs text-gray-500">
+                  {new Date(leave.approvedAt).toLocaleString()}
+                </p>
               </div>
             )}
             <div>
-              <label className="block text-sm font-medium text-gray-500 mb-1">Paid</label>
+              <label className="block text-sm font-medium text-gray-500 mb-1">
+                Paid
+              </label>
               <p className={leave.isPaid ? "text-green-600" : "text-red-600"}>
                 {leave.isPaid ? "Yes" : "No"}
               </p>
@@ -195,7 +224,9 @@ export default function LeaveDetail() {
 
         {leave.documentUrls.length > 0 && (
           <div>
-            <label className="block text-sm font-medium text-gray-500 mb-2">Documents</label>
+            <label className="block text-sm font-medium text-gray-500 mb-2">
+              Documents
+            </label>
             <ul className="space-y-1">
               {leave.documentUrls.map((url, index) => (
                 <li key={index}>
