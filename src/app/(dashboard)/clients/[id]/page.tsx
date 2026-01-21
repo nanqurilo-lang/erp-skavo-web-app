@@ -189,7 +189,7 @@ const [employeeLoading, setEmployeeLoading] = useState(false);
       setLoading(false);
     }
   }, [id]);
-  const EMP_BASE = "https://6jnqmj85-80.inc1.devtunnels.ms";
+  const EMP_BASE = `${process.env.NEXT_PUBLIC_MAIN}`;
 
 const loadEmployees = useCallback(async () => {
   setEmployeeLoading(true);
