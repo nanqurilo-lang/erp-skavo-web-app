@@ -1929,8 +1929,11 @@ import {
   X,
   CloudUpload,
 } from "lucide-react";
+import CreditNoteModal from "./CreditNoteModal";
+import ViewCreditNoteModal from "./ViewCreditNoteModal";
+import DuplicateInvoiceModal from "./DuplicateInvoiceModal";
 
-const API_BASE =  `${process.env.NEXT_PUBLIC_MAIN}`;
+const API_BASE = `${process.env.NEXT_PUBLIC_MAIN}`;
 
 const tryParseResponse = async (res: Response) => {
   try { return { parsed: await res.clone().json(), raw: null }; }
@@ -1955,6 +1958,15 @@ export default function InvoicesTable({
   const [loading, setLoading] = useState<boolean>(Boolean(!invoicesProp));
   const [error, setError] = useState<string | null>(null);
   const [rawResponse, setRawResponse] = useState<string | null>(null);
+
+  // Credit Note Modals
+  const [showCreditModal, setShowCreditModal] = useState(false);
+  const [showViewCreditModal, setShowViewCreditModal] = useState(false);
+  const [activeCredit, setActiveCredit] = useState<any>(null);
+  const [showDuplicateModal, setShowDuplicateModal] = useState(false);
+
+
+
 
 
 
@@ -2020,7 +2032,7 @@ export default function InvoicesTable({
   const [receiptsList, setReceiptsList] = useState<any[]>([]);
   const [selectedInvoiceForReceipts, setSelectedInvoiceForReceipts] = useState<any | null>(null);
 
-const [viewReceipt, setViewReceipt] = useState<any | null>(null);
+  const [viewReceipt, setViewReceipt] = useState<any | null>(null);
 
 
 
@@ -2053,66 +2065,66 @@ const [viewReceipt, setViewReceipt] = useState<any | null>(null);
 
 
 
-async function downloadReceiptPDF(r: any) {
-  const createdIdUSD = r?.createdIdUSD || r?.id;
+  async function downloadReceiptPDF(r: any) {
+    const createdIdUSD = r?.createdIdUSD || r?.id;
 
-  if (!createdIdUSD) {
-    alert("PDF ID not found");
-    return;
+    if (!createdIdUSD) {
+      alert("PDF ID not found");
+      return;
+    }
+
+    try {
+      const res = await fetch(
+        `${API_BASE}/api/invoice/${createdIdUSD}/pdf?disposition=attachment`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+
+      if (!res.ok) throw new Error("Failed to download PDF");
+
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${createdIdUSD}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("❌ PDF Download Error", err);
+      alert("Failed to download PDF");
+    }
   }
 
-  try {
-    const res = await fetch(
-      `${API_BASE}/api/invoice/${createdIdUSD}/pdf?disposition=attachment`,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },
-      }
-    );
 
-    if (!res.ok) throw new Error("Failed to download PDF");
 
-    const blob = await res.blob();
-    const url = window.URL.createObjectURL(blob);
+  async function deleteReceipt(r: any) {
+    if (!confirm("Are you sure you want to delete this receipt?")) return;
 
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${createdIdUSD}.pdf`;
-    document.body.appendChild(a);
-    a.click();
+    const id = r?.id;
+    if (!id) {
+      alert("Receipt ID missing");
+      return;
+    }
 
-    a.remove();
-    window.URL.revokeObjectURL(url);
-  } catch (err) {
-    console.error("❌ PDF Download Error", err);
-    alert("Failed to download PDF");
+    await fetch(`${API_BASE}/api/invoice/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+    });
+
+    // reload receipts list
+    if (selectedInvoiceForReceipts) {
+      await viewReceipts(selectedInvoiceForReceipts);
+    }
   }
-}
-
-
-
-async function deleteReceipt(r: any) {
-  if (!confirm("Are you sure you want to delete this receipt?")) return;
-
-  const id = r?.id;
-  if (!id) {
-    alert("Receipt ID missing");
-    return;
-  }
-
-  await fetch(`${API_BASE}/api/invoice/${id}`, {
-    method: "DELETE",
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-    },
-  });
-
-  // reload receipts list
-  if (selectedInvoiceForReceipts) {
-    await viewReceipts(selectedInvoiceForReceipts);
-  }
-}
 
 
 
@@ -2201,7 +2213,7 @@ async function deleteReceipt(r: any) {
             try {
               const maybe = JSON.parse(parsed.raw);
               if (Array.isArray(maybe)) { setInvoices(maybe); setLoading(false); return; }
-            } catch {}
+            } catch { }
           }
           if (parsed.parsed && typeof parsed.parsed === "object") {
             const obj = parsed.parsed as any;
@@ -2446,22 +2458,22 @@ async function deleteReceipt(r: any) {
       // }
 
       if (returnedUrl) {
-  setInvoices((prev) => prev.map((iv) => {
-    const idA = iv.id ?? iv.invoiceNumber ?? null;
-    const idB = inv.id ?? inv.invoiceNumber ?? null;
-    if (idA != null && idB != null && String(idA) === String(idB)) {
-      const files = Array.isArray(iv.files) ? [...iv.files] : [];
-      files.unshift({ url: returnedUrl, name: uploadSelectedFile.name });
+        setInvoices((prev) => prev.map((iv) => {
+          const idA = iv.id ?? iv.invoiceNumber ?? null;
+          const idB = inv.id ?? inv.invoiceNumber ?? null;
+          if (idA != null && idB != null && String(idA) === String(idB)) {
+            const files = Array.isArray(iv.files) ? [...iv.files] : [];
+            files.unshift({ url: returnedUrl, name: uploadSelectedFile.name });
 
-      const fileUrls = Array.isArray(iv.fileUrls) ? [...iv.fileUrls] : [];
-      // push string URL (avoid duplicates)
-      if (!fileUrls.includes(returnedUrl)) fileUrls.unshift(returnedUrl);
+            const fileUrls = Array.isArray(iv.fileUrls) ? [...iv.fileUrls] : [];
+            // push string URL (avoid duplicates)
+            if (!fileUrls.includes(returnedUrl)) fileUrls.unshift(returnedUrl);
 
-      return { ...iv, files, fileUrls };
-    }
-    return iv;
-  }));
-}
+            return { ...iv, files, fileUrls };
+          }
+          return iv;
+        }));
+      }
 
 
       alert("Upload successful");
@@ -2507,7 +2519,7 @@ async function deleteReceipt(r: any) {
         if (!res.ok) continue;
         const parsed = await tryParseResponse(res);
         return parsed.parsed ?? parsed.raw ?? inv;
-      } catch {}
+      } catch { }
     }
     return inv;
   };
@@ -2611,7 +2623,7 @@ async function deleteReceipt(r: any) {
           if (!res.ok) continue;
           success = true;
           break;
-        } catch {}
+        } catch { }
       }
       if (!success) throw new Error("Edit/save failed (no supported endpoint)");
       if (invoicesProp && typeof onInvoiceCreated === "function") onInvoiceCreated(null as any);
@@ -2621,31 +2633,35 @@ async function deleteReceipt(r: any) {
     finally { setEditing(false); setMenuOpenFor(null); setMenuPos(null); }
   };
 
+
+
+
+
+
+
   const openCreditModal = (inv: any) => {
     setActiveInvoice(inv);
+    setShowCreditModal(true);
     setMenuOpenFor(null);
     setMenuPos(null);
-    const amt = prompt("Credit amount:");
-    if (!amt) return;
-    const amount = Number(amt);
-    if (isNaN(amount) || amount <= 0) return alert("Invalid amount");
-    (async () => {
-      try {
-        const p = invoicePaths(inv)[0];
-        if (p) {
-          const res = await fetch(`${p}/credit-note`, {
-            method: "POST",
-            headers: getAuthHeaders({ "Content-Type": "application/json" }),
-            body: JSON.stringify({ amount }),
-          });
-          if (!res.ok) throw new Error("Credit creation failed");
-        }
-        if (invoicesProp && typeof onInvoiceCreated === "function") onInvoiceCreated(null as any);
-        else await fetchInvoices(clientId);
-        alert("Credit created");
-      } catch (err: any) { alert(err?.message ?? "Credit failed"); }
-    })();
   };
+
+
+  {/* VIEW CREDIT NOTE MODAL */ }
+  {
+    showViewCreditModal && activeCredit && (
+      <ViewCreditNoteModal
+        open={showViewCreditModal}
+        credit={activeCredit}
+        onClose={() => {
+          setShowViewCreditModal(false);
+          setActiveCredit(null);
+        }}
+      />
+    )
+  }
+
+
 
   const handleMarkPaid = async (inv: any) => {
     if (!inv) return;
@@ -2655,7 +2671,7 @@ async function deleteReceipt(r: any) {
       try {
         const res = await fetch(`${p}/mark-paid`, { method: "POST", headers: getAuthHeaders() });
         if (res.ok) { success = true; break; }
-      } catch {}
+      } catch { }
     }
     if (!success) return alert("Mark paid failed (endpoint not supported?)");
     if (invoicesProp && typeof onInvoiceCreated === "function") onInvoiceCreated(null as any);
@@ -2672,7 +2688,7 @@ async function deleteReceipt(r: any) {
       try {
         const res = await fetch(p, { method: "DELETE", headers: getAuthHeaders() });
         if (res.ok) { success = true; break; }
-      } catch {}
+      } catch { }
     }
     if (!success) return alert("Delete failed (endpoint missing?)");
     if (invoicesProp && typeof onInvoiceCreated === "function") onInvoiceCreated(null as any);
@@ -2796,7 +2812,7 @@ async function deleteReceipt(r: any) {
       else if (Array.isArray(parsed.parsed?.data)) arr = parsed.parsed.data;
       else if (Array.isArray(parsed.raw)) arr = parsed.raw;
       else if (typeof parsed.raw === "string") {
-        try { const maybe = JSON.parse(parsed.raw); if (Array.isArray(maybe)) arr = maybe; } catch {}
+        try { const maybe = JSON.parse(parsed.raw); if (Array.isArray(maybe)) arr = maybe; } catch { }
       }
       setReceiptsList(arr);
       setSelectedInvoiceForReceipts(inv);
@@ -2807,18 +2823,53 @@ async function deleteReceipt(r: any) {
     } finally { setReceiptsLoading(false); setMenuOpenFor(null); setMenuPos(null); }
   };
 
-  const viewCredits = async (inv: any) => {
+  // const viewCredits = async (inv: any) => {
+  //   try {
+  //     const p = invoicePaths(inv)[0];
+  //     if (!p) throw new Error("Cannot determine invoice endpoint for credits");
+  //     const res = await fetch(`${p}/credit-notes`, { headers: getAuthHeaders() });
+  //     if (!res.ok) { alert("Credits not available"); return; }
+  //     const parsed = await tryParseResponse(res);
+  //     const credits = parsed.parsed ?? [];
+  //     alert("Credit notes :\n" + JSON.stringify(credits, null, 2));
+  //   } catch (err: any) { alert(err?.message ?? "View credits failed"); }
+  //   finally { setMenuOpenFor(null); setMenuPos(null); }
+  // };
+
+
+
+  const openViewCreditModal = async (inv: any) => {
     try {
-      const p = invoicePaths(inv)[0];
-      if (!p) throw new Error("Cannot determine invoice endpoint for credits");
-      const res = await fetch(`${p}/credit-notes`, { headers: getAuthHeaders() });
-      if (!res.ok) { alert("Credits not available"); return; }
-      const parsed = await tryParseResponse(res);
-      const credits = parsed.parsed ?? [];
-      alert("Credit notes:\n" + JSON.stringify(credits, null, 2));
-    } catch (err: any) { alert(err?.message ?? "View credits failed"); }
-    finally { setMenuOpenFor(null); setMenuPos(null); }
+      const res = await fetch(
+        `${API_BASE}/api/invoices/${inv.invoiceNumber}/credit-notes`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+
+      if (!res.ok) {
+        alert("Failed to load credit notes");
+        return;
+      }
+
+      const credits = await res.json();
+
+      if (!credits || credits.length === 0) {
+        alert("No credit notes found");
+        return;
+      }
+
+      // latest credit
+      setActiveCredit(credits[0]);
+      setShowViewCreditModal(true);
+    } catch (err) {
+      alert("Error loading credit note");
+    }
   };
+
+
 
   const creditDuplicate = (inv: any) => {
     const amt = prompt("Credit amount for duplicate:", String(inv.unpaidAmount ?? inv.total ?? 0));
@@ -2863,7 +2914,15 @@ async function deleteReceipt(r: any) {
           <li><button className="w-full text-left px-3 py-2 hover:bg-gray-100" onClick={() => openViewFromMenu(inv)}><Eye className="inline mr-2 -mt-1" /> View</button></li>
           <li><button className="w-full text-left px-3 py-2 hover:bg-gray-100" onClick={() => openAddPayment(inv)}><PlusCircle className="inline mr-2 -mt-1" /> Add Payment</button></li>
           <li><button className="w-full text-left px-3 py-2 hover:bg-gray-100" onClick={() => openViewPayments(inv)}><CircleDollarSign className="inline mr-2 -mt-1" /> View Payment(s)</button></li>
-          <li><button className="w-full text-left px-3 py-2 hover:bg-gray-100" onClick={() => creditDuplicate(inv)}><Copy className="inline mr-2 -mt-1" /> Credit Duplicate</button></li>
+          <li><button className="w-full text-left px-3 py-2 hover:bg-gray-100"
+            //  onClick={() => creditDuplicate(inv)}
+
+            onClick={() => {
+              setActiveInvoice(inv);
+              setShowDuplicateModal(true);
+            }}>
+
+            <Copy className="inline mr-2 -mt-1" /> Credit Duplicate</button></li>
           <li><button className="w-full text-left px-3 py-2 hover:bg-gray-100 text-red-600" onClick={() => handleDelete(inv)}><Trash className="inline mr-2 -mt-1" /> Delete</button></li>
         </>
       );
@@ -2871,15 +2930,31 @@ async function deleteReceipt(r: any) {
     if (isPaidInvoice(inv)) {
       return (
         <>
-          <li><button className="w-full text-left px-3 py-2 hover:bg-gray-100" onClick={() => openViewFromMenu(inv)}><Eye className="inline mr-2 -mt-1" /> View</button></li>
+          <li><button className="w-full text-left px-3 py-2 hover:bg-gray-100"
+            onClick={() => openViewFromMenu(inv)}
+          // onClick={() => openViewCreditModal(inv)}
+          >
+            <Eye className="inline mr-2 -mt-1" /> View</button></li>
           <li><button className="w-full text-left px-3 py-2 hover:bg-gray-100" onClick={() => addReceipt(inv)}><PlusCircle className="inline mr-2 -mt-1" /> Add Receipt</button></li>
           <li><button className="w-full text-left px-3 py-2 hover:bg-gray-100" onClick={() => viewReceipts(inv)}><FileText className="inline mr-2 -mt-1" /> View Receipt(s)</button></li>
           {/* CHANGED: opens modal UI instead of clicking hidden input directly */}
           <li><button className="w-full text-left px-3 py-2 hover:bg-gray-100" onClick={() => openUploadModalFor(inv)}><Upload className="inline mr-2 -mt-1" /> Upload File</button></li>
           <li><button className="w-full text-left px-3 py-2 hover:bg-gray-100" onClick={() => openViewPayments(inv)}><CircleDollarSign className="inline mr-2 -mt-1" /> View Payment(s)</button></li>
           <li><button className="w-full text-left px-3 py-2 hover:bg-gray-100" onClick={() => openCreditModal(inv)}><FileText className="inline mr-2 -mt-1" /> Add Credit</button></li>
-          <li><button className="w-full text-left px-3 py-2 hover:bg-gray-100" onClick={() => viewCredits(inv)}><FileText className="inline mr-2 -mt-1" /> View Credit(s)</button></li>
+          <li><button className="w-full text-left px-3 py-2 hover:bg-gray-100"
+            onClick={() => openViewCreditModal(inv)}
+          // onClick={() => openViewCreditModal(inv)}
+          >
+            <FileText className="inline mr-2 -mt-1" /> View Credit(s)</button></li>
+          <li><button className="w-full text-left px-3 py-2 hover:bg-gray-100"
+            onClick={() => {
+              setActiveInvoice(inv);
+              setShowDuplicateModal(true);
+            }}             >
+            <FileText className="inline mr-2 -mt-1" /> Create Duplicate</button></li>
+
           <li><button className="w-full text-left px-3 py-2 hover:bg-gray-100 text-red-600" onClick={() => handleDelete(inv)}><Trash className="inline mr-2 -mt-1" /> Delete</button></li>
+
         </>
       );
     }
@@ -2920,39 +2995,39 @@ async function deleteReceipt(r: any) {
   //   return null;
   // };
 
- const firstFileUrl = (inv: any) => {
-  if (!inv) return null;
+  const firstFileUrl = (inv: any) => {
+    if (!inv) return null;
 
-  const extractUrl = (f: any) => {
-    if (!f) return null;
-    if (typeof f === "string") return f;
-    return f.url ?? f.fileUrl ?? f.path ?? f.downloadUrl ?? null;
+    const extractUrl = (f: any) => {
+      if (!f) return null;
+      if (typeof f === "string") return f;
+      return f.url ?? f.fileUrl ?? f.path ?? f.downloadUrl ?? null;
+    };
+
+    // NEW: take the *latest* (last) item in each array
+
+    if (Array.isArray(inv.fileUrls) && inv.fileUrls.length > 0) {
+      const latest = inv.fileUrls[inv.fileUrls.length - 1];
+      return extractUrl(latest);
+    }
+
+    if (Array.isArray(inv.files) && inv.files.length > 0) {
+      const latest = inv.files[inv.files.length - 1];
+      return extractUrl(latest);
+    }
+
+    if (Array.isArray(inv.attachments) && inv.attachments.length > 0) {
+      const latest = inv.attachments[inv.attachments.length - 1];
+      return extractUrl(latest);
+    }
+
+    if (Array.isArray(inv.filesList) && inv.filesList.length > 0) {
+      const latest = inv.filesList[inv.filesList.length - 1];
+      return extractUrl(latest);
+    }
+
+    return extractUrl(inv.fileUrl ?? inv.downloadUrl ?? null);
   };
-
-  // NEW: take the *latest* (last) item in each array
-
-  if (Array.isArray(inv.fileUrls) && inv.fileUrls.length > 0) {
-    const latest = inv.fileUrls[inv.fileUrls.length - 1];
-    return extractUrl(latest);
-  }
-
-  if (Array.isArray(inv.files) && inv.files.length > 0) {
-    const latest = inv.files[inv.files.length - 1];
-    return extractUrl(latest);
-  }
-
-  if (Array.isArray(inv.attachments) && inv.attachments.length > 0) {
-    const latest = inv.attachments[inv.attachments.length - 1];
-    return extractUrl(latest);
-  }
-
-  if (Array.isArray(inv.filesList) && inv.filesList.length > 0) {
-    const latest = inv.filesList[inv.filesList.length - 1];
-    return extractUrl(latest);
-  }
-
-  return extractUrl(inv.fileUrl ?? inv.downloadUrl ?? null);
-};
 
 
 
@@ -3310,67 +3385,67 @@ async function deleteReceipt(r: any) {
                         <div className="text-xs text-gray-400">No files attached</div>
                       )}
                     </div>
-{(
-  (activeInvoice.files && activeInvoice.files.length > 0) ||
-  (activeInvoice.attachments && activeInvoice.attachments.length > 0) ||
-  (activeInvoice.filesList && activeInvoice.filesList.length > 0) ||
-  (activeInvoice.fileUrls && activeInvoice.fileUrls.length > 0)
-) && (
-  <div className="mt-3 space-y-2 text-sm">
-  {(() => {
-    const arr: { url: string | null; name?: string }[] = [];
+                    {(
+                      (activeInvoice.files && activeInvoice.files.length > 0) ||
+                      (activeInvoice.attachments && activeInvoice.attachments.length > 0) ||
+                      (activeInvoice.filesList && activeInvoice.filesList.length > 0) ||
+                      (activeInvoice.fileUrls && activeInvoice.fileUrls.length > 0)
+                    ) && (
+                        <div className="mt-3 space-y-2 text-sm">
+                          {(() => {
+                            const arr: { url: string | null; name?: string }[] = [];
 
-    const pushFrom = (f: any) => {
-      if (!f) return;
+                            const pushFrom = (f: any) => {
+                              if (!f) return;
 
-      if (typeof f === "string") {
-        arr.push({
-          url: f,
-          name: f.split("/").pop(),
-        });
-        return;
-      }
+                              if (typeof f === "string") {
+                                arr.push({
+                                  url: f,
+                                  name: f.split("/").pop(),
+                                });
+                                return;
+                              }
 
-      const url = f.url ?? f.fileUrl ?? f.path ?? f.downloadUrl ?? null;
-      const name =
-        f.name ??
-        f.filename ??
-        f.fileName ??
-        (typeof url === "string" ? url.split("/").pop() : undefined);
+                              const url = f.url ?? f.fileUrl ?? f.path ?? f.downloadUrl ?? null;
+                              const name =
+                                f.name ??
+                                f.filename ??
+                                f.fileName ??
+                                (typeof url === "string" ? url.split("/").pop() : undefined);
 
-      arr.push({ url, name });
-    };
+                              arr.push({ url, name });
+                            };
 
-    (activeInvoice.files ?? []).forEach(pushFrom);
-    (activeInvoice.attachments ?? []).forEach(pushFrom);
-    (activeInvoice.filesList ?? []).forEach(pushFrom);
-    (activeInvoice.fileUrls ?? []).forEach(pushFrom);
+                            (activeInvoice.files ?? []).forEach(pushFrom);
+                            (activeInvoice.attachments ?? []).forEach(pushFrom);
+                            (activeInvoice.filesList ?? []).forEach(pushFrom);
+                            (activeInvoice.fileUrls ?? []).forEach(pushFrom);
 
-    // 🔥 Sort newest first (last pushed = newest = first displayed)
-    const latestFirst = arr.reverse();
+                            // 🔥 Sort newest first (last pushed = newest = first displayed)
+                            const latestFirst = arr.reverse();
 
-    return latestFirst.map((f, idx) => {
-      if (!f.url) return null;
-      return (
-        <div key={idx} className="flex items-center justify-between gap-2">
-          <div className="text-gray-700 truncate">
-            {f.name ?? `File ${idx + 1}`}
-          </div>
-          <a
-            href={f.url}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center px-2 py-1 border rounded text-xs"
-          >
-            <Download className="h-3 w-3 mr-1" /> Download
-          </a>
-        </div>
-      );
-    });
-  })()}
-</div>
+                            return latestFirst.map((f, idx) => {
+                              if (!f.url) return null;
+                              return (
+                                <div key={idx} className="flex items-center justify-between gap-2">
+                                  <div className="text-gray-700 truncate">
+                                    {f.name ?? `File ${idx + 1}`}
+                                  </div>
+                                  <a
+                                    href={f.url}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="inline-flex items-center px-2 py-1 border rounded text-xs"
+                                  >
+                                    <Download className="h-3 w-3 mr-1" /> Download
+                                  </a>
+                                </div>
+                              );
+                            });
+                          })()}
+                        </div>
 
-)}
+                      )}
 
                   </div>
                 </div>
@@ -3498,162 +3573,162 @@ async function deleteReceipt(r: any) {
 
 
 
-{showReceiptsModal && selectedInvoiceForReceipts && (
-  <div className="fixed inset-0 z-50 flex items-start justify-center overflow-auto p-6">
-    <div
-      className="absolute inset-0 bg-black/40"
-      onClick={() => {
-        setShowReceiptsModal(false);
-        setSelectedInvoiceForReceipts(null);
-        setReceiptsList([]);
-      }}
-    />
-
-    <div className="relative z-10 w-full max-w-4xl bg-white rounded shadow-lg overflow-auto">
-      <div className="flex items-center justify-between p-4 border-b">
-        <h3 className="text-lg font-semibold">Receipts</h3>
-        <div className="flex items-center gap-3">
-          <Button onClick={() => addReceipt(selectedInvoiceForReceipts)}>
-            <Plus className="mr-2 h-4 w-4" /> Add a Receipt
-          </Button>
-          <Button
-            variant="ghost"
+      {showReceiptsModal && selectedInvoiceForReceipts && (
+        <div className="fixed inset-0 z-50 flex items-start justify-center overflow-auto p-6">
+          <div
+            className="absolute inset-0 bg-black/40"
             onClick={() => {
               setShowReceiptsModal(false);
               setSelectedInvoiceForReceipts(null);
               setReceiptsList([]);
             }}
-          >
-            <X className="h-4 w-4" />
-          </Button>
-        </div>
-      </div>
+          />
 
-      <div className="p-6">
-        {receiptsLoading ? (
-          <div className="text-center py-8">Loading receipts...</div>
-        ) : receiptsList.length === 0 ? (
-          <div className="text-center py-8 text-gray-500">
-            No receipts found
+          <div className="relative z-10 w-full max-w-4xl bg-white rounded shadow-lg overflow-auto">
+            <div className="flex items-center justify-between p-4 border-b">
+              <h3 className="text-lg font-semibold">Receipts</h3>
+              <div className="flex items-center gap-3">
+                <Button onClick={() => addReceipt(selectedInvoiceForReceipts)}>
+                  <Plus className="mr-2 h-4 w-4" /> Add a Receipt
+                </Button>
+                <Button
+                  variant="ghost"
+                  onClick={() => {
+                    setShowReceiptsModal(false);
+                    setSelectedInvoiceForReceipts(null);
+                    setReceiptsList([]);
+                  }}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+
+            <div className="p-6">
+              {receiptsLoading ? (
+                <div className="text-center py-8">Loading receipts...</div>
+              ) : receiptsList.length === 0 ? (
+                <div className="text-center py-8 text-gray-500">
+                  No receipts found
+                </div>
+              ) : (
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="bg-blue-50 text-left text-xs">
+                      <th className="px-4 py-3">Invoice No.</th>
+                      <th className="px-4 py-3">Project</th>
+                      <th className="px-4 py-3">Client</th>
+                      <th className="px-4 py-3">Amount</th>
+                      <th className="px-4 py-3">Issue Date</th>
+                      <th className="px-4 py-3 text-right">Action</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {receiptsList.map((r: any) => {
+                      const amount =
+                        r.totalAmount ??
+                        r.totalExcluidingTax ??
+                        r.subtotal ??
+                        r.priceWithOutTax ??
+                        0;
+
+                      return (
+                        <tr key={r.id} className="border-t hover:bg-gray-50">
+                          <td className="px-4 py-3">{r.invoiceId}</td>
+                          <td className="px-4 py-3">{r.productName}</td>
+                          <td className="px-4 py-3">{r.buyerCleintName}</td>
+                          <td className="px-4 py-3">
+                            {r.currency} {amount}
+                          </td>
+                          <td className="px-4 py-3">
+                            {new Date(r.issueDate).toLocaleDateString()}
+                          </td>
+
+                          <td className="px-4 py-3 text-right">
+                            <div className="flex justify-end gap-2">
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                onClick={() => setViewReceipt(r)}
+                              >
+                                <Eye className="h-4 w-4" />
+                              </Button>
+
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                onClick={() => downloadReceiptPDF(r)}
+                              >
+                                <Download className="h-4 w-4" />
+                              </Button>
+
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                className="text-red-600"
+                                onClick={() => deleteReceipt(r)}
+                              >
+                                <Trash className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              )}
+            </div>
           </div>
-        ) : (
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="bg-blue-50 text-left text-xs">
-                <th className="px-4 py-3">Invoice No.</th>
-                <th className="px-4 py-3">Project</th>
-                <th className="px-4 py-3">Client</th>
-                <th className="px-4 py-3">Amount</th>
-                <th className="px-4 py-3">Issue Date</th>
-                <th className="px-4 py-3 text-right">Action</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {receiptsList.map((r: any) => {
-                const amount =
-                  r.totalAmount ??
-                  r.totalExcluidingTax ??
-                  r.subtotal ??
-                  r.priceWithOutTax ??
-                  0;
-
-                return (
-                  <tr key={r.id} className="border-t hover:bg-gray-50">
-                    <td className="px-4 py-3">{r.invoiceId}</td>
-                    <td className="px-4 py-3">{r.productName}</td>
-                    <td className="px-4 py-3">{r.buyerCleintName}</td>
-                    <td className="px-4 py-3">
-                      {r.currency} {amount}
-                    </td>
-                    <td className="px-4 py-3">
-                      {new Date(r.issueDate).toLocaleDateString()}
-                    </td>
-
-                    <td className="px-4 py-3 text-right">
-                      <div className="flex justify-end gap-2">
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          onClick={() => setViewReceipt(r)}
-                        >
-                          <Eye className="h-4 w-4" />
-                        </Button>
-
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          onClick={() => downloadReceiptPDF(r)}
-                        >
-                          <Download className="h-4 w-4" />
-                        </Button>
-
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          className="text-red-600"
-                          onClick={() => deleteReceipt(r)}
-                        >
-                          <Trash className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        )}
-      </div>
-    </div>
-  </div>
-)}
-
-
-
-
-{viewReceipt && (
-  <div className="fixed inset-0 z-50 flex items-start justify-center p-6">
-    <div
-      className="absolute inset-0 bg-black/40"
-      onClick={() => setViewReceipt(null)}
-    />
-
-    <div className="relative z-10 w-full max-w-4xl bg-white rounded shadow-lg p-6 text-sm">
-      <h2 className="text-lg font-semibold mb-2">Proforma Invoice</h2>
-      <p>Invoice No.: {viewReceipt.invoiceId}</p>
-      <p>
-        Issue Date: {new Date(viewReceipt.issueDate).toDateString()}
-      </p>
-
-      <div className="grid grid-cols-2 gap-6 mt-4 border p-4">
-        <div>
-          <h3 className="font-semibold mb-1">Seller</h3>
-          <p>{viewReceipt.sellerCompanyName}</p>
-          <p>{viewReceipt.sellerCompanyAddress}</p>
-          <p>Bank: {viewReceipt.sellerCompanyBankName}</p>
         </div>
+      )}
 
-        <div>
-          <h3 className="font-semibold mb-1">Buyer</h3>
-          <p>{viewReceipt.buyerCompanyName}</p>
-          <p>{viewReceipt.buyerCompanyAddress}</p>
-          <p>Client: {viewReceipt.buyerCleintName}</p>
+
+
+
+      {viewReceipt && (
+        <div className="fixed inset-0 z-50 flex items-start justify-center p-6">
+          <div
+            className="absolute inset-0 bg-black/40"
+            onClick={() => setViewReceipt(null)}
+          />
+
+          <div className="relative z-10 w-full max-w-4xl bg-white rounded shadow-lg p-6 text-sm">
+            <h2 className="text-lg font-semibold mb-2">Proforma Invoice</h2>
+            <p>Invoice No.: {viewReceipt.invoiceId}</p>
+            <p>
+              Issue Date: {new Date(viewReceipt.issueDate).toDateString()}
+            </p>
+
+            <div className="grid grid-cols-2 gap-6 mt-4 border p-4">
+              <div>
+                <h3 className="font-semibold mb-1">Seller</h3>
+                <p>{viewReceipt.sellerCompanyName}</p>
+                <p>{viewReceipt.sellerCompanyAddress}</p>
+                <p>Bank: {viewReceipt.sellerCompanyBankName}</p>
+              </div>
+
+              <div>
+                <h3 className="font-semibold mb-1">Buyer</h3>
+                <p>{viewReceipt.buyerCompanyName}</p>
+                <p>{viewReceipt.buyerCompanyAddress}</p>
+                <p>Client: {viewReceipt.buyerCleintName}</p>
+              </div>
+            </div>
+
+            <div className="mt-4 text-right font-semibold">
+              Total: {viewReceipt.currency} {viewReceipt.totalAmount}
+            </div>
+
+            <div className="mt-4 text-right">
+              <Button variant="ghost" onClick={() => setViewReceipt(null)}>
+                Close
+              </Button>
+            </div>
+          </div>
         </div>
-      </div>
-
-      <div className="mt-4 text-right font-semibold">
-        Total: {viewReceipt.currency} {viewReceipt.totalAmount}
-      </div>
-
-      <div className="mt-4 text-right">
-        <Button variant="ghost" onClick={() => setViewReceipt(null)}>
-          Close
-        </Button>
-      </div>
-    </div>
-  </div>
-)}
+      )}
 
 
 
@@ -4042,6 +4117,94 @@ async function deleteReceipt(r: any) {
           </div>
         </div>
       )}
+
+
+
+
+
+
+      {showCreditModal && activeInvoice && (
+        <CreditNoteModal
+          open={showCreditModal}
+          invoice={activeInvoice}
+          onClose={() => {
+            setShowCreditModal(false);
+            setActiveInvoice(null);
+          }}
+          onSave={async (payload) => {
+            const res = await fetch(
+              `${API_BASE}/api/invoices/${payload.invoiceId}/credit-note`,
+              {
+                method: "POST",
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  amount: payload.finalAmount,
+                  note: payload.note,
+                }),
+              }
+            );
+
+            if (!res.ok) {
+              alert("Credit note creation failed");
+              return;
+            }
+
+            await fetchInvoices(clientId);
+            setShowCreditModal(false);
+            setActiveInvoice(null);
+            alert("Credit Note Created");
+          }}
+        />
+      )}
+
+
+
+
+      {showViewCreditModal && activeCredit && (
+        <ViewCreditNoteModal
+          open={showViewCreditModal}
+          credit={activeCredit}
+          onClose={() => {
+            setShowViewCreditModal(false);
+            setActiveCredit(null);
+          }}
+        />
+      )}
+
+
+      {showDuplicateModal && activeInvoice && (
+        <DuplicateInvoiceModal
+          open={showDuplicateModal}
+          invoice={activeInvoice}
+          projects={projectsList}
+          clients={clientsList}
+          onClose={() => {
+            setShowDuplicateModal(false);
+            setActiveInvoice(null);
+          }}
+          onSave={async (payload) => {
+            await fetch(`${API_BASE}/api/invoices`, {
+              method: "POST",
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(payload),
+            });
+
+            await fetchInvoices(clientId);
+            setShowDuplicateModal(false);
+            setActiveInvoice(null);
+          }}
+        />
+      )}
+
+
+
+
     </Card>
   );
 }
