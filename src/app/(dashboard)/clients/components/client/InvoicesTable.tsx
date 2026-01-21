@@ -408,6 +408,7 @@ export default function InvoicesTable({
       // prefer invoiceNumber path as specified by your API
       const invoiceNumber = inv.invoiceNumber ?? inv.id ?? null;
       if (!invoiceNumber) throw new Error("Invoice number not available for upload");
+      // console.log("Uploading to invoice number:", invoiceNumber);
       const uploadUrl = `${API_BASE}/api/invoices/${encodeURIComponent(String(invoiceNumber))}/files`;
 
       const fd = new FormData();
@@ -1084,7 +1085,7 @@ export default function InvoicesTable({
   return (
     <Card>
       <CardHeader className="flex items-center justify-between">
-        <CardTitle>Client Invoices</CardTitle>
+        <CardTitle>Client Invoices </CardTitle>
         <div className="flex items-center gap-2">
           <Button
             onClick={() => {
@@ -1574,7 +1575,7 @@ export default function InvoicesTable({
                     </select>
                   </div>
                   <div>
-                    <label className="text-sm text-gray-600 block mb-1">Project Budget</label>
+                    <label className="text-sm text-gray-600 block mb-1">Project Budget fbhj</label>
                     <div className="flex items-center gap-2">
                       <span className="px-2 py-2 bg-gray-100 rounded"> $ </span>
                       <input className="w-full border rounded px-3 py-2" value={""} disabled placeholder="$ 30,000" />

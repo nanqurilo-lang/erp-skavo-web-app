@@ -91,7 +91,7 @@ export default function InvoiceList() {
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-4">
           <Button onClick={() => setModal(m => ({ ...m, create: true }))}>
-            <Plus className="mr-2 h-4 w-4" /> Create Invoice
+            <Plus className="mr-2 h-4 w-4" /> Create Invoice 
           </Button>
 
           <div>

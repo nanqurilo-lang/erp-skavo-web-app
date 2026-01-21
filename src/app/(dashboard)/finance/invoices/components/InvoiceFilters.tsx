@@ -14,10 +14,10 @@ export default function InvoiceFilters({ filters, setFilters, invoices }) {
     return (
         
         <div className="border rounded-md bg-white px-3 py-3 mb-4 flex items-center justify-between">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1">
 
                 {/* Date Range */}
-                <div className="flex gap-2 items-center border rounded px-2 py-2 bg-white">
+                <div className="flex gap-1 items-center border rounded px-2 py-2 bg-white">
                     <span className="text-sm text-gray-600">Duration</span>
 
                     <input
@@ -39,7 +39,7 @@ export default function InvoiceFilters({ filters, setFilters, invoices }) {
 
                 {/* Client */}
                 <Select value={filters.client} onValueChange={(v) => setFilters(f => ({ ...f, client: v }))}>
-                    <SelectTrigger className="w-[160px]">
+                    <SelectTrigger className="w-[150px]">
                         <SelectValue placeholder="Client" />
                     </SelectTrigger>
                     <SelectContent>
@@ -69,7 +69,7 @@ export default function InvoiceFilters({ filters, setFilters, invoices }) {
 
                 {/* Search */}
                 <div className="relative">
-                    <Search className="w-4 h-4 absolute left-2 top-2 text-gray-400" />
+                    <Search className="w-3 h-4 absolute left-2 top-2 text-gray-400" />
                     <Input
                         placeholder="Search invoice / project / client"
                         className="pl-8 w-[250px]"
@@ -79,7 +79,7 @@ export default function InvoiceFilters({ filters, setFilters, invoices }) {
                 </div>
             </div>
 
-            <Button variant="outline" className="flex items-center gap-2">
+            <Button variant="outline" className="flex items-center gap-1">
                 <SlidersHorizontal className="h-4 w-4" /> Filters
             </Button>
         </div>
