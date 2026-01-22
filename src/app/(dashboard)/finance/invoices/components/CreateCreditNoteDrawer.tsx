@@ -49,6 +49,8 @@ export default function CreateCreditNoteDrawer({
 
         setLoading(true);
         try {
+
+            console.log("SUBMIT Credit Note:", fd);
             await fetch(
                 `${BASE_URL}/api/invoices/${invoiceNumber}/credit-notes`,
                 {

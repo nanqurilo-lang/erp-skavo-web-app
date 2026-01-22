@@ -3460,118 +3460,7 @@ export default function InvoicesTable({
         </div>
       )}
 
-      {/* Receipts modal (NEW) - unchanged UI/logic */}
-      {/* {showReceiptsModal && selectedInvoiceForReceipts && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center overflow-auto p-6">
-          <div className="absolute inset-0 bg-black/40" onClick={() => { setShowReceiptsModal(false); setSelectedInvoiceForReceipts(null); setReceiptsList([]); }} />
-          <div className="relative z-10 w-full max-w-4xl bg-white rounded shadow-lg overflow-auto">
-            <div className="flex items-center justify-between p-4 border-b">
-              <h3 className="text-lg font-semibold">Receipts</h3>
-              <div className="flex items-center gap-3">
-                <Button onClick={() => addReceipt(selectedInvoiceForReceipts)}><Plus className="mr-2 h-4 w-4" /> Add a Receipt</Button>
-                <Button variant="ghost" onClick={() => { setShowReceiptsModal(false); setSelectedInvoiceForReceipts(null); setReceiptsList([]); }}><X className="h-4 w-4" /></Button>
-              </div>
-            </div>
-
-            <div className="p-6">
-              {receiptsLoading ? (
-                <div className="text-center py-8">Loading receipts...</div>
-              ) : receiptsError ? (
-                <div className="text-red-600">{receiptsError}</div>
-              ) : (
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="bg-blue-50 text-left text-xs">
-                        <th className="px-4 py-3">Invoice No.</th>
-                        <th className="px-4 py-3">Project</th>
-                        <th className="px-4 py-3">Client</th>
-                        <th className="px-4 py-3">Amount</th>
-                        <th className="px-4 py-3">Issue Date</th>
-                        <th className="px-4 py-3">Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {receiptsList.length === 0 ? (
-                        <tr><td colSpan={6} className="text-center py-8">No receipts found</td></tr>
-                      ) : receiptsList.map((r: any, idx: number) => {
-                        const key = r.id ?? r.invoiceId ?? idx;
-                        const issue = r.issueDate ?? r.createdAt ?? "—";
-                        const amount = (r.totalAmount ?? r.totalExcluidingTax ?? r.subtotal ?? r.priceWithOutTax ?? 0);
-                        return (
-                          <tr key={key} className="border-t hover:bg-gray-50">
-                            <td className="px-4 py-3">{r.invoiceId ?? "—"}</td>
-                            <td className="px-4 py-3">{r.productName ?? r.projectName ?? "—"}</td>
-                            <td className="px-4 py-3">{r.buyerCleintName ?? r.buyerCompanyName ?? "—"}</td>
-                            <td className="px-4 py-3">{typeof amount === "number" ? (r.currency ? `${r.currency} ` : "") + Number(amount).toLocaleString(undefined, { minimumFractionDigits: 2 }) : amount}</td>
-                            <td className="px-4 py-3">{issue ? new Date(issue).toLocaleDateString() : "—"}</td>
-                            <td className="px-4 py-3">
-                              <div className="flex items-center justify-end gap-2 relative">
-                                { receiptDownloadUrl(r) && (
-                                  <a href={receiptDownloadUrl(r)} target="_blank" rel="noreferrer" className="inline-flex items-center px-2 py-1 border rounded" title="Download">
-                                    <Download className="h-4 w-4" />
-                                  </a>
-                                )}
-                                <button
-                                  className="receipt-action-button inline-flex items-center px-2 py-1 border rounded"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    const btn = e.currentTarget as HTMLElement;
-                                    if (receiptMenuOpenFor && (receiptMenuOpenFor.id ?? receiptMenuOpenFor.invoiceId) === (r.id ?? r.invoiceId)) {
-                                      setReceiptMenuOpenFor(null); setReceiptMenuPos(null);
-                                    } else openReceiptMenuFor(r, btn);
-                                  }}
-                                  title="Actions"
-                                  aria-expanded={receiptMenuOpenFor && (receiptMenuOpenFor.id ?? receiptMenuOpenFor.invoiceId) === (r.id ?? r.invoiceId)}
-                                >
-                                  <MoreHorizontal className="h-4 w-4" />
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-
-                  {receiptMenuOpenFor && receiptMenuPos && (
-                    <div ref={receiptMenuRef} style={{ position: "fixed", left: `${receiptMenuPos.left}px`, top: `${receiptMenuPos.top}px`, width: 220, zIndex: 11000, boxShadow: "0 8px 24px rgba(0,0,0,0.12)" }} className="bg-white border rounded overflow-hidden" onClick={(e) => e.stopPropagation()}>
-                      <ul>
-                        <li>
-                          <button className="w-full text-left px-3 py-2 hover:bg-gray-100" onClick={() => { alert(JSON.stringify(receiptMenuOpenFor, null, 2)); setReceiptMenuOpenFor(null); setReceiptMenuPos(null); }}>
-                            <Eye className="inline mr-2 -mt-1" /> View
-                          </button>
-                        </li>
-                        <li>
-                          <button
-                            className="w-full text-left px-3 py-2 hover:bg-gray-100"
-                            onClick={() => {
-                              const url = receiptDownloadUrl(receiptMenuOpenFor);
-                              if (url) window.open(url, "_blank");
-                              else alert("No download URL available");
-                              setReceiptMenuOpenFor(null);
-                              setReceiptMenuPos(null);
-                            }}
-                          >
-                            <Download className="inline mr-2 -mt-1" /> Download as PDF
-                          </button>
-                        </li>
-                        <li>
-                          <button className="w-full text-left px-3 py-2 hover:bg-gray-100 text-red-600" onClick={() => handleDeleteReceipt(receiptMenuOpenFor)}>
-                            <Trash className="inline mr-2 -mt-1" /> Delete
-                          </button>
-                        </li>
-                      </ul>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )} */}
-
-
+     
 
       {showReceiptsModal && selectedInvoiceForReceipts && (
         <div className="fixed inset-0 z-50 flex items-start justify-center overflow-auto p-6">
@@ -4121,43 +4010,28 @@ export default function InvoicesTable({
 
 
 
-
-
       {showCreditModal && activeInvoice && (
+        // <CreditNoteModal
+        //   open={showCreditModal}
+        //   invoice={activeInvoice}
+        //   onClose={() => {
+        //     setShowCreditModal(false);
+        //     setActiveInvoice(null);
+        //   }}
+          
+        // />
         <CreditNoteModal
-          open={showCreditModal}
-          invoice={activeInvoice}
-          onClose={() => {
-            setShowCreditModal(false);
-            setActiveInvoice(null);
-          }}
-          onSave={async (payload) => {
-            const res = await fetch(
-              `${API_BASE}/api/invoices/${payload.invoiceId}/credit-note`,
-              {
-                method: "POST",
-                headers: {
-                  Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  amount: payload.finalAmount,
-                  note: payload.note,
-                }),
-              }
-            );
+  open={showCreditModal}
+  invoice={activeInvoice}
+  onClose={() => {
+    setShowCreditModal(false);
+    setActiveInvoice(null);
+  }}
+  onCreated={async () => {
+    await fetchInvoices(clientId); // refresh invoices / credits
+  }}
+/>
 
-            if (!res.ok) {
-              alert("Credit note creation failed");
-              return;
-            }
-
-            await fetchInvoices(clientId);
-            setShowCreditModal(false);
-            setActiveInvoice(null);
-            alert("Credit Note Created");
-          }}
-        />
       )}
 
 
