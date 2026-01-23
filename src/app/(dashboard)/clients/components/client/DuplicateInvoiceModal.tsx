@@ -66,7 +66,9 @@ export default function DuplicateInvoiceModal({
 
             <div className="grid grid-cols-3 gap-4">
               <div>
-                <label className="text-sm text-gray-600">Invoice Number *</label>
+                <label className="text-sm text-gray-600">
+                  Invoice Number *
+                </label>
                 <input
                   className="w-full mt-1 border rounded px-3 py-2"
                   placeholder="INV#"
@@ -149,10 +151,7 @@ export default function DuplicateInvoiceModal({
                 >
                   <option value="">Select Client</option>
                   {clients.map((c) => (
-                    <option
-                      key={c.clientId ?? c.id}
-                      value={c.clientId ?? c.id}
-                    >
+                    <option key={c.clientId ?? c.id} value={c.clientId ?? c.id}>
                       {c.name ?? c.company?.companyName}
                     </option>
                   ))}
@@ -160,7 +159,9 @@ export default function DuplicateInvoiceModal({
               </div>
 
               <div>
-                <label className="text-sm text-gray-600">Project Budget *</label>
+                <label className="text-sm text-gray-600">
+                  Project Budget *
+                </label>
                 <div className="flex items-center mt-1">
                   <span className="px-2 py-2 bg-gray-100 border rounded-l">
                     $

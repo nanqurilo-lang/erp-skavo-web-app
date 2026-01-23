@@ -144,7 +144,7 @@ export default function DealsPage() {
   // Fetch global priorities list
   const { data: priorities = [] as PriorityItem[] } = useSWR(
     token ? `${BASE_URL}/deals/admin/priorities` : null,
-    authFetcher
+    authFetcher,
   );
 
   const priorityByStatus = useMemo(() => {
@@ -187,7 +187,7 @@ export default function DealsPage() {
     valid.sort(
       (a, b) =>
         new Date(a.nextDate as string).getTime() -
-        new Date(b.nextDate as string).getTime()
+        new Date(b.nextDate as string).getTime(),
     );
     return valid[0].nextDate || null;
   };
@@ -281,7 +281,7 @@ export default function DealsPage() {
   // POST assign priority: per your latest API: POST ${baseUrl}/deals/{{dealId}}/priority/assign with body { priorityId: <number> }
   const handlePriorityAssign = async (
     dealId: number | string,
-    newPriorityIdOrVal: string | number
+    newPriorityIdOrVal: string | number,
   ) => {
     if (!token) return;
     try {
@@ -292,7 +292,7 @@ export default function DealsPage() {
       if (priorityIdToSend === null) {
         // resolve status -> id
         const found = priorityByStatus.get(
-          String(newPriorityIdOrVal).toLowerCase()
+          String(newPriorityIdOrVal).toLowerCase(),
         );
         if (found) priorityIdToSend = found.id;
       }
@@ -327,12 +327,12 @@ export default function DealsPage() {
   // PUT stage: per your API: PUT ${baseUrl}/deals/:dealId/stage?stage=Win
   const handleStageChange = async (
     dealId: number | string,
-    newStage: string
+    newStage: string,
   ) => {
     if (!token) return;
     try {
       const url = `${BASE_URL}/deals/${dealId}/stage?stage=${encodeURIComponent(
-        newStage
+        newStage,
       )}`;
       const res = await fetch(url, {
         method: "PUT",
@@ -348,6 +348,39 @@ export default function DealsPage() {
       await mutateDeals();
     } catch (err) {
       console.error("Error updating stage:", err);
+    }
+  };
+
+  // DELETE deal
+  const handleDeleteDeal = async (dealId: number | string) => {
+    // if (!token) return;
+
+    // const confirmed = window.confirm(
+    //   "Are you sure you want to delete this deal? This action cannot be undone.",
+    // );
+    // if (!confirmed) return;
+
+    try {
+      console.log("delete devesh", dealId);
+      const res = await fetch(`${BASE_URL}/deals/${dealId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!res.ok) {
+        const txt = await res.text().catch(() => "");
+        console.error("Failed to delete deal:", res.status, txt);
+        alert("Failed to delete deal. Please try again.");
+        return;
+      }
+
+      // Refresh list
+      await mutateDeals();
+    } catch (err) {
+      console.error("Error deleting deal:", err);
+      alert("Something went wrong while deleting the deal.");
     }
   };
 
@@ -490,7 +523,7 @@ export default function DealsPage() {
                 ) {
                   const fallback =
                     priorities?.find(
-                      (p) => String(p.status).toLowerCase() === "low"
+                      (p) => String(p.status).toLowerCase() === "low",
                     ) || priorities?.[0];
                   prioritySelectValue = fallback ? String(fallback.id) : "Low";
                 } else if (
@@ -498,13 +531,13 @@ export default function DealsPage() {
                   "id" in (deal.priority as any)
                 ) {
                   prioritySelectValue = String(
-                    (deal.priority as PriorityObject).id
+                    (deal.priority as PriorityObject).id,
                   );
                 } else if (typeof deal.priority === "number") {
                   prioritySelectValue = String(deal.priority);
                 } else {
                   const found = priorityByStatus.get(
-                    String(deal.priority).toLowerCase()
+                    String(deal.priority).toLowerCase(),
                   );
                   prioritySelectValue = found
                     ? String(found.id)
@@ -644,7 +677,7 @@ export default function DealsPage() {
                                 ? asNum
                                 : (() => {
                                     const resolved = priorityByStatus.get(
-                                      String(val).toLowerCase()
+                                      String(val).toLowerCase(),
                                     );
                                     return resolved ? resolved.id : null;
                                   })();
@@ -712,9 +745,8 @@ export default function DealsPage() {
                               </Link>
                             </DropdownMenuItem>
                             <DropdownMenuItem
-                              onClick={() => {
-                                //console.log("Delete clicked for", deal.id)
-                              }}
+                              className="text-destructive focus:text-destructive"
+                              onClick={() => handleDeleteDeal(deal.id)}
                             >
                               Delete
                             </DropdownMenuItem>
