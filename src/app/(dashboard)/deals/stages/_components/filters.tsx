@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import type { Deal } from "@/types/deals"
-import { useMemo } from "react"
+import type { Deal } from "@/types/deals";
+import { useMemo } from "react";
 
 export default function Filters({
   deals,
@@ -12,22 +12,28 @@ export default function Filters({
   category,
   onCategoryChange,
 }: {
-  deals: Deal[]
-  search: string
-  onSearchChange: (v: string) => void
-  pipeline: string | null
-  onPipelineChange: (v: string | null) => void
-  category: string | null
-  onCategoryChange: (v: string | null) => void
+  deals: Deal[];
+  search: string;
+  onSearchChange: (v: string) => void;
+  pipeline: string | null;
+  onPipelineChange: (v: string | null) => void;
+  category: string | null;
+  onCategoryChange: (v: string | null) => void;
 }) {
   const pipelineOptions = useMemo(
-    () => Array.from(new Set(deals.map((d) => d.pipeline).filter(Boolean))) as string[],
+    () =>
+      Array.from(
+        new Set(deals.map((d) => d.pipeline).filter(Boolean)),
+      ) as string[],
     [deals],
-  )
+  );
   const categoryOptions = useMemo(
-    () => Array.from(new Set(deals.map((d) => d.dealCategory).filter(Boolean))) as string[],
+    () =>
+      Array.from(
+        new Set(deals.map((d) => d.dealCategory).filter(Boolean)),
+      ) as string[],
     [deals],
-  )
+  );
 
   return (
     <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
@@ -66,5 +72,5 @@ export default function Filters({
         </select>
       </div>
     </div>
-  )
+  );
 }

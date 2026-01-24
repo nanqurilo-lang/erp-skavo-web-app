@@ -44,13 +44,27 @@ export default function KanbanBoard({
   }, [stages]);
 
   const filteredDeals = deals.filter((d) => {
-    if (filters.pipeline && d.pipeline !== filters.pipeline) return false;
-    if (filters.category && d.dealCategory !== filters.category) return false;
+    if (
+      filters.pipeline &&
+      d.pipeline?.trim().toLowerCase() !== filters.pipeline.trim().toLowerCase()
+    )
+      return false;
+
+    if (
+      filters.category &&
+      d.dealCategory?.trim().toLowerCase() !==
+        filters.category.trim().toLowerCase()
+    )
+      return false;
+
     if (normalizedSearch) {
       const hay =
-        `${d.title} ${d.id} ${d.dealCategory ?? ""} ${d.pipeline ?? ""} ${d.dealAgentMeta?.name ?? d.dealAgent ?? ""}`.toLowerCase();
+        `${d.title} ${d.id} ${d.dealCategory ?? ""} ${d.pipeline ?? ""} ${
+          d.dealAgentMeta?.name ?? d.dealAgent ?? ""
+        }`.toLowerCase();
       if (!hay.includes(normalizedSearch)) return false;
     }
+
     return true;
   });
 
@@ -353,8 +367,8 @@ export default function KanbanBoard({
   };
 
   return (
-    <div className="relative w-full">
-      <div className="flex gap-6 overflow-x-auto pb-4 px-1">
+    <div className="relative w-full h-full flex flex-col min-h-0">
+      <div className="flex gap-6 flex-1 min-h-0 overflow-x-auto pb-4 px-1">
         {stagesState.map((stage) => {
           const stageDeals = filteredDeals.filter(
             (deal) => deal.dealStage === stage.name,
@@ -362,7 +376,7 @@ export default function KanbanBoard({
           return (
             <div
               key={stage.id}
-              className="min-w-[340px] max-w-[380px] flex-shrink-0 flex flex-col"
+              className="min-w-[340px] max-w-[380px] flex-shrink-0 flex flex-col h-full"
             >
               <div className="mb-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -410,7 +424,7 @@ export default function KanbanBoard({
                 </div>
               </div>
 
-              <div className="flex flex-col gap-3 flex-1 bg-muted/30 rounded-xl p-3 min-h-[400px]">
+              <div className="flex flex-col gap-3 flex-1 min-h-0 bg-muted/30 rounded-xl p-3 overflow-y-auto">
                 {stageDeals.length === 0 ? (
                   <div className="flex items-center justify-center h-full text-center">
                     <p className="text-sm text-muted-foreground">
@@ -454,15 +468,6 @@ function formatDateShort(d: Date) {
     return d.toLocaleDateString();
   } catch {
     return String(d);
-  }
-}
-
-function parseDateSafe(s: string) {
-  try {
-    const d = new Date(s);
-    return isNaN(d.getTime()) ? null : d;
-  } catch {
-    return null;
   }
 }
 
@@ -722,6 +727,56 @@ function DealCard({
     );
     setLocalFollowupsCreated(incomingFollowups);
   }, [deal]);
+
+  function parseDateSafe(s: string) {
+    try {
+      const d = new Date(s);
+      return isNaN(d.getTime()) ? null : d;
+    } catch {
+      return null;
+    }
+  }
+
+  function pickLatestNextDate(followups: any[]) {
+    let best: Date | null = null;
+
+    for (const f of followups || []) {
+      const raw = f?.nextDate || f?.next_date || f?.next_followup_date;
+
+      if (!raw) continue;
+
+      const d = parseDateSafe(String(raw));
+      if (!d) continue;
+
+      if (!best || d.getTime() > best.getTime()) {
+        best = d;
+      }
+    }
+
+    return best;
+  }
+
+  const followupsArray = Array.isArray((deal as any).followups)
+    ? (deal as any).followups
+    : [];
+
+  const latestNextDateFromFollowups = pickLatestNextDate(followupsArray);
+
+  const explicitNextFollowup =
+    (deal as any).nextFollowupDate ||
+    (deal as any).nextFollowup ||
+    (deal as any).next_followup
+      ? parseDateSafe(
+          String(
+            (deal as any).nextFollowupDate ||
+              (deal as any).nextFollowup ||
+              (deal as any).next_followup,
+          ),
+        )
+      : null;
+
+  const displayFollowupDate =
+    latestNextDateFromFollowups || explicitNextFollowup;
 
   useEffect(() => {
     const onDoc = (e: MouseEvent) => {
@@ -1018,14 +1073,14 @@ function DealCard({
   console.log("DEAL RAW OBJECT:", deal);
 
   // compute most recent followup created from localFollowupsCreated + initialFollowups (so local changes reflect)
-  const mostRecentFollowupFromLocal = pickMostRecentDate([
-    ...localFollowupsCreated,
-    ...initialFollowups,
-  ]);
+  // const mostRecentFollowupFromLocal = pickMostRecentDate([
+  //   ...localFollowupsCreated,
+  //   ...initialFollowups,
+  // ]);
 
   // Determine final followup date to show in the "followup" place:
   // prefer explicit nextFollowup field, else fallback to the most recent created followup (from local/server)
-  const displayFollowupDate = nextFollowup ?? mostRecentFollowupFromLocal;
+  // const displayFollowupDate = nextFollowup ?? mostRecentFollowupFromLocal;
 
   return (
     <div className="group rounded-lg border border-border bg-card hover:border-primary/50 hover:shadow-md transition-all duration-200 cursor-default">
@@ -1178,6 +1233,17 @@ function DealCard({
           <div className="flex items-center gap-3">
             {/* IMPORTANT: show nextFollowup if present, otherwise fallback to mostRecentCreated followup date.
                 If neither present, show "No follow-up" (exactly like before). */}
+            {/* {displayFollowupDate ? (
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <Calendar className="w-4 h-4 flex-shrink-0" />
+                <span>{formatDateShort(displayFollowupDate)}</span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <Calendar className="w-4 h-4 flex-shrink-0" />
+                <span>No follow-up</span>
+              </div>
+            )} */}
             {displayFollowupDate ? (
               <div className="flex items-center gap-2 text-xs text-muted-foreground">
                 <Calendar className="w-4 h-4 flex-shrink-0" />
@@ -1481,4 +1547,7 @@ function DealCard({
       )}
     </div>
   );
+}
+function pickLatestNextDate(followupsArray: any) {
+  throw new Error("Function not implemented.");
 }

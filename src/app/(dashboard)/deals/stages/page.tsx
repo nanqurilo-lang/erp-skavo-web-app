@@ -64,10 +64,10 @@ export default function StagesPage() {
   // Compute filters using memoization
   const resolvedFilters = useMemo(
     () => ({
-      pipeline: pipelineFilter || undefined,
-      category: categoryFilter || undefined,
+      pipeline: pipelineFilter,
+      category: categoryFilter,
     }),
-    [pipelineFilter, categoryFilter]
+    [pipelineFilter, categoryFilter],
   );
 
   if (loading) {
@@ -87,12 +87,21 @@ export default function StagesPage() {
   }
 
   return (
-    <main className="container mx-auto max-w-6xl px-4 py-8">
+    <main className="container h-screen flex flex-col overflow-hidden">
       <div className="flex flex-col min-h-screen  overflow-x-hidden">
-        <div className="p-6 max-w-[1400px] mx-auto w-full">
-          <header className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        {/* //   <div className="flex flex-col flex-1 overflow-hidden"> */}
+        <div className="flex flex-col flex-1 p-4 w-full">
+          <header className="shrink-0 mb-4 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             {/* <h1 className="text-3xl font-bold text-foreground text-balance">Deals – Kanban </h1> */}
             <div className="flex items-center gap-2 flex-wrap">
+              {/* <footer className="mt-6">
+                <Link
+                  href="/dashboard"
+                  className="text-blue-600 hover:underline"
+                >
+                  Back to Home
+                </Link>
+              </footer> */}
               <AddStagePanel
                 onCreated={async () => {
                   await mutateStages();
@@ -126,7 +135,7 @@ export default function StagesPage() {
             </div>
           </header>
 
-          <main className="flex-1 overflow-x-auto">
+          <main className="flex-1 min-h-0 overflow-auto">
             <KanbanBoard
               stages={stagesData}
               deals={dealsData}
@@ -134,12 +143,6 @@ export default function StagesPage() {
               filters={resolvedFilters}
             />
           </main>
-
-          <footer className="mt-6">
-            <Link href="/dashboard" className="text-blue-600 hover:underline">
-              Back to Home
-            </Link>
-          </footer>
         </div>
       </div>
     </main>
