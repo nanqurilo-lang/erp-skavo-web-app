@@ -786,11 +786,6 @@
 
 
 
-
-
-
-
-
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
@@ -922,6 +917,17 @@ export default function DealsPage() {
 const [dateFrom, setDateFrom] = useState<Date | undefined>();
 const [dateTo, setDateTo] = useState<Date | undefined>();
 
+const [openFilters, setOpenFilters] = useState(false);
+
+// filter form state
+const [dateFilterOn, setDateFilterOn] = useState<"created" | "close">("created");
+const [minValue, setMinValue] = useState("");
+const [maxValue, setMaxValue] = useState("");
+const [agentFilter, setAgentFilter] = useState("all");
+const [watcherFilter, setWatcherFilter] = useState("all");
+const [leadFilter, setLeadFilter] = useState("all");
+const [tagFilter, setTagFilter] = useState("all");
+const [priorityFilter, setPriorityFilter] = useState("all");
 
 
 
@@ -1006,51 +1012,6 @@ const [dateTo, setDateTo] = useState<Date | undefined>();
     return valid[0].nextDate || null;
   };
 
-//   const filteredDeals = useMemo(() => {
-//     const q = query.trim().toLowerCase();
-//     return (deals as Deal[]).filter((d) => {
-//       const matchesStage =
-//         stageFilter === "all" ||
-//         String(d.dealStage || "").toLowerCase() === stageFilter.toLowerCase();
-//       const hay = [
-//         d.title,
-//         d.dealAgentMeta?.name,
-//         d.dealAgent,
-//         d.dealCategory,
-//         d.pipeline,
-//         String(d.id),
-//         d.leadName,
-//         d.leadEmail,
-//         d.leadMobile,
-//       ]
-//         .filter(Boolean)
-//         .join(" ")
-//         .toLowerCase();
-//       const matchesQuery = q.length === 0 || hay.includes(q);
-//       // return matchesStage && matchesQuery;
-
-
-//       return matchesStage && matchesQuery && matchesDate;
-
-
-
-// // 🗓️ DATE RANGE FILTER (createdAt)
-// let matchesDate = true;
-
-// if (dateFrom || dateTo) {
-//   if (!d.createdAt) return false;
-
-//   const dealDate = new Date(d.createdAt);
-
-//   if (dateFrom && dealDate < dateFrom) matchesDate = false;
-//   if (dateTo && dealDate > dateTo) matchesDate = false;
-// }
-
-
-
-//     });
-//   }, [deals, query, stageFilter]);
-
 
 
 const filteredDeals = useMemo(() => {
@@ -1082,6 +1043,33 @@ const filteredDeals = useMemo(() => {
     const matchesDate =
       (!dateFrom || (d.createdAt && new Date(d.createdAt) >= dateFrom)) &&
       (!dateTo || (d.createdAt && new Date(d.createdAt) <= dateTo));
+
+
+
+
+// value filter
+const dealValue = Number(d.value || 0);
+if (minValue && dealValue < Number(minValue)) return false;
+if (maxValue && dealValue > Number(maxValue)) return false;
+
+// agent filter
+if (
+  agentFilter !== "all" &&
+  d.dealAgentMeta?.name !== agentFilter
+) {
+  return false;
+}
+
+// priority filter
+if (
+  priorityFilter !== "all" &&
+  String(d.priority).toLowerCase() !== priorityFilter.toLowerCase()
+) {
+  return false;
+}
+
+
+
 
     return matchesStage && matchesQuery && matchesDate;
   });
@@ -1272,44 +1260,6 @@ const filteredDeals = useMemo(() => {
             /> */}
 
 
-{/* <Popover>
-  <PopoverTrigger asChild>
-    <Button
-      variant="outline"
-      className="w-[300px] justify-start text-sm"
-    >
-      <CalendarIcon className="mr-2 h-4 w-4" />
-      {dateFrom ? (
-        dateTo ? (
-          <>
-            {format(dateFrom, "dd MMM yyyy")} -{" "}
-            {format(dateTo, "dd MMM yyyy")}
-          </>
-        ) : (
-          format(dateFrom, "dd MMM yyyy")
-        )
-      ) : (
-        "Start Date - End Date"
-      )}
-    </Button>
-  </PopoverTrigger>
-
-  <PopoverContent align="start" className="p-0">
-    <Calendar
-      mode="range"
-      selected={{ from: dateFrom, to: dateTo }}
-      onSelect={(range) => {
-        setDateFrom(range?.from);
-        setDateTo(range?.to);
-      }}
-      numberOfMonths={2}
-    />
-  </PopoverContent>
-</Popover> */}
-
-
-
-
 
 <Popover>
   <PopoverTrigger asChild>
@@ -1430,7 +1380,17 @@ const filteredDeals = useMemo(() => {
           </div>
 
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="sm" className="px-2">
+            {/* <Button variant="ghost" size="sm" className="px-2"> */}
+
+
+<Button
+  variant="ghost"
+  size="sm"
+  className="px-2"
+  onClick={() => setOpenFilters(true)}
+>
+
+
               <div className="flex items-center gap-2">
                 <SlidersHorizontal className="h-4 w-4" />
                 <span className="text-sm">Filters</span>
@@ -1785,6 +1745,130 @@ const filteredDeals = useMemo(() => {
           </Link>
         </div>
       </div>
+
+
+
+
+{openFilters && (
+  <div className="fixed inset-0 z-50 flex">
+    {/* overlay */}
+    <div
+      className="fixed inset-0 bg-black/30"
+      onClick={() => setOpenFilters(false)}
+    />
+
+    {/* drawer */}
+    <div className="relative ml-auto h-full w-[320px] bg-white shadow-xl p-4 overflow-y-auto">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2 font-medium">
+          <SlidersHorizontal className="h-4 w-4" />
+          Filters
+        </div>
+        <Button variant="ghost" size="icon" onClick={() => setOpenFilters(false)}>
+          ✕
+        </Button>
+      </div>
+
+      {/* Date Filter On */}
+      <div className="space-y-1 mb-4">
+        <div className="text-sm">Date Filter On</div>
+        <Select value={dateFilterOn} onValueChange={(v) => setDateFilterOn(v as any)}>
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="created">Created</SelectItem>
+            <SelectItem value="close">Expected Close</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Deal Value */}
+      <div className="space-y-1 mb-4">
+        <div className="text-sm">Deals Value</div>
+        <div className="flex gap-2">
+          <Input
+            placeholder="Min"
+            type="number"
+            value={minValue}
+            onChange={(e) => setMinValue(e.target.value)}
+          />
+          <Input
+            placeholder="Max"
+            type="number"
+            value={maxValue}
+            onChange={(e) => setMaxValue(e.target.value)}
+          />
+        </div>
+      </div>
+
+      {/* Agent */}
+      <div className="space-y-1 mb-4">
+        <div className="text-sm">Agent</div>
+        <Select value={agentFilter} onValueChange={setAgentFilter}>
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All</SelectItem>
+            {(deals as Deal[])
+              .map((d) => d.dealAgentMeta?.name)
+              .filter(Boolean)
+              .filter((v, i, a) => a.indexOf(v) === i)
+              .map((name) => (
+                <SelectItem key={name} value={name!}>
+                  {name}
+                </SelectItem>
+              ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Priority */}
+      <div className="space-y-1 mb-6">
+        <div className="text-sm">Priority Status</div>
+        <Select value={priorityFilter} onValueChange={setPriorityFilter}>
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All</SelectItem>
+            {priorities.map((p) => (
+              <SelectItem key={p.id} value={String(p.status)}>
+                {p.status}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* CLEAR */}
+      <Button
+        variant="outline"
+        className="w-full"
+        onClick={() => {
+          setDateFilterOn("created");
+          setMinValue("");
+          setMaxValue("");
+          setAgentFilter("all");
+          setWatcherFilter("all");
+          setLeadFilter("all");
+          setTagFilter("all");
+          setPriorityFilter("all");
+        }}
+      >
+        Clear
+      </Button>
+    </div>
+  </div>
+)}
+
+
+
+
+
+
+
     </main>
   );
 }
