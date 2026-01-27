@@ -18,6 +18,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/components/ui/popover";
+
+
 /* =======================
    Types & constants
    ======================= */
@@ -1326,10 +1333,71 @@ export default function LeadsAdminPage() {
       {/* header */}
       <div className="mb-6 border-b border-gray-200">
         <div className="flex items-center justify-between py-3">
-          <div className="flex items-center gap-4">
+          {/* <div className="flex items-center gap-4">
             <div className="text-sm text-muted-foreground">Duration</div>
             <div className="text-sm text-muted-foreground underline">Start Date to End Date</div>
-          </div>
+          </div> */}
+
+
+<Popover>
+  <PopoverTrigger asChild>
+    <div className="flex items-center gap-4 cursor-pointer">
+      <div className="text-sm text-muted-foreground">Duration</div>
+      <div className="text-sm text-muted-foreground underline">
+        {startDate && endDate
+          ? `${new Date(startDate).toLocaleDateString()} to ${new Date(endDate).toLocaleDateString()}`
+          : "Start Date to End Date"}
+      </div>
+    </div>
+  </PopoverTrigger>
+
+  <PopoverContent className="w-[320px] p-4">
+    <div className="space-y-4">
+      <h4 className="font-medium">Select Duration</h4>
+
+      {/* Start Date */}
+      <div>
+        <label className="text-sm text-muted-foreground">Start Date</label>
+        <input
+          type="date"
+          value={startDate}
+          onChange={(e) => setStartDate(e.target.value)}
+          className="w-full rounded-md border px-3 py-2"
+        />
+      </div>
+
+      {/* End Date */}
+      <div>
+        <label className="text-sm text-muted-foreground">End Date</label>
+        <input
+          type="date"
+          value={endDate}
+          onChange={(e) => setEndDate(e.target.value)}
+          className="w-full rounded-md border px-3 py-2"
+        />
+      </div>
+
+      {/* Reset */}
+      <div className="flex justify-end">
+        <Button
+          variant="ghost"
+          onClick={() => {
+            setStartDate("");
+            setEndDate("");
+          }}
+        >
+          Reset
+        </Button>
+      </div>
+    </div>
+  </PopoverContent>
+</Popover>
+
+
+
+
+
+
           <div className="flex items-center gap-3">
             <button onClick={() => setDrawerOpen(true)} className="flex items-center gap-2 text-sm text-muted-foreground hover:text-slate-700">
               <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M6 12h12M10 18h4" /></svg>
