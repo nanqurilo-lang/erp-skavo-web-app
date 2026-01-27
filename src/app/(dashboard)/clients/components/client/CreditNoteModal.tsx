@@ -569,7 +569,9 @@ console.log("RENDER CreditNoteModal", invoice?.client.clientId
     <div className="fixed inset-0 z-50 flex items-start justify-center p-6">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
 
-      <div className="relative z-10 w-full max-w-3xl bg-white rounded-lg shadow-lg">
+      {/* <div className="relative z-10 w-full max-w-3xl bg-white rounded-lg shadow-lg"> */}
+      <div className="relative z-10 w-full max-w-3xl bg-white rounded-lg shadow-lg max-h-[90vh] flex flex-col">
+
         <div className="flex items-center justify-between px-6 py-4 border-b">
           <h2 className="text-lg font-semibold">
             Credit Note Details
@@ -579,7 +581,9 @@ console.log("RENDER CreditNoteModal", invoice?.client.clientId
           </Button>
         </div>
 
-        <div className="p-6 space-y-6">
+        {/* <div className="p-6 space-y-6"> */}
+        <div className="p-6 space-y-6 overflow-y-auto ">
+
 
           {/* HEADER FIELDS */}
           <div className="grid grid-cols-3 gap-4">
