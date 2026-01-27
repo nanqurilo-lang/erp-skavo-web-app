@@ -92,6 +92,10 @@ export default function TimesheetPage() {
   const [viewMode, setViewMode] = useState<ViewMode>("table");
   const [showCalendarModal, setShowCalendarModal] = useState(false);
 
+  const [startDate, setStartDate] = useState("");
+const [endDate, setEndDate] = useState("");
+
+
   // Log Time + action
   const [showLogModal, setShowLogModal] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -820,13 +824,30 @@ export default function TimesheetPage() {
       <main className="w-full">
         <div className="max-w-[1180px] mx-auto ">
           {/* PART 1: Filters */}
-          <FiltersSection
+          {/* <FiltersSection
             employeeFilter={employeeFilter}
             setEmployeeFilter={setEmployeeFilter}
             employeeOptions={employeeOptions}
             getEmployeeLabel={getEmployeeLabel}
             onOpenFiltersDrawer={() => setShowFilters(true)}
-          />
+          /> */}
+
+<FiltersSection
+  employeeFilter={employeeFilter}
+  setEmployeeFilter={setEmployeeFilter}
+  employeeOptions={employeeOptions}
+  getEmployeeLabel={getEmployeeLabel}
+
+  startDate={startDate}
+  endDate={endDate}
+  setStartDate={setStartDate}
+  setEndDate={setEndDate}
+
+  onOpenFiltersDrawer={() => setShowFilters(true)}
+/>
+
+
+
 
           {/* PART 2: Action buttons */}
           <ActionsSection
@@ -866,7 +887,7 @@ export default function TimesheetPage() {
         <div className="flex items-center justify-between p-4 border-b">
           <div className="flex items-center gap-2">
             <Search className="w-5 h-5" />
-            <h3 className="font-semibold">Filters</h3>
+            <h3 className="font-semibold">Filters </h3>
           </div>
           <button
             onClick={() => setShowFilters(false)}

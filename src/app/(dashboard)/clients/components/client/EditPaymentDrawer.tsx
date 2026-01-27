@@ -383,7 +383,7 @@ export default function EditPaymentDrawer({
       if (receiptFile) {
         formData.append("receipt", receiptFile);
       }
-
+console.log("payjhhhj", {formData});
       const res = await fetch(`${BASE_URL}/api/payments/${payment.id}`, {
         method: "PUT",
         headers: {
@@ -431,7 +431,7 @@ export default function EditPaymentDrawer({
 
           {/* Currency */}
           <div>
-            <label className="text-sm text-gray-600">Currency *</label>
+            <label className="text-sm text-gray-600">Currency  *</label>
             <select
               className="w-full border rounded px-3 py-2"
               value={currency}
