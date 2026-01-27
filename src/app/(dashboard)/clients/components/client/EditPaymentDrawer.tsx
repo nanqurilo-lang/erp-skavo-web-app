@@ -358,53 +358,55 @@ export default function EditPaymentDrawer({
   // ----------------------------
   // SAVE PAYMENT
   // ----------------------------
-  const savePayment = async () => {
-    if (!amount || isNaN(Number(amount))) {
-      alert("Enter valid amount");
-      return;
+
+
+
+const savePayment = async () => {
+  if (!amount || isNaN(Number(amount))) {
+    alert("Enter valid amount");
+    return;
+  }
+
+  try {
+    setSaving(true);
+
+    const token = localStorage.getItem("accessToken") || "";
+
+    const payload = {
+      amount: Number(amount),
+      currency,
+      transactionId,
+      status,
+      notes: remark || null,
+      paymentGatewayId: paymentGatewayId || null,
+    };
+
+    const res = await fetch(`${BASE_URL}/api/payments/${payment.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) {
+      const text = await res.text();
+      console.error("API ERROR:", text);
+      throw new Error(text || "Failed to update payment");
     }
 
-    try {
-      setSaving(true);
+    onUpdated?.();
+    onClose();
+  } catch (err: any) {
+    alert(err.message || "Update payment failed");
+  } finally {
+    setSaving(false);
+  }
+};
 
-      const token = localStorage.getItem("accessToken") || "";
 
-      const formData = new FormData();
-      formData.append("amount", amount);
-      formData.append("currency", currency);
-      formData.append("transactionId", transactionId);
-      formData.append("status", status);
-      formData.append("note", remark);
 
-      if (paymentGatewayId) {
-        formData.append("paymentGatewayId", String(paymentGatewayId));
-      }
-
-      if (receiptFile) {
-        formData.append("receipt", receiptFile);
-      }
-console.log("payjhhhj", {formData});
-      const res = await fetch(`${BASE_URL}/api/payments/${payment.id}`, {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData,
-      });
-
-      if (!res.ok) {
-        const text = await res.text();
-        throw new Error(text || "Failed to update payment");
-      }
-
-      onUpdated?.();
-      onClose();
-    } catch (err: any) {
-      alert(err?.message ?? "Update payment failed");
-    } finally {
-      setSaving(false);
-    }
-  };
 
   return (
     <div className="fixed inset-0 z-[30000]">
