@@ -28,7 +28,7 @@ import {
 /* =======================
    Types & constants
    ======================= */
-const BASE =  `${process.env.NEXT_PUBLIC_MAIN}`;
+const BASE = `${process.env.NEXT_PUBLIC_MAIN}`;
 
 type EmployeeMeta = {
   employeeId: string;
@@ -291,15 +291,15 @@ export function AddLeadModal({
         deal:
           payload.createDeal || payload.autoConvertToClient
             ? {
-                title: payload.deal!.title,
-                pipeline: payload.deal!.pipeline,
-                dealStage: payload.deal!.dealStage,
-                dealCategory: payload.deal!.dealCategory,
-                value: Number(payload.deal!.value),
-                expectedCloseDate: payload.deal!.expectedCloseDate,
-                dealAgent: payload.deal!.dealAgent,
-                dealWatchers: payload.deal!.dealWatchers || [],
-              }
+              title: payload.deal!.title,
+              pipeline: payload.deal!.pipeline,
+              dealStage: payload.deal!.dealStage,
+              dealCategory: payload.deal!.dealCategory,
+              value: Number(payload.deal!.value),
+              expectedCloseDate: payload.deal!.expectedCloseDate,
+              dealAgent: payload.deal!.dealAgent,
+              dealWatchers: payload.deal!.dealWatchers || [],
+            }
             : undefined,
         companyName: payload.companyName,
         officialWebsite: payload.officialWebsite || undefined,
@@ -749,7 +749,7 @@ export function AddLeadModal({
         </aside>
       </div>
 
-      {SmallAddListModal} 
+      {SmallAddListModal}
     </>
   );
 }
@@ -782,9 +782,9 @@ export function AddLeadModal({
 //     document.addEventListener("mousedown", onDoc);
 //     return () => document.removeEventListener("mousedown", onDoc);
 //   }, [open]);
- 
+
 //   const convert = async () => {
-    
+
 //     if (!confirm("Convert this lead to client?")) return;
 //     try {
 //       const token = localStorage.getItem("accessToken");
@@ -803,7 +803,7 @@ export function AddLeadModal({
 //   };
 
 
-  
+
 
 //   const remove = async () => {
 //     if (!confirm("Delete this lead?")) return;
@@ -1089,47 +1089,46 @@ function LeadRow({
               </li> */}
 
               <li>
-  {(() => {
-    const isConverted = lead.status === "CONVERTED";
+                {(() => {
+                  const isConverted = lead.status === "CONVERTED";
 
-    return (
-      <button
-        disabled={isConverted}
-        onClick={() => {
-          if (isConverted) return; // safety
-          setOpen(false);
-          onChangeToClient(lead.id);
-        }}
-        className={`w-full flex items-center gap-3 px-4 py-3 text-sm ${
-          isConverted
-            ? "cursor-not-allowed text-muted-foreground opacity-50"
-            : "hover:bg-slate-50"
-        }`}
-      >
-        <svg
-          className="w-5 h-5 text-muted-foreground"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-        >
-          <path
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M12 11c2.21 0 4-1.79 4-4S14.21 3 12 3 8 4.79 8 7s1.79 4 4 4z"
-          />
-          <path
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M6 20v-1a4 4 0 014-4h4a4 4 0 014 4v1"
-          />
-        </svg>
-        {isConverted ? "Already Client" : "Change to Client"}
-      </button>
-    );
-  })()}
-</li>
+                  return (
+                    <button
+                      disabled={isConverted}
+                      onClick={() => {
+                        if (isConverted) return; // safety
+                        setOpen(false);
+                        onChangeToClient(lead.id);
+                      }}
+                      className={`w-full flex items-center gap-3 px-4 py-3 text-sm ${isConverted
+                          ? "cursor-not-allowed text-muted-foreground opacity-50"
+                          : "hover:bg-slate-50"
+                        }`}
+                    >
+                      <svg
+                        className="w-5 h-5 text-muted-foreground"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M12 11c2.21 0 4-1.79 4-4S14.21 3 12 3 8 4.79 8 7s1.79 4 4 4z"
+                        />
+                        <path
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M6 20v-1a4 4 0 014-4h4a4 4 0 014 4v1"
+                        />
+                      </svg>
+                      {isConverted ? "Already Client" : "Change to Client"}
+                    </button>
+                  );
+                })()}
+              </li>
 
 
               <li>
@@ -1269,8 +1268,8 @@ export default function LeadsAdminPage() {
   };
 
   const handleChangeToClient = (id: number) => {
-  router.push(`/clients/changeToClient?leadId=${id}`);
-};
+    router.push(`/clients/changeToClient?leadId=${id}`);
+  };
 
   const handleView = (id: number) => {
     // navigate to view page or open view modal — here we navigate
@@ -1324,9 +1323,9 @@ export default function LeadsAdminPage() {
     setSelectedAddedBy("All");
   };
 
-//   const handleChangeToClient = (id: number) => {
-//   router.push(`/clients/add?leadId=${id}`);
-// };
+  //   const handleChangeToClient = (id: number) => {
+  //   router.push(`/clients/add?leadId=${id}`);
+  // };
 
   return (
     <main className="container mx-auto max-w-6xl px-4 py-8">
@@ -1339,59 +1338,59 @@ export default function LeadsAdminPage() {
           </div> */}
 
 
-<Popover>
-  <PopoverTrigger asChild>
-    <div className="flex items-center gap-4 cursor-pointer">
-      <div className="text-sm text-muted-foreground">Duration</div>
-      <div className="text-sm text-muted-foreground underline">
-        {startDate && endDate
-          ? `${new Date(startDate).toLocaleDateString()} to ${new Date(endDate).toLocaleDateString()}`
-          : "Start Date to End Date"}
-      </div>
-    </div>
-  </PopoverTrigger>
+          <Popover>
+            <PopoverTrigger asChild>
+              <div className="flex items-center  gap-4 cursor-pointer">
+                <div className="text-sm text-muted-foreground">Duration</div>
+                <div className="text-sm text-muted-foreground underline">
+                  {startDate && endDate
+                    ? `${new Date(startDate).toLocaleDateString()} to ${new Date(endDate).toLocaleDateString()}`
+                    : "Start Date to End Date"}
+                </div>
+              </div>
+            </PopoverTrigger>
 
-  <PopoverContent className="w-[320px] p-4">
-    <div className="space-y-4">
-      <h4 className="font-medium">Select Duration</h4>
+            <PopoverContent className="w-[320px] p-4">
+              <div className="space-y-4">
+                <h4 className="font-medium">Select Duration</h4>
 
-      {/* Start Date */}
-      <div>
-        <label className="text-sm text-muted-foreground">Start Date</label>
-        <input
-          type="date"
-          value={startDate}
-          onChange={(e) => setStartDate(e.target.value)}
-          className="w-full rounded-md border px-3 py-2"
-        />
-      </div>
+                {/* Start Date */}
+                <div>
+                  <label className="text-sm text-muted-foreground">Start Date</label>
+                  <input
+                    type="date"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    className="w-full rounded-md border px-3 py-2"
+                  />
+                </div>
 
-      {/* End Date */}
-      <div>
-        <label className="text-sm text-muted-foreground">End Date</label>
-        <input
-          type="date"
-          value={endDate}
-          onChange={(e) => setEndDate(e.target.value)}
-          className="w-full rounded-md border px-3 py-2"
-        />
-      </div>
+                {/* End Date */}
+                <div>
+                  <label className="text-sm text-muted-foreground">End Date</label>
+                  <input
+                    type="date"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                    className="w-full rounded-md border px-3 py-2"
+                  />
+                </div>
 
-      {/* Reset */}
-      <div className="flex justify-end">
-        <Button
-          variant="ghost"
-          onClick={() => {
-            setStartDate("");
-            setEndDate("");
-          }}
-        >
-          Reset
-        </Button>
-      </div>
-    </div>
-  </PopoverContent>
-</Popover>
+                {/* Reset */}
+                <div className="flex justify-end">
+                  <Button
+                    variant="ghost"
+                    onClick={() => {
+                      setStartDate("");
+                      setEndDate("");
+                    }}
+                  >
+                    Reset
+                  </Button>
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
 
 
 
@@ -1421,7 +1420,7 @@ export default function LeadsAdminPage() {
             <div className="flex items-center gap-2 rounded-md border bg-white px-3 py-2">
               <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search" aria-label="Search leads" className="border-0 p-0 focus:ring-0" />
             </div>
-            <Button variant="secondary" onClick={() => mutate()}>Refresh</Button>
+            {/* <Button variant="secondary" onClick={() => mutate()}>Refresh</Button> */}
           </div>
         </div>
 
@@ -1466,18 +1465,18 @@ export default function LeadsAdminPage() {
 
                 {/* devesh */}
                 <TableBody>
-  {filtered.map((lead, idx) => (
-    <LeadRow
-      key={lead.id}
-      lead={lead}
-      idx={idx}
-      mutate={() => mutate()}
-      onEdit={(id) => handleEdit(id)}
-      onView={(id) => handleView(id)}
-      onChangeToClient={handleChangeToClient}   // 👈 added
-    />
-  ))}
-</TableBody>
+                  {filtered.map((lead, idx) => (
+                    <LeadRow
+                      key={lead.id}
+                      lead={lead}
+                      idx={idx}
+                      mutate={() => mutate()}
+                      onEdit={(id) => handleEdit(id)}
+                      onView={(id) => handleView(id)}
+                      onChangeToClient={handleChangeToClient}   // 👈 added
+                    />
+                  ))}
+                </TableBody>
 
               </Table>
             </div>
