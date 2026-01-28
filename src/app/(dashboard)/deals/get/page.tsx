@@ -805,6 +805,8 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
+import AddFollowupModal from "../_components/AddFollowupModal";
+
 
 
 
@@ -910,24 +912,28 @@ export default function DealsPage() {
   const [pipelineFilter, setPipelineFilter] = useState<string>("all");
   const [dateRange, setDateRange] = useState<string>(""); // placeholder string for "Start Date to End Date"
 
-// 🔥 NEW: duration (date range)
-// const [dateFrom, setDateFrom] = useState<Date | undefined>();
-// const [dateTo, setDateTo] = useState<Date | undefined>();
+  // 🔥 NEW: duration (date range)
+  // const [dateFrom, setDateFrom] = useState<Date | undefined>();
+  // const [dateTo, setDateTo] = useState<Date | undefined>();
 
-const [dateFrom, setDateFrom] = useState<Date | undefined>();
-const [dateTo, setDateTo] = useState<Date | undefined>();
+  const [dateFrom, setDateFrom] = useState<Date | undefined>();
+  const [dateTo, setDateTo] = useState<Date | undefined>();
 
-const [openFilters, setOpenFilters] = useState(false);
+  const [openFilters, setOpenFilters] = useState(false);
 
-// filter form state
-const [dateFilterOn, setDateFilterOn] = useState<"created" | "close">("created");
-const [minValue, setMinValue] = useState("");
-const [maxValue, setMaxValue] = useState("");
-const [agentFilter, setAgentFilter] = useState("all");
-const [watcherFilter, setWatcherFilter] = useState("all");
-const [leadFilter, setLeadFilter] = useState("all");
-const [tagFilter, setTagFilter] = useState("all");
-const [priorityFilter, setPriorityFilter] = useState("all");
+  // filter form state
+  const [dateFilterOn, setDateFilterOn] = useState<"created" | "close">("created");
+  const [minValue, setMinValue] = useState("");
+  const [maxValue, setMaxValue] = useState("");
+  const [agentFilter, setAgentFilter] = useState("all");
+  const [watcherFilter, setWatcherFilter] = useState("all");
+  const [leadFilter, setLeadFilter] = useState("all");
+  const [tagFilter, setTagFilter] = useState("all");
+  const [priorityFilter, setPriorityFilter] = useState("all");
+
+  const [openFollowup, setOpenFollowup] = useState(false);
+  const [activeDeal, setActiveDeal] = useState<Deal | null>(null);
+
 
 
 
@@ -1000,80 +1006,94 @@ const [priorityFilter, setPriorityFilter] = useState("all");
     return Array.from(s.values()).sort();
   }, [deals]);
 
-  const getNextFollowupDate = (followups?: Followup[]) => {
-    if (!followups || followups.length === 0) return null;
-    const valid = followups.filter((f) => f && f.nextDate).slice();
-    if (valid.length === 0) return null;
-    valid.sort(
-      (a, b) =>
-        new Date(a.nextDate as string).getTime() -
-        new Date(b.nextDate as string).getTime(),
-    );
-    return valid[0].nextDate || null;
+  // const getNextFollowupDate = (followups?: Followup[]) => {
+  //   if (!followups || followups.length === 0) return null;
+  //   const valid = followups.filter((f) => f && f.nextDate).slice();
+  //   if (valid.length === 0) return null;
+  //   valid.sort(
+  //     (a, b) =>
+  //       new Date(a.nextDate as string).getTime() -
+  //       new Date(b.nextDate as string).getTime(),
+  //   );
+  //   return valid[0].nextDate || null;
+  // };
+
+
+
+  const getNextFollowup = (followups?: Followup[]) => {
+    if (!followups?.length) return null;
+
+    return [...followups]
+      .filter((f) => f?.nextDate)
+      .sort(
+        (a, b) =>
+          new Date(a.nextDate!).getTime() -
+          new Date(b.nextDate!).getTime()
+      )[0];
   };
 
 
 
-const filteredDeals = useMemo(() => {
-  const q = query.trim().toLowerCase();
+  const filteredDeals = useMemo(() => {
+    const q = query.trim().toLowerCase();
 
-  return (deals as Deal[]).filter((d) => {
-    const matchesStage =
-      stageFilter === "all" ||
-      String(d.dealStage || "").toLowerCase() === stageFilter.toLowerCase();
+    return (deals as Deal[]).filter((d) => {
+      const matchesStage =
+        stageFilter === "all" ||
+        String(d.dealStage || "").toLowerCase() === stageFilter.toLowerCase();
 
-    const hay = [
-      d.title,
-      d.dealAgentMeta?.name,
-      d.dealAgent,
-      d.dealCategory,
-      d.pipeline,
-      String(d.id),
-      d.leadName,
-      d.leadEmail,
-      d.leadMobile,
-    ]
-      .filter(Boolean)
-      .join(" ")
-      .toLowerCase();
+      const hay = [
+        d.title,
+        d.dealAgentMeta?.name,
+        d.dealAgent,
+        d.dealCategory,
+        d.pipeline,
+        String(d.id),
+        d.leadName,
+        d.leadEmail,
+        d.leadMobile,
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
 
-    const matchesQuery = q.length === 0 || hay.includes(q);
+      const matchesQuery = q.length === 0 || hay.includes(q);
 
-    // 🗓️ DATE RANGE FILTER (SAFE VERSION)
-    const matchesDate =
-      (!dateFrom || (d.createdAt && new Date(d.createdAt) >= dateFrom)) &&
-      (!dateTo || (d.createdAt && new Date(d.createdAt) <= dateTo));
-
-
-
-
-// value filter
-const dealValue = Number(d.value || 0);
-if (minValue && dealValue < Number(minValue)) return false;
-if (maxValue && dealValue > Number(maxValue)) return false;
-
-// agent filter
-if (
-  agentFilter !== "all" &&
-  d.dealAgentMeta?.name !== agentFilter
-) {
-  return false;
-}
-
-// priority filter
-if (
-  priorityFilter !== "all" &&
-  String(d.priority).toLowerCase() !== priorityFilter.toLowerCase()
-) {
-  return false;
-}
+      // 🗓️ DATE RANGE FILTER (SAFE VERSION)
+      const matchesDate =
+        (!dateFrom || (d.createdAt && new Date(d.createdAt) >= dateFrom)) &&
+        (!dateTo || (d.createdAt && new Date(d.createdAt) <= dateTo));
 
 
 
 
-    return matchesStage && matchesQuery && matchesDate;
-  });
-}, [deals, query, stageFilter, dateFrom, dateTo]);
+      // value filter
+      const dealValue = Number(d.value || 0);
+      if (minValue && dealValue < Number(minValue)) return false;
+      if (maxValue && dealValue > Number(maxValue)) return false;
+
+      // agent filter
+      if (
+        agentFilter !== "all" &&
+        d.dealAgentMeta?.name !== agentFilter
+      ) {
+        return false;
+      }
+
+      // priority filter
+      if (
+        priorityFilter !== "all" &&
+        String(d.priority).toLowerCase() !== priorityFilter.toLowerCase()
+      ) {
+        return false;
+      }
+
+
+
+
+      return matchesStage && matchesQuery && matchesDate;
+    });
+  }, [deals, query, stageFilter, dateFrom, dateTo]);
 
 
 
@@ -1261,95 +1281,95 @@ if (
 
 
 
-<Popover>
-  <PopoverTrigger asChild>
-    <Button
-      variant="outline"
-      className="w-[260px] justify-start text-sm"
-    >
-      <CalendarIcon className="mr-2 h-4 w-4" />
-      Duration Start Date to End Date
-    </Button>
-  </PopoverTrigger>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="w-[260px] justify-start text-sm"
+                >
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  Duration Start Date to End Date
+                </Button>
+              </PopoverTrigger>
 
-  <PopoverContent className="w-[320px] p-4" align="start">
-    <div className="space-y-4">
-      <div className="text-sm font-medium">Select Duration</div>
+              <PopoverContent className="w-[320px] p-4" align="start">
+                <div className="space-y-4">
+                  <div className="text-sm font-medium">Select Duration</div>
 
-      {/* START DATE */}
-      <div className="space-y-1">
-        <div className="text-xs text-muted-foreground">Start Date</div>
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              className="w-full justify-between font-normal"
-            >
-              {dateFrom
-                ? format(dateFrom, "dd-MM-yyyy")
-                : "dd-mm-yyyy"}
-              <CalendarIcon className="h-4 w-4" />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="p-0" align="start">
-            <Calendar
-              mode="single"
-              selected={dateFrom}
-              onSelect={(date) => {
-                setDateFrom(date);
-                // auto-fix: end date chhoti ho to clear
-                if (dateTo && date && dateTo < date) {
-                  setDateTo(undefined);
-                }
-              }}
-            />
-          </PopoverContent>
-        </Popover>
-      </div>
+                  {/* START DATE */}
+                  <div className="space-y-1">
+                    <div className="text-xs text-muted-foreground">Start Date</div>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className="w-full justify-between font-normal"
+                        >
+                          {dateFrom
+                            ? format(dateFrom, "dd-MM-yyyy")
+                            : "dd-mm-yyyy"}
+                          <CalendarIcon className="h-4 w-4" />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={dateFrom}
+                          onSelect={(date) => {
+                            setDateFrom(date);
+                            // auto-fix: end date chhoti ho to clear
+                            if (dateTo && date && dateTo < date) {
+                              setDateTo(undefined);
+                            }
+                          }}
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
 
-      {/* END DATE */}
-      <div className="space-y-1">
-        <div className="text-xs text-muted-foreground">End Date</div>
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              className="w-full justify-between font-normal"
-              disabled={!dateFrom}
-            >
-              {dateTo
-                ? format(dateTo, "dd-MM-yyyy")
-                : "dd-mm-yyyy"}
-              <CalendarIcon className="h-4 w-4" />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="p-0" align="start">
-            <Calendar
-              mode="single"
-              selected={dateTo}
-              fromDate={dateFrom}
-              onSelect={(date) => setDateTo(date)}
-            />
-          </PopoverContent>
-        </Popover>
-      </div>
+                  {/* END DATE */}
+                  <div className="space-y-1">
+                    <div className="text-xs text-muted-foreground">End Date</div>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className="w-full justify-between font-normal"
+                          disabled={!dateFrom}
+                        >
+                          {dateTo
+                            ? format(dateTo, "dd-MM-yyyy")
+                            : "dd-mm-yyyy"}
+                          <CalendarIcon className="h-4 w-4" />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={dateTo}
+                          fromDate={dateFrom}
+                          onSelect={(date) => setDateTo(date)}
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
 
-      {/* RESET */}
-      <div className="flex justify-end">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => {
-            setDateFrom(undefined);
-            setDateTo(undefined);
-          }}
-        >
-          Reset
-        </Button>
-      </div>
-    </div>
-  </PopoverContent>
-</Popover>
+                  {/* RESET */}
+                  <div className="flex justify-end">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        setDateFrom(undefined);
+                        setDateTo(undefined);
+                      }}
+                    >
+                      Reset
+                    </Button>
+                  </div>
+                </div>
+              </PopoverContent>
+            </Popover>
 
 
 
@@ -1383,12 +1403,12 @@ if (
             {/* <Button variant="ghost" size="sm" className="px-2"> */}
 
 
-<Button
-  variant="ghost"
-  size="sm"
-  className="px-2"
-  onClick={() => setOpenFilters(true)}
->
+            <Button
+              variant="ghost"
+              size="sm"
+              className="px-2"
+              onClick={() => setOpenFilters(true)}
+            >
 
 
               <div className="flex items-center gap-2">
@@ -1470,17 +1490,19 @@ if (
 
             <TableBody>
               {filteredDeals.map((deal: Deal) => {
-                const nextFollowUp = getNextFollowupDate(deal.followups);
-                const nextFollowUpDisplay = nextFollowUp
-                  ? new Date(nextFollowUp).toLocaleDateString()
-                  : "—";
+                // const nextFollowUp = getNextFollowupDate(deal.followups);
+
+                const nextFollowup = getNextFollowup(deal.followups);
+                // const nextFollowUpDisplay = nextFollowUp
+                //   ? new Date(nextFollowUp).toLocaleDateString()
+                //   : "—";
 
                 const watchersNames =
                   deal.dealWatchersMeta && deal.dealWatchersMeta.length > 0
                     ? deal.dealWatchersMeta
-                        .map((w) => w.name)
-                        .filter(Boolean)
-                        .join(", ")
+                      .map((w) => w.name)
+                      .filter(Boolean)
+                      .join(", ")
                     : (deal.dealWatchers || []).join(", ") || "—";
 
                 let prioritySelectValue: string;
@@ -1564,7 +1586,28 @@ if (
                         : "—"}
                     </TableCell>
 
-                    <TableCell>{nextFollowUpDisplay}</TableCell>
+                    {/* <TableCell>{nextFollowUpDisplay}</TableCell> */}
+
+                    <TableCell>
+                      {nextFollowup ? (
+                        <button
+                          onClick={() => {
+                            setActiveFollowup(nextFollowup);
+                            setActiveDeal(deal);
+                            setOpenFollowupView(true);
+                          }}
+                          className="text-blue-600 underline text-sm hover:text-blue-800"
+                        >
+                          {new Date(nextFollowup.nextDate!).toLocaleDateString()}
+                        </button>
+                      ) : (
+                        "—"
+                      )}
+                    </TableCell>
+
+
+
+
 
                     <TableCell>
                       <div className="flex items-center gap-3">
@@ -1643,11 +1686,11 @@ if (
                               const toSend = !Number.isNaN(asNum)
                                 ? asNum
                                 : (() => {
-                                    const resolved = priorityByStatus.get(
-                                      String(val).toLowerCase(),
-                                    );
-                                    return resolved ? resolved.id : null;
-                                  })();
+                                  const resolved = priorityByStatus.get(
+                                    String(val).toLowerCase(),
+                                  );
+                                  return resolved ? resolved.id : null;
+                                })();
                               if (toSend !== null)
                                 handlePriorityAssign(deal.id, toSend);
                             }}
@@ -1662,14 +1705,14 @@ if (
                               {(priorities && priorities.length > 0
                                 ? priorities
                                 : [
-                                    { id: 3, status: "Low", color: "#10b981" },
-                                    {
-                                      id: 4,
-                                      status: "Medium",
-                                      color: "#f59e0b",
-                                    },
-                                    { id: 1, status: "High", color: "#ef4444" },
-                                  ]
+                                  { id: 3, status: "Low", color: "#10b981" },
+                                  {
+                                    id: 4,
+                                    status: "Medium",
+                                    color: "#f59e0b",
+                                  },
+                                  { id: 1, status: "High", color: "#ef4444" },
+                                ]
                               ).map((p: PriorityItem) => (
                                 <SelectItem key={p.id} value={String(p.id)}>
                                   <div className="flex items-center gap-2">
@@ -1711,6 +1754,16 @@ if (
                                 Edit
                               </Link>
                             </DropdownMenuItem>
+
+
+                            <DropdownMenuItem
+                              onClick={() => {
+                                setActiveDeal(deal);
+                                setOpenFollowup(true);
+                              }}
+                            >
+                              Add Follow Up
+                            </DropdownMenuItem>
                             <DropdownMenuItem
                               className="text-destructive focus:text-destructive"
                               onClick={() => handleDeleteDeal(deal.id)}
@@ -1749,119 +1802,134 @@ if (
 
 
 
-{openFilters && (
-  <div className="fixed inset-0 z-50 flex">
-    {/* overlay */}
-    <div
-      className="fixed inset-0 bg-black/30"
-      onClick={() => setOpenFilters(false)}
-    />
-
-    {/* drawer */}
-    <div className="relative ml-auto h-full w-[320px] bg-white shadow-xl p-4 overflow-y-auto">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2 font-medium">
-          <SlidersHorizontal className="h-4 w-4" />
-          Filters
-        </div>
-        <Button variant="ghost" size="icon" onClick={() => setOpenFilters(false)}>
-          ✕
-        </Button>
-      </div>
-
-      {/* Date Filter On */}
-      <div className="space-y-1 mb-4">
-        <div className="text-sm">Date Filter On</div>
-        <Select value={dateFilterOn} onValueChange={(v) => setDateFilterOn(v as any)}>
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="created">Created</SelectItem>
-            <SelectItem value="close">Expected Close</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* Deal Value */}
-      <div className="space-y-1 mb-4">
-        <div className="text-sm">Deals Value</div>
-        <div className="flex gap-2">
-          <Input
-            placeholder="Min"
-            type="number"
-            value={minValue}
-            onChange={(e) => setMinValue(e.target.value)}
+      {openFilters && (
+        <div className="fixed inset-0 z-50 flex">
+          {/* overlay */}
+          <div
+            className="fixed inset-0 bg-black/30"
+            onClick={() => setOpenFilters(false)}
           />
-          <Input
-            placeholder="Max"
-            type="number"
-            value={maxValue}
-            onChange={(e) => setMaxValue(e.target.value)}
-          />
+
+          {/* drawer */}
+          <div className="relative ml-auto h-full w-[320px] bg-white shadow-xl p-4 overflow-y-auto">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2 font-medium">
+                <SlidersHorizontal className="h-4 w-4" />
+                Filters
+              </div>
+              <Button variant="ghost" size="icon" onClick={() => setOpenFilters(false)}>
+                ✕
+              </Button>
+            </div>
+
+            {/* Date Filter On */}
+            <div className="space-y-1 mb-4">
+              <div className="text-sm">Date Filter On</div>
+              <Select value={dateFilterOn} onValueChange={(v) => setDateFilterOn(v as any)}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="created">Created</SelectItem>
+                  <SelectItem value="close">Expected Close</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Deal Value */}
+            <div className="space-y-1 mb-4">
+              <div className="text-sm">Deals Value</div>
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Min"
+                  type="number"
+                  value={minValue}
+                  onChange={(e) => setMinValue(e.target.value)}
+                />
+                <Input
+                  placeholder="Max"
+                  type="number"
+                  value={maxValue}
+                  onChange={(e) => setMaxValue(e.target.value)}
+                />
+              </div>
+            </div>
+
+            {/* Agent */}
+            <div className="space-y-1 mb-4">
+              <div className="text-sm">Agent</div>
+              <Select value={agentFilter} onValueChange={setAgentFilter}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All</SelectItem>
+                  {(deals as Deal[])
+                    .map((d) => d.dealAgentMeta?.name)
+                    .filter(Boolean)
+                    .filter((v, i, a) => a.indexOf(v) === i)
+                    .map((name) => (
+                      <SelectItem key={name} value={name!}>
+                        {name}
+                      </SelectItem>
+                    ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Priority */}
+            <div className="space-y-1 mb-6">
+              <div className="text-sm">Priority Status</div>
+              <Select value={priorityFilter} onValueChange={setPriorityFilter}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All</SelectItem>
+                  {priorities.map((p) => (
+                    <SelectItem key={p.id} value={String(p.status)}>
+                      {p.status}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* CLEAR */}
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={() => {
+                setDateFilterOn("created");
+                setMinValue("");
+                setMaxValue("");
+                setAgentFilter("all");
+                setWatcherFilter("all");
+                setLeadFilter("all");
+                setTagFilter("all");
+                setPriorityFilter("all");
+              }}
+            >
+              Clear
+            </Button>
+
+          </div>
+    
         </div>
-      </div>
+      )}
 
-      {/* Agent */}
-      <div className="space-y-1 mb-4">
-        <div className="text-sm">Agent</div>
-        <Select value={agentFilter} onValueChange={setAgentFilter}>
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All</SelectItem>
-            {(deals as Deal[])
-              .map((d) => d.dealAgentMeta?.name)
-              .filter(Boolean)
-              .filter((v, i, a) => a.indexOf(v) === i)
-              .map((name) => (
-                <SelectItem key={name} value={name!}>
-                  {name}
-                </SelectItem>
-              ))}
-          </SelectContent>
-        </Select>
-      </div>
 
-      {/* Priority */}
-      <div className="space-y-1 mb-6">
-        <div className="text-sm">Priority Status</div>
-        <Select value={priorityFilter} onValueChange={setPriorityFilter}>
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All</SelectItem>
-            {priorities.map((p) => (
-              <SelectItem key={p.id} value={String(p.status)}>
-                {p.status}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
 
-      {/* CLEAR */}
-      <Button
-        variant="outline"
-        className="w-full"
-        onClick={() => {
-          setDateFilterOn("created");
-          setMinValue("");
-          setMaxValue("");
-          setAgentFilter("all");
-          setWatcherFilter("all");
-          setLeadFilter("all");
-          setTagFilter("all");
-          setPriorityFilter("all");
-        }}
-      >
-        Clear
-      </Button>
-    </div>
-  </div>
-)}
+
+      <AddFollowupModal
+              open={openFollowup}
+              deal={activeDeal}
+              onClose={() => {
+                setOpenFollowup(false);
+                setActiveDeal(null);
+              }}
+              onSaved={() => mutateDeals()}
+            />
 
 
 
