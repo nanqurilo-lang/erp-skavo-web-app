@@ -211,6 +211,8 @@ import React, { useState, useRef, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Bell, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import NotificationBell from "./NotificationBell";
+
 
 const NAV_ITEMS: Record<string, string> = {
   "/dashboard": "Dashboard",
@@ -347,9 +349,16 @@ export const CommonNavbar: React.FC = () => {
           ref={menuRef}
         >
           {/* Bell */}
-          <Button variant="ghost" size="icon">
+          {/* <Button variant="ghost" size="icon">
             <Bell className="h-4 w-4 text-gray-600" />
-          </Button>
+          </Button> */}
+
+
+{/* Bell */}
+<NotificationBell />
+
+
+
 
           {/* Language Selector */}
           <div className="relative">

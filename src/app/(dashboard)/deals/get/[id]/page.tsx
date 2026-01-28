@@ -6,6 +6,7 @@ import { useParams } from "next/navigation";
 import { Deal } from "@/types/deals";
 import DealTags from "../../_components/DealTags";
 import CommentForm from "../../_components/comment";
+import { createPortal } from "react-dom";
 
 type DocumentItem = {
   id: number;
@@ -130,7 +131,27 @@ export default function DealDetailPage() {
   const [commentDeletingId, setCommentDeletingId] = useState<number | null>(null);
 
   // centralized action menu state to avoid overlap + easy click-away
-  const [openActionMenu, setOpenActionMenu] = useState<string | null>(null);
+  // const [openActionMenu, setOpenActionMenu] = useState<string | null>(null);
+
+  // const [menuPosition, setMenuPosition] = useState<{ top: number; left: number } | null>(null);
+    const [openActionMenu, setOpenActionMenu] = useState(null);
+  const [menuPosition, setMenuPosition] = useState(null);
+
+
+  useEffect(() => {
+  const close = () => {
+    setOpenActionMenu(null);
+    setMenuPosition(null);
+  };
+
+document.addEventListener("click", close, true);
+
+  return () => {
+document.removeEventListener("click", close, true);
+  };
+}, []);
+
+
 
   // --- fetch deal
   const fetchDeal = async () => {
@@ -556,111 +577,223 @@ export default function DealDetailPage() {
     setIsFollowupModalOpen(true);
   };
 
-  const openEditFollowup = (f: any) => {
-    setEditingFollowup({
-      id: f.id,
-      nextDate: f.nextDate ? f.nextDate.split("T")[0] : f.nextDate || "",
-      startTime: f.startTime ? f.startTime.slice(0, 5) : f.startTime || "",
-      remarks: f.remarks || "",
-      sendReminder: !!f.sendReminder,
-      remindBefore: f.remindBefore ?? 1,
-      remindUnit: f.remindUnit ?? "DAYS",
-      status: f.status ?? "PENDING",
-    });
-    setIsFollowupModalOpen(true);
-  };
+  // const openEditFollowup = (f: any) => {
+  //   setEditingFollowup({
+  //     id: f.id,
+  //     nextDate: f.nextDate ? f.nextDate.split("T")[0] : f.nextDate || "",
+  //     startTime: f.startTime ? f.startTime.slice(0, 5) : f.startTime || "",
+  //     remarks: f.remarks || "",
+  //     sendReminder: !!f.sendReminder,
+  //     remindBefore: f.remindBefore ?? 1,
+  //     remindUnit: f.remindUnit ?? "DAYS",
+  //     status: f.status ?? "PENDING",
+  //   });
+  //   setIsFollowupModalOpen(true);
+  // };
+
+
+
+const openEditFollowup = (f: any) => {
+  setEditingFollowup({
+    id: f.id,
+    nextDate: f.nextDate?.split("T")[0] || "",
+    startTime: f.startTime?.slice(0, 5) || "",
+    remarks: f.remarks || "", 
+    sendReminder: !!f.sendReminder,
+    remindBefore: f.remindBefore ?? 1,
+    remindUnit: f.remindUnit ?? "DAYS",
+    status: (f.status || "PENDING").toUpperCase(), // 🔥 IMPORTANT
+  });
+  setIsFollowupModalOpen(true);
+};
+
+
 
   const closeFollowupModal = () => {
     setIsFollowupModalOpen(false);
     setEditingFollowup(null);
   };
 
-  const saveFollowup = async () => {
-    if (!editingFollowup) return;
-    setFollowupSaving(true);
-    try {
-      const token = localStorage.getItem("accessToken");
-      if (!token) {
-        alert("No access token found");
-        setFollowupSaving(false);
-        return;
-      }
+  // const saveFollowup = async () => {
+  //   if (!editingFollowup) return;
+  //   setFollowupSaving(true);
+  //   try {
+  //     const token = localStorage.getItem("accessToken");
+  //     if (!token) {
+  //       alert("No access token found");
+  //       setFollowupSaving(false);
+  //       return;
+  //     }
 
-      const payload: any = {
-        nextDate: editingFollowup.nextDate,
-        startTime: editingFollowup.startTime,
-        remarks: editingFollowup.remarks,
-        sendReminder: editingFollowup.sendReminder,
-        remindBefore: editingFollowup.remindBefore,
-        remindUnit: editingFollowup.remindUnit,
-      };
+  //     const payload: any = {
+  //       nextDate: editingFollowup.nextDate,
+  //       startTime: editingFollowup.startTime,
+  //       remarks: editingFollowup.remarks,
+  //       sendReminder: editingFollowup.sendReminder,
+  //       remindBefore: editingFollowup.remindBefore,
+  //       remindUnit: editingFollowup.remindUnit,
+  //     };
 
-      if (editingFollowup.status) payload.status = editingFollowup.status;
+  //     if (editingFollowup.status) payload.status = editingFollowup.status;
 
-      if (editingFollowup.id) {
-        const res = await fetch(`${BASE_URL}/deals/${dealId}/followups/${editingFollowup.id}`, {
+  //     if (editingFollowup.id) {
+  //       const res = await fetch(`${BASE_URL}/deals/${dealId}/followups/${editingFollowup.id}`, {
+  //         method: "PUT",
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify(payload),
+  //       });
+  //       if (!res.ok) {
+  //         const txt = await res.text().catch(() => "");
+  //         throw new Error(`Failed to update followup: ${res.status} ${txt}`);
+  //       }
+  //       const updated = await res.json();
+  //       setFollowups((prev) => prev.map((p) => (p.id === updated.id ? updated : p)));
+  //     } else {
+  //       const res = await fetch(`${BASE_URL}/deals/${dealId}/followups`, {
+  //         method: "POST",
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify(payload),
+  //       });
+  //       if (!res.ok) {
+  //         const txt = await res.text().catch(() => "");
+  //         throw new Error(`Failed to create followup: ${res.status} ${txt}`);
+  //       }
+  //       const created = await res.json();
+  //       setFollowups((prev) => [created, ...prev]);
+  //     }
+
+  //     closeFollowupModal();
+  //   } catch (err: any) {
+  //     console.error(err);
+  //     alert(err?.message || "Failed to save followup");
+  //   } finally {
+  //     setFollowupSaving(false);
+  //   }
+  // };
+
+
+
+
+const saveFollowup = async () => {
+  if (!editingFollowup || !dealId) return;
+
+  if (!editingFollowup.nextDate || !editingFollowup.startTime) {
+    alert("Next Date and Start Time are required");
+    return;
+  }
+
+  setFollowupSaving(true);
+
+  try {
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      alert("No access token found");
+      return;
+    }
+
+    const payload = {
+      nextDate: editingFollowup.nextDate,
+      startTime: editingFollowup.startTime,
+      remarks: editingFollowup.remarks || "",
+      sendReminder: !!editingFollowup.sendReminder,
+      remindBefore: editingFollowup.remindBefore ?? 1,
+      remindUnit: editingFollowup.remindUnit ?? "DAYS",
+      status: (editingFollowup.status || "PENDING").toUpperCase(), // 🔥 IMPORTANT
+    };
+
+    let res: Response;
+
+    if (editingFollowup.id) {
+      // UPDATE
+      res = await fetch(
+        `${BASE_URL}/deals/${dealId}/followups/${editingFollowup.id}`,
+        {
           method: "PUT",
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify(payload),
-        });
-        if (!res.ok) {
-          const txt = await res.text().catch(() => "");
-          throw new Error(`Failed to update followup: ${res.status} ${txt}`);
         }
-        const updated = await res.json();
-        setFollowups((prev) => prev.map((p) => (p.id === updated.id ? updated : p)));
-      } else {
-        const res = await fetch(`${BASE_URL}/deals/${dealId}/followups`, {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(payload),
-        });
-        if (!res.ok) {
-          const txt = await res.text().catch(() => "");
-          throw new Error(`Failed to create followup: ${res.status} ${txt}`);
-        }
-        const created = await res.json();
-        setFollowups((prev) => [created, ...prev]);
-      }
-
-      closeFollowupModal();
-    } catch (err: any) {
-      console.error(err);
-      alert(err?.message || "Failed to save followup");
-    } finally {
-      setFollowupSaving(false);
+      );
+    } else {
+      // CREATE
+      res = await fetch(`${BASE_URL}/deals/${dealId}/followups`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
     }
-  };
+
+    if (!res.ok) {
+      const txt = await res.text().catch(() => "");
+      throw new Error(txt || "Failed to save followup");
+    }
+
+    const updatedFollowup = await res.json();
+
+    // 🔥 STATE UPDATE (THIS WAS MISSING / WRONG)
+    setFollowups((prev) => {
+      if (editingFollowup.id) {
+        return prev.map((f) =>
+          f.id === updatedFollowup.id ? updatedFollowup : f
+        );
+      }
+      return [updatedFollowup, ...prev];
+    });
+
+    closeFollowupModal();
+  } catch (err: any) {
+    console.error(err);
+    alert(err.message || "Failed to save followup");
+  } finally {
+    setFollowupSaving(false);
+  }
+};
 
   const deleteFollowup = async (id?: number) => {
-    if (!id) return;
-    if (!confirm("Are you sure you want to delete this follow up?")) return;
-    try {
-      const token = localStorage.getItem("accessToken");
-      if (!token) {
-        alert("No access token found");
-        return;
-      }
-      const res = await fetch(`${BASE_URL}/deals/${dealId}/followups/${id}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (!res.ok) {
-        const txt = await res.text().catch(() => "");
-        throw new Error(`Failed to delete followup: ${res.status} ${txt}`);
-      }
-      setFollowups((prev) => prev.filter((f) => f.id !== id));
-    } catch (err: any) {
-      console.error(err);
-      alert(err?.message || "Failed to delete followup");
+  if (!id || !dealId) return;
+
+  if (!confirm("Are you sure you want to delete this follow up?")) return;
+
+  try {
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      alert("No access token found");
+      return;
     }
-  };
+
+    const res = await fetch(
+      `${BASE_URL}/deals/${dealId}/followups/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!res.ok) {
+      const txt = await res.text().catch(() => "");
+      throw new Error(txt || "Failed to delete followup");
+    }
+
+    // 🔥 UI INSTANT UPDATE
+    setFollowups((prev) => prev.filter((f) => f.id !== id));
+  } catch (err: any) {
+    console.error(err);
+    alert(err.message || "Failed to delete followup");
+  }
+};
 
   // --- NOTES modals and operations (unchanged logic)
   const openAddNote = () => {
@@ -958,19 +1091,32 @@ export default function DealDetailPage() {
   );
 
   // Document-level click-away: close any open action menu when clicking anywhere
-  useEffect(() => {
-    const handleDocClick = () => {
-      setOpenActionMenu(null);
-    };
-    document.addEventListener("click", handleDocClick);
-    return () => document.removeEventListener("click", handleDocClick);
-  }, []);
+  // useEffect(() => {
+  //   const handleDocClick = () => {
+  //     setOpenActionMenu(null);
+  //   };
+  //   document.addEventListener("click", handleDocClick);
+  //   return () => document.removeEventListener("click", handleDocClick);
+  // }, []);
+const toggleActionMenu = (
+  key: string,
+  e: React.MouseEvent<HTMLButtonElement>
+) => {
+  e.preventDefault();
+  e.stopPropagation();
 
-  // helper to toggle menus safely and stop the document click from closing immediately
-  const toggleActionMenu = (key: string, e: React.MouseEvent) => {
-    e.stopPropagation(); // prevent document click
-    setOpenActionMenu((prev) => (prev === key ? null : key));
-  };
+  const rect = e.currentTarget.getBoundingClientRect();
+
+  setMenuPosition({
+    top: rect.bottom + window.scrollY,
+    left: rect.left + window.scrollX,
+  });
+
+  setOpenActionMenu((prev) => (prev === key ? null : key));
+};
+
+
+
 
   // used to stop close when clicking inside menu itself
   const stopPropagation = (e: React.MouseEvent) => {
@@ -1374,7 +1520,9 @@ export default function DealDetailPage() {
                     </button>
                   </div>
 
-                  <div className="rounded-md border overflow-hidden">
+                  {/* <div className="rounded-md border overflow-hidden"> */}
+                  <div className="rounded-md border overflow-visible">
+
                     <div className="bg-blue-50 text-sm text-gray-700 grid grid-cols-[1fr_1fr_1fr_1fr_80px] gap-3 p-2 items-center font-medium">
                       <div>Created</div>
                       <div>Follow Up</div>
@@ -1406,39 +1554,66 @@ export default function DealDetailPage() {
 
                           {/* action menu (uses openActionMenu state) */}
                           <div className="relative">
-                            <button
+                            {/* <button
                               onClick={(e) => toggleActionMenu(`followup-${f.id ?? idx}`, e)}
                               className="p-1 rounded hover:bg-slate-50 text-gray-500"
                               aria-label="Actions"
                             >
                               ⋮
-                            </button>
+                            </button> */}
+<button
+  type="button"
+  onClick={(e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleActionMenu(`followup-${f.id ?? idx}`, e);
+  }}
+  className="p-1 rounded hover:bg-slate-50 text-gray-500 cursor-pointer"
+>
+  ⋮
+</button>
 
-                            {openActionMenu === `followup-${f.id ?? idx}` && (
-                              <div
-                                onClick={stopPropagation}
-                                className="absolute right-0 mt-2 w-36 bg-white border rounded-md shadow-sm z-50"
-                              >
-                                <button
-                                  onClick={() => {
-                                    openEditFollowup(f);
-                                    setOpenActionMenu(null);
-                                  }}
-                                  className="w-full text-left px-3 py-2 text-sm hover:bg-slate-50"
-                                >
-                                  Edit
-                                </button>
-                                <button
-                                  onClick={() => {
-                                    deleteFollowup(f.id);
-                                    setOpenActionMenu(null);
-                                  }}
-                                  className="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-slate-50"
-                                >
-                                  Delete
-                                </button>
-                              </div>
-                            )}
+
+
+
+
+{openActionMenu === `followup-${f.id ?? idx}` &&
+  menuPosition &&
+  createPortal(
+    <div
+      onClick={(e) => e.stopPropagation()}
+      className="fixed z-[9999] bg-white border rounded-md shadow-lg w-36"
+      style={{
+        top: menuPosition.top,
+        left: menuPosition.left,
+      }}
+    >
+      <button
+        onClick={() => {
+          openEditFollowup(f);
+          setOpenActionMenu(null);
+        }}
+        className="w-full text-left px-3 py-2 text-sm hover:bg-slate-50"
+      >
+        Edit
+      </button>
+
+      <button
+        onClick={() => {
+          deleteFollowup(f.id);
+          setOpenActionMenu(null);
+        }}
+        className="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-slate-50"
+      >
+        Delete
+      </button>
+    </div>,
+    document.body
+  )}
+
+
+
+
                           </div>
                         </div>
                       ))}

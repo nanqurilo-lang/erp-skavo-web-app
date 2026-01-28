@@ -87,7 +87,7 @@ export default function ActivitySection({
 
         // ✅ TOKEN FETCH (same as other sections)
         const token =
-          localStorage.getItem("token") ||
+          localStorage.getItem("accessToken") ||
           localStorage.getItem("authToken") ||
           "";
 
