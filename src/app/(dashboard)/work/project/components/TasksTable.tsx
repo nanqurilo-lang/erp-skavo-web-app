@@ -10,6 +10,8 @@ import { UserIcon } from "@heroicons/react/24/outline";
 import { deleteAPI, postAPI, putAPI } from "@/app/api/apiHelper";
 import { getStorage } from "../../../../../lib/storage/storege";
 import TaskViewModal, { TaskForView } from "../components/TaskViewModal"; // adjust path if needed
+import CreateTaskModal from "./CreateTaskModal";
+
 
 type Employee = {
   employeeId: string;
@@ -62,6 +64,7 @@ export default function TasksTable({ projectId }: { projectId: number }) {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
 
   // status list loaded from server
   const [statuses, setStatuses] = useState<StatusItem[]>([]);
@@ -349,7 +352,7 @@ export default function TasksTable({ projectId }: { projectId: number }) {
       {/* header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-4">
-          <button
+          {/* <button
             onClick={() => {
               setForm({ ...emptyForm, projectId });
               setShowCreate(true);
@@ -357,7 +360,18 @@ export default function TasksTable({ projectId }: { projectId: number }) {
             className="bg-blue-600 text-white px-4 py-2 rounded shadow-sm hover:bg-blue-700"
           >
             + Add Task
-          </button>
+          </button> */}
+
+
+<button
+  onClick={() => setShowCreate(true)}
+  className="px-3 py-2 bg-blue-600 text-white rounded"
+>
+  + Add Task
+</button>
+
+
+
         </div>
 
         <div className="flex items-center gap-3">
@@ -576,7 +590,7 @@ export default function TasksTable({ projectId }: { projectId: number }) {
       )}
 
       {/* Create modal (unchanged) */}
-      {showCreate && (
+      {/* {showCreate && (
         <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/40 p-4">
           <form onSubmit={handleCreate} className="bg-white w-full max-w-3xl rounded-lg p-6 shadow-lg overflow-auto max-h-[90vh]">
             <div className="flex items-center justify-between mb-4">
@@ -672,7 +686,7 @@ export default function TasksTable({ projectId }: { projectId: number }) {
             </div>
           </form>
         </div>
-      )}
+      )} */}
 
       {/* Edit modal (unchanged) */}
       {showEdit && editTask && (
@@ -757,6 +771,18 @@ export default function TasksTable({ projectId }: { projectId: number }) {
           setViewTask(null);
         }}
       />
+
+
+<CreateTaskModal
+  open={showCreate}
+  onClose={() => setShowCreate(false)}
+  projectId={projectId}
+  onCreated={() => {
+    fetchTasks(); // tumhara existing reload fn
+  }}
+/>
+
+
     </div>
   );
 }
