@@ -354,8 +354,8 @@ export const CommonNavbar: React.FC = () => {
           </Button> */}
 
 
-{/* Bell */}
-<NotificationBell />
+          {/* Bell */}
+          <NotificationBell />
 
 
 

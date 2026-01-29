@@ -50,7 +50,7 @@ type TagItem = {
 
 type TabKey = "files" | "followups" | "people" | "notes" | "comments" | "tags";
 
-const BASE_URL =  `${process.env.NEXT_PUBLIC_MAIN}`;
+const BASE_URL = `${process.env.NEXT_PUBLIC_MAIN}`;
 
 // Use the uploaded screenshot path as the developer local fallback (infra will transform to a URL)
 const UPLOADED_LOCAL_PATH = "/mnt/data/Screenshot 2025-11-22 120859.png";
@@ -134,22 +134,22 @@ export default function DealDetailPage() {
   // const [openActionMenu, setOpenActionMenu] = useState<string | null>(null);
 
   // const [menuPosition, setMenuPosition] = useState<{ top: number; left: number } | null>(null);
-    const [openActionMenu, setOpenActionMenu] = useState(null);
+  const [openActionMenu, setOpenActionMenu] = useState(null);
   const [menuPosition, setMenuPosition] = useState(null);
 
 
   useEffect(() => {
-  const close = () => {
-    setOpenActionMenu(null);
-    setMenuPosition(null);
-  };
+    const close = () => {
+      setOpenActionMenu(null);
+      setMenuPosition(null);
+    };
 
-document.addEventListener("click", close, true);
+    document.addEventListener("click", close, true);
 
-  return () => {
-document.removeEventListener("click", close, true);
-  };
-}, []);
+    return () => {
+      document.removeEventListener("click", close, true);
+    };
+  }, []);
 
 
 
@@ -593,19 +593,19 @@ document.removeEventListener("click", close, true);
 
 
 
-const openEditFollowup = (f: any) => {
-  setEditingFollowup({
-    id: f.id,
-    nextDate: f.nextDate?.split("T")[0] || "",
-    startTime: f.startTime?.slice(0, 5) || "",
-    remarks: f.remarks || "", 
-    sendReminder: !!f.sendReminder,
-    remindBefore: f.remindBefore ?? 1,
-    remindUnit: f.remindUnit ?? "DAYS",
-    status: (f.status || "PENDING").toUpperCase(), // 🔥 IMPORTANT
-  });
-  setIsFollowupModalOpen(true);
-};
+  const openEditFollowup = (f: any) => {
+    setEditingFollowup({
+      id: f.id,
+      nextDate: f.nextDate?.split("T")[0] || "",
+      startTime: f.startTime?.slice(0, 5) || "",
+      remarks: f.remarks || "",
+      sendReminder: !!f.sendReminder,
+      remindBefore: f.remindBefore ?? 1,
+      remindUnit: f.remindUnit ?? "DAYS",
+      status: (f.status || "PENDING").toUpperCase(), // 🔥 IMPORTANT
+    });
+    setIsFollowupModalOpen(true);
+  };
 
 
 
@@ -680,120 +680,120 @@ const openEditFollowup = (f: any) => {
 
 
 
-const saveFollowup = async () => {
-  if (!editingFollowup || !dealId) return;
+  const saveFollowup = async () => {
+    if (!editingFollowup || !dealId) return;
 
-  if (!editingFollowup.nextDate || !editingFollowup.startTime) {
-    alert("Next Date and Start Time are required");
-    return;
-  }
-
-  setFollowupSaving(true);
-
-  try {
-    const token = localStorage.getItem("accessToken");
-    if (!token) {
-      alert("No access token found");
+    if (!editingFollowup.nextDate || !editingFollowup.startTime) {
+      alert("Next Date and Start Time are required");
       return;
     }
 
-    const payload = {
-      nextDate: editingFollowup.nextDate,
-      startTime: editingFollowup.startTime,
-      remarks: editingFollowup.remarks || "",
-      sendReminder: !!editingFollowup.sendReminder,
-      remindBefore: editingFollowup.remindBefore ?? 1,
-      remindUnit: editingFollowup.remindUnit ?? "DAYS",
-      status: (editingFollowup.status || "PENDING").toUpperCase(), // 🔥 IMPORTANT
-    };
+    setFollowupSaving(true);
 
-    let res: Response;
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) {
+        alert("No access token found");
+        return;
+      }
 
-    if (editingFollowup.id) {
-      // UPDATE
-      res = await fetch(
-        `${BASE_URL}/deals/${dealId}/followups/${editingFollowup.id}`,
-        {
-          method: "PUT",
+      const payload = {
+        nextDate: editingFollowup.nextDate,
+        startTime: editingFollowup.startTime,
+        remarks: editingFollowup.remarks || "",
+        sendReminder: !!editingFollowup.sendReminder,
+        remindBefore: editingFollowup.remindBefore ?? 1,
+        remindUnit: editingFollowup.remindUnit ?? "DAYS",
+        status: (editingFollowup.status || "PENDING").toUpperCase(), // 🔥 IMPORTANT
+      };
+
+      let res: Response;
+
+      if (editingFollowup.id) {
+        // UPDATE
+        res = await fetch(
+          `${BASE_URL}/deals/${dealId}/followups/${editingFollowup.id}`,
+          {
+            method: "PUT",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+          }
+        );
+      } else {
+        // CREATE
+        res = await fetch(`${BASE_URL}/deals/${dealId}/followups`, {
+          method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify(payload),
-        }
-      );
-    } else {
-      // CREATE
-      res = await fetch(`${BASE_URL}/deals/${dealId}/followups`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-    }
-
-    if (!res.ok) {
-      const txt = await res.text().catch(() => "");
-      throw new Error(txt || "Failed to save followup");
-    }
-
-    const updatedFollowup = await res.json();
-
-    // 🔥 STATE UPDATE (THIS WAS MISSING / WRONG)
-    setFollowups((prev) => {
-      if (editingFollowup.id) {
-        return prev.map((f) =>
-          f.id === updatedFollowup.id ? updatedFollowup : f
-        );
+        });
       }
-      return [updatedFollowup, ...prev];
-    });
 
-    closeFollowupModal();
-  } catch (err: any) {
-    console.error(err);
-    alert(err.message || "Failed to save followup");
-  } finally {
-    setFollowupSaving(false);
-  }
-};
+      if (!res.ok) {
+        const txt = await res.text().catch(() => "");
+        throw new Error(txt || "Failed to save followup");
+      }
+
+      const updatedFollowup = await res.json();
+
+      // 🔥 STATE UPDATE (THIS WAS MISSING / WRONG)
+      setFollowups((prev) => {
+        if (editingFollowup.id) {
+          return prev.map((f) =>
+            f.id === updatedFollowup.id ? updatedFollowup : f
+          );
+        }
+        return [updatedFollowup, ...prev];
+      });
+
+      closeFollowupModal();
+    } catch (err: any) {
+      console.error(err);
+      alert(err.message || "Failed to save followup");
+    } finally {
+      setFollowupSaving(false);
+    }
+  };
 
   const deleteFollowup = async (id?: number) => {
-  if (!id || !dealId) return;
+    if (!id || !dealId) return;
 
-  if (!confirm("Are you sure you want to delete this follow up?")) return;
+    if (!confirm("Are you sure you want to delete this follow up?")) return;
 
-  try {
-    const token = localStorage.getItem("accessToken");
-    if (!token) {
-      alert("No access token found");
-      return;
-    }
-
-    const res = await fetch(
-      `${BASE_URL}/deals/${dealId}/followups/${id}`,
-      {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) {
+        alert("No access token found");
+        return;
       }
-    );
 
-    if (!res.ok) {
-      const txt = await res.text().catch(() => "");
-      throw new Error(txt || "Failed to delete followup");
+      const res = await fetch(
+        `${BASE_URL}/deals/${dealId}/followups/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!res.ok) {
+        const txt = await res.text().catch(() => "");
+        throw new Error(txt || "Failed to delete followup");
+      }
+
+      // 🔥 UI INSTANT UPDATE
+      setFollowups((prev) => prev.filter((f) => f.id !== id));
+    } catch (err: any) {
+      console.error(err);
+      alert(err.message || "Failed to delete followup");
     }
-
-    // 🔥 UI INSTANT UPDATE
-    setFollowups((prev) => prev.filter((f) => f.id !== id));
-  } catch (err: any) {
-    console.error(err);
-    alert(err.message || "Failed to delete followup");
-  }
-};
+  };
 
   // --- NOTES modals and operations (unchanged logic)
   const openAddNote = () => {
@@ -1098,22 +1098,22 @@ const saveFollowup = async () => {
   //   document.addEventListener("click", handleDocClick);
   //   return () => document.removeEventListener("click", handleDocClick);
   // }, []);
-const toggleActionMenu = (
-  key: string,
-  e: React.MouseEvent<HTMLButtonElement>
-) => {
-  e.preventDefault();
-  e.stopPropagation();
+  const toggleActionMenu = (
+    key: string,
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    e.preventDefault();
+    e.stopPropagation();
 
-  const rect = e.currentTarget.getBoundingClientRect();
+    const rect = e.currentTarget.getBoundingClientRect();
 
-  setMenuPosition({
-    top: rect.bottom + window.scrollY,
-    left: rect.left + window.scrollX,
-  });
+    setMenuPosition({
+      top: rect.bottom + window.scrollY,
+      left: rect.left + window.scrollX,
+    });
 
-  setOpenActionMenu((prev) => (prev === key ? null : key));
-};
+    setOpenActionMenu((prev) => (prev === key ? null : key));
+  };
 
 
 
@@ -1561,7 +1561,7 @@ const toggleActionMenu = (
                             >
                               ⋮
                             </button> */}
-<button
+                            {/* <button
   type="button"
   onClick={(e) => {
     e.preventDefault();
@@ -1571,45 +1571,56 @@ const toggleActionMenu = (
   className="p-1 rounded hover:bg-slate-50 text-gray-500 cursor-pointer"
 >
   ⋮
-</button>
+</button> */}
+
+
+
+                            <div className="text-center">
+                              <button
+                                onClick={() => deleteFollowup(f.id)}
+                                className="text-red-600 hover:text-red-700"
+                                title="Delete Follow Up"
+                              >
+                                🗑️
+                              </button>
+                            </div>
 
 
 
 
+                            {openActionMenu === `followup-${f.id ?? idx}` &&
+                              menuPosition &&
+                              createPortal(
+                                <div
+                                  onClick={(e) => e.stopPropagation()}
+                                  className="fixed z-[9999] bg-white border rounded-md shadow-lg w-36"
+                                  style={{
+                                    top: menuPosition.top,
+                                    left: menuPosition.left,
+                                  }}
+                                >
+                                  <button
+                                    onClick={() => {
+                                      openEditFollowup(f);
+                                      setOpenActionMenu(null);
+                                    }}
+                                    className="w-full text-left px-3 py-2 text-sm hover:bg-slate-50"
+                                  >
+                                    Edit
+                                  </button>
 
-{openActionMenu === `followup-${f.id ?? idx}` &&
-  menuPosition &&
-  createPortal(
-    <div
-      onClick={(e) => e.stopPropagation()}
-      className="fixed z-[9999] bg-white border rounded-md shadow-lg w-36"
-      style={{
-        top: menuPosition.top,
-        left: menuPosition.left,
-      }}
-    >
-      <button
-        onClick={() => {
-          openEditFollowup(f);
-          setOpenActionMenu(null);
-        }}
-        className="w-full text-left px-3 py-2 text-sm hover:bg-slate-50"
-      >
-        Edit
-      </button>
-
-      <button
-        onClick={() => {
-          deleteFollowup(f.id);
-          setOpenActionMenu(null);
-        }}
-        className="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-slate-50"
-      >
-        Delete
-      </button>
-    </div>,
-    document.body
-  )}
+                                  <button
+                                    onClick={() => {
+                                      deleteFollowup(f.id);
+                                      setOpenActionMenu(null);
+                                    }}
+                                    className="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-slate-50"
+                                  >
+                                    Delete
+                                  </button>
+                                </div>,
+                                document.body
+                              )}
 
 
 
@@ -1741,7 +1752,7 @@ const toggleActionMenu = (
                           </div>
                           <div className="text-center">
                             {/* action menu with centralized state */}
-                            <div className="relative inline-block">
+                            {/* <div className="relative inline-block">
                               <button
                                 onClick={(e) => toggleActionMenu(`note-${n.id ?? idx}`, e)}
                                 className="p-1 rounded hover:bg-slate-50 text-gray-500"
@@ -1785,7 +1796,21 @@ const toggleActionMenu = (
                                   </button>
                                 </div>
                               )}
+                            </div> */}
+
+
+                            <div className="text-center">
+                              <button
+                                onClick={() => deleteNote(n.id)}
+                                disabled={noteDeletingId === n.id}
+                                className="text-red-600 hover:text-red-700"
+                                title="Delete Note"
+                              >
+                                {noteDeletingId === n.id ? "Deleting..." : "🗑️"}
+                              </button>
                             </div>
+
+
                           </div>
                         </div>
                       ))}

@@ -12,8 +12,8 @@ type Notification = {
   id: number;
   title: string;
   message: string;
-  type?: "TIME_LOG" | "INVOICE" | "PROJECT" | "SYSTEM" | "PROJECT_STATUS_CHANGE"| "LEAVE_APPLICATION"|"CHAT_MESSAGE"
-  |"TASK_STATUS_CHANGE"|"ATTENDANCE_DELETION"|"ATTENDANCE";
+  type?: "TIME_LOG" | "INVOICE" | "PROJECT" | "SYSTEM" | "PROJECT_STATUS_CHANGE" | "LEAVE_APPLICATION" | "CHAT_MESSAGE"
+  | "TASK_STATUS_CHANGE" | "ATTENDANCE_DELETION" | "ATTENDANCE";
   readFlag: boolean;
   createdAt: string;
   readAt?: string | null;
@@ -155,21 +155,21 @@ export default function NotificationBell() {
         break;
       case "LEAVE_APPLICATION":
         router.push("/hr/leaves");
-         break;
+        break;
       case "CHAT_MESSAGE":
         router.push("/messages");
-         break;
+        break;
       case "TASK_STATUS_CHANGE":
         router.push("/work/tasks");
-         break;
+        break;
       case "ATTENDANCE_DELETION":
         router.push("/hr/attendance");
         break;
-        case "ATTENDANCE":
+      case "ATTENDANCE":
         router.push("/hr/attendance");
         break;
       default:
-       
+
     }
   };
 
@@ -264,9 +264,8 @@ export default function NotificationBell() {
                     if (!n.readFlag) markAsRead(n.id);
                     redirectByType(n);
                   }}
-                  className={`px-4 py-3 border-b text-sm cursor-pointer hover:bg-gray-50 ${
-                    !n.readFlag ? "bg-blue-50" : ""
-                  }`}
+                  className={`px-4 py-3 border-b text-sm cursor-pointer hover:bg-gray-50 ${!n.readFlag ? "bg-blue-50" : ""
+                    }`}
                 >
                   <div className="flex justify-between gap-2">
                     <div>

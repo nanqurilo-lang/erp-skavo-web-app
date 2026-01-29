@@ -53,15 +53,14 @@ export default function KanbanBoard({
     if (
       filters.category &&
       d.dealCategory?.trim().toLowerCase() !==
-        filters.category.trim().toLowerCase()
+      filters.category.trim().toLowerCase()
     )
       return false;
 
     if (normalizedSearch) {
       const hay =
-        `${d.title} ${d.id} ${d.dealCategory ?? ""} ${d.pipeline ?? ""} ${
-          d.dealAgentMeta?.name ?? d.dealAgent ?? ""
-        }`.toLowerCase();
+        `${d.title} ${d.id} ${d.dealCategory ?? ""} ${d.pipeline ?? ""} ${d.dealAgentMeta?.name ?? d.dealAgent ?? ""
+          }`.toLowerCase();
       if (!hay.includes(normalizedSearch)) return false;
     }
 
@@ -100,13 +99,13 @@ export default function KanbanBoard({
       } else {
         const chosen =
           (!existing.id && it.id) ||
-          (it.id && existing.id && it.id !== existing.id)
+            (it.id && existing.id && it.id !== existing.id)
             ? { id: it.id ?? existing.id, name: it.name, color: it.color }
             : {
-                id: existing.id ?? it.id,
-                name: existing.name,
-                color: existing.color ?? it.color,
-              };
+              id: existing.id ?? it.id,
+              name: existing.name,
+              color: existing.color ?? it.color,
+            };
         map.set(key, chosen);
       }
     }
@@ -137,10 +136,10 @@ export default function KanbanBoard({
         if (!mounted) return;
         const mapped = Array.isArray(json)
           ? json.map((p: any) => ({
-              id: p.id,
-              name: String(p.status ?? p.status),
-              color: p.color ?? "#2563EB",
-            }))
+            id: p.id,
+            name: String(p.status ?? p.status),
+            color: p.color ?? "#2563EB",
+          }))
           : [];
         if (mapped.length > 0) {
           setGlobalPalette((prev) => dedupePalette([...prev, ...mapped]));
@@ -504,8 +503,8 @@ function DealCard({
     ? (deal as any).tags
     : (deal as any).tags
       ? String((deal as any).tags)
-          .split(",")
-          .map((s: string) => s.trim())
+        .split(",")
+        .map((s: string) => s.trim())
       : [];
 
   // ---- COMMENTS ----
@@ -690,8 +689,8 @@ function DealCard({
         ? (deal as any).tags
         : (deal as any).tags
           ? String((deal as any).tags)
-              .split(",")
-              .map((s: string) => s.trim())
+            .split(",")
+            .map((s: string) => s.trim())
           : [],
     );
 
@@ -708,22 +707,22 @@ function DealCard({
     // sync comments from incoming props (same fallbacks as above)
     const incomingComments = parseComments(
       (deal as any).comments ??
-        (deal as any).dealComments ??
-        (deal as any).commentsMeta ??
-        (deal as any).latestComments ??
-        (deal as any).recentComments ??
-        null,
+      (deal as any).dealComments ??
+      (deal as any).commentsMeta ??
+      (deal as any).latestComments ??
+      (deal as any).recentComments ??
+      null,
     );
     setLocalComments(incomingComments);
 
     // sync followup created dates (NEW)
     const incomingFollowups = parseFollowupsCreated(
       (deal as any).followups ??
-        (deal as any).followUps ??
-        (deal as any).followupHistory ??
-        (deal as any).followupsMeta ??
-        (deal as any).followupList ??
-        null,
+      (deal as any).followUps ??
+      (deal as any).followupHistory ??
+      (deal as any).followupsMeta ??
+      (deal as any).followupList ??
+      null,
     );
     setLocalFollowupsCreated(incomingFollowups);
   }, [deal]);
@@ -764,15 +763,15 @@ function DealCard({
 
   const explicitNextFollowup =
     (deal as any).nextFollowupDate ||
-    (deal as any).nextFollowup ||
-    (deal as any).next_followup
+      (deal as any).nextFollowup ||
+      (deal as any).next_followup
       ? parseDateSafe(
-          String(
-            (deal as any).nextFollowupDate ||
-              (deal as any).nextFollowup ||
-              (deal as any).next_followup,
-          ),
-        )
+        String(
+          (deal as any).nextFollowupDate ||
+          (deal as any).nextFollowup ||
+          (deal as any).next_followup,
+        ),
+      )
       : null;
 
   const displayFollowupDate =
@@ -1027,10 +1026,10 @@ function DealCard({
           const emp = employeesMap[id];
           return emp
             ? {
-                employeeId: id,
-                name: emp.name,
-                profilePictureUrl: emp.profilePictureUrl,
-              }
+              employeeId: id,
+              name: emp.name,
+              profilePictureUrl: emp.profilePictureUrl,
+            }
             : { employeeId: id, name: id };
         });
         setLocalWatchers(watchers);
