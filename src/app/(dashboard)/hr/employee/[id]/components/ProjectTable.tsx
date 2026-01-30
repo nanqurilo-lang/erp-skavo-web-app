@@ -412,26 +412,145 @@ const [employeeLoading, setEmployeeLoading] = useState(false);
 
     const EMP_BASE = `${process.env.NEXT_PUBLIC_MAIN}`;
 
+// const loadEmployees = useCallback(async () => {
+//   setEmployeeLoading(true);
+//   try {
+//     const token =
+//       typeof window !== "undefined"
+//         ? localStorage.getItem("accessToken")
+//         : null;
+
+//     const res = await fetch(`${EMP_BASE}/employee/all`, {
+//       headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+//       cache: "no-store",
+//     });
+    
+
+    // if (!res.ok) {
+    //   console.error("Failed to load employees", res.status);
+    //   setEmployees([]);
+    //   return;
+    // }
+
+
+
+//     const data = await res.json();
+//     if (Array.isArray(data)) {
+//       setEmployees(
+//         data.map((e: any) => ({
+//           employeeId: e.employeeId,
+//           name: e.name,
+//           profilePictureUrl: e.profilePictureUrl ?? null,
+//         }))
+//       );
+//     } else {
+//       setEmployees([]);
+//     }
+//   } catch (err) {
+//     console.error("Employee load error", err);
+//     setEmployees([]);
+//   } finally {
+//     setEmployeeLoading(false);
+//   }
+// }, []);
+
+
+
+//new added
+// const loadEmployees = useCallback(async () => {
+//   // 🔐 already loading → skip
+//   if (employeeLoading) return;
+
+//   setEmployeeLoading(true);
+
+//   try {
+//     const token =
+//       typeof window !== "undefined"
+//         ? localStorage.getItem("accessToken")
+//         : null;
+
+//     if (!token) {
+//       setEmployees([]);
+//       return;
+//     }
+
+//     const res = await fetch(`${EMP_BASE}/employee/all`, {
+//       headers: { Authorization: `Bearer ${token}` },
+//       cache: "no-store",
+//     });
+
+//     // 🔴 HANDLE 503 GRACEFULLY
+//     if (res.status === 503) {
+//       console.warn("Employees service unavailable (503)");
+//       setEmployees([]); // silent fail
+//       return;
+//     }
+
+//     if (!res.ok) {
+//       console.warn("Employees API failed:", res.status);
+//       setEmployees([]);
+//       return;
+//     }
+
+//     const data = await res.json();
+
+//     if (Array.isArray(data)) {
+//       setEmployees(
+//         data.map((e: any) => ({
+//           employeeId: e.employeeId,
+//           name: e.name,
+//           profilePictureUrl: e.profilePictureUrl ?? null,
+//         }))
+//       );
+//     } else {
+//       setEmployees([]);
+//     }
+//   } catch (err) {
+//     console.warn("Employees fetch error (ignored)", err);
+//     setEmployees([]);
+//   } finally {
+//     setEmployeeLoading(false);
+//   }
+// }, [employeeLoading]);
+
+
+
+
 const loadEmployees = useCallback(async () => {
+  if (employeeLoading) return;
+
   setEmployeeLoading(true);
+
   try {
     const token =
       typeof window !== "undefined"
         ? localStorage.getItem("accessToken")
         : null;
 
+    if (!token) {
+      setEmployees([]);
+      return;
+    }
+
     const res = await fetch(`${EMP_BASE}/employee/all`, {
-      headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+      headers: { Authorization: `Bearer ${token}` },
       cache: "no-store",
     });
 
+    if (res.status === 503) {
+      console.warn("Employees service unavailable (503)");
+      setEmployees([]);
+      return;
+    }
+
     if (!res.ok) {
-      console.error("Failed to load employees", res.status);
+      console.warn("Employees API failed:", res.status);
       setEmployees([]);
       return;
     }
 
     const data = await res.json();
+
     if (Array.isArray(data)) {
       setEmployees(
         data.map((e: any) => ({
@@ -444,12 +563,18 @@ const loadEmployees = useCallback(async () => {
       setEmployees([]);
     }
   } catch (err) {
-    console.error("Employee load error", err);
+    console.warn("Employees fetch error (ignored)", err);
     setEmployees([]);
   } finally {
     setEmployeeLoading(false);
   }
-}, []);
+}, [employeeLoading]);
+
+
+
+
+
+
 
 
     const deleteCategory = async (catId: string | number) => {
@@ -553,20 +678,51 @@ const loadEmployees = useCallback(async () => {
     }, [searchInput]);
 
     // initial token & load
-    useEffect(() => {
-        if (typeof window !== "undefined") {
-            const savedToken = localStorage.getItem("accessToken");
-            setToken(savedToken);
-            // load selects regardless of projects auth (but use token if present)
-            loadCategories(savedToken || null);
-            loadClients(savedToken || null);
-            loadDepartments(savedToken || null);
-            loadEmployees();
-            if (savedToken) getProjects(savedToken);
-            else setLoading(false);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    // useEffect(() => {
+    //     if (typeof window !== "undefined") {
+    //         const savedToken = localStorage.getItem("accessToken");
+    //         setToken(savedToken);
+    //         // load selects regardless of projects auth (but use token if present)
+    //         loadCategories(savedToken || null);
+    //         loadClients(savedToken || null);
+    //         loadDepartments(savedToken || null);
+    //         loadEmployees();
+    //         if (savedToken) getProjects(savedToken);
+    //         else setLoading(false);
+    //     }
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, []);
+
+
+
+useEffect(() => {
+  if (typeof window === "undefined") return;
+
+  const savedToken = localStorage.getItem("accessToken");
+  setToken(savedToken);
+
+  // safe loaders
+  loadCategories(savedToken || null);
+  loadClients(savedToken || null);
+  loadDepartments(savedToken || null);
+
+  // ✅ employees sirf ek baar + safe condition
+  if (!employees.length) {
+    loadEmployees();
+  }
+
+  if (savedToken) {
+    getProjects(savedToken);
+  } else {
+    setLoading(false);
+  }
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, []);
+
+
+
+
 
     useEffect(() => {
         if (!token && typeof window !== "undefined") {
@@ -2448,5 +2604,6 @@ const loadEmployees = useCallback(async () => {
             (map[d] ||= []).push(p);
         });
         return map;
-    }
+  }
 }
+

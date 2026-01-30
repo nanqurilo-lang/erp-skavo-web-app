@@ -7,6 +7,9 @@ import axios from "axios";
 import { UserIcon } from "@heroicons/react/24/outline";
 import { deleteAPI, postAPI, putAPI } from "@/app/api/apiHelper";
 // import { getStorage } from "../../../../../lib/storage/storege";
+import EmployeeCreateTaskModal from "./EmployeeCreateTaskModal";
+
+
 import TaskViewModal, { TaskForView } from "@/app/(dashboard)/work/project/components/TaskViewModal"; // adjust path if needed
 
 type Employee = {
@@ -579,7 +582,7 @@ export default function TasksTable({ employeeId, }: { employeeId: string }) {
             )}
 
             {/* Create modal (unchanged) */}
-            {showCreate && (
+            {/* {showCreate && (
                 <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/40 p-4">
                     <form onSubmit={handleCreate} className="bg-white w-full max-w-3xl rounded-lg p-6 shadow-lg overflow-auto max-h-[90vh]">
                         <div className="flex items-center justify-between mb-4">
@@ -629,7 +632,7 @@ export default function TasksTable({ employeeId, }: { employeeId: string }) {
                             </label>
 
                             <label className="flex flex-col">
-                                <span className="text-xs text-gray-600">Label IDs (comma separated)</span>
+                                <span className="text-xs text-gray-600">Label IDs (comma separated) </span>
                                 <input value={form.labelIds.join(",")} onChange={(e) => updateForm({ labelIds: e.target.value.split(",").map(s => s.trim()).filter(Boolean) })} className="border px-3 py-2 rounded" />
                             </label>
 
@@ -675,7 +678,13 @@ export default function TasksTable({ employeeId, }: { employeeId: string }) {
                         </div>
                     </form>
                 </div>
-            )}
+            )} */}
+
+
+
+
+
+
 
             {/* Edit modal (unchanged) */}
             {showEdit && editTask && (
@@ -760,6 +769,17 @@ export default function TasksTable({ employeeId, }: { employeeId: string }) {
                     setViewTask(null);
                 }}
             />
+
+<EmployeeCreateTaskModal
+    open={showCreate}
+    projectId={projectId}
+    employeeId={employeeId}
+    onClose={() => setShowCreate(false)}
+    onCreated={fetchTasks}
+/>
+
+           
+
         </div>
     );
 }

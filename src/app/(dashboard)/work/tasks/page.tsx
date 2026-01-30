@@ -10,6 +10,8 @@ import { ActionsBar } from "./components/ActionsBar";
 import { TaskTable } from "./components/TaskTable";
 import { CalendarModal } from "./components/CalendarModal";
 import { AddTaskModal } from "./components/AddTaskModal";
+// import AddTaskModal from "./components/AddTaskModal";
+
 import { KanbanBoard } from "./components/KanbanBoard";
 import { StagesModal } from "./components/StagesModal";
 import ViewTaskModal from "./components/ViewTaskModal/ViewTaskModal";
