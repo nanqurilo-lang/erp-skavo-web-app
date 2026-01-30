@@ -558,8 +558,8 @@
 //                                                         //     { headers: { Authorization: `Bearer ${token}` } }
 //                                                         // );
 //                                                         // setLabels(await res.json());
-                                                    
-                                                    
+
+
 //                                                     if (!labelProjectId) return;
 
 // const res = await fetch(
@@ -580,8 +580,8 @@
 // }
 
 
-                                                    
-                                                    
+
+
 //                                                     }}
 //                                                 >
 //                                                     🗑
@@ -758,195 +758,195 @@
 import { useEffect, useState } from "react";
 
 interface Props {
-  open: boolean;
-  onClose: () => void;
-  onCreated: () => void;
-  projectId?: string; // ⚠️ actually employeeId
+    open: boolean;
+    onClose: () => void;
+    onCreated: () => void;
+    projectId?: string; // ⚠️ actually employeeId
 }
 
 export default function EmployeeCreateTaskModal({
-  open,
-  onClose,
-  onCreated,
-  projectId, // employeeId
+    open,
+    onClose,
+    onCreated,
+    projectId, // employeeId
 }: Props) {
-  const MAIN = process.env.NEXT_PUBLIC_MAIN;
-  const token =
-    typeof window !== "undefined"
-      ? localStorage.getItem("accessToken")
-      : null;
+    const MAIN = process.env.NEXT_PUBLIC_MAIN;
+    const token =
+        typeof window !== "undefined"
+            ? localStorage.getItem("accessToken")
+            : null;
 
-  /* ================= FORM STATES ================= */
-  const [title, setTitle] = useState("");
-  const [category, setCategory] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [dueDate, setDueDate] = useState("");
-  const [noDueDate, setNoDueDate] = useState(false);
-  const [taskStageId, setTaskStageId] = useState("");
-  const [assignedEmployeeIds, setAssignedEmployeeIds] = useState<string[]>([]);
-  const [description, setDescription] = useState("");
-  const [labelId, setLabelId] = useState("");
-  const [milestoneId, setMilestoneId] = useState("");
-  const [priority, setPriority] = useState("LOW");
-  const [isPrivate, setIsPrivate] = useState(false);
-  const [timeEstimate, setTimeEstimate] = useState(false);
-  const [timeEstimateMinutes, setTimeEstimateMinutes] = useState("");
-  const [isDependent, setIsDependent] = useState(false);
-  const [file, setFile] = useState<File | null>(null);
-  const [loading, setLoading] = useState(false);
+    /* ================= FORM STATES ================= */
+    const [title, setTitle] = useState("");
+    const [category, setCategory] = useState("");
+    const [startDate, setStartDate] = useState("");
+    const [dueDate, setDueDate] = useState("");
+    const [noDueDate, setNoDueDate] = useState(false);
+    const [taskStageId, setTaskStageId] = useState("");
+    const [assignedEmployeeIds, setAssignedEmployeeIds] = useState<string[]>([]);
+    const [description, setDescription] = useState("");
+    const [labelId, setLabelId] = useState("");
+    const [milestoneId, setMilestoneId] = useState("");
+    const [priority, setPriority] = useState("LOW");
+    const [isPrivate, setIsPrivate] = useState(false);
+    const [timeEstimate, setTimeEstimate] = useState(false);
+    const [timeEstimateMinutes, setTimeEstimateMinutes] = useState("");
+    const [isDependent, setIsDependent] = useState(false);
+    const [file, setFile] = useState<File | null>(null);
+    const [loading, setLoading] = useState(false);
 
-  const [selectedProjectId, setSelectedProjectId] = useState("");
-  const [employeeProjects, setEmployeeProjects] = useState<any[]>([]);
+    const [selectedProjectId, setSelectedProjectId] = useState("");
+    const [employeeProjects, setEmployeeProjects] = useState<any[]>([]);
 
-  /* ================= UI STATES ================= */
-  const [assignOpen, setAssignOpen] = useState(false);
+    /* ================= UI STATES ================= */
+    const [assignOpen, setAssignOpen] = useState(false);
 
-  const [showCategoryModal, setShowCategoryModal] = useState(false);
-  const [newCategoryName, setNewCategoryName] = useState("");
-  const [categoryLoading, setCategoryLoading] = useState(false);
+    const [showCategoryModal, setShowCategoryModal] = useState(false);
+    const [newCategoryName, setNewCategoryName] = useState("");
+    const [categoryLoading, setCategoryLoading] = useState(false);
 
-  const [showLabelModal, setShowLabelModal] = useState(false);
-  const [labelName, setLabelName] = useState("");
-  const [labelColor, setLabelColor] = useState("");
-  const [labelDesc, setLabelDesc] = useState("");
-  const [labelProjectId, setLabelProjectId] = useState("");
-  const [labelLoading, setLabelLoading] = useState(false);
+    const [showLabelModal, setShowLabelModal] = useState(false);
+    const [labelName, setLabelName] = useState("");
+    const [labelColor, setLabelColor] = useState("");
+    const [labelDesc, setLabelDesc] = useState("");
+    const [labelProjectId, setLabelProjectId] = useState("");
+    const [labelLoading, setLabelLoading] = useState(false);
 
-  /* ================= API DATA ================= */
-  const [categories, setCategories] = useState<any[]>([]);
-  const [stages, setStages] = useState<any[]>([]);
-  const [employees, setEmployees] = useState<any[]>([]);
-  const [milestones, setMilestones] = useState<any[]>([]);
-  const [labels, setLabels] = useState<any[]>([]);
-  const [projects, setProjects] = useState<any[]>([]);
+    /* ================= API DATA ================= */
+    const [categories, setCategories] = useState<any[]>([]);
+    const [stages, setStages] = useState<any[]>([]);
+    const [employees, setEmployees] = useState<any[]>([]);
+    const [milestones, setMilestones] = useState<any[]>([]);
+    const [labels, setLabels] = useState<any[]>([]);
+    const [projects, setProjects] = useState<any[]>([]);
 
-  /* ================= FETCH BASE DATA ================= */
-  useEffect(() => {
-    if (!open || !MAIN || !token) return;
+    /* ================= FETCH BASE DATA ================= */
+    useEffect(() => {
+        if (!open || !MAIN || !token) return;
 
-    fetch(`${MAIN}/task/task-categories`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((r) => r.json())
-      .then((j) =>
-        setCategories(Array.isArray(j) ? j : j?.data || [])
-      );
+        fetch(`${MAIN}/task/task-categories`, {
+            headers: { Authorization: `Bearer ${token}` },
+        })
+            .then((r) => r.json())
+            .then((j) =>
+                setCategories(Array.isArray(j) ? j : j?.data || [])
+            );
 
-    fetch(`${MAIN}/status`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((r) => r.json())
-      .then((j) => setStages(Array.isArray(j) ? j : j?.data || []));
+        fetch(`${MAIN}/status`, {
+            headers: { Authorization: `Bearer ${token}` },
+        })
+            .then((r) => r.json())
+            .then((j) => setStages(Array.isArray(j) ? j : j?.data || []));
 
-    fetch(`${MAIN}/employee/all`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((r) => r.json())
-      .then((j) => setEmployees(Array.isArray(j) ? j : j?.data || []));
-  }, [open, MAIN, token]);
+        fetch(`${MAIN}/employee/all`, {
+            headers: { Authorization: `Bearer ${token}` },
+        })
+            .then((r) => r.json())
+            .then((j) => setEmployees(Array.isArray(j) ? j : j?.data || []));
+    }, [open, MAIN, token]);
 
-  /* ================= EMPLOYEE PROJECTS ================= */
-  useEffect(() => {
-    if (!open || !MAIN || !token || !projectId) return;
+    /* ================= EMPLOYEE PROJECTS ================= */
+    useEffect(() => {
+        if (!open || !MAIN || !token || !projectId) return;
 
-    fetch(`${MAIN}/api/projects/employee/${projectId}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((r) => r.json())
-      .then((json) => {
-        const list = Array.isArray(json)
-          ? json
-          : Array.isArray(json?.data)
-          ? json.data
-          : [];
+        fetch(`${MAIN}/api/projects/employee/${projectId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        })
+            .then((r) => r.json())
+            .then((json) => {
+                const list = Array.isArray(json)
+                    ? json
+                    : Array.isArray(json?.data)
+                        ? json.data
+                        : [];
 
-        setEmployeeProjects(
-          list.map((p: any) => ({
-            id: p.id || p.projectId,
-            name: p.name || p.projectName,
-          }))
-        );
-      })
-      .catch(() => setEmployeeProjects([]));
-  }, [open, projectId, MAIN, token]);
+                setEmployeeProjects(
+                    list.map((p: any) => ({
+                        id: p.id || p.projectId,
+                        name: p.name || p.projectName,
+                    }))
+                );
+            })
+            .catch(() => setEmployeeProjects([]));
+    }, [open, projectId, MAIN, token]);
 
-  /* ================= ALL PROJECTS (LABEL MODAL) ================= */
-  useEffect(() => {
-    if (!open || !MAIN || !token) return;
+    /* ================= ALL PROJECTS (LABEL MODAL) ================= */
+    useEffect(() => {
+        if (!open || !MAIN || !token) return;
 
-    fetch(`${MAIN}/projects`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((r) => r.json())
-      .then((j) => setProjects(Array.isArray(j) ? j : j?.data || []))
-      .catch(() => setProjects([]));
-  }, [open, MAIN, token]);
+        fetch(`${MAIN}/projects`, {
+            headers: { Authorization: `Bearer ${token}` },
+        })
+            .then((r) => r.json())
+            .then((j) => setProjects(Array.isArray(j) ? j : j?.data || []))
+            .catch(() => setProjects([]));
+    }, [open, MAIN, token]);
 
-  /* ================= PROJECT → MILESTONES + LABELS ================= */
-  useEffect(() => {
-    if (!labelProjectId || !MAIN || !token) return;
+    /* ================= PROJECT → MILESTONES + LABELS ================= */
+    useEffect(() => {
+        if (!labelProjectId || !MAIN || !token) return;
 
-    fetch(`${MAIN}/api/projects/${labelProjectId}/milestones`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((r) => r.json())
-      .then((j) =>
-        setMilestones(Array.isArray(j) ? j : j?.data || [])
-      );
+        fetch(`${MAIN}/api/projects/${labelProjectId}/milestones`, {
+            headers: { Authorization: `Bearer ${token}` },
+        })
+            .then((r) => r.json())
+            .then((j) =>
+                setMilestones(Array.isArray(j) ? j : j?.data || [])
+            );
 
-    fetch(`${MAIN}/projects/${labelProjectId}/labels`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((r) => r.json())
-      .then((j) => setLabels(Array.isArray(j) ? j : j?.data || []))
-      .catch(() => setLabels([]));
-  }, [labelProjectId, MAIN, token]);
+        fetch(`${MAIN}/projects/${labelProjectId}/labels`, {
+            headers: { Authorization: `Bearer ${token}` },
+        })
+            .then((r) => r.json())
+            .then((j) => setLabels(Array.isArray(j) ? j : j?.data || []))
+            .catch(() => setLabels([]));
+    }, [labelProjectId, MAIN, token]);
 
-  /* ================= SUBMIT ================= */
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      setLoading(true);
+    /* ================= SUBMIT ================= */
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        try {
+            setLoading(true);
 
-      const fd = new FormData();
-      fd.append("title", title);
-      fd.append("category", category);
-      fd.append("projectId", selectedProjectId);
-      fd.append("startDate", startDate);
-      if (!noDueDate) fd.append("dueDate", dueDate);
-      fd.append("taskStageId", taskStageId);
-      fd.append("description", description);
-      fd.append("priority", priority);
-      fd.append("isPrivate", String(isPrivate));
-      fd.append("timeEstimate", String(timeEstimate));
-      fd.append("timeEstimateMinutes", timeEstimateMinutes);
-      fd.append("isDependent", String(isDependent));
-      fd.append("milestoneId", milestoneId);
+            const fd = new FormData();
+            fd.append("title", title);
+            fd.append("category", category);
+            fd.append("projectId", selectedProjectId);
+            fd.append("startDate", startDate);
+            if (!noDueDate) fd.append("dueDate", dueDate);
+            fd.append("taskStageId", taskStageId);
+            fd.append("description", description);
+            fd.append("priority", priority);
+            fd.append("isPrivate", String(isPrivate));
+            fd.append("timeEstimate", String(timeEstimate));
+            fd.append("timeEstimateMinutes", timeEstimateMinutes);
+            fd.append("isDependent", String(isDependent));
+            fd.append("milestoneId", milestoneId);
 
-      assignedEmployeeIds.forEach((id) =>
-        fd.append("assignedEmployeeIds", id)
-      );
-      if (labelId) fd.append("labelIds", labelId);
-      if (file) fd.append("taskFile", file);
+            assignedEmployeeIds.forEach((id) =>
+                fd.append("assignedEmployeeIds", id)
+            );
+            if (labelId) fd.append("labelIds", labelId);
+            if (file) fd.append("taskFile", file);
 
-      const res = await fetch(`${MAIN}/api/projects/tasks`, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
-        body: fd,
-      });
+            const res = await fetch(`${MAIN}/api/projects/tasks`, {
+                method: "POST",
+                headers: { Authorization: `Bearer ${token}` },
+                body: fd,
+            });
 
-      if (!res.ok) throw new Error("Failed");
+            if (!res.ok) throw new Error("Failed");
 
-      onCreated();
-      onClose();
-    } catch {
-      alert("Failed to create task");
-    } finally {
-      setLoading(false);
-    }
-  };
+            onCreated();
+            onClose();
+        } catch {
+            alert("Failed to create task");
+        } finally {
+            setLoading(false);
+        }
+    };
 
-  if (!open) return null;
+    if (!open) return null;
 
 
 
@@ -988,8 +988,8 @@ export default function EmployeeCreateTaskModal({
 
 
 
-{/* PROJECT (NEW FIELD) */}
-{/* <div>
+                        {/* PROJECT (NEW FIELD) */}
+                        {/* <div>
   <label className="text-xs text-gray-600">Project *</label>
   <select
     className="border px-3 py-2 rounded w-full"
@@ -1018,29 +1018,29 @@ export default function EmployeeCreateTaskModal({
  */}
 
 
-{/* PROJECT */}
-<div>
-  <label className="text-xs text-gray-600">Project *</label>
+                        {/* PROJECT */}
+                        <div>
+                            <label className="text-xs text-gray-600">Project *</label>
 
-  <select
-    className="border px-3 py-2 rounded w-full"
-    value={selectedProjectId}
-    onChange={(e) => {
-      const pid = e.target.value;
-      setSelectedProjectId(pid);
-      setLabelProjectId(pid); // 🔥 milestone + label sync
-    }}
-    required
-  >
-    <option value="">-- Select Project --</option>
+                            <select
+                                className="border px-3 py-2 rounded w-full"
+                                value={selectedProjectId}
+                                onChange={(e) => {
+                                    const pid = e.target.value;
+                                    setSelectedProjectId(pid);
+                                    setLabelProjectId(pid); // 🔥 milestone + label sync
+                                }}
+                                required
+                            >
+                                <option value="">-- Select Project --</option>
 
-    {projects.map((p) => (
-      <option key={p.id} value={p.id}>
-        {p.name}
-      </option>
-    ))}
-  </select>
-</div>
+                                {projects.map((p) => (
+                                    <option key={p.id} value={p.id}>
+                                        {p.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
 
 
 
@@ -1129,11 +1129,11 @@ export default function EmployeeCreateTaskModal({
                                 >
                                     <option value="">--</option>
                                     {Array.isArray(labels) &&
-  labels.map((l) => (
-    <option key={l.id} value={l.id}>
-      {l.name}
-    </option>
-  ))}
+                                        labels.map((l) => (
+                                            <option key={l.id} value={l.id}>
+                                                {l.name}
+                                            </option>
+                                        ))}
 
                                 </select>
 
@@ -1247,7 +1247,7 @@ export default function EmployeeCreateTaskModal({
                         <div className="flex justify-end gap-3 px-6 py-4 border-t">
                             <button onClick={() => setShowCategoryModal(false)} className="px-4 py-2 rounded border">Cancel</button>
                             <button disabled={categoryLoading} onClick={async () => {
-                               // if (!newCategoryName) return;
+                                // if (!newCategoryName) return;
                                 setCategoryLoading(true);
                                 await fetch(`${MAIN}/task/task-categories`, { method: "POST", headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" }, body: JSON.stringify({ name: newCategoryName }) });
                                 const res = await fetch(`${MAIN}/task/task-categories`, { headers: { Authorization: `Bearer ${token}` } });
@@ -1314,30 +1314,30 @@ export default function EmployeeCreateTaskModal({
                                                         //     { headers: { Authorization: `Bearer ${token}` } }
                                                         // );
                                                         // setLabels(await res.json());
-                                                    
-                                                    
-                                                    if (!labelProjectId) return;
-
-const res = await fetch(
-  `${MAIN}/projects/${labelProjectId}/labels`,
-  { headers: { Authorization: `Bearer ${token}` } }
-);
-
-const json = await res.json();
-
-if (Array.isArray(json)) {
-  setLabels(json);
-} else if (Array.isArray(json.labels)) {
-  setLabels(json.labels);
-} else if (Array.isArray(json.data)) {
-  setLabels(json.data);
-} else {
-  setLabels([]); // fallback
-}
 
 
-                                                    
-                                                    
+                                                        if (!labelProjectId) return;
+
+                                                        const res = await fetch(
+                                                            `${MAIN}/projects/${labelProjectId}/labels`,
+                                                            { headers: { Authorization: `Bearer ${token}` } }
+                                                        );
+
+                                                        const json = await res.json();
+
+                                                        if (Array.isArray(json)) {
+                                                            setLabels(json);
+                                                        } else if (Array.isArray(json.labels)) {
+                                                            setLabels(json.labels);
+                                                        } else if (Array.isArray(json.data)) {
+                                                            setLabels(json.data);
+                                                        } else {
+                                                            setLabels([]); // fallback
+                                                        }
+
+
+
+
                                                     }}
                                                 >
                                                     🗑
@@ -1382,19 +1382,19 @@ if (Array.isArray(json)) {
 
 
 
-<select
-  value={labelProjectId}
-  onChange={(e) => setLabelProjectId(e.target.value)}
-  className="border px-3 py-2 rounded w-full"
->
-  <option value="">-- Select Project --</option>
+                                    <select
+                                        value={labelProjectId}
+                                        onChange={(e) => setLabelProjectId(e.target.value)}
+                                        className="border px-3 py-2 rounded w-full"
+                                    >
+                                        <option value="">-- Select Project --</option>
 
-  {projects.map((p) => (
-    <option key={p.id} value={p.id}>
-      {p.name}
-    </option>
-  ))}
-</select>
+                                        {projects.map((p) => (
+                                            <option key={p.id} value={p.id}>
+                                                {p.name}
+                                            </option>
+                                        ))}
+                                    </select>
 
 
                                 </div>
@@ -1416,7 +1416,7 @@ if (Array.isArray(json)) {
                                 onClick={() => setShowLabelModal(false)}
                                 className="px-4 py-2 rounded border"
                             >
-                                Cancel 
+                                Cancel
                             </button>
 
                             <button
@@ -1443,19 +1443,19 @@ if (Array.isArray(json)) {
                                     // });
 
 
-await fetch(`${MAIN}/api/labels`, {
-  method: "POST",
-  headers: {
-    Authorization: `Bearer ${token}`,
-    "Content-Type": "application/json",
-  },
-  body: JSON.stringify({
-    name: labelName,
-    colorCode: labelColor,
-    description: labelDesc,
-    projectId: labelProjectId,
-  }),
-});
+                                    await fetch(`${MAIN}/api/labels`, {
+                                        method: "POST",
+                                        headers: {
+                                            Authorization: `Bearer ${token}`,
+                                            "Content-Type": "application/json",
+                                        },
+                                        body: JSON.stringify({
+                                            name: labelName,
+                                            colorCode: labelColor,
+                                            description: labelDesc,
+                                            projectId: labelProjectId,
+                                        }),
+                                    });
 
 
 
@@ -1465,18 +1465,18 @@ await fetch(`${MAIN}/api/labels`, {
                                         { headers: { Authorization: `Bearer ${token}` } }
                                     );
 
-                                  //  setLabels(await res.json());
-                                  const json = await res.json();
+                                    //  setLabels(await res.json());
+                                    const json = await res.json();
 
-if (Array.isArray(json)) {
-  setLabels(json);
-} else if (Array.isArray(json.labels)) {
-  setLabels(json.labels);
-} else if (Array.isArray(json.data)) {
-  setLabels(json.data);
-} else {
-  setLabels([]); // fallback
-}
+                                    if (Array.isArray(json)) {
+                                        setLabels(json);
+                                    } else if (Array.isArray(json.labels)) {
+                                        setLabels(json.labels);
+                                    } else if (Array.isArray(json.data)) {
+                                        setLabels(json.data);
+                                    } else {
+                                        setLabels([]); // fallback
+                                    }
 
                                     setLabelName("");
                                     setLabelColor("");
