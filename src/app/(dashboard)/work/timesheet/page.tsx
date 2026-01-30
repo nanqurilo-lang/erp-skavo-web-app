@@ -579,6 +579,21 @@ const [endDate, setEndDate] = useState("");
         return;
       }
 
+      //new added
+
+if (
+  form.taskId &&
+  selectedTaskEmployees.length > 0 &&
+  !selectedTaskEmployees.some(e => e.employeeId === form.employeeId)
+) {
+  setSaveError("Selected employee is not assigned to this task.");
+  setSaving(false);
+  return;
+}
+
+
+
+
       const payload: any = {
         projectId: Number(form.projectId),
         taskId: Number(form.taskId),
@@ -1107,20 +1122,58 @@ const [endDate, setEndDate] = useState("");
                           );
                         }
 
-                        if (form.projectId && projectEmployees.length > 0) {
-                          return (
-                            <>
-                              <option value="--">--</option>
-                              {projectEmployees.map((e) => (
-                                <option key={e.employeeId} value={e.employeeId}>
-                                  {e.name
-                                    ? `${e.name} (${e.employeeId})`
-                                    : e.employeeId}
-                                </option>
-                              ))}
-                            </>
-                          );
-                        }
+                        // if (form.projectId && projectEmployees.length > 0) {
+                        //   return (
+                        //     <>
+                        //       <option value="--">--</option>
+                        //       {projectEmployees.map((e) => (
+                        //         <option key={e.employeeId} value={e.employeeId}>
+                        //           {e.name
+                        //             ? `${e.name} (${e.employeeId})`
+                        //             : e.employeeId}
+                        //         </option>
+                        //       ))}
+                        //     </>
+                        //   );
+                        // }
+
+
+
+if (form.taskId && selectedTaskEmployees.length === 0) {
+  return <option value="--">No employees assigned to this task</option>;
+}
+
+if (selectedTaskEmployees.length > 0) {
+  return (
+    <>
+      <option value="--">--</option>
+      {selectedTaskEmployees.map((e) => (
+        <option key={e.employeeId} value={e.employeeId}>
+          {e.name ? `${e.name} (${e.employeeId})` : e.employeeId}
+        </option>
+      ))}
+    </>
+  );
+}
+
+// ONLY when no task selected
+if (!form.taskId && projectEmployees.length > 0) {
+  return (
+    <>
+      <option value="--">--</option>
+      {projectEmployees.map((e) => (
+        <option key={e.employeeId} value={e.employeeId}>
+          {e.name ? `${e.name} (${e.employeeId})` : e.employeeId}
+        </option>
+      ))}
+    </>
+  );
+}
+
+
+
+
+                        
 
                         return employeeOptions.map((e) => (
                           <option key={e} value={e}>
