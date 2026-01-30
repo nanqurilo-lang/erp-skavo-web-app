@@ -847,8 +847,8 @@ export default function EmployeeCreateTaskModal({
 
     /* ================= EMPLOYEE PROJECTS ================= */
     useEffect(() => {
-        if (!open || !MAIN || !token || !projectId) return;
-
+       // if (!open || !MAIN || !token || !projectId) return;
+console.log("Fetching projects for employeeId:", projectId);
         fetch(`${MAIN}/api/projects/employee/${projectId}`, {
             headers: { Authorization: `Bearer ${token}` },
         })
@@ -1034,7 +1034,7 @@ export default function EmployeeCreateTaskModal({
                             >
                                 <option value="">-- Select Project --</option>
 
-                                {projects.map((p) => (
+                                {employeeProjects.map((p) => (
                                     <option key={p.id} value={p.id}>
                                         {p.name}
                                     </option>
@@ -1389,7 +1389,7 @@ export default function EmployeeCreateTaskModal({
                                     >
                                         <option value="">-- Select Project --</option>
 
-                                        {projects.map((p) => (
+                                        {employeeProjects.map((p) => (
                                             <option key={p.id} value={p.id}>
                                                 {p.name}
                                             </option>

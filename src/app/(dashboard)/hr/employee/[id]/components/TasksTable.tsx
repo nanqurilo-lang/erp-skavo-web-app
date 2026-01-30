@@ -772,8 +772,8 @@ export default function TasksTable({ employeeId, }: { employeeId: string }) {
 
 <EmployeeCreateTaskModal
     open={showCreate}
-    projectId={projectId}
-    employeeId={employeeId}
+    projectId={employeeId}
+   // employeeId={employeeId}
     onClose={() => setShowCreate(false)}
     onCreated={fetchTasks}
 />
