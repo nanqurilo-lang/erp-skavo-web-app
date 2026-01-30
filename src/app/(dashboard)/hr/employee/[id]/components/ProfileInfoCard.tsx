@@ -8,7 +8,7 @@ export default function ProfileInfoCard({ employee }: { employee: any }) {
 
     return (
         <div className="border rounded-lg p-4 bg-white">
-            <h3 className="font-medium mb-4">Profile Information</h3>
+            <h3 className="font-medium mb-4">Profile Information </h3>
 
             <div className="space-y-2">
                 <Row label="Name" value={employee.name} />
