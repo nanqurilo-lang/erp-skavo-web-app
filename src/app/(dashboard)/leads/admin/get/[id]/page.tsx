@@ -731,6 +731,12 @@ function AddDealModal({
   possibleAgents: EmployeeMeta[];
   possibleWatchers: EmployeeMeta[];
 }) {
+
+
+const [employees, setEmployees] = useState<EmployeeMeta[]>([]);
+const [employeesLoading, setEmployeesLoading] = useState(true);
+
+
   const [form, setForm] = useState({
     leadContact: lead?.id ?? "",
     title: "",
@@ -743,8 +749,40 @@ function AddDealModal({
     closeDate: "",
   });
 
+
+
+
+
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+
+useEffect(() => {
+  const fetchEmployees = async () => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) return;
+
+      const res = await fetch("/api/hr/employee", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (!res.ok) throw new Error("Failed to fetch employees");
+
+      const data = await res.json();
+      setEmployees(data.content || []);
+    } catch (err) {
+      console.error("Employee load failed", err);
+      setEmployees([]);
+    } finally {
+      setEmployeesLoading(false);
+    }
+  };
+
+  fetchEmployees();
+}, []);
+
+
 
   const [watchersOpen, setWatchersOpen] = useState(false);
   const watchersButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -1019,7 +1057,7 @@ function AddDealModal({
                   <label className="block text-xs text-muted-foreground mb-2">
                     Deal Agent
                   </label>
-                  <select
+                  {/* <select
                     className="w-full p-2 border rounded-md bg-white text-sm"
                     value={form.dealAgent}
                     onChange={(e) => update("dealAgent", e.target.value)}
@@ -1030,7 +1068,30 @@ function AddDealModal({
                         {a.name}
                       </option>
                     ))}
-                  </select>
+                  </select> */}
+
+
+
+<select
+  className="w-full p-2 border rounded-md bg-white text-sm"
+  value={form.dealAgent}
+  onChange={(e) => update("dealAgent", e.target.value)}
+>
+  <option value="">--</option>
+
+  {employeesLoading ? (
+    <option disabled>Loading...</option>
+  ) : (
+    employees.map((emp) => (
+      <option key={emp.employeeId} value={emp.employeeId}>
+        {emp.name}
+      </option>
+    ))
+  )}
+</select>
+
+
+
                 </div>
 
                 <div>
@@ -1106,7 +1167,7 @@ function AddDealModal({
                           </div>
                         ) : (
                           <div className="grid gap-2">
-                            {possibleWatchers.map((w) => (
+                            {/* {possibleWatchers.map((w) => (
                               <label
                                 key={w.employeeId}
                                 className="flex items-start gap-2 text-sm"
@@ -1133,7 +1194,48 @@ function AddDealModal({
                                   )}
                                 </div>
                               </label>
-                            ))}
+                            ))} */}
+
+
+
+
+{employeesLoading ? (
+  <div className="text-sm text-muted-foreground">
+    Loading employees...
+  </div>
+) : employees.length === 0 ? (
+  <div className="text-sm text-muted-foreground">
+    No employees found
+  </div>
+) : (
+  <div className="grid gap-2">
+    {employees.map((emp) => (
+      <label
+        key={emp.employeeId}
+        className="flex items-start gap-2 text-sm"
+      >
+        <input
+          type="checkbox"
+          className="mt-1"
+          checked={form.dealWatchers.includes(emp.employeeId)}
+          onChange={(e) =>
+            toggleWatcher(emp.employeeId, e.target.checked)
+          }
+        />
+        <div>
+          <div className="text-sm">{emp.name}</div>
+          {emp.designation && (
+            <div className="text-xs text-muted-foreground">
+              {emp.designation}
+            </div>
+          )}
+        </div>
+      </label>
+    ))}
+  </div>
+)}
+
+
                           </div>
                         )}
                       </div>

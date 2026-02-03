@@ -338,7 +338,7 @@ export default function CreateDealPage() {
 
               {/* Deal Agent */}
               <div>
-                <label className="block text-xs text-gray-500 mb-2">Deal Agent</label>
+                <label className="block text-xs text-gray-500 mb-2">Deal Agent </label>
                 <select
                   name="dealAgent"
                   value={formData.dealAgent}
