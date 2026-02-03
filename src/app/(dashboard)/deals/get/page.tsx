@@ -1034,66 +1034,174 @@ export default function DealsPage() {
 
 
 
-  const filteredDeals = useMemo(() => {
-    const q = query.trim().toLowerCase();
+  // const filteredDeals = useMemo(() => {
+  //   const q = query.trim().toLowerCase();
 
-    return (deals as Deal[]).filter((d) => {
-      const matchesStage =
-        stageFilter === "all" ||
-        String(d.dealStage || "").toLowerCase() === stageFilter.toLowerCase();
+  //   return (deals as Deal[]).filter((d) => {
+  //     const matchesStage =
+  //       stageFilter === "all" ||
+  //       String(d.dealStage || "").toLowerCase() === stageFilter.toLowerCase();
 
-      const hay = [
-        d.title,
-        d.dealAgentMeta?.name,
-        d.dealAgent,
-        d.dealCategory,
-        d.pipeline,
-        String(d.id),
-        d.leadName,
-        d.leadEmail,
-        d.leadMobile,
-      ]
-        .filter(Boolean)
-        .join(" ")
-        .toLowerCase();
+  //     const hay = [
+  //       d.title,
+  //       d.dealAgentMeta?.name,
+  //       d.dealAgent,
+  //       d.dealCategory,
+  //       d.pipeline,
+  //       String(d.id),
+  //       d.leadName,
+  //       d.leadEmail,
+  //       d.leadMobile,
+  //     ]
+  //       .filter(Boolean)
+  //       .join(" ")
+  //       .toLowerCase();
 
-      const matchesQuery = q.length === 0 || hay.includes(q);
+  //     const matchesQuery = q.length === 0 || hay.includes(q);
 
-      // 🗓️ DATE RANGE FILTER (SAFE VERSION)
-      const matchesDate =
-        (!dateFrom || (d.createdAt && new Date(d.createdAt) >= dateFrom)) &&
-        (!dateTo || (d.createdAt && new Date(d.createdAt) <= dateTo));
-
-
-
-
-      // value filter
-      const dealValue = Number(d.value || 0);
-      if (minValue && dealValue < Number(minValue)) return false;
-      if (maxValue && dealValue > Number(maxValue)) return false;
-
-      // agent filter
-      if (
-        agentFilter !== "all" &&
-        d.dealAgentMeta?.name !== agentFilter
-      ) {
-        return false;
-      }
-
-      // priority filter
-      if (
-        priorityFilter !== "all" &&
-        String(d.priority).toLowerCase() !== priorityFilter.toLowerCase()
-      ) {
-        return false;
-      }
+  //     // 🗓️ DATE RANGE FILTER (SAFE VERSION)
+  //     const matchesDate =
+  //       (!dateFrom || (d.createdAt && new Date(d.createdAt) >= dateFrom)) &&
+  //       (!dateTo || (d.createdAt && new Date(d.createdAt) <= dateTo));
 
 
 
 
-      return matchesStage && matchesQuery && matchesDate;
-    });
-  }, [deals, query, stageFilter, dateFrom, dateTo]);
+  //     // value filter
+  //     const dealValue = Number(d.value || 0);
+  //     if (minValue && dealValue < Number(minValue)) return false;
+  //     if (maxValue && dealValue > Number(maxValue)) return false;
+
+  //     // agent filter
+  //     if (
+  //       agentFilter !== "all" &&
+  //       d.dealAgentMeta?.name !== agentFilter
+  //     ) {
+  //       return false;
+  //     }
+
+  //     // priority filter
+  //     if (
+  //       priorityFilter !== "all" &&
+  //       String(d.priority).toLowerCase() !== priorityFilter.toLowerCase()
+  //     ) {
+  //       return false;
+  //     }
+
+
+
+
+  //     return matchesStage && matchesQuery && matchesDate;
+  //   });
+  // }, [deals, query, stageFilter, dateFrom, dateTo]);
+
+
+
+
+const filteredDeals = useMemo(() => {
+  const q = query.trim().toLowerCase();
+
+  return (deals as Deal[]).filter((d) => {
+    /* ---------------- STAGE ---------------- */
+    const matchesStage =
+      stageFilter === "all" ||
+      String(d.dealStage || "").toLowerCase() === stageFilter.toLowerCase();
+
+    /* ---------------- SEARCH ---------------- */
+    const hay = [
+      d.title,
+      d.dealAgentMeta?.name,
+      d.dealAgent,
+      d.dealCategory,
+      d.pipeline,
+      String(d.id),
+      d.leadName,
+      d.leadEmail,
+      d.leadMobile,
+    ]
+      .filter(Boolean)
+      .join(" ")
+      .toLowerCase();
+
+    const matchesQuery = q.length === 0 || hay.includes(q);
+
+    /* ---------------- DATE FILTER ---------------- */
+    let dateToCheck: Date | null = null;
+
+    if (dateFilterOn === "created" && d.createdAt) {
+      dateToCheck = new Date(d.createdAt);
+    }
+
+    if (dateFilterOn === "close" && d.expectedCloseDate) {
+      dateToCheck = new Date(d.expectedCloseDate);
+    }
+
+    const matchesDate =
+      (!dateFrom || (dateToCheck && dateToCheck >= dateFrom)) &&
+      (!dateTo || (dateToCheck && dateToCheck <= dateTo));
+
+    /* ---------------- VALUE FILTER ---------------- */
+    const dealValue = Number(d.value || 0);
+    if (minValue && dealValue < Number(minValue)) return false;
+    if (maxValue && dealValue > Number(maxValue)) return false;
+
+    /* ---------------- AGENT FILTER ---------------- */
+    if (
+      agentFilter !== "all" &&
+      d.dealAgentMeta?.name !== agentFilter
+    ) {
+      return false;
+    }
+
+    /* ---------------- PRIORITY FILTER ---------------- */
+    if (priorityFilter !== "all") {
+      const dealPriority = normalizePriorityString(d.priority);
+      if (dealPriority !== priorityFilter.toLowerCase()) return false;
+    }
+
+    /* ---------------- WATCHER FILTER ---------------- */
+    if (watcherFilter !== "all") {
+      const watcherIds =
+        d.dealWatchersMeta?.map((w) => w.employeeId) || [];
+      if (!watcherIds.includes(watcherFilter)) return false;
+    }
+
+    /* ---------------- LEAD FILTER ---------------- */
+    if (leadFilter !== "all" && String(d.leadId) !== leadFilter) {
+      return false;
+    }
+
+    /* ---------------- TAG FILTER ---------------- */
+    if (
+      tagFilter !== "all" &&
+      !(d.tags || []).includes(tagFilter)
+    ) {
+      return false;
+    }
+
+    return (
+      matchesStage &&
+      matchesQuery &&
+      matchesDate
+    );
+  });
+}, [
+  deals,
+  query,
+  stageFilter,
+  dateFrom,
+  dateTo,
+  dateFilterOn,
+  minValue,
+  maxValue,
+  agentFilter,
+  watcherFilter,
+  leadFilter,
+  tagFilter,
+  priorityFilter,
+]);
+
+
 
 
 
@@ -1824,7 +1932,7 @@ export default function DealsPage() {
 
             {/* Date Filter On */}
             <div className="space-y-1 mb-4">
-              <div className="text-sm">Date Filter On</div>
+              <div className="text-sm">Date Filter On </div>
               <Select value={dateFilterOn} onValueChange={(v) => setDateFilterOn(v as any)}>
                 <SelectTrigger>
                   <SelectValue />

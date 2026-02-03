@@ -182,7 +182,7 @@ export default function EditDealPage() {
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6">Edit Deal</h1>
+      <h1 className="text-3xl font-bold mb-6">Edit Deal </h1>
 
       <form onSubmit={handleSubmit} className="bg-white p-6 border rounded-2xl shadow-sm">
         {error && <div className="mb-4 text-red-600 text-sm font-semibold">{error}</div>}
@@ -191,7 +191,7 @@ export default function EditDealPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Basic Info */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Title *</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Name *</label>
             <input
               type="text"
               name="title"
@@ -243,7 +243,7 @@ export default function EditDealPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Category *</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Deal Category *</label>
             <input
               type="text"
               name="dealCategory"
@@ -288,7 +288,7 @@ export default function EditDealPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Expected Close Date *
+               Close Date *
             </label>
             <input
               type="date"

@@ -191,7 +191,7 @@ export default function EditDealPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Basic Info */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Title *</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Name *</label>
             <input
               type="text"
               name="title"
@@ -243,7 +243,7 @@ export default function EditDealPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Category *</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Deal Category *</label>
             <input
               type="text"
               name="dealCategory"
@@ -273,7 +273,7 @@ export default function EditDealPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Value ($) *</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Deal Value ($) *</label>
             <input
               type="number"
               name="value"
@@ -288,7 +288,7 @@ export default function EditDealPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Expected Close Date *
+               Close Date *
             </label>
             <input
               type="date"
