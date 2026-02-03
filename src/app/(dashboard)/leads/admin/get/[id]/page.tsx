@@ -917,13 +917,26 @@ useEffect(() => {
     setWatchersOpen((s) => !s);
   };
 
-  const selectedWatcherNames = () => {
-    const selected = possibleWatchers.filter((w) =>
-      form.dealWatchers.includes(w.employeeId || ""),
-    );
-    if (selected.length === 0) return "--";
-    return selected.map((s) => s.name).join(", ");
-  };
+  // const selectedWatcherNames = () => {
+  //   const selected = possibleWatchers.filter((w) =>
+  //     form.dealWatchers.includes(w.employeeId || ""),
+  //   );
+  //   if (selected.length === 0) return "--";
+  //   return selected.map((s) => s.name).join(", ");
+  // };
+
+
+const selectedWatcherNames = () => {
+  if (form.dealWatchers.length === 0) return "--";
+
+  return employees
+    .filter((e) => form.dealWatchers.includes(e.employeeId))
+    .map((e) => e.name)
+    .join(", ");
+};
+
+
+
 
   return (
     <div className="fixed inset-0 z-50">
@@ -1125,10 +1138,10 @@ useEffect(() => {
 
                 <div className="relative">
                   <label className="block text-xs text-muted-foreground mb-2">
-                    Deal Watcher
+                    Deal Watcher 
                   </label>
 
-                  <button
+                  {/* <button
                     type="button"
                     ref={watchersButtonRef}
                     onClick={openWatchers}
@@ -1148,104 +1161,75 @@ useEffect(() => {
                         strokeLinejoin="round"
                       />
                     </svg>
-                  </button>
-
-                  {watchersOpen && panelPos && (
-                    <div
-                      style={{
-                        position: "fixed",
-                        top: panelPos.top + window.scrollY,
-                        left: panelPos.left,
-                        width: panelPos.width,
-                        zIndex: 60,
-                      }}
-                    >
-                      <div className="bg-white border rounded-md shadow-lg p-3 max-h-[60vh] overflow-auto">
-                        {possibleWatchers.length === 0 ? (
-                          <div className="text-sm text-muted-foreground">
-                            No employees
-                          </div>
-                        ) : (
-                          <div className="grid gap-2">
-                            {/* {possibleWatchers.map((w) => (
-                              <label
-                                key={w.employeeId}
-                                className="flex items-start gap-2 text-sm"
-                              >
-                                <input
-                                  type="checkbox"
-                                  className="mt-1"
-                                  checked={form.dealWatchers.includes(
-                                    w.employeeId || "",
-                                  )}
-                                  onChange={(e) =>
-                                    toggleWatcher(
-                                      w.employeeId || "",
-                                      e.target.checked,
-                                    )
-                                  }
-                                />
-                                <div>
-                                  <div className="text-sm">{w.name}</div>
-                                  {w.designation && (
-                                    <div className="text-xs text-muted-foreground">
-                                      {w.designation}
-                                    </div>
-                                  )}
-                                </div>
-                              </label>
-                            ))} */}
+                  </button> */}
 
 
 
+  {/* Dropdown button */}
+  <button
+    type="button"
+    onClick={() => setWatchersOpen((s) => !s)}
+    className="w-full p-2 border rounded-md bg-white text-sm text-left flex items-center justify-between"
+  >
+    <span className="truncate">{selectedWatcherNames()}</span>
+    <svg
+      className={`w-4 h-4 transition-transform ${watchersOpen ? "rotate-180" : ""}`}
+      viewBox="0 0 20 20"
+      fill="none"
+      stroke="currentColor"
+    >
+      <path
+        d="M6 8l4 4 4-4"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  </button>
 
-{employeesLoading ? (
-  <div className="text-sm text-muted-foreground">
-    Loading employees...
-  </div>
-) : employees.length === 0 ? (
-  <div className="text-sm text-muted-foreground">
-    No employees found
-  </div>
-) : (
-  <div className="grid gap-2">
-    {employees.map((emp) => (
-      <label
-        key={emp.employeeId}
-        className="flex items-start gap-2 text-sm"
-      >
-        <input
-          type="checkbox"
-          className="mt-1"
-          checked={form.dealWatchers.includes(emp.employeeId)}
-          onChange={(e) =>
-            toggleWatcher(emp.employeeId, e.target.checked)
-          }
-        />
-        <div>
-          <div className="text-sm">{emp.name}</div>
-          {emp.designation && (
-            <div className="text-xs text-muted-foreground">
-              {emp.designation}
-            </div>
-          )}
+
+              
+  {/* Dropdown panel */}
+  {watchersOpen && (
+    <div className="absolute z-50 mt-2 w-full bg-white border rounded-md shadow-lg p-3 max-h-60 overflow-auto">
+      {employeesLoading ? (
+        <div className="text-sm text-muted-foreground">
+          Loading employees...
         </div>
-      </label>
-    ))}
+      ) : employees.length === 0 ? (
+        <div className="text-sm text-muted-foreground">
+          No employees found
+        </div>
+      ) : (
+        <div className="grid gap-2">
+          {employees.map((emp) => (
+            <label
+              key={emp.employeeId}
+              className="flex items-start gap-2 text-sm cursor-pointer"
+            >
+              <input
+                type="checkbox"
+                className="mt-1"
+                checked={form.dealWatchers.includes(emp.employeeId)}
+                onChange={(e) =>
+                  toggleWatcher(emp.employeeId, e.target.checked)
+                }
+              />
+              <span>{emp.name}</span>
+            </label>
+          ))}
+        </div>
+      )}
+    </div>
+  )}
+
+  <div className="text-xs text-muted-foreground mt-1">
+    Select one or more watchers
   </div>
-)}
+</div>
 
 
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )}
 
-                  <div className="text-xs text-muted-foreground mt-1">
-                    Click to open and select watchers
-                  </div>
-                </div>
               </div>
             </div>
 
