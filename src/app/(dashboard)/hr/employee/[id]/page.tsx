@@ -430,7 +430,7 @@ export default function EmployeeViewPage() {
               <EmployeeHeader employee={employee} />
             </div>
             <div className="lg:col-span-3">
-              <EmployeeStats />
+              <EmployeeStats employeeId={employee} />
             </div>
           </div>
 
