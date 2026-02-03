@@ -30,6 +30,21 @@ import {
    ======================= */
 const BASE = `${process.env.NEXT_PUBLIC_MAIN}`;
 
+const COUNTRIES = [
+  "Afghanistan", "Albania", "Algeria", "Argentina", "Australia", "Austria",
+  "Bangladesh", "Belgium", "Brazil", "Canada", "China", "Denmark", "Egypt",
+  "Finland", "France", "Germany", "Greece", "Hong Kong", "Hungary", "Iceland",
+  "India", "Indonesia", "Iran", "Ireland", "Israel", "Italy", "Japan", "Kenya",
+  "Malaysia", "Mexico", "Nepal", "Netherlands", "New Zealand", "Nigeria",
+  "Norway", "Pakistan", "Philippines", "Poland", "Portugal", "Qatar",
+  "Romania", "Russia", "Saudi Arabia", "Singapore", "South Africa",
+  "South Korea", "Spain", "Sri Lanka", "Sweden", "Switzerland", "Thailand",
+  "Turkey", "UAE", "UK", "Ukraine", "USA", "Vietnam", "Zimbabwe"
+];
+
+
+
+
 type EmployeeMeta = {
   employeeId: string;
   name: string;
@@ -641,7 +656,21 @@ export function AddLeadModal({
 
           <div>
             <label className="block text-xs text-left text-muted-foreground mb-1">Country</label>
-            <input className="w-full border rounded-md px-3 py-2 text-sm" value={payload.country} onChange={(e) => update("country", e.target.value)} />
+
+
+            <select
+              className="w-full border rounded-md px-3 py-2 text-sm"
+              value={payload.country}
+              onChange={(e) => update("country", e.target.value)}
+            >
+              <option value="">-- Select Country --</option>
+              {COUNTRIES.map((c) => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+            </select>
+
+
+
           </div>
 
           <div className="md:col-span-3">
@@ -754,166 +783,7 @@ export function AddLeadModal({
   );
 }
 
-/* =======================
-   LeadRow component (per-row menu, local open ref to avoid collisions)
-   ======================= */
-// function LeadRow({
-//   lead,
-//   idx,
-//   mutate,
-//   onEdit,
-//   onView,
-// }: {
-//   lead: Lead;
-//   idx: number;
-//   mutate: () => Promise<any>;
-//   onEdit: (id: number) => void;
-//   onView: (id: number) => void;
-// }) {
-//   const [open, setOpen] = useState(false);
-//   const rowRef = useRef<HTMLTableRowElement | null>(null);
 
-//   useEffect(() => {
-//     if (!open) return;
-//     const onDoc = (e: MouseEvent) => {
-//       const t = e.target as Node;
-//       if (rowRef.current && !rowRef.current.contains(t)) setOpen(false);
-//     };
-//     document.addEventListener("mousedown", onDoc);
-//     return () => document.removeEventListener("mousedown", onDoc);
-//   }, [open]);
-
-//   const convert = async () => {
-
-//     if (!confirm("Convert this lead to client?")) return;
-//     try {
-//       const token = localStorage.getItem("accessToken");
-//       const res = await fetch(`${BASE}/leads/${lead.id}/convert`, {
-//         method: "POST",
-//         headers: { Authorization: `Bearer ${token}` },
-//       });
-//       if (!res.ok) throw new Error(await res.text());
-//       alert("Converted to client");
-//       await mutate();
-//     } catch (e: any) {
-//       alert("Error: " + (e.message || e));
-//     } finally {
-//       setOpen(false);
-//     }
-//   };
-
-
-
-
-//   const remove = async () => {
-//     if (!confirm("Delete this lead?")) return;
-//     try {
-//       const token = localStorage.getItem("accessToken");
-//       const res = await fetch(`${BASE}/leads/${lead.id}`, {
-//         method: "DELETE",
-//         headers: { Authorization: `Bearer ${token}` },
-//       });
-//       if (!res.ok) throw new Error(await res.text());
-//       alert("Deleted");
-//       await mutate();
-//     } catch (e: any) {
-//       alert("Error: " + (e.message || e));
-//     } finally {
-//       setOpen(false);
-//     }
-//   };
-
-//   return (
-//     <TableRow ref={rowRef}>
-//       <TableCell>{idx + 1}</TableCell>
-//       <TableCell>
-//         <Link href={`/leads/${lead.id}`}>
-//           <div className="flex flex-col">
-//             <span className="font-medium">{lead.name}</span>
-//             <span className="text-xs text-muted-foreground">{lead.companyName || "—"}</span>
-//           </div>
-//         </Link>
-//       </TableCell>
-//       <TableCell>
-//         <div className="flex flex-col">
-//           <span className="text-sm">{lead.email || "—"}</span>
-//           <span className="text-xs text-muted-foreground">{lead.mobileNumber || "—"}</span>
-//         </div>
-//       </TableCell>
-//       <TableCell>
-//         <OwnerCell meta={lead.leadOwnerMeta} fallback={lead.leadOwner} />
-//       </TableCell>
-//       <TableCell>
-//         <OwnerCell meta={lead.addedByMeta} fallback={lead.addedBy} />
-//       </TableCell>
-//       <TableCell>
-//         <span className="text-sm">
-//           {lead.createdAt ? new Date(lead.createdAt).toLocaleDateString() : "—"}
-//         </span>
-//       </TableCell>
-
-//       <TableCell className="relative text-right">
-//         <button onClick={() => setOpen((s) => !s)} className="inline-flex items-center rounded-full p-2 hover:bg-slate-100">
-//           <svg className="w-5 h-5 text-muted-foreground" viewBox="0 0 24 24" fill="currentColor">
-//             <circle cx="5" cy="12" r="1.5" />
-//             <circle cx="12" cy="12" r="1.5" />
-//             <circle cx="19" cy="12" r="1.5" />
-//           </svg>
-//         </button>
-
-//         {open && (
-//           <div className="absolute right-0 z-30 mt-2 w-56 rounded-md bg-white shadow-lg border">
-//             <ul className="py-1">
-//               <li>
-//                 <button
-//                   onClick={() => { setOpen(false); onView(lead.id); }}
-//                   className="w-full flex items-center gap-3 px-4 py-3 text-sm hover:bg-slate-50"
-//                 >
-//                   <svg className="w-5 h-5 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-//                     <path strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z" />
-//                     <circle cx="12" cy="12" r="3" strokeWidth="1.5" />
-//                   </svg>
-//                   View
-//                 </button>
-//               </li>
-
-//               <li>
-//                 <button
-//                   onClick={() => { setOpen(false); onEdit(lead.id); }}
-//                   className="w-full flex items-center gap-3 px-4 py-3 text-sm hover:bg-slate-50"
-//                 >
-//                   <svg className="w-5 h-5 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-//                     <path strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536M9 11l6-6L20 10M3 21h6l11-11a2 2 0 00-2-2L7 19v2z" />
-//                   </svg>
-//                   Edit
-//                 </button>
-//               </li>
-
-//               <li>
-//                 <button onClick={convert} className="w-full flex items-center gap-3 px-4 py-3 text-sm hover:bg-slate-50">
-//                   <svg className="w-5 h-5 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-//                     <path strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" d="M12 11c2.21 0 4-1.79 4-4S14.21 3 12 3 8 4.79 8 7s1.79 4 4 4z" />
-//                     <path strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" d="M6 20v-1a4 4 0 014-4h4a4 4 0 014 4v1" />
-//                   </svg>
-//                   Change to Client
-//                 </button>
-//               </li>
-
-//               <li>
-//                 <button onClick={remove} className="w-full flex items-center gap-3 px-4 py-3 text-sm text-destructive hover:bg-slate-50">
-//                   <svg className="w-5 h-5 text-destructive" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-//                     <path strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" d="M3 6h18M8 6v12a2 2 0 002 2h4a2 2 0 002-2V6M10 6V4a2 2 0 012-2h0a2 2 0 012 2v2" />
-//                   </svg>
-//                   Delete
-//                 </button>
-//               </li>
-//             </ul>
-//           </div>
-//         )}
-//       </TableCell>
-//     </TableRow>
-//   );
-// }
 
 function LeadRow({
   lead,
@@ -1056,37 +926,6 @@ function LeadRow({
                 </button>
               </li>
 
-              {/* 🔴 This is now just UI → it calls the callback */}
-              {/* <li>
-                <button
-                  onClick={() => {
-                    setOpen(false);
-                    onChangeToClient(lead.id);
-                  }}
-                  className="w-full flex items-center gap-3 px-4 py-3 text-sm hover:bg-slate-50"
-                >
-                  <svg
-                    className="w-5 h-5 text-muted-foreground"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M12 11c2.21 0 4-1.79 4-4S14.21 3 12 3 8 4.79 8 7s1.79 4 4 4z"
-                    />
-                    <path
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M6 20v-1a4 4 0 014-4h4a4 4 0 014 4v1"
-                    />
-                  </svg>
-                  Change to Client
-                </button>
-              </li> */}
 
               <li>
                 {(() => {
@@ -1101,8 +940,8 @@ function LeadRow({
                         onChangeToClient(lead.id);
                       }}
                       className={`w-full flex items-center gap-3 px-4 py-3 text-sm ${isConverted
-                          ? "cursor-not-allowed text-muted-foreground opacity-50"
-                          : "hover:bg-slate-50"
+                        ? "cursor-not-allowed text-muted-foreground opacity-50"
+                        : "hover:bg-slate-50"
                         }`}
                     >
                       <svg
@@ -1323,19 +1162,14 @@ export default function LeadsAdminPage() {
     setSelectedAddedBy("All");
   };
 
-  //   const handleChangeToClient = (id: number) => {
-  //   router.push(`/clients/add?leadId=${id}`);
-  // };
+
 
   return (
     <main className="container mx-auto max-w-6xl px-4 py-8">
       {/* header */}
       <div className="mb-6 border-b border-gray-200">
         <div className="flex items-center justify-between py-3">
-          {/* <div className="flex items-center gap-4">
-            <div className="text-sm text-muted-foreground">Duration</div>
-            <div className="text-sm text-muted-foreground underline">Start Date to End Date</div>
-          </div> */}
+
 
 
           <Popover>
@@ -1450,18 +1284,6 @@ export default function LeadsAdminPage() {
                   </TableRow>
                 </TableHeader>
 
-                {/* <TableBody>
-                  {filtered.map((lead, idx) => (
-                    <LeadRow
-                      key={lead.id}
-                      lead={lead}
-                      idx={idx}
-                      mutate={() => mutate()}
-                      onEdit={(id) => handleEdit(id)}
-                      onView={(id) => handleView(id)}
-                    />
-                  ))}
-                </TableBody> */}
 
                 {/* devesh */}
                 <TableBody>
@@ -1565,10 +1387,10 @@ export default function LeadsAdminPage() {
         />
       )}
 
-      {/* Edit modal: fetch lead and render edit UI (reusing your EditModal from earlier file) */}
       {editModalLeadId !== null && (
         <EditLeadModal
           leadId={editModalLeadId}
+          employees={employees}   // 👈 yahi missing tha
           onClose={() => setEditModalLeadId(null)}
           onSaved={async () => {
             setEditModalLeadId(null);
@@ -1576,17 +1398,27 @@ export default function LeadsAdminPage() {
           }}
         />
       )}
+
+
+
     </main>
   );
 }
 
-/* =======================
-   EditLeadModal (simple wrapper that fetches a lead and renders the existing Update form you had)
-   This keeps your edit behavior — fetches the single lead and uses the Update form previously posted.
-   (I included a compact in-file version so this single file works.)
-   ======================= */
+function EditLeadModal({
+  leadId,
+  employees,
+  onClose,
+  onSaved,
+}: {
+  leadId: number;
+  employees: Employee[];
+  onClose: () => void;
+  onSaved: () => void;
+}) {
 
-function EditLeadModal({ leadId, onClose, onSaved }: { leadId: number; onClose: () => void; onSaved: () => void }) {
+
+
   const [lead, setLead] = useState<Lead | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -1617,15 +1449,34 @@ function EditLeadModal({ leadId, onClose, onSaved }: { leadId: number; onClose: 
     );
   }
 
-  // Reuse your earlier EditModal UI (the one you posted) — slightly adapted to accept `lead`
-  // For brevity, we call the component UpdateLeadForm which we define below.
   return (
-    <UpdateLeadForm lead={lead} onClose={onClose} onSaved={onSaved} />
+    <UpdateLeadForm
+      lead={lead}
+      employees={employees}
+      onClose={onClose}
+      onSaved={onSaved}
+    />
   );
+
 }
 
-/* UpdateLeadForm: copy of your EditModal form (keeps all fields and logic you posted earlier) */
-function UpdateLeadForm({ lead, onClose, onSaved }: { lead: Lead; onClose: () => void; onSaved: () => void }) {
+function UpdateLeadForm({
+  lead,
+  employees,
+  onClose,
+  onSaved,
+}: {
+  lead: Lead;
+  employees: Employee[];
+  onClose: () => void;
+  onSaved: () => void;
+}) {
+
+
+
+
+
+
   const [form, setForm] = useState({
     name: lead?.name ?? "",
     email: lead?.email ?? "",
@@ -1644,8 +1495,34 @@ function UpdateLeadForm({ lead, onClose, onSaved }: { lead: Lead; onClose: () =>
     country: lead?.country ?? "",
     companyAddress: lead?.companyAddress ?? "",
   });
+
+
+
+
+  const [leadSources, setLeadSources] = useState<LeadSourceItem[]>([]);
+  const [addSourceOpen, setAddSourceOpen] = useState(false);
+  const [newSource, setNewSource] = useState("");
+
+
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        const res = await fetch(`${BASE}/deals/dealCategory/LeadSource`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (res.ok) {
+          const json = await res.json();
+          if (Array.isArray(json)) setLeadSources(json);
+        }
+      } catch { }
+    })();
+  }, []);
+
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
@@ -1708,17 +1585,170 @@ function UpdateLeadForm({ lead, onClose, onSaved }: { lead: Lead; onClose: () =>
     }
   };
 
-  return (
-    <div className="fixed inset-0 z-50">
-      <div className="absolute inset-0 bg-black/30" onClick={onClose} />
-      <div className="fixed inset-0 flex items-start justify-center px-4 pt-12">
-        <div className="max-w-4xl w-full bg-white rounded-lg shadow-lg border overflow-auto" style={{ maxHeight: "92vh" }}>
-          <div className="flex items-center justify-between p-4 border-b">
-            <h3 className="text-lg font-semibold">Update Lead Contact</h3>
-            <button onClick={onClose} className="text-muted-foreground p-1 rounded hover:bg-slate-100">✕</button>
-          </div>
+  // return (
+  //   <div className="fixed inset-0 z-50">
+  //     <div className="absolute inset-0 bg-black/30" onClick={onClose} />
+  //     <div className="fixed inset-0 flex items-start justify-center px-4 pt-12">
+  //       <div className="max-w-4xl w-full bg-white rounded-lg shadow-lg border overflow-auto" style={{ maxHeight: "92vh" }}>
+  //         <div className="flex items-center justify-between p-4 border-b">
+  //           <h3 className="text-lg font-semibold">Update Lead Contact </h3>
+  //           <button onClick={onClose} className="text-muted-foreground p-1 rounded hover:bg-slate-100">✕</button>
+  //         </div>
 
-          <form onSubmit={submit} className="p-6 space-y-6">
+  //         <form onSubmit={submit} className="p-6 space-y-6">
+  //           {errorMsg && <div className="text-destructive text-sm">{errorMsg}</div>}
+
+  //           <div className="rounded-lg border p-4">
+  //             <h4 className="font-medium mb-3">Contact Details</h4>
+  //             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+  //               <div>
+  //                 <label className="text-sm text-muted-foreground">Name *</label>
+  //                 <input className="w-full border rounded-md p-2" value={form.name} onChange={(e) => update("name", e.target.value)} />
+  //               </div>
+
+  //               <div>
+  //                 <label className="text-sm text-muted-foreground">Email *</label>
+  //                 <input className="w-full border rounded-md p-2" value={form.email} onChange={(e) => update("email", e.target.value)} />
+  //               </div>
+
+
+  //               <div>
+  //                 <label className="text-sm text-muted-foreground">Lead Source</label>
+  //                 <div className="flex gap-2">
+  //                   <select
+  //                     className="flex-1 border rounded-md p-2"
+  //                     value={form.leadSource}
+  //                     onChange={(e) => update("leadSource", e.target.value)}
+  //                   >
+  //                     <option value="">--</option>
+  //                     {leadSources.map((s) => (
+  //                       <option key={s.id} value={s.name}>{s.name}</option>
+  //                     ))}
+  //                   </select>
+  //                   <button
+  //                     type="button"
+  //                     onClick={() => setAddSourceOpen(true)}
+  //                     className="px-3 py-2 border rounded text-sm"
+  //                   >
+  //                     Add
+  //                   </button>
+  //                 </div>
+  //               </div>
+
+
+
+  //               <div>
+  //                 <label className="text-sm text-muted-foreground">Lead Owner</label>
+  //                 {/* <input className="w-full border rounded-md p-2" value={form.leadOwner} onChange={(e) => update("leadOwner", e.target.value)} /> */}
+  //                 <div>
+  //                   <label className="text-sm text-muted-foreground">Lead Owner</label>
+  //                   <select
+  //                     className="w-full border rounded-md p-2"
+  //                     value={form.leadOwner}
+  //                     onChange={(e) => update("leadOwner", e.target.value)}
+  //                   >
+  //                     <option value="">--</option>
+  //                     {employees.map((emp) => (
+  //                       <option key={emp.employeeId} value={emp.employeeId}>
+  //                         {emp.name} ({emp.employeeId})
+  //                       </option>
+  //                     ))}
+  //                   </select>
+  //                 </div>
+  //               </div>
+
+  //               <div className="flex items-center gap-2 md:col-span-2">
+  //                 <input type="checkbox" id="autoConvert" checked={!!form.autoConvertToClient} onChange={(e) => update("autoConvertToClient", e.target.checked)} />
+  //                 <label htmlFor="autoConvert" className="text-sm">Auto Convert lead to client when the deal stage is set to "WIN".</label>
+  //               </div>
+  //             </div>
+  //           </div>
+
+  //           <div className="rounded-lg border p-4">
+  //             <h4 className="font-medium mb-3">Company Details</h4>
+  //             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
+  //               <div>
+  //                 <label className="text-sm text-muted-foreground">Company Name</label>
+  //                 <input className="w-full border rounded-md p-2" value={form.companyName} onChange={(e) => update("companyName", e.target.value)} />
+  //               </div>
+
+  //               <div>
+  //                 <label className="text-sm text-muted-foreground">Official Website</label>
+  //                 <input className="w-full border rounded-md p-2" value={form.officialWebsite} onChange={(e) => update("officialWebsite", e.target.value)} />
+  //               </div>
+
+  //               <div>
+  //                 <label className="text-sm text-muted-foreground ">Mobile Number</label>
+  //                 <input className="w-full border rounded-md p-2" value={form.mobileNumber} onChange={(e) => update("mobileNumber", e.target.value)} />
+  //               </div>
+
+  //               <div>
+  //                 <label className="text-sm text-muted-foreground">Office Phone No.</label>
+  //                 <input className="w-full border rounded-md p-2" value={form.officePhone} onChange={(e) => update("officePhone", e.target.value)} />
+  //               </div>
+
+  //               <div>
+  //                 <label className="text-sm text-muted-foreground">City</label>
+  //                 <input className="w-full border rounded-md p-2" value={form.city} onChange={(e) => update("city", e.target.value)} />
+  //               </div>
+
+  //               <div>
+  //                 <label className="text-sm text-muted-foreground">State</label>
+  //                 <input className="w-full border rounded-md p-2" value={form.state} onChange={(e) => update("state", e.target.value)} />
+  //               </div>
+
+  //               <div>
+  //                 <label className="text-sm text-muted-foreground">Postal Code</label>
+  //                 <input className="w-full border rounded-md p-2" value={form.postalCode} onChange={(e) => update("postalCode", e.target.value)} />
+  //               </div>
+
+  //               <div>
+  //                 <label className="text-sm text-muted-foreground">Country</label>
+  //                 <select
+  //                   className="w-full border rounded-md p-2"
+  //                   value={form.country}
+  //                   onChange={(e) => update("country", e.target.value)}
+  //                 >
+  //                   <option value="">-- Select Country --</option>
+  //                   {COUNTRIES.map((c) => (
+  //                     <option key={c} value={c}>{c}</option>
+  //                   ))}
+  //                 </select>
+
+
+
+  //               </div>
+
+  //               <div className="md:col-span-3">
+  //                 <label className="text-sm text-muted-foreground">Company Address</label>
+  //                 <textarea className="w-full border rounded-md p-2 h-28" value={form.companyAddress} onChange={(e) => update("companyAddress", e.target.value)} />
+  //               </div>
+  //             </div>
+  //           </div>
+
+  //           <div className="flex justify-end gap-3">
+  //             <Button variant="outline" onClick={onClose} disabled={submitting}>Cancel</Button>
+  //             <Button type="submit" onClick={submit} disabled={submitting}>{submitting ? "Updating..." : "Update"}</Button>
+  //           </div>
+  //         </form>
+  //       </div>
+  //     </div>
+
+
+      return (
+      <div className="fixed inset-0 z-50">
+        <div className="absolute inset-0 bg-black/30" onClick={onClose} />
+
+        <div className="fixed inset-0 flex items-start justify-center px-4 pt-12">
+          <div
+            className="max-w-4xl w-full bg-white rounded-lg shadow-lg border overflow-auto"
+            style={{ maxHeight: "92vh" }}
+          >
+            {/* <form onSubmit={submit} className="p-6 space-y-6"> */}
+              {/* 🔽🔽 tumhara poora form yahin rahega */}
+
+
+<form onSubmit={submit} className="p-6 space-y-6">
             {errorMsg && <div className="text-destructive text-sm">{errorMsg}</div>}
 
             <div className="rounded-lg border p-4">
@@ -1734,14 +1764,50 @@ function UpdateLeadForm({ lead, onClose, onSaved }: { lead: Lead; onClose: () =>
                   <input className="w-full border rounded-md p-2" value={form.email} onChange={(e) => update("email", e.target.value)} />
                 </div>
 
+
                 <div>
                   <label className="text-sm text-muted-foreground">Lead Source</label>
-                  <input className="w-full border rounded-md p-2" value={form.leadSource} onChange={(e) => update("leadSource", e.target.value)} />
+                  <div className="flex gap-2">
+                    <select
+                      className="flex-1 border rounded-md p-2"
+                      value={form.leadSource}
+                      onChange={(e) => update("leadSource", e.target.value)}
+                    >
+                      <option value="">--</option>
+                      {leadSources.map((s) => (
+                        <option key={s.id} value={s.name}>{s.name}</option>
+                      ))}
+                    </select>
+                    <button
+                      type="button"
+                      onClick={() => setAddSourceOpen(true)}
+                      className="px-3 py-2 border rounded text-sm"
+                    >
+                      Add
+                    </button>
+                  </div>
                 </div>
+
+
 
                 <div>
                   <label className="text-sm text-muted-foreground">Lead Owner</label>
-                  <input className="w-full border rounded-md p-2" value={form.leadOwner} onChange={(e) => update("leadOwner", e.target.value)} />
+                  {/* <input className="w-full border rounded-md p-2" value={form.leadOwner} onChange={(e) => update("leadOwner", e.target.value)} /> */}
+                  <div>
+                    <label className="text-sm text-muted-foreground">Lead Owner</label>
+                    <select
+                      className="w-full border rounded-md p-2"
+                      value={form.leadOwner}
+                      onChange={(e) => update("leadOwner", e.target.value)}
+                    >
+                      <option value="">--</option>
+                      {employees.map((emp) => (
+                        <option key={emp.employeeId} value={emp.employeeId}>
+                          {emp.name} ({emp.employeeId})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
 
                 <div className="flex items-center gap-2 md:col-span-2">
@@ -1791,7 +1857,19 @@ function UpdateLeadForm({ lead, onClose, onSaved }: { lead: Lead; onClose: () =>
 
                 <div>
                   <label className="text-sm text-muted-foreground">Country</label>
-                  <input className="w-full border rounded-md p-2" value={form.country} onChange={(e) => update("country", e.target.value)} />
+                  <select
+                    className="w-full border rounded-md p-2"
+                    value={form.country}
+                    onChange={(e) => update("country", e.target.value)}
+                  >
+                    <option value="">-- Select Country --</option>
+                    {COUNTRIES.map((c) => (
+                      <option key={c} value={c}>{c}</option>
+                    ))}
+                  </select>
+
+
+
                 </div>
 
                 <div className="md:col-span-3">
@@ -1806,16 +1884,82 @@ function UpdateLeadForm({ lead, onClose, onSaved }: { lead: Lead; onClose: () =>
               <Button type="submit" onClick={submit} disabled={submitting}>{submitting ? "Updating..." : "Update"}</Button>
             </div>
           </form>
+
+
+
+            {/* </form> */}
+          </div>
         </div>
+
+        {/* ✅ YAHAN PASTE KARO — RETURN KE ANDAR */}
+        {addSourceOpen && (
+          <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/30">
+            <div className="bg-white rounded-lg p-4 w-[400px]">
+              <h3 className="font-medium mb-3">Add Lead Source</h3>
+
+              <input
+                className="w-full border rounded-md p-2 mb-3"
+                placeholder="Enter source name"
+                value={newSource}
+                onChange={(e) => setNewSource(e.target.value)}
+              />
+
+              <div className="flex justify-end gap-2">
+                <button
+                  onClick={() => setAddSourceOpen(false)}
+                  className="px-3 py-2 border rounded"
+                >
+                  Cancel
+                </button>
+
+                <button
+                  onClick={async () => {
+                    if (!newSource.trim()) return;
+
+                    const token = localStorage.getItem("accessToken");
+                    const res = await fetch(
+                      `${BASE}/deals/dealCategory/LeadSource`,
+                      {
+                        method: "POST",
+                        headers: {
+                          Authorization: `Bearer ${token}`,
+                          "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ name: newSource }),
+                      }
+                    );
+
+                    const created = await res.json();
+                    setLeadSources((p) => [...p, created]);
+                    update("leadSource", created.name);
+                    setNewSource("");
+                    setAddSourceOpen(false);
+                  }}
+                  className="px-3 py-2 bg-sky-600 text-white rounded"
+                >
+                  Save
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
-    </div>
-  );
+      );
+
+
+
+
+
+
+
+  //   </div>
+  // );
+
+
+
+
+
 }
-
-
-
-
-
 
 
 
