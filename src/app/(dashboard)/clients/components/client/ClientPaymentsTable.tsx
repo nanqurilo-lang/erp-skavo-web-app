@@ -13,6 +13,7 @@ import { MoreHorizontal, X, Trash2 } from "lucide-react";
 
 type PaymentClient = {
   clientId?: string;
+  projectIdk?: string | number | null;
   name?: string | null;
   companyName?: string | null;
   profilePictureUrl?: string | null;
@@ -56,11 +57,13 @@ const BASE_URL = `${process.env.NEXT_PUBLIC_MAIN}`;
 
 export default function ClientPaymentsTable({
   clientId,
+  projectIdk,
   onAdd,
   onSearch,
   onAction,
 }: {
   clientId?: string | number | null;
+  projectIdk?: string | number | null;
   onAdd?: () => void;
   onSearch?: (q: string) => void;
   onAction?: (p: Payment) => void;
@@ -83,10 +86,13 @@ export default function ClientPaymentsTable({
 
   // Add Payment modal state + form fields
   const [showAddModal, setShowAddModal] = useState(false);
-  const [projectField, setProjectField] = useState<string>("pre filled");
+  const [projectField, setProjectField] = useState<string>(() =>
+    projectIdk ? String(projectIdk) 
+    :"pre filled");
   const [clientField, setClientField] = useState<string>(() =>
     clientId ? String(clientId) : "pre filled"
   );
+  console.log("llllllll",projectIdk)
   const [invoiceField, setInvoiceField] = useState<string>("pre filled");
   const [amountField, setAmountField] = useState<string>("");
   const [currencyField, setCurrencyField] = useState<string>("USD");
@@ -370,7 +376,7 @@ export default function ClientPaymentsTable({
                 onClick={handleOpenAdd}
                 className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
               >
-                + Add Payment
+                + Add Payment 
               </button>
             </div>
 
@@ -537,7 +543,7 @@ export default function ClientPaymentsTable({
           />
           <div className="relative w-full max-w-4xl bg-white rounded-xl shadow-2xl overflow-y-auto z-10">
             <div className="flex items-center justify-between p-4 border-b">
-              <h3 className="text-lg font-semibold">Add Payment Details</h3>
+              <h3 className="text-lg font-semibold">Add Payment Details  </h3>
               <button
                 onClick={() => setShowAddModal(false)}
                 className="p-2 rounded hover:bg-gray-100"
@@ -549,7 +555,7 @@ export default function ClientPaymentsTable({
 
             <div className="p-6 space-y-6">
               <div className="rounded-lg border p-4">
-                <h4 className="font-medium mb-3">Payment Details</h4>
+                <h4 className="font-medium mb-3">Payment Details </h4>
 
                 <div className="grid grid-cols-3 gap-4">
                   <div>

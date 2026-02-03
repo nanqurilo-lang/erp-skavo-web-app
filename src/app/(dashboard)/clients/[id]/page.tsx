@@ -120,6 +120,9 @@ export default function ClientDetailPage() {
 
 const [employees, setEmployees] = useState<EmployeeItem[]>([]);
 const [employeeLoading, setEmployeeLoading] = useState(false);
+const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
+const [selectedInvoiceId, setSelectedInvoiceId] = useState<string | null>(null);
+
 
 // members already hai
 // const [members, setMembers] = useState<string[] | string>("")
@@ -403,6 +406,7 @@ const loadEmployees = useCallback(async () => {
         id: p.id ?? p.projectId ?? p._id ?? String(Math.random()),
         shortCode:
           p.shortCode ?? p.code ?? p.projectCode ?? p.project_code ?? p.id,
+          
         name: p.name ?? p.projectName ?? p.title ?? "Project Name",
         members:
           Array.isArray(p.assignedEmployees) && p.assignedEmployees.length
@@ -469,7 +473,7 @@ const loadEmployees = useCallback(async () => {
         const inner = safeParseText(parsed.ResponseBody);
         if (Array.isArray(inner)) list = inner;
       }
-
+//a============bc
       const mapped = list.map((inv: any) => ({
         id: inv.id ?? inv.invoiceId,
         invoiceNumber: inv.invoiceNumber,
@@ -1272,6 +1276,7 @@ useEffect(() => {
       {(activeTab === "payments" || activeTab === "Payments") && (
         <div className="mt-6">
           <ClientPaymentsTable
+          projectIdk={projectId}
             clientId={client.clientId}
             onAdd={() => {
               /* open add payment modal if you have one */
@@ -1344,7 +1349,7 @@ useEffect(() => {
             <div className="p-6 space-y-6">
               {/* Project Details */}
               <div className="rounded-lg border p-4">
-                <h4 className="font-medium mb-3">Project Details</h4>
+                <h4 className="font-medium mb-3">Project Details </h4>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="text-sm text-gray-600">
