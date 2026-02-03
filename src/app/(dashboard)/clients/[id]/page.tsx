@@ -1276,7 +1276,7 @@ useEffect(() => {
       {(activeTab === "payments" || activeTab === "Payments") && (
         <div className="mt-6">
           <ClientPaymentsTable
-          projectIdk={projectId}
+          projectIdk={client.clientId}
             clientId={client.clientId}
             onAdd={() => {
               /* open add payment modal if you have one */

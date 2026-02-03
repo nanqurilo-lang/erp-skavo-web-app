@@ -92,7 +92,7 @@ export default function ClientPaymentsTable({
   const [clientField, setClientField] = useState<string>(() =>
     clientId ? String(clientId) : "pre filled"
   );
-  console.log("llllllll",projectIdk)
+  // console.log("llllllll",projectIdk)
   const [invoiceField, setInvoiceField] = useState<string>("pre filled");
   const [amountField, setAmountField] = useState<string>("");
   const [currencyField, setCurrencyField] = useState<string>("USD");
@@ -372,12 +372,12 @@ export default function ClientPaymentsTable({
 
           <div className="flex items-center gap-3">
             <div>
-              <button
+              {/* <button
                 onClick={handleOpenAdd}
                 className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
               >
                 + Add Payment 
-              </button>
+              </button> */}
             </div>
 
             <div>
