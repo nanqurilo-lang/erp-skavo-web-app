@@ -30,7 +30,7 @@ import FullCalendarView from "./components/FullCalendarView";
 import TimesheetSummaryList from "./components/TimesheetSummaryList";
 
 const MAIN =
-  process.env.NEXT_PUBLIC_MAIN ;
+  process.env.NEXT_PUBLIC_MAIN;
 
 export type EmployeeItem = {
   employeeId: string;
@@ -93,7 +93,7 @@ export default function TimesheetPage() {
   const [showCalendarModal, setShowCalendarModal] = useState(false);
 
   const [startDate, setStartDate] = useState("");
-const [endDate, setEndDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
 
   // Log Time + action
@@ -123,6 +123,10 @@ const [endDate, setEndDate] = useState("");
   const [projectOptions, setProjectOptions] = useState<ProjectOption[]>([]);
   const [projectsLoading, setProjectsLoading] = useState(false);
   const [projectsError, setProjectsError] = useState<string | null>(null);
+
+  //project filter
+  const [filterProject, setFilterProject] = useState<string>("all");
+
 
   // Tasks
   const [projectTasks, setProjectTasks] = useState<ProjectTask[]>([]);
@@ -273,9 +277,9 @@ const [endDate, setEndDate] = useState("");
           method: "GET",
           headers: resolvedToken
             ? {
-                Authorization: `Bearer ${resolvedToken}`,
-                Accept: "application/json",
-              }
+              Authorization: `Bearer ${resolvedToken}`,
+              Accept: "application/json",
+            }
             : { Accept: "application/json" },
           cache: "no-store",
         });
@@ -283,7 +287,7 @@ const [endDate, setEndDate] = useState("");
         if (res.status === 401) {
           try {
             localStorage.removeItem("accessToken");
-          } catch {}
+          } catch { }
           setToken(null);
           setTimesheets([]);
           setTotalPages(1);
@@ -308,10 +312,10 @@ const [endDate, setEndDate] = useState("");
           items = Array.isArray(data.items) ? data.items : [];
           setTotalPages(
             data.totalPages ??
-              Math.max(
-                1,
-                Math.ceil((data.total ?? items.length) / itemsPerPage)
-              )
+            Math.max(
+              1,
+              Math.ceil((data.total ?? items.length) / itemsPerPage)
+            )
           );
         }
         setTimesheets(items);
@@ -344,9 +348,9 @@ const [endDate, setEndDate] = useState("");
           method: "GET",
           headers: resolvedToken
             ? {
-                Authorization: `Bearer ${resolvedToken}`,
-                Accept: "application/json",
-              }
+              Authorization: `Bearer ${resolvedToken}`,
+              Accept: "application/json",
+            }
             : { Accept: "application/json" },
           cache: "no-store",
         });
@@ -354,7 +358,7 @@ const [endDate, setEndDate] = useState("");
         if (res.status === 401) {
           try {
             localStorage.removeItem("accessToken");
-          } catch {}
+          } catch { }
           setToken(null);
           setProjectOptions([]);
           setProjectsLoading(false);
@@ -438,9 +442,9 @@ const [endDate, setEndDate] = useState("");
           method: "GET",
           headers: resolvedToken
             ? {
-                Authorization: `Bearer ${resolvedToken}`,
-                Accept: "application/json",
-              }
+              Authorization: `Bearer ${resolvedToken}`,
+              Accept: "application/json",
+            }
             : { Accept: "application/json" },
           cache: "no-store",
         });
@@ -581,15 +585,15 @@ const [endDate, setEndDate] = useState("");
 
       //new added
 
-if (
-  form.taskId &&
-  selectedTaskEmployees.length > 0 &&
-  !selectedTaskEmployees.some(e => e.employeeId === form.employeeId)
-) {
-  setSaveError("Selected employee is not assigned to this task.");
-  setSaving(false);
-  return;
-}
+      if (
+        form.taskId &&
+        selectedTaskEmployees.length > 0 &&
+        !selectedTaskEmployees.some(e => e.employeeId === form.employeeId)
+      ) {
+        setSaveError("Selected employee is not assigned to this task.");
+        setSaving(false);
+        return;
+      }
 
 
 
@@ -708,38 +712,74 @@ if (
 
   // ====== Filtered data ======
 
+  // const filtered = useMemo(() => {
+  //   const q = searchQuery.trim().toLowerCase();
+  //   return timesheets.filter((t) => {
+  //     if (employeeFilter !== "All") {
+  //       const hasByEmpObj = (t.employees ?? []).some(
+  //         (e) => e.employeeId === employeeFilter
+  //       );
+  //       const hasByEmpId = t.employeeId === employeeFilter;
+  //       if (!hasByEmpObj && !hasByEmpId) return false;
+  //     }
+  //     if (!q) return true;
+  //     if (
+  //       String(t.projectShortCode ?? "")
+  //         .toLowerCase()
+  //         .includes(q)
+  //     )
+  //       return true;
+  //     if (
+  //       String(t.memo ?? "")
+  //         .toLowerCase()
+  //         .includes(q)
+  //     )
+  //       return true;
+  //     const empMatch = (t.employees ?? []).some(
+  //       (e) =>
+  //         (e.name ?? "").toLowerCase().includes(q) ||
+  //         (e.designation ?? "").toLowerCase().includes(q)
+  //     );
+  //     if (empMatch) return true;
+  //     return false;
+  //   });
+  // }, [timesheets, searchQuery, employeeFilter]);
+
+
+
+
   const filtered = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
+
     return timesheets.filter((t) => {
-      if (employeeFilter !== "All") {
-        const hasByEmpObj = (t.employees ?? []).some(
-          (e) => e.employeeId === employeeFilter
-        );
-        const hasByEmpId = t.employeeId === employeeFilter;
-        if (!hasByEmpObj && !hasByEmpId) return false;
+
+      // 🔹 Project filter
+      if (filterProject !== "all") {
+        if (String(t.projectId) !== filterProject) return false;
       }
+
+      // 🔹 Employee filter
+      if (employeeFilter !== "All") {
+        const hasEmp =
+          t.employeeId === employeeFilter ||
+          (t.employees ?? []).some(e => e.employeeId === employeeFilter);
+
+        if (!hasEmp) return false;
+      }
+
       if (!q) return true;
-      if (
-        String(t.projectShortCode ?? "")
-          .toLowerCase()
-          .includes(q)
-      )
-        return true;
-      if (
-        String(t.memo ?? "")
-          .toLowerCase()
-          .includes(q)
-      )
-        return true;
-      const empMatch = (t.employees ?? []).some(
-        (e) =>
-          (e.name ?? "").toLowerCase().includes(q) ||
-          (e.designation ?? "").toLowerCase().includes(q)
+
+      if (String(t.projectShortCode ?? "").toLowerCase().includes(q)) return true;
+      if (String(t.memo ?? "").toLowerCase().includes(q)) return true;
+
+      return (t.employees ?? []).some(e =>
+        (e.name ?? "").toLowerCase().includes(q)
       );
-      if (empMatch) return true;
-      return false;
     });
-  }, [timesheets, searchQuery, employeeFilter]);
+  }, [timesheets, searchQuery, employeeFilter, filterProject]);
+
+
+
 
   // ====== Render helpers ======
 
@@ -847,19 +887,19 @@ if (
             onOpenFiltersDrawer={() => setShowFilters(true)}
           /> */}
 
-<FiltersSection
-  employeeFilter={employeeFilter}
-  setEmployeeFilter={setEmployeeFilter}
-  employeeOptions={employeeOptions}
-  getEmployeeLabel={getEmployeeLabel}
+          <FiltersSection
+            employeeFilter={employeeFilter}
+            setEmployeeFilter={setEmployeeFilter}
+            employeeOptions={employeeOptions}
+            getEmployeeLabel={getEmployeeLabel}
 
-  startDate={startDate}
-  endDate={endDate}
-  setStartDate={setStartDate}
-  setEndDate={setEndDate}
+            startDate={startDate}
+            endDate={endDate}
+            setStartDate={setStartDate}
+            setEndDate={setEndDate}
 
-  onOpenFiltersDrawer={() => setShowFilters(true)}
-/>
+            onOpenFiltersDrawer={() => setShowFilters(true)}
+          />
 
 
 
@@ -886,15 +926,22 @@ if (
       <div
         aria-hidden={!showFilters}
         onClick={() => setShowFilters(false)}
-        className={`fixed inset-0 transition-opacity duration-300 z-[9990] ${showFilters
-          ? "opacity-100 pointer-events-auto"
-          : "opacity-0 pointer-events-none"
+        // className={`fixed inset-0 transition-opacity duration-300 z-[9990] ${showFilters
+        //   ? "opacity-100 pointer-events-auto"
+        //   : "opacity-0 pointer-events-none"
+
+
+        className={`fixed inset-0 bg-black/30 transition-opacity duration-300 z-[9980] ${showFilters ? "opacity-100" : "opacity-0 pointer-events-none"
+
+
           }`}
         style={{ backgroundColor: "rgba(0,0,0,0.3)" }}
       />
       <aside
         aria-hidden={!showFilters}
-        className={`fixed right-0 top-0 h-full w-[360px] bg-white shadow-xl transform transition-transform duration-300 z-[9999] ${showFilters ? "translate-x-0" : "translate-x-full"
+        className={`
+          fixed right-0 top-0 z-[9999]
+          fixed right-0 top-0 h-full w-[360px] bg-white shadow-xl transform transition-transform duration-300 z-[9999] ${showFilters ? "translate-x-0" : "translate-x-full"
           }`}
         role="dialog"
         aria-modal="true"
@@ -914,8 +961,8 @@ if (
 
         <div className="p-4 space-y-4 overflow-auto h-[calc(100%-140px)]">
           <div>
-            <label className="block text-sm text-gray-600 mb-2">Employee</label>
-            <Select
+            <label className="block text-sm text-gray-600 mb-2">Project</label>
+            {/* <Select
               value={filterEmployee}
               onValueChange={(v) => setFilterEmployee(v)}
             >
@@ -923,15 +970,39 @@ if (
                 <SelectValue placeholder="All" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All</SelectItem>
-                {/* SHOW THE FULL EMPLOYEE LIST */}
-                {employeeOptions.slice(1).map((e) => (
+                <SelectItem value="all">All </SelectItem> */}
+            {/* SHOW THE FULL EMPLOYEE LIST */}
+            {/* {employeeOptions.slice(1).map((e) => (
                   <SelectItem key={e} value={e}>
                     {getEmployeeLabel(e)}
                   </SelectItem>
                 ))}
               </SelectContent>
+            </Select> */}
+
+            <Select
+              value={filterProject}
+              onValueChange={(v) => setFilterProject(v)}
+            >
+              <SelectTrigger className="w-full rounded border px-3 py-2">
+                <SelectValue placeholder="All Projects" />
+              </SelectTrigger>
+
+              <SelectContent className="z-[10050]">
+                <SelectItem value="all">All</SelectItem>
+
+                {projectOptions.map((p) => (
+                  <SelectItem key={p.id} value={String(p.id)}>
+                    {p.name || p.shortCode}
+                  </SelectItem>
+                ))}
+              </SelectContent>
             </Select>
+
+
+
+
+
           </div>
         </div>
 
@@ -940,6 +1011,8 @@ if (
             variant="outline"
             onClick={() => {
               setFilterEmployee("all");
+              setFilterProject("all");
+              setCurrentPage(1);
               setShowFilters(false);
             }}
           >
@@ -949,7 +1022,7 @@ if (
             <Button variant="ghost" onClick={() => setShowFilters(false)}>
               Close
             </Button>
-            <Button
+            {/* <Button
               className="bg-blue-600 text-white"
               onClick={() => {
                 setShowFilters(false);
@@ -958,7 +1031,21 @@ if (
               }}
             >
               Apply
+            </Button> */}
+
+
+            <Button
+              className="bg-blue-600 text-white"
+              onClick={() => {
+                setCurrentPage(1);
+                setShowFilters(false);
+              }}
+            >
+              Apply
             </Button>
+
+
+
           </div>
         </div>
       </aside>
@@ -1139,41 +1226,41 @@ if (
 
 
 
-if (form.taskId && selectedTaskEmployees.length === 0) {
-  return <option value="--">No employees assigned to this task</option>;
-}
+                        if (form.taskId && selectedTaskEmployees.length === 0) {
+                          return <option value="--">No employees assigned to this task</option>;
+                        }
 
-if (selectedTaskEmployees.length > 0) {
-  return (
-    <>
-      <option value="--">--</option>
-      {selectedTaskEmployees.map((e) => (
-        <option key={e.employeeId} value={e.employeeId}>
-          {e.name ? `${e.name} (${e.employeeId})` : e.employeeId}
-        </option>
-      ))}
-    </>
-  );
-}
+                        if (selectedTaskEmployees.length > 0) {
+                          return (
+                            <>
+                              <option value="--">--</option>
+                              {selectedTaskEmployees.map((e) => (
+                                <option key={e.employeeId} value={e.employeeId}>
+                                  {e.name ? `${e.name} (${e.employeeId})` : e.employeeId}
+                                </option>
+                              ))}
+                            </>
+                          );
+                        }
 
-// ONLY when no task selected
-if (!form.taskId && projectEmployees.length > 0) {
-  return (
-    <>
-      <option value="--">--</option>
-      {projectEmployees.map((e) => (
-        <option key={e.employeeId} value={e.employeeId}>
-          {e.name ? `${e.name} (${e.employeeId})` : e.employeeId}
-        </option>
-      ))}
-    </>
-  );
-}
-
-
+                        // ONLY when no task selected
+                        if (!form.taskId && projectEmployees.length > 0) {
+                          return (
+                            <>
+                              <option value="--">--</option>
+                              {projectEmployees.map((e) => (
+                                <option key={e.employeeId} value={e.employeeId}>
+                                  {e.name ? `${e.name} (${e.employeeId})` : e.employeeId}
+                                </option>
+                              ))}
+                            </>
+                          );
+                        }
 
 
-                        
+
+
+
 
                         return employeeOptions.map((e) => (
                           <option key={e} value={e}>
