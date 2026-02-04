@@ -280,10 +280,10 @@ export default function AddEmployeePage() {
     <option value="">Select Language</option>
     <option value="English">English</option>
     <option value="Hindi">Polski</option>
-    <option value="Gujarati">Gujarati</option>
-    <option value="Marathi">Marathi</option>
-    <option value="Tamil">Tamil</option>
-    <option value="Telugu">Telugu</option>
+    <option value="French">Lithuanian</option>
+    <option value="Dutch">Dutch</option>
+    <option value="Danish">German</option>
+    <option value="Russian">Russian</option>
   </select>
 </Field>
 
@@ -370,11 +370,23 @@ export default function AddEmployeePage() {
     className="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
   >
     <option value="">Select Country</option>
-    <option value="India">India</option>
     <option value="USA">USA</option>
     <option value="UK">UK</option>
     <option value="Canada">Canada</option>
     <option value="Australia">Australia</option>
+     <option value="Japan">Japan</option>
+    <option value="South Korea">South Korea</option>
+    <option value="China">China</option>
+
+    <option value="South Africa">South Africa</option>
+    <option value="Nigeria">Nigeria</option>
+    <option value="Kenya">Kenya</option>
+
+    <option value="Brazil">Brazil</option>
+    <option value="Argentina">Argentina</option>
+    <option value="Mexico">Mexico</option>
+
+    <option value="Other">Other</option>
   </select>
 </Field>
 
