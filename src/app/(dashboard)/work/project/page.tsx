@@ -158,17 +158,17 @@ export default function AllProjectsPage() {
   const [summary, setSummary] = useState("");
   const [needsApproval, setNeedsApproval] = useState(true);
 
-type EmployeeItem = {
-  employeeId: string
-  name: string
-  profilePictureUrl?: string | null
-};
+  type EmployeeItem = {
+    employeeId: string
+    name: string
+    profilePictureUrl?: string | null
+  };
 
-const [employees, setEmployees] = useState<EmployeeItem[]>([]);
-const [employeeLoading, setEmployeeLoading] = useState(false);
+  const [employees, setEmployees] = useState<EmployeeItem[]>([]);
+  const [employeeLoading, setEmployeeLoading] = useState(false);
 
-// members already hai
-// const [members, setMembers] = useState<string[] | string>("")
+  // members already hai
+  // const [members, setMembers] = useState<string[] | string>("")
 
 
 
@@ -230,14 +230,32 @@ const [employeeLoading, setEmployeeLoading] = useState(false);
   ]);
 
   // Build select options from fetched projects
-  const projectOptions = Array.from(
-    new Set(projects.map((p) => p.name))
-  ).filter(Boolean);
+  // const projectOptions = Array.from(
+  //   new Set(projects.map((p) => p.name))
+  // ).filter(Boolean);
+
+
+  const projectOptions = projects.map((p) => ({
+    id: String(p.id),
+    name: p.name,
+  }));
+
+
+  // const memberOptions = Array.from(
+  //   new Set(
+  //     projects.flatMap((p) => (p.assignedEmployees || []).map((e) => e.name))
+  //   )
+  // ).filter(Boolean);
+
   const memberOptions = Array.from(
-    new Set(
-      projects.flatMap((p) => (p.assignedEmployees || []).map((e) => e.name))
-    )
-  ).filter(Boolean);
+    new Map(
+      projects
+        .flatMap((p) => p.assignedEmployees || [])
+        .map((e) => [e.employeeId, e])
+    ).values()
+  );
+
+
 
   // categoryOptions derived (id as string)
   const categoryOptions = categories.map((c) => ({
@@ -285,47 +303,47 @@ const [employeeLoading, setEmployeeLoading] = useState(false);
 
 
 
-//assign employee
+  //assign employee
 
-const EMP_BASE = `${process.env.NEXT_PUBLIC_MAIN}`
-const loadEmployees = useCallback(async () => {
-  setEmployeeLoading(true);
-  try {
-    const token =
-      typeof window !== "undefined"
-        ? localStorage.getItem("accessToken")
-        : null;
+  const EMP_BASE = `${process.env.NEXT_PUBLIC_MAIN}`
+  const loadEmployees = useCallback(async () => {
+    setEmployeeLoading(true);
+    try {
+      const token =
+        typeof window !== "undefined"
+          ? localStorage.getItem("accessToken")
+          : null;
 
-    const res = await fetch(`${EMP_BASE}/employee/all`, {
-      headers: token ? { Authorization: `Bearer ${token}` } : undefined,
-      cache: "no-store",
-    });
+      const res = await fetch(`${EMP_BASE}/employee/all`, {
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+        cache: "no-store",
+      });
 
-    if (!res.ok) {
-      console.error("Failed to load employees", res.status);
+      if (!res.ok) {
+        console.error("Failed to load employees", res.status);
+        setEmployees([]);
+        return;
+      }
+
+      const data = await res.json();
+      if (Array.isArray(data)) {
+        setEmployees(
+          data.map((e: any) => ({
+            employeeId: e.employeeId,
+            name: e.name,
+            profilePictureUrl: e.profilePictureUrl ?? null,
+          }))
+        );
+      } else {
+        setEmployees([]);
+      }
+    } catch (err) {
+      console.error("Employee load error", err);
       setEmployees([]);
-      return;
+    } finally {
+      setEmployeeLoading(false);
     }
-
-    const data = await res.json();
-    if (Array.isArray(data)) {
-      setEmployees(
-        data.map((e: any) => ({
-          employeeId: e.employeeId,
-          name: e.name,
-          profilePictureUrl: e.profilePictureUrl ?? null,
-        }))
-      );
-    } else {
-      setEmployees([]);
-    }
-  } catch (err) {
-    console.error("Employee load error", err);
-    setEmployees([]);
-  } finally {
-    setEmployeeLoading(false);
-  }
-}, []);
+  }, []);
 
 
 
@@ -685,7 +703,7 @@ const loadEmployees = useCallback(async () => {
       if (savedToken) getProjects(savedToken);
       else setLoading(false);
 
-      loadEmployees(); 
+      loadEmployees();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -986,7 +1004,7 @@ const loadEmployees = useCallback(async () => {
       }
       fd.append("noDeadline", String(Boolean(noDeadline)));
 
-     
+
 
       // ✅ REQUIRED by backend
       fd.append(
@@ -1023,7 +1041,7 @@ const loadEmployees = useCallback(async () => {
       if (file) fd.append("companyFile", file);
 
       fd.append("currency", currency || "");
-      
+
 
       fd.append(
         "projectBudget",
@@ -1190,7 +1208,7 @@ const loadEmployees = useCallback(async () => {
           );
           setUcSummary(data.summary ?? "");
           setUcNeedsApproval(Boolean(data.tasksNeedAdminApproval ?? true));
-        
+
 
           setUcMembers(
             Array.isArray(data.assignedEmployees)
@@ -1451,7 +1469,7 @@ const loadEmployees = useCallback(async () => {
                         Project Category *
                       </label>
                       <div className="flex gap-2">
-                       
+
 
 
                         <Select
@@ -1484,7 +1502,7 @@ const loadEmployees = useCallback(async () => {
                       <label className="text-sm text-gray-600">
                         Department *
                       </label>
-                    
+
 
                       <Select
                         modal={false}
@@ -1510,7 +1528,7 @@ const loadEmployees = useCallback(async () => {
 
                     <div>
                       <label className="text-sm text-gray-600">Client *</label>
-                      
+
 
 
                       <Select
@@ -1578,99 +1596,99 @@ const loadEmployees = useCallback(async () => {
                       <label className="text-sm text-gray-600">
                         Assigned to *
                       </label>
-                    <div>
- 
+                      <div>
 
-  <Select
-  modal={false}
-  value=""
-  onValueChange={(val) => {
-    setUcMembers((prev) => {
-      const arr = Array.isArray(prev)
-        ? prev
-        : String(prev || "").split(",").filter(Boolean);
 
-      if (arr.includes(val)) return arr;
-      return [...arr, val];
-    });
-  }}
->
+                        <Select
+                          modal={false}
+                          value=""
+                          onValueChange={(val) => {
+                            setUcMembers((prev) => {
+                              const arr = Array.isArray(prev)
+                                ? prev
+                                : String(prev || "").split(",").filter(Boolean);
 
-    <SelectTrigger className="w-full">
-      <SelectValue
-        placeholder={
-          Array.isArray(members) && members.length > 0
-            ? `${members.length} members selected`
-            : "Select members"
-        }
-      />
-    </SelectTrigger>
+                              if (arr.includes(val)) return arr;
+                              return [...arr, val];
+                            });
+                          }}
+                        >
 
-    <SelectContent className="z-[99999] pointer-events-auto max-h-72 overflow-auto">
-      {employeeLoading ? (
-        <div className="px-3 py-2 text-sm text-gray-500">
-          Loading...
-        </div>
-      ) : employees.length === 0 ? (
-        <div className="px-3 py-2 text-sm text-gray-500">
-          No employees found
-        </div>
-      ) : (
-        employees.map((emp) => (
-          <SelectItem
-            key={emp.employeeId}
-            value={emp.employeeId}
-          >
-            <div className="flex items-center gap-2">
-              {emp.profilePictureUrl ? (
-                <img
-                  src={emp.profilePictureUrl}
-                  className="w-6 h-6 rounded-full"
-                  alt={emp.name}
-                />
-              ) : (
-                <div className="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center text-xs text-white">
-                  {emp.name.charAt(0)}
-                </div>
-              )}
-              <span className="text-sm">
-                {emp.name} ({emp.employeeId})
-              </span>
-            </div>
-          </SelectItem>
-        ))
-      )}
-    </SelectContent>
-  </Select>
+                          <SelectTrigger className="w-full">
+                            <SelectValue
+                              placeholder={
+                                Array.isArray(members) && members.length > 0
+                                  ? `${members.length} members selected`
+                                  : "Select members"
+                              }
+                            />
+                          </SelectTrigger>
 
-  {/* Selected members chips */}
-  {Array.isArray(ucMembers) && ucMembers.length > 0 && (
+                          <SelectContent className="z-[99999] pointer-events-auto max-h-72 overflow-auto">
+                            {employeeLoading ? (
+                              <div className="px-3 py-2 text-sm text-gray-500">
+                                Loading...
+                              </div>
+                            ) : employees.length === 0 ? (
+                              <div className="px-3 py-2 text-sm text-gray-500">
+                                No employees found
+                              </div>
+                            ) : (
+                              employees.map((emp) => (
+                                <SelectItem
+                                  key={emp.employeeId}
+                                  value={emp.employeeId}
+                                >
+                                  <div className="flex items-center gap-2">
+                                    {emp.profilePictureUrl ? (
+                                      <img
+                                        src={emp.profilePictureUrl}
+                                        className="w-6 h-6 rounded-full"
+                                        alt={emp.name}
+                                      />
+                                    ) : (
+                                      <div className="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center text-xs text-white">
+                                        {emp.name.charAt(0)}
+                                      </div>
+                                    )}
+                                    <span className="text-sm">
+                                      {emp.name} ({emp.employeeId})
+                                    </span>
+                                  </div>
+                                </SelectItem>
+                              ))
+                            )}
+                          </SelectContent>
+                        </Select>
 
-    <div className="mt-2 flex flex-wrap gap-2">
-     {ucMembers.map((id) => {
-  const emp = employees.find((e) => e.employeeId === id);
-  return (
-    <span key={id} className="flex items-center gap-1 bg-blue-100 px-2 py-1 rounded text-xs">
-      {emp?.name ?? id}
-      <button
-        className="ml-1 text-red-500"
-        onClick={() =>
-          setUcMembers((prev) =>
-            Array.isArray(prev)
-              ? prev.filter((x) => x !== id)
-              : prev
-          )
-        }
-      >
-        ×
-      </button>
-    </span>
-  );
-})}
+                        {/* Selected members chips */}
+                        {Array.isArray(ucMembers) && ucMembers.length > 0 && (
 
-    </div>
-  )}
-</div>
+                          <div className="mt-2 flex flex-wrap gap-2">
+                            {ucMembers.map((id) => {
+                              const emp = employees.find((e) => e.employeeId === id);
+                              return (
+                                <span key={id} className="flex items-center gap-1 bg-blue-100 px-2 py-1 rounded text-xs">
+                                  {emp?.name ?? id}
+                                  <button
+                                    className="ml-1 text-red-500"
+                                    onClick={() =>
+                                      setUcMembers((prev) =>
+                                        Array.isArray(prev)
+                                          ? prev.filter((x) => x !== id)
+                                          : prev
+                                      )
+                                    }
+                                  >
+                                    ×
+                                  </button>
+                                </span>
+                              );
+                            })}
+
+                          </div>
+                        )}
+                      </div>
 
                     </div>
 
@@ -1790,7 +1808,7 @@ const loadEmployees = useCallback(async () => {
                   <div className="grid grid-cols-3 gap-4">
                     <div>
                       <label className="text-sm text-gray-600">Currency</label>
-                     
+
                       <Select
                         modal={false}
                         value={ucCurrency}
@@ -2361,7 +2379,7 @@ const loadEmployees = useCallback(async () => {
             </div>
 
             <div className="flex items-center gap-3">
-              <span className="text-sm text-gray-600">Progress</span>
+              <span className="text-sm text-gray-600">Progress change</span>
               <Select
                 value={progressFilter}
                 onValueChange={(v) => {
@@ -2381,7 +2399,26 @@ const loadEmployees = useCallback(async () => {
               </Select>
             </div>
 
+
+            {/* RIGHT SIDE FILTER BUTTON */}
+            <div className="ml-auto">
+              <Button
+                type="button"
+                variant="outline"
+                className="flex items-center gap-2"
+                onClick={() => setShowFilters(true)}
+              >
+                <Filter className="w-4 h-4" />
+                Filters
+              </Button>
+            </div>
+
+
+
           </div>
+
+
+
 
           {/* ROW: Add Project + Search + Top-right icons */}
           <div className="flex items-center justify-between mb-4">
@@ -2414,6 +2451,7 @@ const loadEmployees = useCallback(async () => {
               <div className="flex items-center bg-white border rounded-lg overflow-hidden">
                 {/* List */}
                 <button
+
                   onClick={() => toggleView("list")}
                   className={`px-3 py-2 hover:bg-gray-50 ${viewMode === "list" && !calendarOpen ? "bg-gray-100" : ""
                     }`}
@@ -2424,10 +2462,11 @@ const loadEmployees = useCallback(async () => {
 
                 {/* Grid / Table (default) */}
                 <button
+                  type="button"
                   onClick={() => toggleView("grid")}
                   className={`px-3 py-2 hover:bg-gray-50 ${viewMode === "grid" && !calendarOpen
-                      ? "bg-violet-600 text-white"
-                      : ""
+                    ? "bg-violet-600 text-white"
+                    : ""
                     }`}
                   title="Grid / Table view"
                 >
@@ -2494,7 +2533,7 @@ const loadEmployees = useCallback(async () => {
 
             <div className="overflow-auto p-4">
               {viewMode === "calendar" || calendarOpen ? (
-                
+
                 <ProjectCalendarMonth />
               ) : // {/* </div> */}
                 viewMode === "list" ? (
@@ -2622,8 +2661,8 @@ const loadEmployees = useCallback(async () => {
         aria-hidden={!showFilters}
         onClick={closeFilters}
         className={`fixed inset-0 transition-opacity duration-300 z-[9990] ${showFilters
-            ? "opacity-100 pointer-events-auto"
-            : "opacity-0 pointer-events-none"
+          ? "opacity-100 pointer-events-auto"
+          : "opacity-0 pointer-events-none"
           }`}
         style={{ backgroundColor: "rgba(0,0,0,0.3)" }}
       />
@@ -2631,6 +2670,8 @@ const loadEmployees = useCallback(async () => {
       {/* DRAWER */}
       <aside
         aria-hidden={!showFilters}
+        onSubmit={(e) => e.preventDefault()}
+
         className={`fixed right-0 top-0 h-full w-[360px] bg-white shadow-xl transform transition-transform duration-300 z-[9999] ${showFilters ? "translate-x-0" : "translate-x-full"
           }`}
         role="dialog"
@@ -2642,6 +2683,7 @@ const loadEmployees = useCallback(async () => {
             <h3 className="font-semibold">Filters</h3>
           </div>
           <button
+            type="button"
             onClick={closeFilters}
             className="p-2 rounded hover:bg-gray-100"
           >
@@ -2652,14 +2694,14 @@ const loadEmployees = useCallback(async () => {
         <div className="p-4 space-y-4 overflow-auto h-[calc(100%-140px)]">
           <div>
             <label className="block text-sm text-gray-600 mb-2">Project</label>
-            <Select
+            {/* <Select
               value={filterProject}
               onValueChange={(v) => setFilterProject(v)}
             >
               <SelectTrigger className="w-full rounded border px-3 py-2">
                 <SelectValue placeholder="All" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="z-[10001] pointer-events-auto">
                 <SelectItem value="all">All</SelectItem>
                 {projectOptions.map((name) => (
                   <SelectItem key={name} value={name}>
@@ -2667,21 +2709,44 @@ const loadEmployees = useCallback(async () => {
                   </SelectItem>
                 ))}
               </SelectContent>
+            </Select> */}
+
+
+            <Select
+              modal={false}
+              value={filterProject}
+              onValueChange={setFilterProject}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="All" />
+              </SelectTrigger>
+
+              <SelectContent className="z-[10001] pointer-events-auto">
+                <SelectItem value="all">All</SelectItem>
+                {projectOptions.map((p) => (
+                  <SelectItem key={p.id} value={p.id}>
+                    {p.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
             </Select>
+
+
+
           </div>
 
           <div>
             <label className="block text-sm text-gray-600 mb-2">
               Project Members
             </label>
-            <Select
+            {/* <Select
               value={filterMember}
               onValueChange={(v) => setFilterMember(v)}
             >
               <SelectTrigger className="w-full rounded border px-3 py-2">
                 <SelectValue placeholder="All" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="z-[10001] pointer-events-auto">
                 <SelectItem value="all">All</SelectItem>
                 {memberOptions.map((m) => (
                   <SelectItem key={m} value={m}>
@@ -2689,7 +2754,28 @@ const loadEmployees = useCallback(async () => {
                   </SelectItem>
                 ))}
               </SelectContent>
+            </Select> */}
+
+            <Select
+              modal={false}
+              value={filterMember}
+              onValueChange={setFilterMember}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="All" />
+              </SelectTrigger>
+
+              <SelectContent className="z-[10001] pointer-events-auto">
+                <SelectItem value="all">All</SelectItem>
+                {memberOptions.map((m) => (
+                  <SelectItem key={m.employeeId} value={m.employeeId}>
+                    {m.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
             </Select>
+
+
           </div>
 
           <div>
@@ -2701,7 +2787,7 @@ const loadEmployees = useCallback(async () => {
               <SelectTrigger className="w-full rounded border px-3 py-2">
                 <SelectValue placeholder="All" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="z-[10001] pointer-events-auto">
                 <SelectItem value="all">All</SelectItem>
                 {clientOptions.map((c) => (
                   <SelectItem key={c.id} value={c.id}>
@@ -2714,16 +2800,26 @@ const loadEmployees = useCallback(async () => {
         </div>
 
         <div className="p-4 border-t flex items-center justify-between gap-2">
-          <Button variant="outline" onClick={resetDrawerFilters}>
+          <Button type="button" variant="outline" onClick={resetDrawerFilters}>
             Reset
           </Button>
           <div className="flex items-center gap-2">
-            <Button variant="ghost" onClick={closeFilters}>
+            <Button type="button" variant="ghost" onClick={closeFilters}>
               Close
             </Button>
-            <Button className="bg-blue-600 text-white" onClick={applyFilters}>
+            {/* <Button className="bg-blue-600 text-white" onClick={applyFilters}>
+              Apply
+            </Button> */}
+
+            <Button
+              type="button"
+              className="bg-blue-600 text-white"
+              onClick={applyFilters}
+            >
               Apply
             </Button>
+
+
           </div>
         </div>
       </aside>
@@ -2819,7 +2915,7 @@ const loadEmployees = useCallback(async () => {
                       Project Category *
                     </label>
                     <div className="flex gap-2">
-                      
+
 
 
                       <Select
@@ -2852,7 +2948,7 @@ const loadEmployees = useCallback(async () => {
                     <label className="text-sm text-gray-600">
                       Department *
                     </label>
-                    
+
 
 
 
@@ -2880,7 +2976,7 @@ const loadEmployees = useCallback(async () => {
 
                   <div>
                     <label className="text-sm text-gray-600">Client *</label>
-                    
+
 
 
 
@@ -2950,96 +3046,96 @@ const loadEmployees = useCallback(async () => {
                     <label className="text-sm text-gray-600">
                       Add Project Members *
                     </label>
-                   <div>
-  
+                    <div>
 
-  <Select
-    modal={false}
-    value=""
-    onValueChange={(val) => {
-      setMembers((prev) => {
-        const arr = Array.isArray(prev) ? prev : [];
-        if (arr.includes(val)) return arr;
-        return [...arr, val];
-      });
-    }}
-  >
-    <SelectTrigger className="w-full">
-      <SelectValue
-        placeholder={
-          Array.isArray(members) && members.length > 0
-            ? `${members.length} members selected`
-            : "Select members"
-        }
-      />
-    </SelectTrigger>
 
-    <SelectContent className="z-[99999] pointer-events-auto max-h-72 overflow-auto">
-      {employeeLoading ? (
-        <div className="px-3 py-2 text-sm text-gray-500">
-          Loading...
-        </div>
-      ) : employees.length === 0 ? (
-        <div className="px-3 py-2 text-sm text-gray-500">
-          No employees found
-        </div>
-      ) : (
-        employees.map((emp) => (
-          <SelectItem
-            key={emp.employeeId}
-            value={emp.employeeId}
-          >
-            <div className="flex items-center gap-2">
-              {emp.profilePictureUrl ? (
-                <img
-                  src={emp.profilePictureUrl}
-                  className="w-6 h-6 rounded-full"
-                  alt={emp.name}
-                />
-              ) : (
-                <div className="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center text-xs text-white">
-                  {emp.name.charAt(0)}
-                </div>
-              )}
-              <span className="text-sm">
-                {emp.name} ({emp.employeeId})
-              </span>
-            </div>
-          </SelectItem>
-        ))
-      )}
-    </SelectContent>
-  </Select>
+                      <Select
+                        modal={false}
+                        value=""
+                        onValueChange={(val) => {
+                          setMembers((prev) => {
+                            const arr = Array.isArray(prev) ? prev : [];
+                            if (arr.includes(val)) return arr;
+                            return [...arr, val];
+                          });
+                        }}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue
+                            placeholder={
+                              Array.isArray(members) && members.length > 0
+                                ? `${members.length} members selected`
+                                : "Select members"
+                            }
+                          />
+                        </SelectTrigger>
 
-  {/* Selected members chips */}
-  {Array.isArray(members) && members.length > 0 && (
-    <div className="mt-2 flex flex-wrap gap-2">
-      {members.map((id) => {
-        const emp = employees.find((e) => e.employeeId === id);
-        return (
-          <span
-            key={id}
-            className="flex items-center gap-1 bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs"
-          >
-            {emp?.name ?? id}
-            <button
-              className="ml-1 text-red-500"
-              onClick={() =>
-                setMembers((prev) =>
-                  Array.isArray(prev)
-                    ? prev.filter((x) => x !== id)
-                    : prev
-                )
-              }
-            >
-              ×
-            </button>
-          </span>
-        );
-      })}
-    </div>
-  )}
-</div>
+                        <SelectContent className="z-[99999] pointer-events-auto max-h-72 overflow-auto">
+                          {employeeLoading ? (
+                            <div className="px-3 py-2 text-sm text-gray-500">
+                              Loading...
+                            </div>
+                          ) : employees.length === 0 ? (
+                            <div className="px-3 py-2 text-sm text-gray-500">
+                              No employees found
+                            </div>
+                          ) : (
+                            employees.map((emp) => (
+                              <SelectItem
+                                key={emp.employeeId}
+                                value={emp.employeeId}
+                              >
+                                <div className="flex items-center gap-2">
+                                  {emp.profilePictureUrl ? (
+                                    <img
+                                      src={emp.profilePictureUrl}
+                                      className="w-6 h-6 rounded-full"
+                                      alt={emp.name}
+                                    />
+                                  ) : (
+                                    <div className="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center text-xs text-white">
+                                      {emp.name.charAt(0)}
+                                    </div>
+                                  )}
+                                  <span className="text-sm">
+                                    {emp.name} ({emp.employeeId})
+                                  </span>
+                                </div>
+                              </SelectItem>
+                            ))
+                          )}
+                        </SelectContent>
+                      </Select>
+
+                      {/* Selected members chips */}
+                      {Array.isArray(members) && members.length > 0 && (
+                        <div className="mt-2 flex flex-wrap gap-2">
+                          {members.map((id) => {
+                            const emp = employees.find((e) => e.employeeId === id);
+                            return (
+                              <span
+                                key={id}
+                                className="flex items-center gap-1 bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs"
+                              >
+                                {emp?.name ?? id}
+                                <button
+                                  className="ml-1 text-red-500"
+                                  onClick={() =>
+                                    setMembers((prev) =>
+                                      Array.isArray(prev)
+                                        ? prev.filter((x) => x !== id)
+                                        : prev
+                                    )
+                                  }
+                                >
+                                  ×
+                                </button>
+                              </span>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
 
                   </div>
                 </div>
@@ -3070,7 +3166,7 @@ const loadEmployees = useCallback(async () => {
                 <div className="grid grid-cols-3 gap-4">
                   <div>
                     <label className="text-sm text-gray-600">Currency</label>
-                 
+
 
 
                     <Select
@@ -3157,9 +3253,16 @@ const loadEmployees = useCallback(async () => {
                       <SelectContent>
                         <SelectItem value="you">You</SelectItem>
                         {memberOptions.map((m) => (
-                          <SelectItem key={m} value={m}>
-                            {m}
+                          // <SelectItem key={m} value={m}>
+                          //   {m}
+                          // </SelectItem>
+
+                          <SelectItem key={m.employeeId} value={m.employeeId}>
+                            {m.name}
                           </SelectItem>
+
+
+
                         ))}
                       </SelectContent>
                     </Select>
