@@ -109,13 +109,15 @@ const TasksPage: React.FC = () => {
   );
   const [dateRange, setDateRange] = useState<DateRangeFilter>({});
   const [openFilters, setOpenFilters] = useState(false);
+  const [searchTerm, setSearchTerm] = useState(""); // ✅ ADD
+
 
   const [advancedFilters, setAdvancedFilters] = useState({
-  projectId: "All",
-  clientId: "All",
-  assignedTo: "All",
-  priority: "All",
-});
+    projectId: "All",
+    clientId: "All",
+    assignedTo: "All",
+    priority: "All",
+  });
 
 
 
@@ -218,39 +220,39 @@ const TasksPage: React.FC = () => {
   }, []);
 
 
-// ---------------- Filter Dropdown Options ----------------
+  // ---------------- Filter Dropdown Options ----------------
 
-const projectOptions = useMemo(() => {
-  const map = new Map<string, string>();
-  allTasks.forEach((t) => {
-    if (t.projectId && t.projectName) {
-      map.set(String(t.projectId), t.projectName);
-    }
-  });
-  return Array.from(map, ([id, name]) => ({ id, name }));
-}, [allTasks]);
-
-const clientOptions = useMemo(() => {
-  const map = new Map<string, string>();
-  allTasks.forEach((t) => {
-    if (t.categoryId?.id && t.categoryId?.name) {
-      map.set(String(t.categoryId.id), t.categoryId.name);
-    }
-  });
-  return Array.from(map, ([id, name]) => ({ id, name }));
-}, [allTasks]);
-
-const employeeOptions = useMemo(() => {
-  const map = new Map<string, string>();
-  allTasks.forEach((t) => {
-    t.assignedEmployees?.forEach((e) => {
-      map.set(e.employeeId, e.name);
+  const projectOptions = useMemo(() => {
+    const map = new Map<string, string>();
+    allTasks.forEach((t) => {
+      if (t.projectId && t.projectName) {
+        map.set(String(t.projectId), t.projectName);
+      }
     });
-  });
-  return Array.from(map, ([id, name]) => ({ id, name }));
-}, [allTasks]);
+    return Array.from(map, ([id, name]) => ({ id, name }));
+  }, [allTasks]);
 
-const priorityOptions = ["LOW", "MEDIUM", "HIGH"];
+  const clientOptions = useMemo(() => {
+    const map = new Map<string, string>();
+    allTasks.forEach((t) => {
+      if (t.categoryId?.id && t.categoryId?.name) {
+        map.set(String(t.categoryId.id), t.categoryId.name);
+      }
+    });
+    return Array.from(map, ([id, name]) => ({ id, name }));
+  }, [allTasks]);
+
+  const employeeOptions = useMemo(() => {
+    const map = new Map<string, string>();
+    allTasks.forEach((t) => {
+      t.assignedEmployees?.forEach((e) => {
+        map.set(e.employeeId, e.name);
+      });
+    });
+    return Array.from(map, ([id, name]) => ({ id, name }));
+  }, [allTasks]);
+
+  const priorityOptions = ["LOW", "MEDIUM", "HIGH"];
 
 
 
@@ -315,83 +317,104 @@ const priorityOptions = ["LOW", "MEDIUM", "HIGH"];
 
 
 
-const sourceTasks: Task[] = useMemo(() => {
-  let base: Task[] = [];
+  const sourceTasks: Task[] = useMemo(() => {
+    let base: Task[] = [];
 
-  switch (taskSource) {
-    case "all":
-      base = allTasks;
-      break;
-    case "me":
-      base = myTasks.length ? myTasks : allTasks;
-      break;
-    case "approval":
-      base = allTasks.filter((t) => t.taskStage?.name === "Waiting");
-      break;
-    case "pinned":
-      base = allTasks.filter((t) => t.pinned);
-      break;
-    default:
-      base = allTasks;
-  }
+    switch (taskSource) {
+      case "all":
+        base = allTasks;
+        break;
+      case "me":
+        base = myTasks.length ? myTasks : allTasks;
+        break;
+      case "approval":
+        base = allTasks.filter((t) => t.taskStage?.name === "Waiting");
+        break;
+      case "pinned":
+        base = allTasks.filter((t) => t.pinned);
+        break;
+      default:
+        base = allTasks;
+    }
 
-  // status filter
-  if (statusFilter !== "All") {
-    base = base.filter((t) => t.taskStage?.name === statusFilter);
-  }
+    // status filter
+    if (statusFilter !== "All") {
+      base = base.filter((t) => t.taskStage?.name === statusFilter);
+    }
 
-  // date range filter
-  if (dateRange.start || dateRange.end) {
+    // date range filter
+    if (dateRange.start || dateRange.end) {
+      base = base.filter((t) => {
+        const start = t.startDate ? new Date(t.startDate) : null;
+        const end = t.dueDate ? new Date(t.dueDate) : null;
+
+        if (!start && !end) return false;
+
+        const filterStart = dateRange.start ? new Date(dateRange.start) : null;
+        const filterEnd = dateRange.end ? new Date(dateRange.end) : null;
+
+        if (filterStart && end && end < filterStart) return false;
+        if (filterEnd && start && start > filterEnd) return false;
+
+        return true;
+      });
+    }
+
+    // 🔥 ADVANCED FILTERS — YAHI PASTE KARO
     base = base.filter((t) => {
-      const start = t.startDate ? new Date(t.startDate) : null;
-      const end = t.dueDate ? new Date(t.dueDate) : null;
+      if (
+        advancedFilters.projectId !== "All" &&
+        String(t.projectId) !== advancedFilters.projectId
+      ) return false;
 
-      if (!start && !end) return false;
+      if (
+        advancedFilters.clientId !== "All" &&
+        String(t.categoryId?.id) !== advancedFilters.clientId
+      ) return false;
 
-      const filterStart = dateRange.start ? new Date(dateRange.start) : null;
-      const filterEnd = dateRange.end ? new Date(dateRange.end) : null;
+      if (
+        advancedFilters.assignedTo !== "All" &&
+        !t.assignedEmployeeIds?.includes(advancedFilters.assignedTo)
+      ) return false;
 
-      if (filterStart && end && end < filterStart) return false;
-      if (filterEnd && start && start > filterEnd) return false;
+      if (
+        advancedFilters.priority !== "All" &&
+        t.priority !== advancedFilters.priority
+      ) return false;
 
       return true;
     });
-  }
 
-  // 🔥 ADVANCED FILTERS — YAHI PASTE KARO
-  base = base.filter((t) => {
-    if (
-      advancedFilters.projectId !== "All" &&
-      String(t.projectId) !== advancedFilters.projectId
-    ) return false;
 
-    if (
-      advancedFilters.clientId !== "All" &&
-      String(t.categoryId?.id) !== advancedFilters.clientId
-    ) return false;
+    // 🔍 SEARCH FILTER
+    if (searchTerm.trim()) {
+      const q = searchTerm.toLowerCase();
 
-    if (
-      advancedFilters.assignedTo !== "All" &&
-      !t.assignedEmployeeIds?.includes(advancedFilters.assignedTo)
-    ) return false;
+      base = base.filter((t) => {
+        return (
+          t.title?.toLowerCase().includes(q) ||
+          t.projectName?.toLowerCase().includes(q) ||
+          t.categoryId?.name?.toLowerCase().includes(q) ||
+          t.assignedEmployees?.some((e) =>
+            e.name?.toLowerCase().includes(q)
+          )
+        );
+      });
+    }
 
-    if (
-      advancedFilters.priority !== "All" &&
-      t.priority !== advancedFilters.priority
-    ) return false;
 
-    return true;
-  });
 
-  return base;
-}, [
-  allTasks,
-  myTasks,
-  taskSource,
-  statusFilter,
-  dateRange,
-  advancedFilters, // ⚠️ IMPORTANT
-]);
+    return base;
+  }, [
+    allTasks,
+    myTasks,
+    taskSource,
+    statusFilter,
+    dateRange,
+    advancedFilters, // ⚠️ IMPORTANT
+    searchTerm, // ✅ ADD THIS
+
+  ]);
 
 
 
@@ -475,13 +498,13 @@ const sourceTasks: Task[] = useMemo(() => {
               /> */}
 
 
-<FiltersBar
-  status={statusFilter}
-  onStatusChange={setStatusFilter}
-  dateRange={dateRange}
-  onDateRangeChange={setDateRange}
-  onOpenFilters={() => setOpenFilters(true)}   // ✅ IMPORTANT
-/>
+              <FiltersBar
+                status={statusFilter}
+                onStatusChange={setStatusFilter}
+                dateRange={dateRange}
+                onDateRangeChange={setDateRange}
+                onOpenFilters={() => setOpenFilters(true)}   // ✅ IMPORTANT
+              />
 
 
 
@@ -499,9 +522,11 @@ const sourceTasks: Task[] = useMemo(() => {
                 onAddTask={() => setShowAddTaskModal(true)}
                 onOpenCalendar={handleOpenCalendar}
                 onOpenStages={() => setShowStagesModal(true)}
-                // ye special actions automatically filters se handle ho rahe hain:
-                // - Approval -> taskSource = "approval"
-                // - Pin -> taskSource = "pinned"
+                onSearchChange={setSearchTerm}   // ✅ IMPORTANT
+
+              // ye special actions automatically filters se handle ho rahe hain:
+              // - Approval -> taskSource = "approval"
+              // - Pin -> taskSource = "pinned"
               />
             </div>
           </Card>
@@ -597,7 +622,7 @@ const sourceTasks: Task[] = useMemo(() => {
           />
         )}
 
-{/* 
+        {/* 
 <TaskFiltersDrawer
   open={openFilters}
   onClose={() => setOpenFilters(false)}
@@ -616,24 +641,24 @@ const sourceTasks: Task[] = useMemo(() => {
 
 
 
-<TaskFiltersDrawer
-  open={openFilters}
-  onClose={() => setOpenFilters(false)}
-  filters={advancedFilters}
-  onChange={setAdvancedFilters}
-  onClear={() =>
-    setAdvancedFilters({
-      projectId: "All",
-      clientId: "All",
-      assignedTo: "All",
-      priority: "All",
-    })
-  }
-  projects={projectOptions}
-  clients={clientOptions}
-  employees={employeeOptions}
-  priorities={priorityOptions}
-/>
+        <TaskFiltersDrawer
+          open={openFilters}
+          onClose={() => setOpenFilters(false)}
+          filters={advancedFilters}
+          onChange={setAdvancedFilters}
+          onClear={() =>
+            setAdvancedFilters({
+              projectId: "All",
+              clientId: "All",
+              assignedTo: "All",
+              priority: "All",
+            })
+          }
+          projects={projectOptions}
+          clients={clientOptions}
+          employees={employeeOptions}
+          priorities={priorityOptions}
+        />
 
 
 
