@@ -235,20 +235,60 @@ export default function AddEmployeePage() {
                             />
                         </Field>
 
-                        <Field label="Blood Group *">
+                        {/* <Field label="Blood Group *">
                             <input name="bloodGroup" onChange={handleChange} className="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
-                        </Field>
+                        </Field> */}
+
+<Field label="Blood Group *">
+  <select
+    name="bloodGroup"
+    onChange={handleChange}
+    className="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+  >
+    <option value="">Select Blood Group</option>
+    <option value="A+">A+</option>
+    <option value="A-">A-</option>
+    <option value="B+">B+</option>
+    <option value="B-">B-</option>
+    <option value="AB+">AB+</option>
+    <option value="AB-">AB-</option>
+    <option value="O+">O+</option>
+    <option value="O-">O-</option>
+  </select>
+</Field>
+
+
 
                         <Field label="Joining Date *">
                             <input type="date" name="joiningDate" onChange={handleChange} className="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
                         </Field>
 
-                        <Field label="Language *">
+                        {/* <Field label="Language *">
                             <input name="language" onChange={handleChange} className="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
-                        </Field>
+                        </Field> */}
+
+
+<Field label="Language *">
+  <select
+    name="language"
+    onChange={handleChange}
+    className="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+  >
+    <option value="">Select Language</option>
+    <option value="English">English</option>
+    <option value="Hindi">Polski</option>
+    <option value="Gujarati">Gujarati</option>
+    <option value="Marathi">Marathi</option>
+    <option value="Tamil">Tamil</option>
+    <option value="Telugu">Telugu</option>
+  </select>
+</Field>
+
+
+
                     </div>
 
                     {/* Row 3 */}
@@ -318,10 +358,27 @@ export default function AddEmployeePage() {
                             </select>
                         </Field>
 
-                        <Field label="Country">
+                        {/* <Field label="Country">
                             <input name="country" onChange={handleChange} className="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
-                        </Field>
+                        </Field> */}
+
+<Field label="Country">
+  <select
+    name="country"
+    onChange={handleChange}
+    className="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+  >
+    <option value="">Select Country</option>
+    <option value="India">India</option>
+    <option value="USA">USA</option>
+    <option value="UK">UK</option>
+    <option value="Canada">Canada</option>
+    <option value="Australia">Australia</option>
+  </select>
+</Field>
+
+
 
                         <Field label="Mobile">
                             <input name="mobile" onChange={handleChange} className="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -451,10 +508,27 @@ export default function AddEmployeePage() {
                         </select>
                     </Field>
 
-                    <Field label="Business Address *">
+                    {/* <Field label="Business Address *">
                         <input name="businessAddress" onChange={handleChange} className="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
-                    </Field>
+                    </Field> */}
+
+<Field label="Business Address *">
+  <select
+    name="businessAddress"
+    onChange={handleChange}
+    className="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+  >
+    <option value="">Select Office Location</option>
+    <option value="Head Office">Head Office</option>
+    <option value="Branch Office">Branch Office</option>
+    <option value="Remote">Remote</option>
+    <option value="Client Location">Client Location</option>
+  </select>
+</Field>
+
+
+
                 </div>
             </div>
 
