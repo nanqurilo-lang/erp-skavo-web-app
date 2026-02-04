@@ -87,6 +87,34 @@ export default function NotificationBell() {
     }
   };
 
+
+
+
+  /* =========================
+   Clear ALL notifications
+========================== */
+const clearAllNotifications = async () => {
+  if (!token) return;
+
+  try {
+    await fetch(
+      `${API_BASE}/employee/notifications/clear`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    // UI se sab hata do
+    setNotifications([]);
+  } catch (err) {
+    console.error("Clear notifications failed", err);
+  }
+};
+
+
   /* =========================
      Mark as UNREAD
   ========================== */
@@ -113,6 +141,37 @@ export default function NotificationBell() {
       console.error("Mark unread failed", err);
     }
   };
+
+
+
+
+
+  /* =========================
+   Delete single notification
+========================== */
+const deleteNotification = async (id: number) => {
+  if (!token) return;
+
+  try {
+    await fetch(
+      `${API_BASE}/employee/notifications/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    // UI se bhi hata do
+    setNotifications((prev) =>
+      prev.filter((n) => n.id !== id)
+    );
+  } catch (err) {
+    console.error("Delete notification failed", err);
+  }
+};
+
 
   /* =========================
      Mark ALL as READ
@@ -240,6 +299,19 @@ export default function NotificationBell() {
                 Mark all as read
               </button>
             )}
+
+
+
+ {notifications.length > 0 && (
+      <button
+        onClick={clearAllNotifications}
+        className="text-xs text-red-600 hover:underline"
+      >
+        Clear all
+      </button>
+    )}
+
+
           </div>
 
           {/* List */}
@@ -282,7 +354,34 @@ export default function NotificationBell() {
                       </div>
                     </div>
 
-                    {n.readFlag && (
+
+{n.readFlag && (
+  <button
+    onClick={(e) => {
+      e.stopPropagation();
+      markAsUnread(n.id);
+    }}
+    className="text-[10px] text-blue-600 hover:underline whitespace-nowrap"
+  >
+    Mark unread
+  </button>
+)}
+
+
+  <button
+    onClick={(e) => {
+      e.stopPropagation();
+      deleteNotification(n.id);
+    }}
+    className="text-[10px] text-red-600 hover:underline"
+  >
+    Delete
+  </button>
+
+
+
+
+                    {/* {n.readFlag && (
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
@@ -292,7 +391,7 @@ export default function NotificationBell() {
                       >
                         Mark unread
                       </button>
-                    )}
+                    )} */}
                   </div>
                 </div>
               ))}
