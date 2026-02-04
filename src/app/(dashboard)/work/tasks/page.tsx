@@ -17,6 +17,7 @@ import { StagesModal } from "./components/StagesModal";
 import ViewTaskModal from "./components/ViewTaskModal/ViewTaskModal";
 import EditTaskDrawer from "./components/EditTaskDrawer";
 import { DuplicateTaskModal } from "./components/DuplicateTaskModal";
+import { TaskFiltersDrawer } from "./components/TaskFiltersDrawer";
 
 /**
  * ---- Shared Types (baaki components inko import karke use kar sakte hain) ----
@@ -107,6 +108,16 @@ const TasksPage: React.FC = () => {
     "All"
   );
   const [dateRange, setDateRange] = useState<DateRangeFilter>({});
+  const [openFilters, setOpenFilters] = useState(false);
+
+  const [advancedFilters, setAdvancedFilters] = useState({
+  projectId: "All",
+  clientId: "All",
+  assignedTo: "All",
+  priority: "All",
+});
+
+
 
   // action bar state (section 2)
   const [taskSource, setTaskSource] = useState<TaskSource>("all"); // All Tasks / My Tasks / Approval / Pin
@@ -206,54 +217,185 @@ const TasksPage: React.FC = () => {
     fetchMyTasks();
   }, []);
 
+
+// ---------------- Filter Dropdown Options ----------------
+
+const projectOptions = useMemo(() => {
+  const map = new Map<string, string>();
+  allTasks.forEach((t) => {
+    if (t.projectId && t.projectName) {
+      map.set(String(t.projectId), t.projectName);
+    }
+  });
+  return Array.from(map, ([id, name]) => ({ id, name }));
+}, [allTasks]);
+
+const clientOptions = useMemo(() => {
+  const map = new Map<string, string>();
+  allTasks.forEach((t) => {
+    if (t.categoryId?.id && t.categoryId?.name) {
+      map.set(String(t.categoryId.id), t.categoryId.name);
+    }
+  });
+  return Array.from(map, ([id, name]) => ({ id, name }));
+}, [allTasks]);
+
+const employeeOptions = useMemo(() => {
+  const map = new Map<string, string>();
+  allTasks.forEach((t) => {
+    t.assignedEmployees?.forEach((e) => {
+      map.set(e.employeeId, e.name);
+    });
+  });
+  return Array.from(map, ([id, name]) => ({ id, name }));
+}, [allTasks]);
+
+const priorityOptions = ["LOW", "MEDIUM", "HIGH"];
+
+
+
+
   // --------- Derived Tasks based on Source + Filters ---------
 
-  const sourceTasks: Task[] = useMemo(() => {
-    let base: Task[] = [];
+  // const sourceTasks: Task[] = useMemo(() => {
+  //   let base: Task[] = [];
 
-    switch (taskSource) {
-      case "all":
-        base = allTasks;
-        break;
-      case "me":
-        base = myTasks.length ? myTasks : allTasks; // agar meTasks na mile to fallback
-        break;
-      case "approval":
-        base = allTasks.filter((t) => t.taskStage?.name === "Waiting");
-        break;
-      case "pinned":
-        base = allTasks.filter((t) => t.pinned);
-        break;
-      default:
-        base = allTasks;
-    }
+  //   switch (taskSource) {
+  //     case "all":
+  //       base = allTasks;
+  //       break;
+  //     case "me":
+  //       base = myTasks.length ? myTasks : allTasks; // agar meTasks na mile to fallback
+  //       break;
+  //     case "approval":
+  //       base = allTasks.filter((t) => t.taskStage?.name === "Waiting");
+  //       break;
+  //     case "pinned":
+  //       base = allTasks.filter((t) => t.pinned);
+  //       break;
+  //     default:
+  //       base = allTasks;
+  //   }
 
-    // status filter
-    if (statusFilter !== "All") {
-      base = base.filter((t) => t.taskStage?.name === statusFilter);
-    }
+  //   // status filter
+  //   if (statusFilter !== "All") {
+  //     base = base.filter((t) => t.taskStage?.name === statusFilter);
+  //   }
 
-    // date range filter (Duration: startDate to endDate)
-    if (dateRange.start || dateRange.end) {
-      base = base.filter((t) => {
-        const start = t.startDate ? new Date(t.startDate) : null;
-        const end = t.dueDate ? new Date(t.dueDate) : null;
+  //   // date range filter (Duration: startDate to endDate)
+  //   if (dateRange.start || dateRange.end) {
+  //     base = base.filter((t) => {
+  //       const start = t.startDate ? new Date(t.startDate) : null;
+  //       const end = t.dueDate ? new Date(t.dueDate) : null;
 
-        if (!start && !end) return false;
+  //       if (!start && !end) return false;
 
-        const filterStart = dateRange.start ? new Date(dateRange.start) : null;
-        const filterEnd = dateRange.end ? new Date(dateRange.end) : null;
+  //       const filterStart = dateRange.start ? new Date(dateRange.start) : null;
+  //       const filterEnd = dateRange.end ? new Date(dateRange.end) : null;
 
-        // basic overlap check
-        if (filterStart && end && end < filterStart) return false;
-        if (filterEnd && start && start > filterEnd) return false;
+  //       // basic overlap check
+  //       if (filterStart && end && end < filterStart) return false;
+  //       if (filterEnd && start && start > filterEnd) return false;
 
-        return true;
-      });
-    }
+  //       return true;
+  //     });
+  //   }
 
-    return base;
-  }, [allTasks, myTasks, taskSource, statusFilter, dateRange]);
+
+
+
+
+
+
+
+
+  //   return base;
+  // }, [allTasks, myTasks, taskSource, statusFilter, dateRange]);
+
+
+
+
+const sourceTasks: Task[] = useMemo(() => {
+  let base: Task[] = [];
+
+  switch (taskSource) {
+    case "all":
+      base = allTasks;
+      break;
+    case "me":
+      base = myTasks.length ? myTasks : allTasks;
+      break;
+    case "approval":
+      base = allTasks.filter((t) => t.taskStage?.name === "Waiting");
+      break;
+    case "pinned":
+      base = allTasks.filter((t) => t.pinned);
+      break;
+    default:
+      base = allTasks;
+  }
+
+  // status filter
+  if (statusFilter !== "All") {
+    base = base.filter((t) => t.taskStage?.name === statusFilter);
+  }
+
+  // date range filter
+  if (dateRange.start || dateRange.end) {
+    base = base.filter((t) => {
+      const start = t.startDate ? new Date(t.startDate) : null;
+      const end = t.dueDate ? new Date(t.dueDate) : null;
+
+      if (!start && !end) return false;
+
+      const filterStart = dateRange.start ? new Date(dateRange.start) : null;
+      const filterEnd = dateRange.end ? new Date(dateRange.end) : null;
+
+      if (filterStart && end && end < filterStart) return false;
+      if (filterEnd && start && start > filterEnd) return false;
+
+      return true;
+    });
+  }
+
+  // 🔥 ADVANCED FILTERS — YAHI PASTE KARO
+  base = base.filter((t) => {
+    if (
+      advancedFilters.projectId !== "All" &&
+      String(t.projectId) !== advancedFilters.projectId
+    ) return false;
+
+    if (
+      advancedFilters.clientId !== "All" &&
+      String(t.categoryId?.id) !== advancedFilters.clientId
+    ) return false;
+
+    if (
+      advancedFilters.assignedTo !== "All" &&
+      !t.assignedEmployeeIds?.includes(advancedFilters.assignedTo)
+    ) return false;
+
+    if (
+      advancedFilters.priority !== "All" &&
+      t.priority !== advancedFilters.priority
+    ) return false;
+
+    return true;
+  });
+
+  return base;
+}, [
+  allTasks,
+  myTasks,
+  taskSource,
+  statusFilter,
+  dateRange,
+  advancedFilters, // ⚠️ IMPORTANT
+]);
+
+
+
+
 
   // --------- Handlers passed to child components ---------
 
@@ -325,12 +467,24 @@ const TasksPage: React.FC = () => {
           {/* -------- Section 1: Filters -------- */}
           <Card className="border-none bg-white shadow-sm">
             <div className="p-4">
-              <FiltersBar
+              {/* <FiltersBar
                 status={statusFilter}
                 onStatusChange={setStatusFilter}
                 dateRange={dateRange}
                 onDateRangeChange={setDateRange}
-              />
+              /> */}
+
+
+<FiltersBar
+  status={statusFilter}
+  onStatusChange={setStatusFilter}
+  dateRange={dateRange}
+  onDateRangeChange={setDateRange}
+  onOpenFilters={() => setOpenFilters(true)}   // ✅ IMPORTANT
+/>
+
+
+
             </div>
           </Card>
 
@@ -442,6 +596,47 @@ const TasksPage: React.FC = () => {
             }}
           />
         )}
+
+{/* 
+<TaskFiltersDrawer
+  open={openFilters}
+  onClose={() => setOpenFilters(false)}
+  filters={advancedFilters}
+  onChange={setAdvancedFilters}
+  onClear={() =>
+    setAdvancedFilters({
+      projectId: "All",
+      clientId: "All",
+      assignedTo: "All",
+      priority: "All",
+    })
+  }
+/> */}
+
+
+
+
+<TaskFiltersDrawer
+  open={openFilters}
+  onClose={() => setOpenFilters(false)}
+  filters={advancedFilters}
+  onChange={setAdvancedFilters}
+  onClear={() =>
+    setAdvancedFilters({
+      projectId: "All",
+      clientId: "All",
+      assignedTo: "All",
+      priority: "All",
+    })
+  }
+  projects={projectOptions}
+  clients={clientOptions}
+  employees={employeeOptions}
+  priorities={priorityOptions}
+/>
+
+
+
       </div>
     </main>
   );
