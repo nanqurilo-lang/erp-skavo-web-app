@@ -40,6 +40,12 @@ export default function NotificationBell() {
 
     try {
       setLoading(true);
+      
+  const token =
+    typeof window !== "undefined"
+      ? localStorage.getItem("accessToken")
+      : null;
+
       const res = await fetch(
         `${API_BASE}/employee/notifications/me`,
         {
@@ -67,6 +73,12 @@ export default function NotificationBell() {
     if (!token) return;
 
     try {
+      
+  const token =
+    typeof window !== "undefined"
+      ? localStorage.getItem("accessToken")
+      : null;
+
       await fetch(
         `${API_BASE}/employee/notifications/${id}/mark-read`,
         {
@@ -97,6 +109,13 @@ const clearAllNotifications = async () => {
   if (!token) return;
 
   try {
+
+    
+  const token =
+    typeof window !== "undefined"
+      ? localStorage.getItem("accessToken")
+      : null;
+
     await fetch(
       `${API_BASE}/employee/notifications/clear`,
       {
@@ -122,6 +141,12 @@ const clearAllNotifications = async () => {
     if (!token) return;
 
     try {
+      
+  const token =
+    typeof window !== "undefined"
+      ? localStorage.getItem("accessToken")
+      : null;
+
       await fetch(
         `${API_BASE}/employee/notifications/${id}/mark-unread`,
         {
@@ -153,6 +178,12 @@ const deleteNotification = async (id: number) => {
   if (!token) return;
 
   try {
+    
+  const token =
+    typeof window !== "undefined"
+      ? localStorage.getItem("accessToken")
+      : null;
+
     await fetch(
       `${API_BASE}/employee/notifications/${id}`,
       {

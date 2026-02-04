@@ -24,6 +24,16 @@ export default function EmployeePage() {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("all");
 
+ // filter drawer
+const [filterOpen, setFilterOpen] = useState(false);
+
+// image-style filters
+const [filterRole, setFilterRole] = useState("all");
+const [filterDepartment, setFilterDepartment] = useState("all");
+const [filterStatus, setFilterStatus] = useState("all");
+
+
+
   // pagination
   // const PAGE_SIZE = 5;
   // const [page, setPage] = useState(0);
@@ -48,6 +58,18 @@ export default function EmployeePage() {
     };
     fetchEmployees();
   }, []);
+
+// dropdown options (table data se)
+const roleOptions = Array.from(
+  new Set(employees.map(e => e.role).filter(Boolean))
+);
+
+const departmentOptions = Array.from(
+  new Set(employees.map(e => e.departmentName).filter(Boolean))
+);
+
+
+
 
   /* ================= INVITE API ================= */
   const sendInvite = async () => {
@@ -86,19 +108,45 @@ export default function EmployeePage() {
   };
 
   /* ================= FILTER LOGIC ================= */
-  const filtered = employees.filter((e) => {
-    const matchSearch =
-      e.name.toLowerCase().includes(search.toLowerCase()) ||
-      e.email.toLowerCase().includes(search.toLowerCase()) ||
-      e.employeeId.toLowerCase().includes(search.toLowerCase());
+  // const filtered = employees.filter((e) => {
+  //   const matchSearch =
+  //     e.name.toLowerCase().includes(search.toLowerCase()) ||
+  //     e.email.toLowerCase().includes(search.toLowerCase()) ||
+  //     e.employeeId.toLowerCase().includes(search.toLowerCase());
 
-    const matchStatus =
-      status === "all" ||
-      (status === "active" && e.active) ||
-      (status === "inactive" && !e.active);
+  //   const matchStatus =
+  //     status === "all" ||
+  //     (status === "active" && e.active) ||
+  //     (status === "inactive" && !e.active);
 
-    return matchSearch && matchStatus;
-  });
+  //   return matchSearch && matchStatus;
+  // });
+
+const filtered = employees.filter((e) => {
+  const matchSearch =
+    e.name.toLowerCase().includes(search.toLowerCase()) ||
+    e.email.toLowerCase().includes(search.toLowerCase()) ||
+    e.employeeId.toLowerCase().includes(search.toLowerCase());
+
+  const matchStatus =
+    filterStatus === "all" ||
+    (filterStatus === "active" && e.active) ||
+    (filterStatus === "inactive" && !e.active);
+
+  const matchDepartment =
+    filterDepartment === "all" ||
+    e.departmentName === filterDepartment;
+
+  const matchRole =
+    filterRole === "all" ||
+    e.role === filterRole;
+
+  return matchSearch && matchStatus && matchDepartment && matchRole;
+});
+
+
+
+
 
   // const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
   // const data = filtered.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
@@ -128,7 +176,7 @@ export default function EmployeePage() {
       {/* ================= FILTER ================= */}
       <div className="bg-white rounded-lg border p-4 flex gap-4">
         <input
-          placeholder="Search employee..."
+          placeholder="Search employee... "
           className="border px-3 py-2 rounded w-64"
           value={search}
           onChange={(e) => {
@@ -149,7 +197,22 @@ export default function EmployeePage() {
           <option value="active">Active</option>
           <option value="inactive">Inactive</option>
         </select>
+
+
+  {/* FILTER BUTTON */}
+  <button
+    onClick={() => setFilterOpen(true)}
+    className="border px-4 py-2 rounded flex items-right gap-2"
+  >
+    🔍 Filters
+
+</button>
       </div>
+
+
+
+      
+  
 
       {/* ================= ACTIONS ================= */}
       <div className="flex justify-between items-center">
@@ -177,7 +240,7 @@ export default function EmployeePage() {
         <table className="w-full text-sm">
           <thead className="bg-gray-100">
             <tr>
-              <th className="p-3 text-left">Employee ID</th>
+              <th className="p-3 text-left">Employee ID </th>
               <th className="p-3 text-left">Name</th>
               <th className="p-3 text-left">Email</th>
               <th className="p-3 text-left">Department</th>
@@ -261,7 +324,115 @@ export default function EmployeePage() {
             ))}
           </tbody>
         </table>
+
+
+
+
+
+
+
+
+
+
+
+
       </div>
+
+
+
+
+{/* ================= FILTER DRAWER ================= */}
+{filterOpen && (
+  <div className="fixed inset-0 bg-black/40 z-50 flex justify-end">
+    <div className="bg-white w-full max-w-sm h-full p-6 relative">
+      
+      {/* Header */}
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-lg font-semibold">Filters</h2>
+        <button
+          onClick={() => setFilterOpen(false)}
+          className="text-xl text-gray-400"
+        >
+          ×
+        </button>
+      </div>
+
+      <div className="space-y-5">
+
+        {/* Reporting To (future ready – disabled) */}
+        <div>
+          <label className="text-sm font-medium">Reporting to</label>
+          <select
+            disabled
+            className="w-full border rounded px-3 py-2 mt-1 bg-gray-100"
+          >
+            <option>All</option>
+          </select>
+        </div>
+
+        {/* Role */}
+        <div>
+          <label className="text-sm font-medium">Role</label>
+          <select
+            className="w-full border rounded px-3 py-2 mt-1"
+            value={filterRole}
+            onChange={(e) => setFilterRole(e.target.value)}
+          >
+            <option value="all">All</option>
+            {roleOptions.map((r) => (
+              <option key={r} value={r}>{r}</option>
+            ))}
+          </select>
+        </div>
+
+        {/* Department */}
+        <div>
+          <label className="text-sm font-medium">Department</label>
+          <select
+            className="w-full border rounded px-3 py-2 mt-1"
+            value={filterDepartment}
+            onChange={(e) => setFilterDepartment(e.target.value)}
+          >
+            <option value="all">All</option>
+            {departmentOptions.map((d) => (
+              <option key={d} value={d}>{d}</option>
+            ))}
+          </select>
+        </div>
+
+        {/* Status */}
+        <div>
+          <label className="text-sm font-medium">Status</label>
+          <select
+            className="w-full border rounded px-3 py-2 mt-1"
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+          >
+            <option value="all">All</option>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+        </div>
+
+        {/* Clear */}
+        <div className="pt-6 flex justify-end">
+          <button
+            onClick={() => {
+              setFilterRole("all");
+              setFilterDepartment("all");
+              setFilterStatus("all");
+            }}
+            className="border px-6 py-2 rounded text-blue-600"
+          >
+            Clear
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+
+
 
       {/* ================= INVITE MODAL ================= */}
       {inviteOpen && (
