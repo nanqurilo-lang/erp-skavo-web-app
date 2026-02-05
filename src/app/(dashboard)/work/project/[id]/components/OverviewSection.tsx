@@ -180,11 +180,11 @@ function TaskStatistics({ projectId }: { projectId: number }) {
         }
       } catch (err: any) {
         console.error(
-          "Failed to load task statistics:",
+          "No Task is created in task statistics:",
           err?.response?.data ?? err?.message ?? err
         );
         if (mounted) {
-          setError("Failed to load task statistics");
+          setError("No Task is created in task statistics");
           setStatuses([]);
           setTasks([]);
         }
