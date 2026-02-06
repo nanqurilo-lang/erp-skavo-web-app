@@ -136,7 +136,7 @@ export default function NewLeaveDrawer({ open, onClose, onSuccess }: Props) {
     if (!open) return null;
 
     return (
-        <div className="fixed inset-0 z-[10000]">
+        <div className="fixed inset-0 z-[10010]">
             {/* BACKDROP */}
             <div
                 className="absolute inset-0 bg-black/40"
@@ -164,7 +164,7 @@ export default function NewLeaveDrawer({ open, onClose, onSuccess }: Props) {
                         <div className="grid grid-cols-3 gap-6">
                             {/* MEMBER */}
                             <div>
-                                <label className="text-sm font-medium">Choose Member *</label>
+                                {/* <label className="text-sm font-medium">Choose Member *</label> */}
 
                                 {/* EMPLOYEE DROPDOWN */}
                                 <div className="relative">

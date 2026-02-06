@@ -362,7 +362,7 @@ export default function LeavesList() {
               onChange={(e) => setFilters(f => ({ ...f, toDate: e.target.value }))} />
             <select className="border py-3 px-6 rounded-2xl"
               onChange={(e) => setFilters(f => ({ ...f, status: e.target.value }))}>
-              <option value="">Status</option>
+              <option value="">Status </option>
               <option value="APPROVED">Approved</option>
               <option value="PENDING">Pending</option>
               <option value="REJECTED">Rejected</option>
