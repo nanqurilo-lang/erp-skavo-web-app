@@ -406,7 +406,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 
-import { MoreHorizontal, Eye, Edit, TrendingUp, Trash2 } from "lucide-react";
+import { MoreHorizontal, Eye, Edit, TrendingUp, Trash2, Calendar, CalendarIcon } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -681,13 +681,26 @@ export default function ClientsPage() {
           {/* LEFT: Duration */}
           <Popover>
             <PopoverTrigger asChild>
-              <div className="flex items-center gap-3 cursor-pointer">
-                <span className="text-sm text-muted-foreground">Duration</span>
-                <span className="text-sm text-muted-foreground underline">
+              <div className="flex items-center gap-3 cursor-pointer 
+               border border-gray-300 px-3 py-2 rounded-md hover:border-slate-400 transition 
+
+              ">
+                <span className="text-sm text-muted-foreground">Duration </span>
+                <span className="text-sm text-muted-foreground 
+
+                ">
+
                   {startDate && endDate
                     ? `${new Date(startDate).toLocaleDateString()} to ${new Date(endDate).toLocaleDateString()}`
-                    : "Start Date to End Date"}
+                    : <div className="font-medium">Start Date to End Date
+                      <CalendarIcon className="inline-block mb-1 ml-2 h-4 w-4" />
+                    </div>
+
+                  }
+
+
                 </span>
+
               </div>
             </PopoverTrigger>
 
@@ -733,7 +746,10 @@ export default function ClientsPage() {
           {/* RIGHT: Filters */}
           <button
             onClick={() => setDrawerOpen(true)}
-            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-slate-700"
+            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-slate-700
+                           border border-gray-300 px-3 py-2 rounded-md hover:border-slate-400 transition 
+"
+
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <path strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M6 12h12M10 18h4" />

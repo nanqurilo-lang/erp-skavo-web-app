@@ -1396,7 +1396,7 @@ const filteredDeals = useMemo(() => {
                   className="w-[260px] justify-start text-sm"
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
-                  Duration Start Date to End Date
+                  Start Date to End Date
                 </Button>
               </PopoverTrigger>
 

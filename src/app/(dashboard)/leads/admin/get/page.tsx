@@ -23,6 +23,7 @@ import {
   PopoverTrigger,
   PopoverContent,
 } from "@/components/ui/popover";
+import { Calendar, CalendarIcon } from "lucide-react";
 
 
 /* =======================
@@ -1174,14 +1175,103 @@ export default function LeadsAdminPage() {
 
           <Popover>
             <PopoverTrigger asChild>
-              <div className="flex items-center  gap-4 cursor-pointer">
-                <div className="text-sm text-muted-foreground">Duration</div>
-                <div className="text-sm text-muted-foreground underline">
+              {/* <div className="flex items-center  gap-4 cursor-pointer
+               border border-gray-300 px-3 py-2 rounded-md hover:border-slate-400 transition
+
+              ">
+                <div className="text-sm text-muted-foreground
+
+
+
+
+
+                ">Duration </div>
+                <div className="text-sm text-muted-foreground font-medium">
                   {startDate && endDate
                     ? `${new Date(startDate).toLocaleDateString()} to ${new Date(endDate).toLocaleDateString()}`
-                    : "Start Date to End Date"}
+                    : "dd-mm-yyyy "}
+                </div>
+              </div> */}
+
+
+
+
+              <div className="flex items-center   gap-4 cursor-pointer
+               border border-gray-300 px-3 py-2 rounded-md hover:border-slate-400 transition
+
+              ">
+                <div className="text-sm text-muted-foreground
+
+
+
+
+
+                ">Duration </div>
+                <div className="text-sm text-muted-foreground  font-medium">
+                  {startDate && endDate
+                    ? `${new Date(startDate).toLocaleDateString()} to ${new Date(endDate).toLocaleDateString()}`
+                    : <div className="flex items-center gap-3">
+                      StartDate to EndDate <CalendarIcon className="w-4 h-4 text-muted-foreground" />
+                    </div>}
                 </div>
               </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              {/* <div className="flex items-center gap-3">
+              <span className="text-sm text-gray-600">Duration</span>
+
+              <Input
+                type="date"
+                value={durationFrom ?? ""}
+                onChange={(e) => {
+                  setDurationFrom(e.target.value || null);
+                  setCurrentPage(1);
+                }}
+                className="w-40"
+              />
+
+              <span className="text-gray-400 text-sm">to</span>
+
+              <Input
+                type="date"
+                value={durationTo ?? ""}
+                onChange={(e) => {
+                  setDurationTo(e.target.value || null);
+                  setCurrentPage(1);
+                }}
+                className="w-40"
+              />
+            </div> */}
+
+
+
+
             </PopoverTrigger>
 
             <PopoverContent className="w-[320px] p-4">
@@ -1195,13 +1285,13 @@ export default function LeadsAdminPage() {
                     type="date"
                     value={startDate}
                     onChange={(e) => setStartDate(e.target.value)}
-                    className="w-full rounded-md border px-3 py-2"
+                    className="w-full rounded-md border  px-3 py-2"
                   />
                 </div>
 
                 {/* End Date */}
                 <div>
-                  <label className="text-sm text-muted-foreground">End Date</label>
+                  <label className="text-sm gap-6 text-muted-foreground">End Date</label>
                   <input
                     type="date"
                     value={endDate}
@@ -1232,11 +1322,17 @@ export default function LeadsAdminPage() {
 
 
           <div className="flex items-center gap-3">
-            <button onClick={() => setDrawerOpen(true)} className="flex items-center gap-2 text-sm text-muted-foreground hover:text-slate-700">
+            <button onClick={() => setDrawerOpen(true)} className="flex items-center gap-2 text-sm text-muted-foreground 
+            border border-gray-300 px-3 py-2 rounded-md hover:border-slate-400 transition
+
+
+
+
+ hover:text-slate-700">
               <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M6 12h12M10 18h4" /></svg>
               <span className="hidden sm:inline">Filters</span>
             </button>
-            <div className="w-9 h-9 rounded-full bg-gray-200" />
+            {/* <div className="w-9 h-9 rounded-full bg-gray-200" /> */}
           </div>
         </div>
       </div>
@@ -1735,20 +1831,20 @@ function UpdateLeadForm({
   //     </div>
 
 
-      return (
-      <div className="fixed inset-0 z-50">
-        <div className="absolute inset-0 bg-black/30" onClick={onClose} />
+  return (
+    <div className="fixed inset-0 z-50">
+      <div className="absolute inset-0 bg-black/30" onClick={onClose} />
 
-        <div className="fixed inset-0 flex items-start justify-center px-4 pt-12">
-          <div
-            className="max-w-4xl w-full bg-white rounded-lg shadow-lg border overflow-auto"
-            style={{ maxHeight: "92vh" }}
-          >
-            {/* <form onSubmit={submit} className="p-6 space-y-6"> */}
-              {/* 🔽🔽 tumhara poora form yahin rahega */}
+      <div className="fixed inset-0 flex items-start justify-center px-4 pt-12">
+        <div
+          className="max-w-4xl w-full bg-white rounded-lg shadow-lg border overflow-auto"
+          style={{ maxHeight: "92vh" }}
+        >
+          {/* <form onSubmit={submit} className="p-6 space-y-6"> */}
+          {/* 🔽🔽 tumhara poora form yahin rahega */}
 
 
-<form onSubmit={submit} className="p-6 space-y-6">
+          <form onSubmit={submit} className="p-6 space-y-6">
             {errorMsg && <div className="text-destructive text-sm">{errorMsg}</div>}
 
             <div className="rounded-lg border p-4">
@@ -1887,64 +1983,64 @@ function UpdateLeadForm({
 
 
 
-            {/* </form> */}
-          </div>
+          {/* </form> */}
         </div>
+      </div>
 
-        {/* ✅ YAHAN PASTE KARO — RETURN KE ANDAR */}
-        {addSourceOpen && (
-          <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/30">
-            <div className="bg-white rounded-lg p-4 w-[400px]">
-              <h3 className="font-medium mb-3">Add Lead Source</h3>
+      {/* ✅ YAHAN PASTE KARO — RETURN KE ANDAR */}
+      {addSourceOpen && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/30">
+          <div className="bg-white rounded-lg p-4 w-[400px]">
+            <h3 className="font-medium mb-3">Add Lead Source</h3>
 
-              <input
-                className="w-full border rounded-md p-2 mb-3"
-                placeholder="Enter source name"
-                value={newSource}
-                onChange={(e) => setNewSource(e.target.value)}
-              />
+            <input
+              className="w-full border rounded-md p-2 mb-3"
+              placeholder="Enter source name"
+              value={newSource}
+              onChange={(e) => setNewSource(e.target.value)}
+            />
 
-              <div className="flex justify-end gap-2">
-                <button
-                  onClick={() => setAddSourceOpen(false)}
-                  className="px-3 py-2 border rounded"
-                >
-                  Cancel
-                </button>
+            <div className="flex justify-end gap-2">
+              <button
+                onClick={() => setAddSourceOpen(false)}
+                className="px-3 py-2 border rounded"
+              >
+                Cancel
+              </button>
 
-                <button
-                  onClick={async () => {
-                    if (!newSource.trim()) return;
+              <button
+                onClick={async () => {
+                  if (!newSource.trim()) return;
 
-                    const token = localStorage.getItem("accessToken");
-                    const res = await fetch(
-                      `${BASE}/deals/dealCategory/LeadSource`,
-                      {
-                        method: "POST",
-                        headers: {
-                          Authorization: `Bearer ${token}`,
-                          "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({ name: newSource }),
-                      }
-                    );
+                  const token = localStorage.getItem("accessToken");
+                  const res = await fetch(
+                    `${BASE}/deals/dealCategory/LeadSource`,
+                    {
+                      method: "POST",
+                      headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({ name: newSource }),
+                    }
+                  );
 
-                    const created = await res.json();
-                    setLeadSources((p) => [...p, created]);
-                    update("leadSource", created.name);
-                    setNewSource("");
-                    setAddSourceOpen(false);
-                  }}
-                  className="px-3 py-2 bg-sky-600 text-white rounded"
-                >
-                  Save
-                </button>
-              </div>
+                  const created = await res.json();
+                  setLeadSources((p) => [...p, created]);
+                  update("leadSource", created.name);
+                  setNewSource("");
+                  setAddSourceOpen(false);
+                }}
+                className="px-3 py-2 bg-sky-600 text-white rounded"
+              >
+                Save
+              </button>
             </div>
           </div>
-        )}
-      </div>
-      );
+        </div>
+      )}
+    </div>
+  );
 
 
 
