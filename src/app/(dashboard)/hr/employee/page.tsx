@@ -202,7 +202,7 @@ const filtered = employees.filter((e) => {
   {/* FILTER BUTTON */}
   <button
     onClick={() => setFilterOpen(true)}
-    className="border px-4 py-2 rounded flex items-right gap-2"
+    className="border px-4 py-2 rounded flex items-right gap-2 ml-auto"
   >
     🔍 Filters
 
