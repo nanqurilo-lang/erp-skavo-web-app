@@ -1,4 +1,6 @@
 "use client";
+import { useState } from "react";
+import InvoiceFiltersDrawer from "./InvoiceFiltersDrawer";
 
 import { Search, SlidersHorizontal } from "lucide-react";
 import { Select, SelectTrigger, SelectItem, SelectContent, SelectValue } from "@/components/ui/select";
@@ -10,6 +12,9 @@ export default function InvoiceFilters({ filters, setFilters, invoices }) {
     const projectList = ["All", ...new Set(invoices.map(i => i.project?.projectName).filter(Boolean))];
     const clientList = ["All", ...new Set(invoices.map(i => i.client?.name).filter(Boolean))];
     const statusList = ["All", ...new Set(invoices.map(i => i.status).filter(Boolean))];
+
+    const [openFilters, setOpenFilters] = useState(false);
+
 
     return (
         
@@ -79,9 +84,29 @@ export default function InvoiceFilters({ filters, setFilters, invoices }) {
                 </div>
             </div>
 
-            <Button variant="outline" className="flex items-center gap-1">
-                <SlidersHorizontal className="h-4 w-4" /> Filters
-            </Button>
+            {/* <Button variant="outline" className="flex items-center gap-1">
+                <SlidersHorizontal className="h-4 w-4" /> Filters 
+            </Button> */}
+
+
+
+<Button
+  variant="outline"
+  className="flex items-center gap-1"
+  onClick={() => setOpenFilters(true)}
+>
+  <SlidersHorizontal className="h-4 w-4" /> Filters
+</Button>
+
+<InvoiceFiltersDrawer
+  open={openFilters}
+  onClose={() => setOpenFilters(false)}
+  filters={filters}
+  setFilters={setFilters}
+  invoices={invoices}
+/>
+
+
         </div>
     );
 }
