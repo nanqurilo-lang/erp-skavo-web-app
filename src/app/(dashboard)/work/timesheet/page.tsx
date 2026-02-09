@@ -96,6 +96,31 @@ export default function TimesheetPage() {
   const [endDate, setEndDate] = useState("");
 
 
+
+const isWithinDateRange = (
+  date?: string,
+  start?: string,
+  end?: string
+) => {
+  if (!date) return false;
+
+  const d = new Date(date);
+  if (start) {
+    const s = new Date(start);
+    if (d < s) return false;
+  }
+  if (end) {
+    const e = new Date(end);
+    e.setHours(23, 59, 59, 999); // include full end day
+    if (d > e) return false;
+  }
+  return true;
+};
+
+
+
+
+
   // Log Time + action
   const [showLogModal, setShowLogModal] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -748,36 +773,95 @@ export default function TimesheetPage() {
 
 
 
+  // const filtered = useMemo(() => {
+  //   const q = searchQuery.trim().toLowerCase();
+
+  //   return timesheets.filter((t) => {
+
+  //     // 🔹 Project filter
+  //     if (filterProject !== "all") {
+  //       if (String(t.projectId) !== filterProject) return false;
+  //     }
+
+  //     // 🔹 Employee filter
+  //     if (employeeFilter !== "All") {
+  //       const hasEmp =
+  //         t.employeeId === employeeFilter ||
+  //         (t.employees ?? []).some(e => e.employeeId === employeeFilter);
+
+  //       if (!hasEmp) return false;
+  //     }
+
+  //     if (!q) return true;
+
+  //     if (String(t.projectShortCode ?? "").toLowerCase().includes(q)) return true;
+  //     if (String(t.memo ?? "").toLowerCase().includes(q)) return true;
+
+  //     return (t.employees ?? []).some(e =>
+  //       (e.name ?? "").toLowerCase().includes(q)
+  //     );
+  //   });
+  // }, [timesheets, searchQuery, employeeFilter, filterProject]);
+
+
+
   const filtered = useMemo(() => {
-    const q = searchQuery.trim().toLowerCase();
+  const q = searchQuery.trim().toLowerCase();
 
-    return timesheets.filter((t) => {
+  return timesheets.filter((t) => {
 
-      // 🔹 Project filter
-      if (filterProject !== "all") {
-        if (String(t.projectId) !== filterProject) return false;
+    // 🔹 Project filter
+    if (filterProject !== "all") {
+      if (String(t.projectId) !== filterProject) return false;
+    }
+
+    // 🔹 Employee filter
+    if (employeeFilter !== "All") {
+      const hasEmp =
+        t.employeeId === employeeFilter ||
+        (t.employees ?? []).some(
+          (e) => e.employeeId === employeeFilter
+        );
+
+      if (!hasEmp) return false;
+    }
+
+    // 🔹 Duration (date range) filter  ✅ NEW
+    if (startDate || endDate) {
+      if (!isWithinDateRange(t.startDate, startDate, endDate)) {
+        return false;
       }
+    }
 
-      // 🔹 Employee filter
-      if (employeeFilter !== "All") {
-        const hasEmp =
-          t.employeeId === employeeFilter ||
-          (t.employees ?? []).some(e => e.employeeId === employeeFilter);
+    // 🔹 Search
+    if (!q) return true;
 
-        if (!hasEmp) return false;
-      }
+    if (
+      String(t.projectShortCode ?? "")
+        .toLowerCase()
+        .includes(q)
+    )
+      return true;
 
-      if (!q) return true;
+    if (
+      String(t.memo ?? "")
+        .toLowerCase()
+        .includes(q)
+    )
+      return true;
 
-      if (String(t.projectShortCode ?? "").toLowerCase().includes(q)) return true;
-      if (String(t.memo ?? "").toLowerCase().includes(q)) return true;
-
-      return (t.employees ?? []).some(e =>
-        (e.name ?? "").toLowerCase().includes(q)
-      );
-    });
-  }, [timesheets, searchQuery, employeeFilter, filterProject]);
-
+    return (t.employees ?? []).some((e) =>
+      (e.name ?? "").toLowerCase().includes(q)
+    );
+  });
+}, [
+  timesheets,
+  searchQuery,
+  employeeFilter,
+  filterProject,
+  startDate,
+  endDate,
+]);
 
 
 
@@ -961,7 +1045,7 @@ export default function TimesheetPage() {
 
         <div className="p-4 space-y-4 overflow-auto h-[calc(100%-140px)]">
           <div>
-            <label className="block text-sm text-gray-600 mb-2">Project</label>
+            <label className="block text-sm text-gray-600 mb-2">Project </label>
             {/* <Select
               value={filterEmployee}
               onValueChange={(v) => setFilterEmployee(v)}
