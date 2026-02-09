@@ -164,7 +164,7 @@ export default function ChatRoomsList({
   }) => {
     return (
       <Link
-        href={`/messages/${employeeId}`}
+        href={`/employees/messages/${employeeId}`}
         key={employeeId}
         className="block"
         aria-label={`Open chat with ${name}`}
@@ -253,7 +253,7 @@ export default function ChatRoomsList({
             return (
               <Link
                 key={room.id}
-                href={`/messages/${partner.employeeId}`}
+                href={`/employees/messages/${partner.employeeId}`}
                 className="block"
                 aria-label={`Open chat with ${partner.name}`}
               >
