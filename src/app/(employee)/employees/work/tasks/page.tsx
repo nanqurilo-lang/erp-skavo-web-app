@@ -15,6 +15,8 @@ import { StagesModal } from "./components/StagesModal";
 import ViewTaskModal from "./components/ViewTaskModal/ViewTaskModal";
 import EditTaskDrawer from "./components/EditTaskDrawer";
 import { DuplicateTaskModal } from "./components/DuplicateTaskModal";
+import { TaskFiltersDrawer } from "./components/TaskFiltersDrawer";
+
 
 /**
  * ---- Shared Types (baaki components inko import karke use kar sakte hain) ----
@@ -99,6 +101,55 @@ const TasksPage: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [initialLoaded, setInitialLoaded] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+
+
+const [filtersDrawerOpen, setFiltersDrawerOpen] = useState(false);
+
+const [taskFilters, setTaskFilters] = useState({
+  projectId: "All",
+  clientId: "All",
+  assignedTo: "All",
+  priority: "All",
+});
+
+
+const projectOptions = useMemo(() => {
+  const map = new Map<string, string>();
+  allTasks.forEach((t) => {
+    if (t.projectId && t.projectName) {
+      map.set(String(t.projectId), t.projectName);
+    }
+  });
+  return Array.from(map.entries()).map(([id, name]) => ({ id, name }));
+}, [allTasks]);
+
+  const clientOptions = useMemo(() => {
+    const map = new Map<string, string>();
+    allTasks.forEach((t) => {
+      if (t.categoryId?.id && t.categoryId?.name) {
+        map.set(String(t.categoryId.id), t.categoryId.name);
+      }
+    });
+    return Array.from(map, ([id, name]) => ({ id, name }));
+  }, [allTasks]);
+
+
+const employeeOptions = useMemo(() => {
+  const map = new Map<string, string>();
+  allTasks.forEach((t) => {
+    t.assignedEmployees?.forEach((e) => {
+      map.set(e.employeeId, e.name);
+    });
+  });
+  return Array.from(map.entries()).map(([id, name]) => ({ id, name }));
+}, [allTasks]);
+
+const priorityOptions = ["LOW", "MEDIUM", "HIGH"];
+
+
+
+
+
 
   // top filters (section 1)
   const [statusFilter, setStatusFilter] = useState<TaskStageName | "All">(
@@ -250,8 +301,76 @@ const TasksPage: React.FC = () => {
       });
     }
 
+
+
+
+// 🔥 DRAWER FILTERS (table-accurate)
+
+// if (taskFilters.projectId !== "All") {
+//   base = base.filter(
+//     (t) => String(t.projectId) === taskFilters.projectId
+//   );
+// }
+
+// if (taskFilters.clientId !== "All") {
+//   base = base.filter(
+//     (t: any) => String(t.clientId) === taskFilters.clientId
+//   );
+// }
+
+
+
+// if (taskFilters.assignedTo !== "All") {
+//   base = base.filter((t) =>
+//     t.assignedEmployees?.some(
+//       (e) => e.employeeId === taskFilters.assignedTo
+//     )
+//   );
+// }
+
+// if (taskFilters.priority !== "All") {
+//   base = base.filter((t) => t.priority === taskFilters.priority);
+// }
+
+
+
+// 🔥 DRAWER FILTERS (FINAL & CORRECT)
+
+if (taskFilters.projectId !== "All") {
+  base = base.filter(
+    (t) => String(t.projectId) === taskFilters.projectId
+  );
+}
+
+if (taskFilters.clientId !== "All") {
+  base = base.filter(
+    (t) => String(t.categoryId?.id) === taskFilters.clientId
+  );
+}
+
+if (taskFilters.assignedTo !== "All") {
+  base = base.filter((t) =>
+    t.assignedEmployees?.some(
+      (e) => e.employeeId === taskFilters.assignedTo
+    )
+  );
+}
+
+if (taskFilters.priority !== "All") {
+  base = base.filter((t) => t.priority === taskFilters.priority);
+}
+
+
+
+
+
+
+
     return base;
-  }, [allTasks, myTasks, taskSource, statusFilter, dateRange]);
+  }, [allTasks, myTasks, taskSource, statusFilter, dateRange, taskFilters,]);
+
+
+
 
   // --------- Handlers passed to child components ---------
 
@@ -328,6 +447,8 @@ const TasksPage: React.FC = () => {
                 onStatusChange={setStatusFilter}
                 dateRange={dateRange}
                 onDateRangeChange={setDateRange}
+                onOpenFilters={() => setFiltersDrawerOpen(true)} // 👈 ADD THIS
+
               />
             </div>
           </Card>
@@ -439,7 +560,33 @@ const TasksPage: React.FC = () => {
               fetchMyTasks();
             }}
           />
-        )}
+        )} 
+
+
+
+
+<TaskFiltersDrawer
+  open={filtersDrawerOpen}
+  onClose={() => setFiltersDrawerOpen(false)}
+  filters={taskFilters}
+  onChange={setTaskFilters}
+  onClear={() =>
+    setTaskFilters({
+      projectId: "All",
+      clientId: "All",
+      assignedTo: "All",
+      priority: "All",
+    })
+  }
+  projects={projectOptions}
+  clients={clientOptions}
+  employees={employeeOptions}
+  priorities={priorityOptions}
+/>
+
+
+
+
       </div>
     </main>
   );

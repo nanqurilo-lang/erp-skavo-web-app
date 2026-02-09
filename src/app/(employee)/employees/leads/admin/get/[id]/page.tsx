@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import useSWR from "swr";
 import { useState, useRef, useEffect } from "react";
 import { Card } from "@/components/ui/card";
@@ -1265,12 +1265,19 @@ function ViewNoteModal({ note, onClose }: { note: Note; onClose: () => void }) {
 
 /* ---------------- Main Page Component (updated: notes popup fixed positioning) ---------------- */
 
-export default function LeadDetailPage({ params }: { params: { id: string } }) {
+export default function LeadDetailPage() {
+  const params = useParams<{ id: string }>();
+  const leadId = params?.id;
+
   const router = useRouter();
-  const { data, error, isLoading, mutate } = useSWR<Lead>(`/api/leads/admin/get/${params.id}`, fetcher, {
-    refreshInterval: 30000,
-    revalidateOnFocus: true,
-  });
+  const { data, error, isLoading, mutate } = useSWR<Lead>(
+    leadId ? `/api/leads/admin/get/${leadId}` : null,
+    fetcher,
+    {
+      refreshInterval: 30000,
+      revalidateOnFocus: true,
+    },
+  );
 
   const [activeTab, setActiveTab] = useState<"profile" | "deals" | "notes">("profile");
   const [menuOpen, setMenuOpen] = useState(false);

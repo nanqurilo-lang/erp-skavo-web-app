@@ -25,13 +25,17 @@ interface FiltersBarProps {
 
     dateRange: DateRangeFilter;
     onDateRangeChange: (v: DateRangeFilter) => void;
+      onOpenFilters: () => void; // 👈 ADD THIS
+
 }
 
 export const FiltersBar: React.FC<FiltersBarProps> = ({
     status,
     onStatusChange,
     dateRange,
-    onDateRangeChange
+    onDateRangeChange ,
+      onOpenFilters, // 👈 ADD THIS
+
 }) => {
     return (
         <div className="flex flex-wrap items-center gap-4">
@@ -118,13 +122,28 @@ export const FiltersBar: React.FC<FiltersBarProps> = ({
             </Select>
 
             {/* Filters Icon Button */}
-            <Button
+            {/* <Button 
+            
                 variant="outline"
                 className="ml-auto flex h-10 items-center gap-2 rounded-xl border-slate-300 bg-white px-4 shadow-sm"
             >
                 <SlidersHorizontal size={16} />
+                Filters 
+            </Button> */}
+
+
+{/* Filters Drawer Button */}
+            <Button
+                variant="outline"
+                className="ml-auto h-10 rounded-xl"
+                onClick={onOpenFilters}
+            >
+                <SlidersHorizontal size={16} />
                 Filters
             </Button>
+
+
+
         </div>
     );
 };

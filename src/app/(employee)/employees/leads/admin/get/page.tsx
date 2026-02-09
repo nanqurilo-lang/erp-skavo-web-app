@@ -17,6 +17,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { CalendarIcon } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@radix-ui/react-popover";
 
 /* =======================
    Types & constants
@@ -1340,7 +1342,7 @@ export default function LeadsAdminPage() {
   return (
     <main className="container mx-auto max-w-6xl px-4 py-8">
       {/* header */}
-      <div className="mb-6 border-b border-gray-200">
+      {/* <div className="mb-6 border-b border-gray-200">
         <div className="flex items-center justify-between py-3">
           <div className="flex items-center gap-4">
             <div className="text-sm text-muted-foreground">Duration</div>
@@ -1354,7 +1356,186 @@ export default function LeadsAdminPage() {
             <div className="w-9 h-9 rounded-full bg-gray-200" />
           </div>
         </div>
+      </div> */}
+
+
+
+
+
+
+ <div className="mb-6 border-b border-gray-200">
+        <div className="flex items-center justify-between py-3">
+
+
+
+          <Popover>
+            <PopoverTrigger asChild>
+              {/* <div className="flex items-center  gap-4 cursor-pointer
+               border border-gray-300 px-3 py-2 rounded-md hover:border-slate-400 transition
+
+              ">
+                <div className="text-sm text-muted-foreground
+
+
+
+
+
+                ">Duration </div>
+                <div className="text-sm text-muted-foreground font-medium">
+                  {startDate && endDate
+                    ? `${new Date(startDate).toLocaleDateString()} to ${new Date(endDate).toLocaleDateString()}`
+                    : "dd-mm-yyyy "}
+                </div>
+              </div> */}
+
+
+
+
+              <div className="flex items-center   gap-4 cursor-pointer
+               border border-gray-300 px-3 py-2 rounded-md hover:border-slate-400 transition
+
+              ">
+                <div className="text-sm text-muted-foreground
+
+
+
+
+
+                ">Duration </div>
+                <div className="text-sm text-muted-foreground  font-medium">
+                  {startDate && endDate
+                    ? `${new Date(startDate).toLocaleDateString()} to ${new Date(endDate).toLocaleDateString()}`
+                    : <div className="flex items-center gap-3">
+                      StartDate to EndDate <CalendarIcon className="w-4 h-4 text-muted-foreground" />
+                    </div>}
+                </div>
+              </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              {/* <div className="flex items-center gap-3">
+              <span className="text-sm text-gray-600">Duration</span>
+
+              <Input
+                type="date"
+                value={durationFrom ?? ""}
+                onChange={(e) => {
+                  setDurationFrom(e.target.value || null);
+                  setCurrentPage(1);
+                }}
+                className="w-40"
+              />
+
+              <span className="text-gray-400 text-sm">to</span>
+
+              <Input
+                type="date"
+                value={durationTo ?? ""}
+                onChange={(e) => {
+                  setDurationTo(e.target.value || null);
+                  setCurrentPage(1);
+                }}
+                className="w-40"
+              />
+            </div> */}
+
+
+
+
+            </PopoverTrigger>
+
+            <PopoverContent className="w-[320px] p-4">
+              <div className="space-y-4 bg-white border rounded-md p-4">
+                <h4 className="font-medium">Select Duration</h4>
+
+                {/* Start Date */}
+                <div>
+                  <label className="text-sm text-muted-foreground">Start Date</label>
+                  <input
+                    type="date"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    className="w-full rounded-md border  px-3 py-2"
+                  />
+                </div>
+
+                {/* End Date */}
+                <div>
+                  <label className="text-sm gap-6 text-muted-foreground">End Date</label>
+                  <input
+                    type="date"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                    className="w-full rounded-md border px-3 py-2"
+                  />
+                </div>
+
+                {/* Reset */}
+                <div className="flex justify-end">
+                  <Button
+                    variant="ghost"
+                    onClick={() => {
+                      setStartDate("");
+                      setEndDate("");
+                    }}
+                  >
+                    Reset
+                  </Button>
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
+
+
+
+
+
+
+          <div className="flex items-center gap-3">
+            <button onClick={() => setDrawerOpen(true)} className="flex items-center gap-2 text-sm text-muted-foreground 
+            border border-gray-300 px-3 py-2 rounded-md hover:border-slate-400 transition
+
+
+
+
+ hover:text-slate-700">
+              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M6 12h12M10 18h4" /></svg>
+              <span className="hidden sm:inline">Filters</span>
+            </button>
+            {/* <div className="w-9 h-9 rounded-full bg-gray-200" /> */}
+          </div>
+        </div>
       </div>
+
+
+
+
+
 
       <Card className="p-4 md:p-6">
         {/* controls */}
