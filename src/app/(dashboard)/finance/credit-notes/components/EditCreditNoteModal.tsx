@@ -135,7 +135,10 @@ export default function EditCreditNoteModal({
 
       <div
         // ensure modal content receives pointer events and is above overlay
-        className="relative z-70 w-[900px] max-w-full bg-white rounded-lg border shadow-lg pointer-events-auto"
+     className="relative z-70 w-[900px] max-w-full bg-white rounded-lg border shadow-lg pointer-events-auto
+             max-h-[85vh] flex flex-col"
+     
+   // className="relative z-70 w-[900px] max-w-full bg-white rounded-lg border shadow-lg pointer-events-auto"
       >
         {/* header */}
         <div className="flex items-center justify-between p-4 border-b">
@@ -150,7 +153,9 @@ export default function EditCreditNoteModal({
         </div>
 
         {/* content */}
-        <div className="p-6">
+        {/* <div className="p-6"> */}
+        <div className="p-6 overflow-y-auto flex-1">
+
           {/* Top row: credit note #, date, currency */}
           <div className="grid grid-cols-12 gap-4 items-center">
             <div className="col-span-4">
@@ -309,7 +314,7 @@ export default function EditCreditNoteModal({
 
           {/* Note */}
           <div className="mt-6">
-            <label className="block text-sm text-slate-600 mb-2">Note for the recipient</label>
+            <label className="block text-sm text-slate-600 mb-2">Note for the recipient </label>
             <textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
