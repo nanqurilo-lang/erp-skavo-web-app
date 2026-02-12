@@ -1550,7 +1550,7 @@ export default function LeadsAdminPage() {
             <div className="flex items-center gap-2 rounded-md border bg-white px-3 py-2">
               <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search" aria-label="Search leads" className="border-0 p-0 focus:ring-0" />
             </div>
-            <Button variant="secondary" onClick={() => mutate()}>Refresh</Button>
+            {/* <Button variant="secondary" onClick={() => mutate()}>Refresh</Button> */}
           </div>
         </div>
 
