@@ -209,7 +209,11 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
   // ---------------- UI ----------------
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[95vh] w-[900px] overflow-y-auto rounded-xl">
+      <DialogContent 
+      className="max-h-[95vh] w-[900px] overflow-y-auto rounded-xl"
+     >
+
+
         <DialogHeader>
           <DialogTitle>Add New Task</DialogTitle>
         </DialogHeader>
@@ -439,3 +443,25 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
     </Dialog>
   );
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
