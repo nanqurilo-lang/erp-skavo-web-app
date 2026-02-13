@@ -23,7 +23,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@radix-ui/react-popover
 /* =======================
    Types & constants
    ======================= */
-const BASE =  `${process.env.NEXT_PUBLIC_MAIN}`;
+const BASE = `${process.env.NEXT_PUBLIC_MAIN}`;
 
 type EmployeeMeta = {
   employeeId: string;
@@ -109,16 +109,7 @@ function OwnerCell({ meta, fallback }: { meta?: EmployeeMeta; fallback?: string 
 type DealCategoryItem = { id: number; categoryName: string };
 type LeadSourceItem = { id: number; name: string };
 
-type DealPayload = {
-  title: string;
-  pipeline: string;
-  dealStage: string;
-  dealCategory: string;
-  value: number | "";
-  expectedCloseDate: string;
-  dealAgent: string;
-  dealWatchers: string[];
-};
+
 
 export function AddLeadModal({
   onClose,
@@ -129,8 +120,6 @@ export function AddLeadModal({
   onCreated: () => void;
   employees: Employee[];
 }) {
-  const defaultPipelines = ["Default Pipeline", "Sales Pipeline", "Enterprise Pipeline"];
-  const defaultDealStages = ["Generated", "Qualification", "Proposal", "Win", "Lost"];
 
   const [dealCategories, setDealCategories] = useState<DealCategoryItem[]>([]);
   const [leadSources, setLeadSources] = useState<LeadSourceItem[]>([]);
@@ -160,16 +149,7 @@ export function AddLeadModal({
     })();
   }, []);
 
-  const emptyDeal: DealPayload = {
-    title: "",
-    pipeline: defaultPipelines[0],
-    dealStage: defaultDealStages[0],
-    dealCategory: "",
-    value: "" as unknown as number,
-    expectedCloseDate: "",
-    dealAgent: "",
-    dealWatchers: [],
-  };
+
 
   const [payload, setPayload] = useState({
     name: "",
@@ -179,9 +159,6 @@ export function AddLeadModal({
     leadSource: "",
     addedBy: "",
     leadOwner: "",
-    createDeal: true,
-    autoConvertToClient: true,
-    deal: emptyDeal,
     companyName: "",
     officialWebsite: "",
     officePhone: "",
@@ -199,21 +176,7 @@ export function AddLeadModal({
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
-  // watcher dropdown
-  const [watcherDropdownOpen, setWatcherDropdownOpen] = useState(false);
-  const [watcherFilter, setWatcherFilter] = useState("");
-  const watcherRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    const onDoc = (e: MouseEvent) => {
-      const t = e.target as HTMLElement;
-      if (watcherDropdownOpen && watcherRef.current && !watcherRef.current.contains(t)) {
-        setWatcherDropdownOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", onDoc);
-    return () => document.removeEventListener("mousedown", onDoc);
-  }, [watcherDropdownOpen]);
 
   // slide + focus + prevent background scroll
   const [visible, setVisible] = useState(false);
@@ -235,29 +198,12 @@ export function AddLeadModal({
   }, [onClose]);
 
   const update = (k: string, v: any) => setPayload((p) => ({ ...p, [k]: v }));
-  const updateDeal = (k: keyof DealPayload, v: any) => setPayload((p) => ({ ...p, deal: { ...(p.deal as DealPayload), [k]: v } }));
-
-  const toggleWatcher = (id: string) => {
-    setPayload((p) => {
-      const s = new Set(p.deal!.dealWatchers || []);
-      if (s.has(id)) s.delete(id);
-      else s.add(id);
-      return { ...p, deal: { ...(p.deal as DealPayload), dealWatchers: Array.from(s) } };
-    });
-  };
-
-  const clearWatchers = () => setPayload((p) => ({ ...p, deal: { ...(p.deal as DealPayload), dealWatchers: [] } }));
 
   const validate = () => {
     if (!payload.name?.trim() || !payload.email?.trim() || !payload.companyName?.trim()) {
       return "Name, Email and Company Name are required.";
     }
-    if (payload.createDeal || payload.autoConvertToClient) {
-      const d = payload.deal!;
-      if (!d.title?.trim() || !d.value || !d.expectedCloseDate || !d.dealAgent) {
-        return "Deal title, value, expected close date and deal agent are required when creating a deal.";
-      }
-    }
+
     return null;
   };
 
@@ -281,21 +227,8 @@ export function AddLeadModal({
         leadSource: payload.leadSource || undefined,
         addedBy: payload.addedBy || undefined,
         leadOwner: payload.leadOwner || undefined,
-        createDeal: !!payload.createDeal,
-        autoConvertToClient: !!payload.autoConvertToClient,
-        deal:
-          payload.createDeal || payload.autoConvertToClient
-            ? {
-              title: payload.deal!.title,
-              pipeline: payload.deal!.pipeline,
-              dealStage: payload.deal!.dealStage,
-              dealCategory: payload.deal!.dealCategory,
-              value: Number(payload.deal!.value),
-              expectedCloseDate: payload.deal!.expectedCloseDate,
-              dealAgent: payload.deal!.dealAgent,
-              dealWatchers: payload.deal!.dealWatchers || [],
-            }
-            : undefined,
+
+
         companyName: payload.companyName,
         officialWebsite: payload.officialWebsite || undefined,
         officePhone: payload.officePhone || undefined,
@@ -482,118 +415,10 @@ export function AddLeadModal({
             </select>
           </div>
 
-          <div className="flex items-center gap-3">
-            <input id="createDeal" type="checkbox" checked={!!payload.createDeal} onChange={(e) => update("createDeal", e.target.checked)} />
-            <label htmlFor="createDeal" className="text-sm">Create Deal</label>
-          </div>
 
-          <div className="flex items-center gap-3">
-            <input id="autoConvert" type="checkbox" checked={!!payload.autoConvertToClient} onChange={(e) => update("autoConvertToClient", e.target.checked)} />
-            <label htmlFor="autoConvert" className="text-sm">Auto convert on WIN</label>
-          </div>
         </div>
       </div>
 
-      {/* Deal Card */}
-      {(payload.createDeal || payload.autoConvertToClient) && (
-        <div className="bg-white rounded-lg border p-5 shadow-sm flex flex-col">
-          <h4 className="text-sm font-medium mb-4 text-left order-first">Deal Details</h4>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div>
-              <label className="block text-xs text-left text-muted-foreground mb-1">Deal Name *</label>
-              <input className="w-full border rounded-md px-3 py-2 text-sm" value={payload.deal!.title} onChange={(e) => updateDeal("title", e.target.value)} />
-            </div>
-
-            <div>
-              <label className="block text-xs text-left text-muted-foreground mb-1">Pipeline *</label>
-              <select className="w-full border rounded-md px-3 py-2 text-sm" value={payload.deal!.pipeline} onChange={(e) => updateDeal("pipeline", e.target.value)}>
-                {defaultPipelines.map((p) => <option key={p} value={p}>{p}</option>)}
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-xs text-left text-muted-foreground mb-1">Deal Stage *</label>
-              <select className="w-full border rounded-md px-3 py-2 text-sm" value={payload.deal!.dealStage} onChange={(e) => updateDeal("dealStage", e.target.value)}>
-                {defaultDealStages.map((s) => <option key={s} value={s}>{s}</option>)}
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-xs text-left text-muted-foreground mb-1">Deal Value *</label>
-              <div className="flex">
-                <div className="px-3 py-2 bg-gray-100 rounded-l text-sm">USD $</div>
-                <input className="flex-1 border rounded-r px-3 py-2 text-sm" type="number" value={payload.deal!.value as any} onChange={(e) => updateDeal("value", e.target.value)} />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-xs text-left text-muted-foreground mb-1">Close Date *</label>
-              <input className="w-full border rounded-md px-3 py-2 text-sm" type="date" value={payload.deal!.expectedCloseDate} onChange={(e) => updateDeal("expectedCloseDate", e.target.value)} />
-            </div>
-
-            <div>
-              <label className="block text-xs text-left text-muted-foreground mb-1">Deal Category</label>
-              <div className="flex gap-2">
-                <select className="flex-1 border rounded-md px-3 py-2 text-sm" value={payload.deal!.dealCategory} onChange={(e) => updateDeal("dealCategory", e.target.value)}>
-                  <option value="">--</option>
-                  {dealCategories.map((d) => <option key={d.id} value={d.categoryName}>{d.categoryName}</option>)}
-                </select>
-                <button type="button" onClick={() => openAddModal("dealCategory")} className="px-3 py-2 rounded border text-sm">Add</button>
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-xs text-left text-muted-foreground mb-1">Deal Agent *</label>
-              <select className="w-full border rounded-md px-3 py-2 text-sm" value={payload.deal!.dealAgent} onChange={(e) => updateDeal("dealAgent", e.target.value)}>
-                <option value="">--</option>
-                {employees.map((emp) => <option key={emp.employeeId} value={emp.employeeId}>{emp.name} ({emp.employeeId})</option>)}
-              </select>
-            </div>
-
-            <div className="md:col-span-3">
-              <label className="block text-xs text-left text-muted-foreground mb-1">Deal Watcher(s)</label>
-              <div ref={watcherRef} className="relative">
-                <button type="button" onClick={() => setWatcherDropdownOpen((s) => !s)} className="w-full flex items-center justify-between border rounded-md px-3 py-2 text-sm bg-white">
-                  <div className="truncate">
-                    {payload.deal!.dealWatchers.length === 0 ? "-- select --" : payload.deal!.dealWatchers.map((id) => employees.find((emp) => emp.employeeId === id)?.name ?? id).join(", ")}
-                  </div>
-                  <div className="ml-2">
-                    {payload.deal!.dealWatchers.length > 0 && (<button type="button" onClick={(e) => { e.stopPropagation(); clearWatchers(); }} className="text-xs px-2 py-1 rounded hover:bg-slate-100">Clear</button>)}
-                  </div>
-                </button>
-
-                {watcherDropdownOpen && (
-                  <div className="absolute left-0 right-0 mt-2 z-40 rounded-md bg-white border shadow-lg max-h-60 overflow-auto">
-                    <div className="p-2 border-b">
-                      <input className="w-full border rounded-md p-2 text-sm" placeholder="Search employees..." value={watcherFilter} onChange={(e) => setWatcherFilter(e.target.value)} />
-                    </div>
-                    <ul className="p-2 space-y-1">
-                      {employees.filter((emp) => emp.name.toLowerCase().includes(watcherFilter.trim().toLowerCase()) || emp.employeeId.toLowerCase().includes(watcherFilter.trim().toLowerCase())).map((emp) => {
-                        const checked = payload.deal!.dealWatchers.includes(emp.employeeId);
-                        return (
-                          <li key={emp.employeeId}>
-                            <label className="flex items-center gap-2 p-2 rounded hover:bg-slate-50 cursor-pointer text-sm">
-                              <input type="checkbox" checked={checked} onChange={() => toggleWatcher(emp.employeeId)} />
-                              <span>{emp.name} <span className="text-xs text-muted-foreground">({emp.employeeId})</span></span>
-                            </label>
-                          </li>
-                        );
-                      })}
-                      {employees.length === 0 && <li className="p-2 text-sm text-muted-foreground">No employees</li>}
-                    </ul>
-                    <div className="p-2 border-t flex justify-end gap-2">
-                      <button type="button" onClick={() => setWatcherDropdownOpen(false)} className="rounded-md px-3 py-1 border text-sm">Done</button>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              <div className="mt-2 text-sm text-muted-foreground">Selected: {payload.deal!.dealWatchers.length === 0 ? "—" : payload.deal!.dealWatchers.map((id) => employees.find((emp) => emp.employeeId === id)?.name ?? id).join(", ")}</div>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Company */}
       <div className="bg-white rounded-lg border p-5 shadow-sm flex flex-col">
@@ -749,167 +574,6 @@ export function AddLeadModal({
   );
 }
 
-/* =======================
-   LeadRow component (per-row menu, local open ref to avoid collisions)
-   ======================= */
-// function LeadRow({
-//   lead,
-//   idx,
-//   mutate,
-//   onEdit,
-//   onView,
-// }: {
-//   lead: Lead;
-//   idx: number;
-//   mutate: () => Promise<any>;
-//   onEdit: (id: number) => void;
-//   onView: (id: number) => void;
-// }) {
-//   const [open, setOpen] = useState(false);
-//   const rowRef = useRef<HTMLTableRowElement | null>(null);
-
-//   useEffect(() => {
-//     if (!open) return;
-//     const onDoc = (e: MouseEvent) => {
-//       const t = e.target as Node;
-//       if (rowRef.current && !rowRef.current.contains(t)) setOpen(false);
-//     };
-//     document.addEventListener("mousedown", onDoc);
-//     return () => document.removeEventListener("mousedown", onDoc);
-//   }, [open]);
-
-//   const convert = async () => {
-
-//     if (!confirm("Convert this lead to client?")) return;
-//     try {
-//       const token = localStorage.getItem("accessToken");
-//       const res = await fetch(`${BASE}/leads/${lead.id}/convert`, {
-//         method: "POST",
-//         headers: { Authorization: `Bearer ${token}` },
-//       });
-//       if (!res.ok) throw new Error(await res.text());
-//       alert("Converted to client");
-//       await mutate();
-//     } catch (e: any) {
-//       alert("Error: " + (e.message || e));
-//     } finally {
-//       setOpen(false);
-//     }
-//   };
-
-
-
-
-//   const remove = async () => {
-//     if (!confirm("Delete this lead?")) return;
-//     try {
-//       const token = localStorage.getItem("accessToken");
-//       const res = await fetch(`${BASE}/leads/${lead.id}`, {
-//         method: "DELETE",
-//         headers: { Authorization: `Bearer ${token}` },
-//       });
-//       if (!res.ok) throw new Error(await res.text());
-//       alert("Deleted");
-//       await mutate();
-//     } catch (e: any) {
-//       alert("Error: " + (e.message || e));
-//     } finally {
-//       setOpen(false);
-//     }
-//   };
-
-//   return (
-//     <TableRow ref={rowRef}>
-//       <TableCell>{idx + 1}</TableCell>
-//       <TableCell>
-//         <Link href={`/leads/${lead.id}`}>
-//           <div className="flex flex-col">
-//             <span className="font-medium">{lead.name}</span>
-//             <span className="text-xs text-muted-foreground">{lead.companyName || "—"}</span>
-//           </div>
-//         </Link>
-//       </TableCell>
-//       <TableCell>
-//         <div className="flex flex-col">
-//           <span className="text-sm">{lead.email || "—"}</span>
-//           <span className="text-xs text-muted-foreground">{lead.mobileNumber || "—"}</span>
-//         </div>
-//       </TableCell>
-//       <TableCell>
-//         <OwnerCell meta={lead.leadOwnerMeta} fallback={lead.leadOwner} />
-//       </TableCell>
-//       <TableCell>
-//         <OwnerCell meta={lead.addedByMeta} fallback={lead.addedBy} />
-//       </TableCell>
-//       <TableCell>
-//         <span className="text-sm">
-//           {lead.createdAt ? new Date(lead.createdAt).toLocaleDateString() : "—"}
-//         </span>
-//       </TableCell>
-
-//       <TableCell className="relative text-right">
-//         <button onClick={() => setOpen((s) => !s)} className="inline-flex items-center rounded-full p-2 hover:bg-slate-100">
-//           <svg className="w-5 h-5 text-muted-foreground" viewBox="0 0 24 24" fill="currentColor">
-//             <circle cx="5" cy="12" r="1.5" />
-//             <circle cx="12" cy="12" r="1.5" />
-//             <circle cx="19" cy="12" r="1.5" />
-//           </svg>
-//         </button>
-
-//         {open && (
-//           <div className="absolute right-0 z-30 mt-2 w-56 rounded-md bg-white shadow-lg border">
-//             <ul className="py-1">
-//               <li>
-//                 <button
-//                   onClick={() => { setOpen(false); onView(lead.id); }}
-//                   className="w-full flex items-center gap-3 px-4 py-3 text-sm hover:bg-slate-50"
-//                 >
-//                   <svg className="w-5 h-5 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-//                     <path strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z" />
-//                     <circle cx="12" cy="12" r="3" strokeWidth="1.5" />
-//                   </svg>
-//                   View
-//                 </button>
-//               </li>
-
-//               <li>
-//                 <button
-//                   onClick={() => { setOpen(false); onEdit(lead.id); }}
-//                   className="w-full flex items-center gap-3 px-4 py-3 text-sm hover:bg-slate-50"
-//                 >
-//                   <svg className="w-5 h-5 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-//                     <path strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536M9 11l6-6L20 10M3 21h6l11-11a2 2 0 00-2-2L7 19v2z" />
-//                   </svg>
-//                   Edit
-//                 </button>
-//               </li>
-
-//               <li>
-//                 <button onClick={convert} className="w-full flex items-center gap-3 px-4 py-3 text-sm hover:bg-slate-50">
-//                   <svg className="w-5 h-5 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-//                     <path strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" d="M12 11c2.21 0 4-1.79 4-4S14.21 3 12 3 8 4.79 8 7s1.79 4 4 4z" />
-//                     <path strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" d="M6 20v-1a4 4 0 014-4h4a4 4 0 014 4v1" />
-//                   </svg>
-//                   Change to Client
-//                 </button>
-//               </li>
-
-//               <li>
-//                 <button onClick={remove} className="w-full flex items-center gap-3 px-4 py-3 text-sm text-destructive hover:bg-slate-50">
-//                   <svg className="w-5 h-5 text-destructive" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-//                     <path strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" d="M3 6h18M8 6v12a2 2 0 002 2h4a2 2 0 002-2V6M10 6V4a2 2 0 012-2h0a2 2 0 012 2v2" />
-//                   </svg>
-//                   Delete
-//                 </button>
-//               </li>
-//             </ul>
-//           </div>
-//         )}
-//       </TableCell>
-//     </TableRow>
-//   );
-// }
-
 function LeadRow({
   lead,
   idx,
@@ -961,10 +625,10 @@ function LeadRow({
       <TableCell>{idx + 1}</TableCell>
       <TableCell>
         {/* <Link href={`/leads/${lead.id}`}> */}
-          <div className="flex flex-col">
-            <span className="font-medium">{lead.name}</span>
-            <span className="text-xs text-muted-foreground">{lead.companyName || "—"}</span>
-          </div>
+        <div className="flex flex-col">
+          <span className="font-medium">{lead.name}</span>
+          <span className="text-xs text-muted-foreground">{lead.companyName || "—"}</span>
+        </div>
         {/* </Link> */}
       </TableCell>
       <TableCell>
@@ -986,183 +650,40 @@ function LeadRow({
       </TableCell>
 
       <TableCell className="relative text-right">
-         <button
-                  onClick={() => {
-                    setOpen(false);
-                    onView(lead.id);
-                  }}
-                  className="w-full flex items-center gap-3 px-4 py-3 text-sm hover:bg-slate-50"
-                >
-                  <svg
-                    className="w-5 h-5 text-muted-foreground"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"
-                    />
-                    <circle cx="12" cy="12" r="3" strokeWidth="1.5" />
-                  </svg>
-                  
-                </button>
+        <button
+          onClick={() => {
+            setOpen(false);
+            onView(lead.id);
+          }}
+          className="w-full flex items-center gap-3 px-4 py-3 text-sm hover:bg-slate-50"
+        >
+          <svg
+            className="w-5 h-5 text-muted-foreground"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+          >
+            <path
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"
+            />
+            <circle cx="12" cy="12" r="3" strokeWidth="1.5" />
+          </svg>
+
+        </button>
 
         {open && (
           <div className="absolute right-0 z-30 mt-2 w-56 rounded-md bg-white shadow-lg border">
             <ul className="py-1">
               <li>
-                {/* <button
-                  onClick={() => {
-                    setOpen(false);
-                    onView(lead.id);
-                  }}
-                  className="w-full flex items-center gap-3 px-4 py-3 text-sm hover:bg-slate-50"
-                >
-                  <svg
-                    className="w-5 h-5 text-muted-foreground"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"
-                    />
-                    <circle cx="12" cy="12" r="3" strokeWidth="1.5" />
-                  </svg>
-                  View
-                </button> */}
+
               </li>
 
-              <li>
 
 
 
-                {/* <button
-                  onClick={() => {
-                    setOpen(false);
-                    onEdit(lead.id);
-                  }}
-                  className="w-full flex items-center gap-3 px-4 py-3 text-sm hover:bg-slate-50"
-                >
-                  <svg
-                    className="w-5 h-5 text-muted-foreground"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M15.232 5.232l3.536 3.536M9 11l6-6L20 10M3 21h6l11-11a2 2 0 00-2-2L7 19v2z"
-                    />
-                  </svg>
-                  Edit
-                </button> */}
-              </li>
-
-              {/* 🔴 This is now just UI → it calls the callback */}
-              {/* <li>
-                <button
-                  onClick={() => {
-                    setOpen(false);
-                    onChangeToClient(lead.id);
-                  }}
-                  className="w-full flex items-center gap-3 px-4 py-3 text-sm hover:bg-slate-50"
-                >
-                  <svg
-                    className="w-5 h-5 text-muted-foreground"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M12 11c2.21 0 4-1.79 4-4S14.21 3 12 3 8 4.79 8 7s1.79 4 4 4z"
-                    />
-                    <path
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M6 20v-1a4 4 0 014-4h4a4 4 0 014 4v1"
-                    />
-                  </svg>
-                  Change to Client
-                </button>
-              </li> */}
-
-              {/* <li>
-                {(() => {
-                  const isConverted = lead.status === "CONVERTED";
-
-                  return (
-                    <button
-                      disabled={isConverted}
-                      onClick={() => {
-                        if (isConverted) return; // safety
-                        setOpen(false);
-                        onChangeToClient(lead.id);
-                      }}
-                      className={`w-full flex items-center gap-3 px-4 py-3 text-sm ${isConverted
-                          ? "cursor-not-allowed text-muted-foreground opacity-50"
-                          : "hover:bg-slate-50"
-                        }`}
-                    >
-                      <svg
-                        className="w-5 h-5 text-muted-foreground"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M12 11c2.21 0 4-1.79 4-4S14.21 3 12 3 8 4.79 8 7s1.79 4 4 4z"
-                        />
-                        <path
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M6 20v-1a4 4 0 014-4h4a4 4 0 014 4v1"
-                        />
-                      </svg>
-                      {isConverted ? "Already Client" : "Change to Client"}
-                    </button>
-                  );
-                })()}
-              </li> */}
-
-
-              {/* <li>
-                <button
-                  onClick={remove}
-                  className="w-full flex items-center gap-3 px-4 py-3 text-sm text-destructive hover:bg-slate-50"
-                >
-                  <svg
-                    className="w-5 h-5 text-destructive"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M3 6h18M8 6v12a2 2 0 002 2h4a2 2 0 002-2V6M10 6V4a2 2 0 012-2h0a2 2 0 012 2v2"
-                    />
-                  </svg>
-                  Delete
-                </button>
-              </li> */}
             </ul>
           </div>
         )}
@@ -1342,28 +863,14 @@ export default function LeadsAdminPage() {
   return (
     <main className="container mx-auto max-w-6xl px-4 py-8">
       {/* header */}
-      {/* <div className="mb-6 border-b border-gray-200">
-        <div className="flex items-center justify-between py-3">
-          <div className="flex items-center gap-4">
-            <div className="text-sm text-muted-foreground">Duration</div>
-            <div className="text-sm text-muted-foreground underline">Start Date to End Date </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <button onClick={() => setDrawerOpen(true)} className="flex items-center gap-2 text-sm text-muted-foreground hover:text-slate-700">
-              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M6 12h12M10 18h4" /></svg>
-              <span className="hidden sm:inline">Filters</span>
-            </button>
-            <div className="w-9 h-9 rounded-full bg-gray-200" />
-          </div>
-        </div>
-      </div> */}
 
 
 
 
 
 
- <div className="mb-6 border-b border-gray-200">
+
+      <div className="mb-6 border-b border-gray-200">
         <div className="flex items-center justify-between py-3">
 
 
@@ -1410,31 +917,6 @@ export default function LeadsAdminPage() {
                     </div>}
                 </div>
               </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1580,20 +1062,9 @@ export default function LeadsAdminPage() {
                   </TableRow>
                 </TableHeader>
 
-                {/* <TableBody>
-                  {filtered.map((lead, idx) => (
-                    <LeadRow
-                      key={lead.id}
-                      lead={lead}
-                      idx={idx}
-                      mutate={() => mutate()}
-                      onEdit={(id) => handleEdit(id)}
-                      onView={(id) => handleView(id)}
-                    />
-                  ))}
-                </TableBody> */}
 
-                {/* devesh */}
+
+                {/* ......... */}
                 <TableBody>
                   {filtered.map((lead, idx) => (
                     <LeadRow
