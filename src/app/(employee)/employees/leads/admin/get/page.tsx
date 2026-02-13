@@ -169,6 +169,32 @@ export function AddLeadModal({
     companyAddress: "",
   });
 
+const countries = [
+    "United States",
+    "United Kingdom",
+    "Canada",
+    "Australia",
+    "Germany",
+    "France",
+    "Italy",
+    "Spain",
+    "Brazil",
+    "Japan",
+    "China",
+    "South Korea",
+    "Singapore",
+    "UAE",
+    "Saudi Arabia",
+    "South Africa",
+    "Russia",
+    "Mexico",
+    "Netherlands",
+    "Switzerland"
+  ];
+
+
+
+
   const [addModalOpen, setAddModalOpen] = useState<null | "clientCategory" | "leadSource" | "dealCategory">(null);
   const [addName, setAddName] = useState("");
   const [loadingAddList, setLoadingAddList] = useState(false);
@@ -459,10 +485,34 @@ export function AddLeadModal({
             <input className="w-full border rounded-md px-3 py-2 text-sm" value={payload.postalCode} onChange={(e) => update("postalCode", e.target.value)} />
           </div>
 
-          <div>
+          {/* <div>
             <label className="block text-xs text-left text-muted-foreground mb-1">Country</label>
             <input className="w-full border rounded-md px-3 py-2 text-sm" value={payload.country} onChange={(e) => update("country", e.target.value)} />
-          </div>
+          </div> */}
+
+
+
+<div>
+  <label className="block text-xs text-left text-muted-foreground mb-1">
+    Country
+  </label>
+
+  <select
+    className="w-full border rounded-md px-3 py-2 text-sm bg-white"
+    value={payload.country}
+    onChange={(e) => update("country", e.target.value)}
+  >
+    <option value="">-- Select Country --</option>
+
+    {countries.map((country) => (
+      <option key={country} value={country}>
+        {country}
+      </option>
+    ))}
+  </select>
+</div>
+
+
 
           <div className="md:col-span-3">
             <label className="block text-xs text-left text-muted-foreground mb-1">Company Address</label>
