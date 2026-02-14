@@ -1118,108 +1118,108 @@ export default function DealsPage() {
 
 
 
-const filteredDeals = useMemo(() => {
-  const q = query.trim().toLowerCase();
+  const filteredDeals = useMemo(() => {
+    const q = query.trim().toLowerCase();
 
-  return (deals as Deal[]).filter((d) => {
-    /* ---------------- STAGE ---------------- */
-    const matchesStage =
-      stageFilter === "all" ||
-      String(d.dealStage || "").toLowerCase() === stageFilter.toLowerCase();
+    return (deals as Deal[]).filter((d) => {
+      /* ---------------- STAGE ---------------- */
+      const matchesStage =
+        stageFilter === "all" ||
+        String(d.dealStage || "").toLowerCase() === stageFilter.toLowerCase();
 
-    /* ---------------- SEARCH ---------------- */
-    const hay = [
-      d.title,
-      d.dealAgentMeta?.name,
-      d.dealAgent,
-      d.dealCategory,
-      d.pipeline,
-      String(d.id),
-      d.leadName,
-      d.leadEmail,
-      d.leadMobile,
-    ]
-      .filter(Boolean)
-      .join(" ")
-      .toLowerCase();
+      /* ---------------- SEARCH ---------------- */
+      const hay = [
+        d.title,
+        d.dealAgentMeta?.name,
+        d.dealAgent,
+        d.dealCategory,
+        d.pipeline,
+        String(d.id),
+        d.leadName,
+        d.leadEmail,
+        d.leadMobile,
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
 
-    const matchesQuery = q.length === 0 || hay.includes(q);
+      const matchesQuery = q.length === 0 || hay.includes(q);
 
-    /* ---------------- DATE FILTER ---------------- */
-    let dateToCheck: Date | null = null;
+      /* ---------------- DATE FILTER ---------------- */
+      let dateToCheck: Date | null = null;
 
-    if (dateFilterOn === "created" && d.createdAt) {
-      dateToCheck = new Date(d.createdAt);
-    }
+      if (dateFilterOn === "created" && d.createdAt) {
+        dateToCheck = new Date(d.createdAt);
+      }
 
-    if (dateFilterOn === "close" && d.expectedCloseDate) {
-      dateToCheck = new Date(d.expectedCloseDate);
-    }
+      if (dateFilterOn === "close" && d.expectedCloseDate) {
+        dateToCheck = new Date(d.expectedCloseDate);
+      }
 
-    const matchesDate =
-      (!dateFrom || (dateToCheck && dateToCheck >= dateFrom)) &&
-      (!dateTo || (dateToCheck && dateToCheck <= dateTo));
+      const matchesDate =
+        (!dateFrom || (dateToCheck && dateToCheck >= dateFrom)) &&
+        (!dateTo || (dateToCheck && dateToCheck <= dateTo));
 
-    /* ---------------- VALUE FILTER ---------------- */
-    const dealValue = Number(d.value || 0);
-    if (minValue && dealValue < Number(minValue)) return false;
-    if (maxValue && dealValue > Number(maxValue)) return false;
+      /* ---------------- VALUE FILTER ---------------- */
+      const dealValue = Number(d.value || 0);
+      if (minValue && dealValue < Number(minValue)) return false;
+      if (maxValue && dealValue > Number(maxValue)) return false;
 
-    /* ---------------- AGENT FILTER ---------------- */
-    if (
-      agentFilter !== "all" &&
-      d.dealAgentMeta?.name !== agentFilter
-    ) {
-      return false;
-    }
+      /* ---------------- AGENT FILTER ---------------- */
+      if (
+        agentFilter !== "all" &&
+        d.dealAgentMeta?.name !== agentFilter
+      ) {
+        return false;
+      }
 
-    /* ---------------- PRIORITY FILTER ---------------- */
-    if (priorityFilter !== "all") {
-      const dealPriority = normalizePriorityString(d.priority);
-      if (dealPriority !== priorityFilter.toLowerCase()) return false;
-    }
+      /* ---------------- PRIORITY FILTER ---------------- */
+      if (priorityFilter !== "all") {
+        const dealPriority = normalizePriorityString(d.priority);
+        if (dealPriority !== priorityFilter.toLowerCase()) return false;
+      }
 
-    /* ---------------- WATCHER FILTER ---------------- */
-    if (watcherFilter !== "all") {
-      const watcherIds =
-        d.dealWatchersMeta?.map((w) => w.employeeId) || [];
-      if (!watcherIds.includes(watcherFilter)) return false;
-    }
+      /* ---------------- WATCHER FILTER ---------------- */
+      if (watcherFilter !== "all") {
+        const watcherIds =
+          d.dealWatchersMeta?.map((w) => w.employeeId) || [];
+        if (!watcherIds.includes(watcherFilter)) return false;
+      }
 
-    /* ---------------- LEAD FILTER ---------------- */
-    if (leadFilter !== "all" && String(d.leadId) !== leadFilter) {
-      return false;
-    }
+      /* ---------------- LEAD FILTER ---------------- */
+      if (leadFilter !== "all" && String(d.leadId) !== leadFilter) {
+        return false;
+      }
 
-    /* ---------------- TAG FILTER ---------------- */
-    if (
-      tagFilter !== "all" &&
-      !(d.tags || []).includes(tagFilter)
-    ) {
-      return false;
-    }
+      /* ---------------- TAG FILTER ---------------- */
+      if (
+        tagFilter !== "all" &&
+        !(d.tags || []).includes(tagFilter)
+      ) {
+        return false;
+      }
 
-    return (
-      matchesStage &&
-      matchesQuery &&
-      matchesDate
-    );
-  });
-}, [
-  deals,
-  query,
-  stageFilter,
-  dateFrom,
-  dateTo,
-  dateFilterOn,
-  minValue,
-  maxValue,
-  agentFilter,
-  watcherFilter,
-  leadFilter,
-  tagFilter,
-  priorityFilter,
-]);
+      return (
+        matchesStage &&
+        matchesQuery &&
+        matchesDate
+      );
+    });
+  }, [
+    deals,
+    query,
+    stageFilter,
+    dateFrom,
+    dateTo,
+    dateFilterOn,
+    minValue,
+    maxValue,
+    agentFilter,
+    watcherFilter,
+    leadFilter,
+    tagFilter,
+    priorityFilter,
+  ]);
 
 
 
@@ -1289,50 +1289,104 @@ const filteredDeals = useMemo(() => {
   };
 
   // POST assign priority: per your latest API: POST ${baseUrl}/deals/{{dealId}}/priority/assign with body { priorityId: <number> }
+  // const handlePriorityAssign = async (
+  //   dealId: number | string,
+  //   newPriorityIdOrVal: string | number,
+  // ) => {
+  //   if (!token) return;
+  //   try {
+  //     // prefer numeric id
+  //     const asNum = Number(newPriorityIdOrVal);
+  //     let priorityIdToSend: number | null = !Number.isNaN(asNum) ? asNum : null;
+
+  //     if (priorityIdToSend === null) {
+  //       // resolve status -> id
+  //       const found = priorityByStatus.get(
+  //         String(newPriorityIdOrVal).toLowerCase(),
+  //       );
+  //       if (found) priorityIdToSend = found.id;
+  //     }
+
+  //     if (priorityIdToSend === null) {
+  //       console.error("Could not resolve priorityId for:", newPriorityIdOrVal);
+  //       return;
+  //     }
+
+  //     const url = `${BASE_URL}/deals/${dealId}/priority/assign`;
+  //     const res = await fetch(url, {
+  //       method: "POST",
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({ priorityId: priorityIdToSend }),
+  //     });
+
+  //     if (!res.ok) {
+  //       const txt = await res.text().catch(() => "");
+  //       console.error("Failed to assign priority:", res.status, txt);
+  //       return;
+  //     }
+
+  //     await mutateDeals();
+  //   } catch (err) {
+  //     console.error("Error assigning priority:", err);
+  //   }
+  // };
+
+
+
+
+
+
+
   const handlePriorityAssign = async (
     dealId: number | string,
-    newPriorityIdOrVal: string | number,
+    priorityId: number
   ) => {
     if (!token) return;
+
     try {
-      // prefer numeric id
-      const asNum = Number(newPriorityIdOrVal);
-      let priorityIdToSend: number | null = !Number.isNaN(asNum) ? asNum : null;
+      // 🔥 Optimistic update
+      mutateDeals(
+        (currentDeals: Deal[] = []) =>
+          currentDeals.map((d) =>
+            String(d.id) === String(dealId)
+              ? { ...d, priority: priorityId }
+              : d
+          ),
+        false
+      );
 
-      if (priorityIdToSend === null) {
-        // resolve status -> id
-        const found = priorityByStatus.get(
-          String(newPriorityIdOrVal).toLowerCase(),
-        );
-        if (found) priorityIdToSend = found.id;
-      }
-
-      if (priorityIdToSend === null) {
-        console.error("Could not resolve priorityId for:", newPriorityIdOrVal);
-        return;
-      }
-
-      const url = `${BASE_URL}/deals/${dealId}/priority/assign`;
-      const res = await fetch(url, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ priorityId: priorityIdToSend }),
-      });
+      const res = await fetch(
+        `${BASE_URL}/deals/${dealId}/priority`,
+        {
+          method: "PUT", // 👈 change this
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            priorityId: priorityId,
+          }),
+        }
+      );
 
       if (!res.ok) {
-        const txt = await res.text().catch(() => "");
-        console.error("Failed to assign priority:", res.status, txt);
+        const txt = await res.text();
+        console.error("Priority API error:", res.status, txt);
+        await mutateDeals(); // revert
         return;
       }
 
-      await mutateDeals();
+      await mutateDeals(); // refresh from backend
     } catch (err) {
-      console.error("Error assigning priority:", err);
+      console.error("Priority update error:", err);
+      await mutateDeals();
     }
   };
+
+
 
   // PUT stage: per your API: PUT ${baseUrl}/deals/:dealId/stage?stage=Win
   const handleStageChange = async (
@@ -2016,11 +2070,22 @@ const filteredDeals = useMemo(() => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All</SelectItem>
-                  {priorities.map((p) => (
-                    <SelectItem key={p.id} value={String(p.status)}>
-                      {p.status}
-                    </SelectItem>
-                  ))}
+                  {/* {priorities.map((p) => ( */}
+
+
+                  {priorities
+                    .filter((p) =>
+                      ["high", "medium", "low"].includes(
+                        String(p.status).toLowerCase()
+                      )
+                    )
+                    .map((p) => (
+
+
+                      <SelectItem key={p.id} value={String(p.status)}>
+                        {p.status}
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
             </div>
@@ -2044,7 +2109,7 @@ const filteredDeals = useMemo(() => {
             </Button>
 
           </div>
-    
+
         </div>
       )}
 
@@ -2052,14 +2117,14 @@ const filteredDeals = useMemo(() => {
 
 
       <AddFollowupModal
-              open={openFollowup}
-              deal={activeDeal}
-              onClose={() => {
-                setOpenFollowup(false);
-                setActiveDeal(null);
-              }}
-              onSaved={() => mutateDeals()}
-            />
+        open={openFollowup}
+        deal={activeDeal}
+        onClose={() => {
+          setOpenFollowup(false);
+          setActiveDeal(null);
+        }}
+        onSaved={() => mutateDeals()}
+      />
 
 
 
