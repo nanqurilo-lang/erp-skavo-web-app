@@ -1148,10 +1148,10 @@ export default function DealsPage() {
 
 
       /* ---------------- PIPELINE FILTER ---------------- */
-const matchesPipeline =
-  pipelineFilter === "all" ||
-  String(d.pipeline || "").toLowerCase() ===
-    pipelineFilter.toLowerCase();
+      const matchesPipeline =
+        pipelineFilter === "all" ||
+        String(d.pipeline || "").toLowerCase() ===
+        pipelineFilter.toLowerCase();
 
 
       /* ---------------- DATE FILTER ---------------- */
@@ -1220,7 +1220,7 @@ const matchesPipeline =
     deals,
     query,
     stageFilter,
-   pipelineFilter, // 👈 add this
+    pipelineFilter, // 👈 add this
 
     dateFrom,
     dateTo,
@@ -2012,7 +2012,7 @@ const matchesPipeline =
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2 font-medium">
                 <SlidersHorizontal className="h-4 w-4" />
-                Filters 
+                Filters
               </div>
               <Button variant="ghost" size="icon" onClick={() => setOpenFilters(false)}>
                 ✕
@@ -2094,9 +2094,9 @@ const matchesPipeline =
                     )
                     .map((p) => (
 
-    <SelectItem key={p.id} value={String(p.id)}>
+                      <SelectItem key={p.id} value={String(p.id)}>
 
-                       {/* <SelectItem key={p.id} value={String(p.status)}> */}
+                        {/* <SelectItem key={p.id} value={String(p.status)}> */}
                         {p.status}
                       </SelectItem>
                     ))}
