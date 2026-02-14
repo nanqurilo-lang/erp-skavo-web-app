@@ -404,18 +404,57 @@ export default function DealDetailPage() {
         return;
       }
 
+      // const depRes = await fetch(`${BASE_URL}/admin/departments`, {
+      //   headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+      // });
+      // if (!depRes.ok) {
+      //   console.warn("Failed to fetch departments", depRes.statusText);
+      // } else {
+      //   const depJson = await depRes.json();
+      //   if (Array.isArray(depJson)) {
+      //     const names = depJson.map((d: any) => (typeof d === "string" ? d : d.name || d.department || "")).filter(Boolean);
+      //     setDepartments(names);
+      //   }
+      // }
+
+
       const depRes = await fetch(`${BASE_URL}/admin/departments`, {
-        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+        headers: { Authorization: `Bearer ${token}` },
       });
+
       if (!depRes.ok) {
-        console.warn("Failed to fetch departments", depRes.statusText);
+        console.warn("Failed to fetch departments");
       } else {
         const depJson = await depRes.json();
+
+        let depArray: any[] = [];
+
         if (Array.isArray(depJson)) {
-          const names = depJson.map((d: any) => (typeof d === "string" ? d : d.name || d.department || "")).filter(Boolean);
-          setDepartments(names);
+          depArray = depJson;
+        } else if (Array.isArray(depJson.content)) {
+          depArray = depJson.content;
+        } else if (Array.isArray(depJson.departments)) {
+          depArray = depJson.departments;
         }
+
+        const names = depArray
+          .map((d: any) =>
+            typeof d === "string"
+              ? d
+              : d.name || d.department || d.departmentName || ""
+          )
+          .filter(Boolean);
+
+        // 🔥 Remove duplicates
+        const unique = [...new Set(names)];
+
+        setDepartments(unique);
       }
+
+
+
+
+
 
       const empRes = await fetch(`${BASE_URL}/employee/all?page=0&size=200`, {
         headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
