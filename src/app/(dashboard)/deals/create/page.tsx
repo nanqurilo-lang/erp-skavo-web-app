@@ -69,7 +69,17 @@ export default function CreateDealPage() {
         const stageRes = await fetch("/api/deals/stages", {
           headers: { Authorization: `Bearer ${token}` },
         });
-        if (!stageRes.ok) throw new Error("Failed to fetch deal stages");
+        // if (!stageRes.ok) throw new Error("Failed to fetch deal stages");
+
+
+        if (!stageRes.ok) {
+  const text = await stageRes.text();
+  console.error("Stages API error:", stageRes.status, text);
+  throw new Error(`Failed to fetch deal stages (${stageRes.status})`);
+}
+
+
+
         const stageData: Stage[] = await stageRes.json();
         setStages(stageData);
         if (stageData.length > 0) {

@@ -758,7 +758,7 @@ export function AddLeadModal({
         <aside
           className={[
             "absolute right-0 top-0 h-full bg-gray-50 flex flex-col",
-            "w-full sm:w-[80vw] max-w-full",
+            "w-full sm:w-[83vw] max-w-full",
             "transform transition-transform duration-300 ease-out",
             visible ? "translate-x-0" : "translate-x-full",
           ].join(" ")}
