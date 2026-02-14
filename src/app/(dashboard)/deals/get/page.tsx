@@ -1597,7 +1597,7 @@ export default function DealsPage() {
 
               <div className="flex items-center gap-2">
                 <SlidersHorizontal className="h-4 w-4" />
-                <span className="text-sm">Filters</span>
+                <span className="text-sm">Filters </span>
               </div>
             </Button>
           </div>
@@ -1999,7 +1999,7 @@ export default function DealsPage() {
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2 font-medium">
                 <SlidersHorizontal className="h-4 w-4" />
-                Filters
+                Filters 
               </div>
               <Button variant="ghost" size="icon" onClick={() => setOpenFilters(false)}>
                 ✕
@@ -2081,8 +2081,9 @@ export default function DealsPage() {
                     )
                     .map((p) => (
 
+    <SelectItem key={p.id} value={String(p.id)}>
 
-                      <SelectItem key={p.id} value={String(p.status)}>
+                       {/* <SelectItem key={p.id} value={String(p.status)}> */}
                         {p.status}
                       </SelectItem>
                     ))}
