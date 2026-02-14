@@ -1145,6 +1145,15 @@ export default function DealsPage() {
 
       const matchesQuery = q.length === 0 || hay.includes(q);
 
+
+
+      /* ---------------- PIPELINE FILTER ---------------- */
+const matchesPipeline =
+  pipelineFilter === "all" ||
+  String(d.pipeline || "").toLowerCase() ===
+    pipelineFilter.toLowerCase();
+
+
       /* ---------------- DATE FILTER ---------------- */
       let dateToCheck: Date | null = null;
 
@@ -1202,13 +1211,17 @@ export default function DealsPage() {
       return (
         matchesStage &&
         matchesQuery &&
-        matchesDate
+        matchesDate &&
+        matchesPipeline
+
       );
     });
   }, [
     deals,
     query,
     stageFilter,
+   pipelineFilter, // 👈 add this
+
     dateFrom,
     dateTo,
     dateFilterOn,
@@ -1559,7 +1572,7 @@ export default function DealsPage() {
 
 
 
-            <div className="text-xs text-muted-foreground">Pipeline</div>
+            <div className="text-xs text-muted-foreground">Pipeline </div>
             <Select value={pipelineFilter} onValueChange={setPipelineFilter}>
               <SelectTrigger className="w-36 text-sm py-1">
                 <SelectValue placeholder="All pipelines" />
