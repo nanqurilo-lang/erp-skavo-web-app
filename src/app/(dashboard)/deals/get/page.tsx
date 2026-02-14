@@ -1097,6 +1097,26 @@ export default function DealsPage() {
 
 
 
+  const normalizePriorityString = (p?: unknown) => {
+    if (p === null || p === undefined) return "low";
+    if (typeof p === "string") return p.toLowerCase();
+    if (typeof p === "number") {
+      const byId = priorityById.get(p);
+      if (byId?.status) return String(byId.status).toLowerCase();
+      return "low";
+    }
+    try {
+      const o = p as PriorityObject;
+      if (o && o.status) return String(o.status).toLowerCase();
+      return String(p).toLowerCase();
+    } catch {
+      return "low";
+    }
+  };
+
+
+
+
 
 const filteredDeals = useMemo(() => {
   const q = query.trim().toLowerCase();
@@ -1223,22 +1243,24 @@ const filteredDeals = useMemo(() => {
   }
 
   // Normalize priority input to status string
-  const normalizePriorityString = (p?: unknown) => {
-    if (p === null || p === undefined) return "low";
-    if (typeof p === "string") return p.toLowerCase();
-    if (typeof p === "number") {
-      const byId = priorityById.get(p);
-      if (byId?.status) return String(byId.status).toLowerCase();
-      return "low";
-    }
-    try {
-      const o = p as PriorityObject;
-      if (o && o.status) return String(o.status).toLowerCase();
-      return String(p).toLowerCase();
-    } catch {
-      return "low";
-    }
-  };
+  // const normalizePriorityString = (p?: unknown) => {
+  //   if (p === null || p === undefined) return "low";
+  //   if (typeof p === "string") return p.toLowerCase();
+  //   if (typeof p === "number") {
+  //     const byId = priorityById.get(p);
+  //     if (byId?.status) return String(byId.status).toLowerCase();
+  //     return "low";
+  //   }
+  //   try {
+  //     const o = p as PriorityObject;
+  //     if (o && o.status) return String(o.status).toLowerCase();
+  //     return String(p).toLowerCase();
+  //   } catch {
+  //     return "low";
+  //   }
+  // };
+
+
 
   const getPriorityColor = (p?: unknown) => {
     if (
