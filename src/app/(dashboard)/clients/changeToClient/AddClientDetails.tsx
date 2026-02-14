@@ -11,6 +11,33 @@ import { CommonNavbar } from "@/components/Navbar";
 const API_BASE = process.env.NEXT_PUBLIC_MAIN!;
 
 
+const countryOptions = [
+  "United States",
+  "United Kingdom",
+  "Canada",
+  "Australia",
+  "Germany",
+  "France",
+  "Italy",
+  "Spain",
+  "Brazil",
+  "Japan",
+  "China",
+  "South Korea",
+  "Singapore",
+  "UAE",
+  "Saudi Arabia",
+  "South Africa",
+  "Russia",
+  "Mexico",
+  "Netherlands",
+  "Switzerland",
+];
+
+
+
+
+
 export default function AddClientDetails() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -29,7 +56,7 @@ export default function AddClientDetails() {
   // const [category, setCategory] = useState("");
 
   const [categoryId, setCategoryId] = useState<number | null>(null);
-const [category, setCategory] = useState("");
+  const [category, setCategory] = useState("");
 
   const [subCategory, setSubCategory] = useState("");
 
@@ -139,42 +166,42 @@ const [category, setCategory] = useState("");
 
 
 
-useEffect(() => {
-  if (!leadId) return;
+  useEffect(() => {
+    if (!leadId) return;
 
-  const token = localStorage.getItem("accessToken");
-  if (!token) {
-    console.warn("No access token found");
-    return;
-  }
-
-  (async () => {
-    try {
-      const url = `${API_BASE}/leads/${leadId}`;
-      console.log("Loading lead:", url);
-
-      const res = await fetch(url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!res.ok) {
-        const err = await res.text();
-        throw new Error(err || "Failed to load lead");
-      }
-
-      const lead = await res.json();
-
-      setName(lead.name || "");
-      setEmail(lead.email || "");
-      setMobile(lead.mobileNumber || "");
-      setCountry(lead.country || "");
-    } catch (err) {
-      console.error("Failed to prefill from lead:", err);
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      console.warn("No access token found");
+      return;
     }
-  })();
-}, [leadId]);
+
+    (async () => {
+      try {
+        const url = `${API_BASE}/leads/${leadId}`;
+        console.log("Loading lead:", url);
+
+        const res = await fetch(url, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!res.ok) {
+          const err = await res.text();
+          throw new Error(err || "Failed to load lead");
+        }
+
+        const lead = await res.json();
+
+        setName(lead.name || "");
+        setEmail(lead.email || "");
+        setMobile(lead.mobileNumber || "");
+        setCountry(lead.country || "");
+      } catch (err) {
+        console.error("Failed to prefill from lead:", err);
+      }
+    })();
+  }, [leadId]);
 
 
 
@@ -328,7 +355,7 @@ useEffect(() => {
       // set a refresh flag so clients list can re-fetch
       try {
         localStorage.setItem("clients:refresh", String(Date.now()));
-      } catch {}
+      } catch { }
 
       window.dispatchEvent(new Event("clients:refresh"));
 
@@ -432,51 +459,51 @@ useEffect(() => {
 
 
 
-const saveSubCategory = async () => {
-  if (!newSubCategoryName.trim()) return;
+  const saveSubCategory = async () => {
+    if (!newSubCategoryName.trim()) return;
 
-  if (!categoryId) {
-    alert("Please select a category first");
-    return;
-  }
-
-  try {
-    const res = await fetch(`${API_BASE}/clients/category/subcategory`, {
-      method: "POST",
-      headers: {
-        ...getAuthHeader(),
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        subCategoryName: newSubCategoryName.trim(),
-        categoryId: categoryId, // ✅ REQUIRED
-      }),
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      throw new Error(data?.message || "Failed to save subcategory");
+    if (!categoryId) {
+      alert("Please select a category first");
+      return;
     }
 
-    await fetchSubcategories();
-    setSubCategory(data?.subCategoryName ?? newSubCategoryName.trim());
-    setNewSubCategoryName("");
-    setShowSubCategoryModal(false);
-  } catch (e: any) {
-    console.error(e);
-    alert(e.message || "Could not save subcategory");
-  }
-};
+    try {
+      const res = await fetch(`${API_BASE}/clients/category/subcategory`, {
+        method: "POST",
+        headers: {
+          ...getAuthHeader(),
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          subCategoryName: newSubCategoryName.trim(),
+          categoryId: categoryId, // ✅ REQUIRED
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data?.message || "Failed to save subcategory");
+      }
+
+      await fetchSubcategories();
+      setSubCategory(data?.subCategoryName ?? newSubCategoryName.trim());
+      setNewSubCategoryName("");
+      setShowSubCategoryModal(false);
+    } catch (e: any) {
+      console.error(e);
+      alert(e.message || "Could not save subcategory");
+    }
+  };
 
 
 
 
-const pickCategory = (c: { id: number; categoryName: string }) => {
-  setCategory(c.categoryName);
-  setCategoryId(c.id); // ✅ IMPORTANT
-  setShowCategoryModal(false);
-};
+  const pickCategory = (c: { id: number; categoryName: string }) => {
+    setCategory(c.categoryName);
+    setCategoryId(c.id); // ✅ IMPORTANT
+    setShowCategoryModal(false);
+  };
 
 
 
@@ -511,10 +538,9 @@ const pickCategory = (c: { id: number; categoryName: string }) => {
   };
 
   const inputClass = (err?: boolean) =>
-    `w-full px-3 py-2 rounded-md border transition focus:outline-none ${
-      err
-        ? "border-red-300 bg-red-50 focus:border-red-500 focus:ring-2 focus:ring-red-200"
-        : "border-slate-200 bg-white focus:border-gray-300 focus:ring-0"
+    `w-full px-3 py-2 rounded-md border transition focus:outline-none ${err
+      ? "border-red-300 bg-red-50 focus:border-red-500 focus:ring-2 focus:ring-red-200"
+      : "border-slate-200 bg-white focus:border-gray-300 focus:ring-0"
     }`;
 
   const handleClose = () => router.push("/clients");
@@ -537,11 +563,10 @@ const pickCategory = (c: { id: number; categoryName: string }) => {
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           {message && (
             <div
-              className={`rounded-md p-3 ${
-                messageType === "success"
+              className={`rounded-md p-3 ${messageType === "success"
                   ? "bg-emerald-50 border border-emerald-200"
                   : "bg-red-50 border border-red-200"
-              } flex items-start gap-3`}
+                } flex items-start gap-3`}
             >
               {messageType === "success" ? (
                 <CheckCircle className="text-emerald-600" />
@@ -631,7 +656,7 @@ const pickCategory = (c: { id: number; categoryName: string }) => {
                     <label className="text-xs font-medium text-slate-700 mb-1 block">
                       Country *
                     </label>
-                    <input
+                    {/* <input
                       value={country}
                       onChange={(e) => {
                         setCountry(e.target.value);
@@ -640,7 +665,28 @@ const pickCategory = (c: { id: number; categoryName: string }) => {
                       }}
                       className={inputClass(Boolean(errors.country))}
                       placeholder="--"
-                    />
+                    /> */}
+
+                    <select
+                      value={country}
+                      onChange={(e) => {
+                        setCountry(e.target.value);
+                        if (errors.country)
+                          setErrors({ ...errors, country: "" });
+                      }}
+                      className={inputClass(Boolean(errors.country))}
+                    >
+                      <option value="">Select Country</option>
+                      {countryOptions.map((c, i) => (
+                        <option key={i} value={c}>
+                          {c}
+                        </option>
+                      ))}
+                    </select>
+
+
+
+
                     {errors.country && (
                       <p className="text-xs text-red-600 mt-1">
                         {errors.country}
@@ -679,49 +725,49 @@ const pickCategory = (c: { id: number; categoryName: string }) => {
                       > */}
 
 
-<select
+                      <select
 
 
-//   value={category}
-//   onChange={(e) => {
-//     const selected = categories.find(
-//       (c) => c.categoryName === e.target.value
-//     );
-//     setCategory(e.target.value);
-//     setCategoryId(selected?.id ?? null);
-    
-//   }}
-// >
+                        //   value={category}
+                        //   onChange={(e) => {
+                        //     const selected = categories.find(
+                        //       (c) => c.categoryName === e.target.value
+                        //     );
+                        //     setCategory(e.target.value);
+                        //     setCategoryId(selected?.id ?? null);
+
+                        //   }}
+                        // >
 
 
-//                         <option value="">--</option>
-//                         {categories.map((c) => (
-//                           <option key={c.id} value={c.categoryName}>
-//                             {c.categoryName}
-//                           </option>
-//                         ))}
-//                       </select>
+                        //                         <option value="">--</option>
+                        //                         {categories.map((c) => (
+                        //                           <option key={c.id} value={c.categoryName}>
+                        //                             {c.categoryName}
+                        //                           </option>
+                        //                         ))}
+                        //                       </select>
 
 
 
-value={category}
-  onChange={(e) => {
-    const selectedCategory = categories.find(
-      (c) => c.categoryName === e.target.value
-    );
+                        value={category}
+                        onChange={(e) => {
+                          const selectedCategory = categories.find(
+                            (c) => c.categoryName === e.target.value
+                          );
 
-    setCategory(e.target.value);
-    setCategoryId(selectedCategory?.id ?? null); // 🔥 MOST IMPORTANT
-  }}
-  className="appearance-none px-4 py-2 w-full border-none rounded-none focus:outline-none"
->
-  <option value="">--</option>
-  {categories.map((c) => (
-    <option key={c.id} value={c.categoryName}>
-      {c.categoryName}
-    </option>
-  ))}
-</select>
+                          setCategory(e.target.value);
+                          setCategoryId(selectedCategory?.id ?? null); // 🔥 MOST IMPORTANT
+                        }}
+                        className="appearance-none px-4 py-2 w-full border-none rounded-none focus:outline-none"
+                      >
+                        <option value="">--</option>
+                        {categories.map((c) => (
+                          <option key={c.id} value={c.categoryName}>
+                            {c.categoryName}
+                          </option>
+                        ))}
+                      </select>
 
 
                       <button
@@ -778,7 +824,18 @@ value={category}
                       onChange={(e) => setLanguage(e.target.value)}
                       className={inputClass()}
                     >
-                      <option value="">English</option>
+                      <option value="">Select Language</option>
+                      <option value="English">English</option>
+                      <option value="Spanish">Spanish</option>
+                      <option value="French">French</option>
+                      <option value="German">German</option>
+                      <option value="Italian">Italian</option>
+                      <option value="Portuguese">Portuguese</option>
+                      <option value="Russian">Russian</option>
+                      <option value="Chinese">Chinese</option>
+                      <option value="Japanese">Japanese</option>
+                      <option value="Arabic">Arabic</option>
+                      <option value="Korean">Dutch</option>
                     </select>
                   </div>
 
