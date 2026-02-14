@@ -8,6 +8,7 @@ import { CommonNavbar } from "@/components/Navbar"
 
 const API_BASE = `${process.env.NEXT_PUBLIC_MAIN}`
 
+
 export default function AddClientDetails() {
   const router = useRouter()
 
@@ -298,7 +299,38 @@ export default function AddClientDetails() {
 
                   <div>
                     <label className="text-xs font-medium text-slate-700 mb-1 block">Country *</label>
-                    <input value={country} onChange={(e) => { setCountry(e.target.value); if (errors.country) setErrors({ ...errors, country: "" }) }} className={inputClass(Boolean(errors.country))} placeholder="--" />
+<select
+  value={country}
+  onChange={(e) => {
+    setCountry(e.target.value);
+    if (errors.country) setErrors({ ...errors, country: "" });
+  }}
+  className={inputClass(Boolean(errors.country))}
+>
+  <option value="">Select Country</option>
+  <option value="United States">United States</option>
+  <option value="United Kingdom">United Kingdom</option>
+  <option value="Canada">Canada</option>
+  <option value="Australia">Australia</option>
+  <option value="Germany">Germany</option>
+  <option value="France">France</option>
+  <option value="Italy">Italy</option>
+  <option value="Spain">Spain</option>
+  <option value="Netherlands">Netherlands</option>
+  <option value="Switzerland">Switzerland</option>
+  <option value="Sweden">Sweden</option>
+  <option value="Norway">Norway</option>
+  <option value="Denmark">Denmark</option>
+  <option value="Finland">Finland</option>
+  <option value="Japan">Japan</option>
+  <option value="South Korea">South Korea</option>
+  <option value="Singapore">Singapore</option>
+  <option value="UAE">UAE</option>
+  <option value="Saudi Arabia">Saudi Arabia</option>
+  <option value="South Africa">South Africa</option>
+  <option value="Brazil">Brazil</option>
+  <option value="Mexico">Mexico</option>
+</select>
                     {errors.country && <p className="text-xs text-red-600 mt-1">{errors.country}</p>}
                   </div>
                 </div>
@@ -359,7 +391,18 @@ export default function AddClientDetails() {
                   <div>
                     <label className="text-xs font-medium text-slate-700 mb-1 block">Language</label>
                     <select value={language} onChange={(e) => setLanguage(e.target.value)} className={inputClass()}>
-                      <option value="">English</option>
+                      <option value="">Select Language</option>
+  <option value="English">English</option>
+  <option value="Spanish">Spanish</option>
+  <option value="French">French</option>
+  <option value="German">German</option>
+  <option value="Italian">Italian</option>
+  <option value="Portuguese">Portuguese</option>
+  <option value="Russian">Russian</option>
+  <option value="Chinese">Chinese</option>
+  <option value="Japanese">Japanese</option>
+  <option value="Arabic">Arabic</option>
+  <option value="Korean">Korean</option>
                     </select>
                   </div>
 
