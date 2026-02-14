@@ -67,6 +67,52 @@ export default function KanbanBoard({
     return true;
   });
 
+
+
+function getDealFollowupDate(deal: Deal): Date | null {
+  const parseDateSafe = (s: string) => {
+    try {
+      const d = new Date(s);
+      return isNaN(d.getTime()) ? null : d;
+    } catch {
+      return null;
+    }
+  };
+
+  const followupsArray = Array.isArray((deal as any).followups)
+    ? (deal as any).followups
+    : [];
+
+  // 1️⃣ latest nextDate from followups
+  let latestNext: Date | null = null;
+
+  for (const f of followupsArray) {
+    const raw =
+      f?.nextDate || f?.next_date || f?.next_followup_date;
+
+    if (!raw) continue;
+
+    const d = parseDateSafe(String(raw));
+    if (!d) continue;
+
+    if (!latestNext || d.getTime() > latestNext.getTime()) {
+      latestNext = d;
+    }
+  }
+
+  // 2️⃣ explicit nextFollowup field
+  const explicitRaw =
+    (deal as any).nextFollowupDate ||
+    (deal as any).nextFollowup ||
+    (deal as any).next_followup;
+
+  const explicit = explicitRaw ? parseDateSafe(String(explicitRaw)) : null;
+
+  return latestNext || explicit;
+}
+
+
+
   // Read token once (used for API calls)
   const [token, setToken] = useState<string | null>(null);
   useEffect(() => {
@@ -369,9 +415,31 @@ export default function KanbanBoard({
     <div className="relative w-full h-full flex flex-col min-h-0">
       <div className="flex gap-6 flex-1 min-h-0 overflow-x-auto pb-4 px-1">
         {stagesState.map((stage) => {
-          const stageDeals = filteredDeals.filter(
-            (deal) => deal.dealStage === stage.name,
-          );
+          // const stageDeals = filteredDeals.filter(
+          //   (deal) => deal.dealStage === stage.name,
+          // );
+
+
+
+const stageDeals = filteredDeals
+  .filter((deal) => deal.dealStage === stage.name)
+  .sort((a, b) => {
+    const dateA = getDealFollowupDate(a);
+    const dateB = getDealFollowupDate(b);
+
+    // If both null
+    if (!dateA && !dateB) return 0;
+
+    // Null ko bottom me bhejna hai
+    if (!dateA) return 1;
+    if (!dateB) return -1;
+
+    // Ascending order (earliest first)
+    return dateA.getTime() - dateB.getTime();
+  });
+
+
+
           return (
             <div
               key={stage.id}
