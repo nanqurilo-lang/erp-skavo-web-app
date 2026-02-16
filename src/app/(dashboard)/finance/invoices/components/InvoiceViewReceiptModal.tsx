@@ -176,11 +176,11 @@ async function downloadPDF(r: any) {
 
   return (
     <>
-      <Modal open={open} onClose={onClose} title="Receipts" className="max-w-6xl">
+      <Modal open={open} onClose={onClose} title="Receipts" className="w-[83%]">
         <div className="mb-4">
           <Button onClick={() => setShowAddReceipt(true)}>
             <Plus className="w-4 h-4 mr-2" />
-            Add a Receipt
+            Add a Receipt 
           </Button>
         </div>
 
@@ -271,7 +271,7 @@ async function downloadPDF(r: any) {
           open={true}
           onClose={() => setViewReceipt(null)}
           title={viewReceipt.invoiceId}
-          className="max-w-4xl"
+          className="w-[83%]"
         >
           <div className="border p-6 bg-white text-sm">
             <h2 className="text-lg font-semibold mb-2">Proforma Invoice</h2>

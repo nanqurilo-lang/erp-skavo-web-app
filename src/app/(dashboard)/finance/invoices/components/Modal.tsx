@@ -52,10 +52,11 @@ export default function Modal({
       {/* Right side full screen panel */}
       <div
         className={cn(
-          "absolute right-0 top-0 h-full w-full bg-white shadow-xl",
+          "absolute right-0 top-0 h-full w-full  w-[83%]    bg-white shadow-xl",
           "animate-slide-in-right",
           className
         )}
+
       >
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b">
