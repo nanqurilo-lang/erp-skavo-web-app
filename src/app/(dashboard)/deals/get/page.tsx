@@ -1730,6 +1730,16 @@ export default function DealsPage() {
                     : String(deal.priority);
                 }
 
+
+
+const selectedPriority = priorities.find(
+  (p) => String(p.id) === prioritySelectValue
+);
+
+
+
+
+
                 const priorityColor = getPriorityColor(deal.priority);
 
                 return (
@@ -1892,12 +1902,36 @@ export default function DealsPage() {
                                 handlePriorityAssign(deal.id, toSend);
                             }}
                           >
-                            <SelectTrigger
+                            {/* <SelectTrigger
                               className="w-32 text-sm py-1"
                               aria-label="Priority status"
                             >
                               <SelectValue placeholder="Priority" />
-                            </SelectTrigger>
+                            </SelectTrigger> */}
+
+<SelectTrigger
+  className="w-32 text-sm py-1"
+  aria-label="Priority status"
+>
+  {selectedPriority ? (
+    <div className="flex items-center gap-2">
+      <span
+        className="inline-block w-2 h-2 rounded-full"
+        style={{ backgroundColor: selectedPriority.color }}
+      />
+      <span className="text-sm">
+        {selectedPriority.status}
+      </span>
+    </div>
+  ) : (
+    <span className="text-sm text-muted-foreground">
+      Priority
+    </span>
+  )}
+</SelectTrigger>
+
+
+
                             <SelectContent>
                               {(priorities && priorities.length > 0
                                 ? priorities
@@ -2086,7 +2120,7 @@ export default function DealsPage() {
                   {/* {priorities.map((p) => ( */}
 
 
-                  {priorities
+                  {/* {priorities
                     .filter((p) =>
                       ["high", "medium", "low"].includes(
                         String(p.status).toLowerCase()
@@ -2096,10 +2130,29 @@ export default function DealsPage() {
 
                       <SelectItem key={p.id} value={String(p.id)}>
 
-                        {/* <SelectItem key={p.id} value={String(p.status)}> */}
                         {p.status}
                       </SelectItem>
-                    ))}
+                    ))} */}
+
+
+{priorities
+  .filter((p) =>
+    ["high", "medium", "low"].includes(
+      String(p.status).toLowerCase()
+    )
+  )
+  .map((p) => (
+    <SelectItem
+      key={p.id}
+      value={String(p.status).toLowerCase()}
+    >
+      {p.status}
+    </SelectItem>
+  ))}
+
+
+
+
                 </SelectContent>
               </Select>
             </div>
