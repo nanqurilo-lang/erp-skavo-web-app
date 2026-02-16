@@ -116,12 +116,12 @@ export default function LeaveDetail() {
     <div className="p-6 bg-white rounded-lg shadow-md max-w-2xl mx-auto">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-800">Leave Details</h1>
-        <Link
-          href="/hr/leaves"
+        {/* <Link
+          href="/hr/leaves/admin"
           className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors"
         >
           Back to List
-        </Link>
+        </Link> */}
       </div>
 
       <div className="space-y-4">
