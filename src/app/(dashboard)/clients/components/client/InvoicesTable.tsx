@@ -7696,7 +7696,7 @@ onClick={() => openViewPaymentsDrawer(inv)}
 
           <div className="relative z-10 w-full max-w-4xl bg-white rounded shadow-lg overflow-auto">
             <div className="flex items-center justify-between p-4 border-b">
-              <h3 className="text-lg font-semibold">Receipts</h3>
+              <h3 className="text-lg font-semibold">Receipts  </h3>
               <div className="flex items-center gap-3">
                 <Button onClick={() => addReceipt(selectedInvoiceForReceipts)}>
                   <Plus className="mr-2 h-4 w-4" /> Add a Receipt

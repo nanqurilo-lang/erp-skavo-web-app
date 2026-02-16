@@ -209,7 +209,7 @@ async function downloadPDF(r: any) {
               {!loading && receipts.length === 0 && (
                 <TableRow>
                   <TableCell colSpan={6} className="text-center text-sm text-gray-500">
-                    No receipts available
+                    No receipts available for this invoice.
                   </TableCell>
                 </TableRow>
               )}

@@ -1888,11 +1888,21 @@ export default function AllProjectsPage() {
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="you">You</SelectItem>
-                          {memberOptions.map((m) => (
+                          {/* {memberOptions.map((m) => (
                             <SelectItem key={m} value={m}>
                               {m}
                             </SelectItem>
-                          ))}
+                          ))} */}
+
+
+{memberOptions.map((m) => (
+  <SelectItem key={m.employeeId} value={m.employeeId}>
+    {m.name}
+  </SelectItem>
+))}
+
+
+
                         </SelectContent>
                       </Select>
                     </div>
