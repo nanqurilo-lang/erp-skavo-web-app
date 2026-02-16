@@ -24,7 +24,7 @@ import EditCreditNoteModal, {
   CreditNoteShape,
 } from "../credit-notes/components/EditCreditNoteModal";
 
-const API_BASE =  `${process.env.NEXT_PUBLIC_MAIN}`;
+const API_BASE = `${process.env.NEXT_PUBLIC_MAIN}`;
 
 type Company = {
   companyName?: string;
@@ -81,6 +81,11 @@ export default function CreditNotesPage() {
   const [showFilters, setShowFilters] = useState<boolean>(false);
   const [projectFilter, setProjectFilter] = useState<string>("all");
 
+
+  const [startDate, setStartDate] = useState<string>("");
+  const [endDate, setEndDate] = useState<string>("");
+
+
   useEffect(() => {
     let mounted = true;
     async function load() {
@@ -130,14 +135,45 @@ export default function CreditNotesPage() {
     ];
   }, [creditNotes]);
 
+  // const filteredNotes = useMemo(() => {
+  //   return creditNotes.filter((cn) => {
+  //     if (projectFilter && projectFilter !== "all") {
+  //       return cn.project?.projectName === projectFilter;
+  //     }
+  //     return true;
+  //   });
+  // }, [creditNotes, projectFilter]);
+
+
   const filteredNotes = useMemo(() => {
     return creditNotes.filter((cn) => {
+      // Project filter
       if (projectFilter && projectFilter !== "all") {
-        return cn.project?.projectName === projectFilter;
+        if (cn.project?.projectName !== projectFilter) return false;
       }
+
+      // Date filter
+      if (cn.creditNoteDate) {
+        const noteDate = new Date(cn.creditNoteDate);
+
+        if (startDate) {
+          const start = new Date(startDate);
+          if (noteDate < start) return false;
+        }
+
+        if (endDate) {
+          const end = new Date(endDate);
+          end.setHours(23, 59, 59, 999); // include full end day
+          if (noteDate > end) return false;
+        }
+      }
+
       return true;
     });
-  }, [creditNotes, projectFilter]);
+  }, [creditNotes, projectFilter, startDate, endDate]);
+
+
+
 
   const formatDate = (d?: string | null) => {
     if (!d) return "";
@@ -206,7 +242,25 @@ export default function CreditNotesPage() {
         <div className="bg-white border rounded-md mb-4 p-4 flex items-center gap-4">
           <div className="flex items-center gap-3">
             <div className="text-sm text-slate-600 font-medium">Duration</div>
-            <div className="text-sm text-slate-500">Start Date to End Date</div>
+            {/* <div className="text-sm text-slate-500">Start Date to End Date</div> */}
+
+            <div className="flex items-center gap-2">
+              <input
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                className="border rounded px-2 py-1 text-sm"
+              />
+              <span className="text-slate-500 text-sm">to</span>
+              <input
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                className="border rounded px-2 py-1 text-sm"
+              />
+            </div>
+
+
           </div>
 
           <div>
@@ -288,7 +342,7 @@ export default function CreditNotesPage() {
                       <TableCell className="align-middle">
                         <div className="flex items-center gap-3">
                           {cn.client?.profilePictureUrl ||
-                          cn.client?.company?.companyLogoUrl ? (
+                            cn.client?.company?.companyLogoUrl ? (
                             <Image
                               src={
                                 cn.client?.profilePictureUrl ??
@@ -456,10 +510,21 @@ export default function CreditNotesPage() {
               <div className="p-4 border-t">
                 <div className="flex items-center justify-between">
                   <button
+                    // onClick={() => {
+                    //   setProjectFilter("all");
+                    //   setShowFilters(false);
+                    // }}
+
                     onClick={() => {
                       setProjectFilter("all");
+                      setStartDate("");
+                      setEndDate("");
                       setShowFilters(false);
                     }}
+
+
+
+
                     className="px-4 py-2 border rounded text-sm text-slate-700 hover:bg-slate-50"
                   >
                     Clear
@@ -581,15 +646,15 @@ function ViewCreditNoteModal({
                   <div className="py-1">
                     {creditNote.creditNoteDate
                       ? new Date(creditNote.creditNoteDate).toLocaleDateString(
-                          "en-GB"
-                        )
+                        "en-GB"
+                      )
                       : ""}
                   </div>
 
                   <div className="py-1">
                     <div className="flex items-center gap-3">
                       {creditNote.client?.profilePictureUrl ||
-                      creditNote.client?.company?.companyLogoUrl ? (
+                        creditNote.client?.company?.companyLogoUrl ? (
                         <Image
                           src={
                             creditNote.client?.profilePictureUrl ??
