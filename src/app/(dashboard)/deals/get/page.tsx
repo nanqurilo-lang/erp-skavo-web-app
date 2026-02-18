@@ -1803,7 +1803,7 @@ const selectedPriority = priorities.find(
                             setActiveDeal(deal);
                             setOpenFollowupView(true);
                           }}
-                          className="text-blue-600 underline text-sm hover:text-blue-800"
+                          className=" text-sm hover:text-blue-800"
                         >
                           {new Date(nextFollowup.nextDate!).toLocaleDateString()}
                         </button>
