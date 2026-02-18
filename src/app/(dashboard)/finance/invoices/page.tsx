@@ -146,12 +146,12 @@ export default function InvoiceList() {
         refresh={fetchInvoices}
       />
 
-      <InvoicePaymentModal
+      {/* <InvoicePaymentModal
         open={modal.payment}
         onClose={() => setModal(m => ({ ...m, payment: false }))}
         invoice={activeInvoice}
         refresh={fetchInvoices}
-      />
+      /> */}
 
       <InvoiceReceiptModal
         open={modal.receipt}

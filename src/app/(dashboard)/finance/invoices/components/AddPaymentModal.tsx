@@ -117,7 +117,7 @@ export default function AddPaymentModal({
                 >
                     {/* HEADER */}
                     <div className="flex items-center justify-between p-4 border-b">
-                        <h3 className="text-lg font-semibold">Add Payment Details </h3>
+                        <h3 className="text-lg font-semibold">Add Payment Details  </h3>
                         <button onClick={onClose} className="p-2 rounded hover:bg-gray-100">
                             <X className="w-5 h-5" />
                         </button>
@@ -182,7 +182,7 @@ export default function AddPaymentModal({
 
                             {/* RECEIPT UPLOAD */}
                             <div className="mt-4">
-                                <label className="text-sm text-gray-600">Receipt</label>
+                                <label className="text-sm text-gray-600">Receipt </label>
                                 <div
                                     className="border-2 border-dashed rounded-lg h-28 flex items-center justify-center cursor-pointer text-gray-600"
                                     onClick={() => fileRef.current?.click()}
