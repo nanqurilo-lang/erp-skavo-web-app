@@ -25,6 +25,8 @@ import {
 } from "@/components/ui/popover";
 import { Calendar, CalendarIcon } from "lucide-react";
 
+import { createPortal } from "react-dom";
+
 
 /* =======================
    Types & constants
@@ -42,6 +44,7 @@ const COUNTRIES = [
   "South Korea", "Spain", "Sri Lanka", "Sweden", "Switzerland", "Thailand",
   "Turkey", "UAE", "UK", "Ukraine", "USA", "Vietnam", "Zimbabwe","Others"
 ];
+
 
 
 
@@ -802,17 +805,51 @@ function LeadRow({
   onChangeToClient: (id: number) => void; // NEW
 }) {
   const [open, setOpen] = useState(false);
-  const rowRef = useRef<HTMLTableRowElement | null>(null);
 
-  useEffect(() => {
-    if (!open) return;
-    const onDoc = (e: MouseEvent) => {
-      const t = e.target as Node;
-      if (rowRef.current && !rowRef.current.contains(t)) setOpen(false);
-    };
-    document.addEventListener("mousedown", onDoc);
-    return () => document.removeEventListener("mousedown", onDoc);
-  }, [open]);
+
+ // ✅ ADD HERE (inside component)
+  const [menuPos, setMenuPos] = useState<{ top: number; left: number }>({
+    top: 0,
+    left: 0,
+  });
+
+  const rowRef = useRef<HTMLTableRowElement | null>(null);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);  // ✅ ADD THIS
+
+
+  // useEffect(() => {
+  //   if (!open) return;
+  //   const onDoc = (e: MouseEvent) => {
+  //     const t = e.target as Node;
+  //     if (rowRef.current && !rowRef.current.contains(t)) setOpen(false);
+  //   };
+  //   document.addEventListener("mousedown", onDoc);
+  //   return () => document.removeEventListener("mousedown", onDoc);
+  // }, [open]);
+
+
+
+useEffect(() => {
+  if (!open) return;
+
+  const handleClickOutside = (e: MouseEvent) => {
+    const target = e.target as Node;
+
+    // If click is inside row → ignore
+    if (rowRef.current?.contains(target)) return;
+
+    // If click is inside dropdown → ignore
+    if (dropdownRef.current?.contains(target)) return;
+
+    // Otherwise close
+    setOpen(false);
+  };
+
+  document.addEventListener("mousedown", handleClickOutside);
+  return () => document.removeEventListener("mousedown", handleClickOutside);
+}, [open]);
+
+
 
   const remove = async () => {
     if (!confirm("Delete this lead?")) return;
@@ -863,7 +900,25 @@ function LeadRow({
 
       <TableCell className="relative text-right">
         <button
-          onClick={() => setOpen((s) => !s)}
+          // onClick={() => setOpen((s) => !s)}
+
+onClick={(e) => {
+  e.stopPropagation();
+
+  const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+
+  const menuWidth = 224; // w-56 = 224px
+
+  setMenuPos({
+    top: rect.bottom + window.scrollY,
+    left: rect.right + window.scrollX - menuWidth,
+  });
+
+  setOpen((prev) => !prev);
+}}
+
+
+
           className="inline-flex items-center rounded-full p-2 hover:bg-slate-100"
         >
           <svg className="w-5 h-5 text-muted-foreground" viewBox="0 0 24 24" fill="currentColor">
@@ -873,7 +928,7 @@ function LeadRow({
           </svg>
         </button>
 
-        {open && (
+        {/* {open && (
           <div className="absolute right-0 z-30 mt-2 w-56 rounded-md bg-white shadow-lg border">
             <ul className="py-1">
               <li>
@@ -994,7 +1049,78 @@ function LeadRow({
               </li>
             </ul>
           </div>
-        )}
+        )} */}
+
+
+
+{open &&
+  typeof window !== "undefined" &&
+  createPortal(
+    <div
+          ref={dropdownRef}
+
+      style={{
+        position: "absolute",
+        top: menuPos.top,
+        left: menuPos.left,
+        width: "224px",
+        zIndex: 9999,
+      }}
+      className="rounded-md bg-white shadow-xl border bg-white"
+    >
+      <ul className="py-1">
+        <li>
+          <button
+            onClick={() => {
+              setOpen(false);
+              onView(lead.id);
+            }}
+            className="w-full flex items-center gap-3 px-4 py-3 text-sm hover:bg-slate-50"
+          >
+            View
+          </button>
+        </li>
+
+        <li>
+          <button
+            onClick={() => {
+              setOpen(false);
+              onEdit(lead.id);
+            }}
+            className="w-full flex items-center gap-3 px-4 py-3 text-sm hover:bg-slate-50"
+          >
+            Edit
+          </button>
+        </li>
+
+        <li>
+          <button
+            onClick={() => {
+              setOpen(false);
+              onChangeToClient(lead.id);
+            }}
+            className="w-full flex items-center gap-3 px-4 py-3 text-sm hover:bg-slate-50"
+          >
+            Change to Client
+          </button>
+        </li>
+
+        <li>
+          <button
+            onClick={remove}
+            className="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-600 hover:bg-slate-50"
+          >
+            Delete
+          </button>
+        </li>
+      </ul>
+    </div>,
+    document.body
+  )}
+
+
+
+
       </TableCell>
     </TableRow>
   );
@@ -1887,7 +2013,7 @@ function UpdateLeadForm({
 
 
                 <div>
-                  <label className="text-sm text-muted-foreground">Lead Owner</label>
+                  {/* <label className="text-sm text-muted-foreground">Lead Owner</label> */}
                   {/* <input className="w-full border rounded-md p-2" value={form.leadOwner} onChange={(e) => update("leadOwner", e.target.value)} /> */}
                   <div>
                     <label className="text-sm text-muted-foreground">Lead Owner</label>
