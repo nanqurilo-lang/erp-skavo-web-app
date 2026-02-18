@@ -1805,7 +1805,9 @@ const selectedPriority = priorities.find(
                           }}
                           className=" text-sm hover:text-blue-800"
                         >
-                          {new Date(nextFollowup.nextDate!).toLocaleDateString()}
+                          {/* {new Date(nextFollowup.nextDate!).toLocaleDateString()} */}
+                          {format(new Date(nextFollowup.nextDate!), "dd-MM-yyyy")}
+
                         </button>
                       ) : (
                         "—"
