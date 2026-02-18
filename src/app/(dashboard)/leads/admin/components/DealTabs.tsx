@@ -1277,7 +1277,7 @@ export default function DealTabs({ dealId, deal, onDealUpdated }: DealTabsProps)
                                             strokeLinejoin="round"
                                         />
                                     </svg>
-                                    Add a Follow Up
+                                    Add a Follow Up 
                                 </button>
                             </div>
 
