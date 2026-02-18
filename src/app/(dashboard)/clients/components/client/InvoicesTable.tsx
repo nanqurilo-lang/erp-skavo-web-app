@@ -7349,7 +7349,10 @@ onClick={() => openViewPaymentsDrawer(inv)}
 
       {/* VIEW modal */}
       {showViewModal && activeInvoice && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center overflow-auto p-6">
+        // <div className="fixed inset-0 z-50 flex items-start justify-center overflow-auto p-6">
+  <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+
+
           <div
             className="absolute inset-0 bg-black/40"
             onClick={() => {
@@ -7357,8 +7360,10 @@ onClick={() => openViewPaymentsDrawer(inv)}
               setActiveInvoice(null);
             }}
           />
-          <div className="relative z-10 w-full max-w-4xl bg-white rounded shadow-lg overflow-auto">
-            <div className="flex items-center justify-between p-4 border-b">
+          {/* <div className="relative z-10 w-full max-w-4xl bg-white rounded shadow-lg overflow-auto"> */}
+              <div className="relative z-10 w-full max-w-4xl bg-white rounded-lg shadow-xl flex flex-col max-h-[90vh]">
+
+            <div className="flex items-center justify-between p-4 border-b shrink-0">
               <h3 className="text-lg font-semibold">Invoice Details</h3>
               <div className="flex items-center gap-2">
                 <Button
@@ -7372,7 +7377,7 @@ onClick={() => openViewPaymentsDrawer(inv)}
                 </Button>
               </div>
             </div>
-            <div className="p-6 space-y-6">
+            <div className="p-6 space-y-6 overflow-y-auto">
               {/* client, project, invoice details and files (same as before) */}
               <div className="border rounded-lg p-4">
                 <div className="text-sm font-semibold mb-2">Client Details</div>
@@ -7479,7 +7484,7 @@ onClick={() => openViewPaymentsDrawer(inv)}
 
               <div className="border rounded-lg p-4">
                 <div className="text-sm font-semibold mb-3">
-                  Invoice Details
+                  Invoice Details 
                 </div>
                 <div className="grid grid-cols-2 gap-4 text-sm text-gray-700">
                   <div>
@@ -7837,20 +7842,24 @@ onClick={() => openViewPaymentsDrawer(inv)}
 
       {/* CREATE modal (unchanged) */}
       {showCreateModal && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center overflow-auto p-6">
+        // <div className="fixed inset-0 z-50 flex items-start justify-center overflow-auto p-6">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+
           <div
             className="absolute inset-0 bg-black/40"
             onClick={() => setShowCreateModal(false)}
           />
-          <div className="relative z-10 w-full max-w-3xl bg-white rounded shadow-lg overflow-auto">
-            <div className="flex items-center justify-between p-4 border-b">
+          {/* <div className="relative z-10 w-full max-w-3xl bg-white rounded shadow-lg overflow-auto"> */}
+              <div className="relative z-10 w-full max-w-3xl bg-white rounded-lg shadow-xl flex flex-col max-h-[90vh]">
+
+            <div className="flex items-center justify-between p-4 border-b shrink-0">
               <h3 className="text-lg font-semibold">Create Invoice</h3>
               <Button variant="ghost" onClick={() => setShowCreateModal(false)}>
                 Close
               </Button>
             </div>
 
-            <div className="p-6 space-y-6">
+            <div className="p-6 space-y-6 overflow-y-auto">
               {/* Invoice Details */}
               <div className="border rounded-lg p-4">
                 <h4 className="font-medium mb-3">Invoice Details</h4>
@@ -8153,7 +8162,9 @@ onClick={() => openViewPaymentsDrawer(inv)}
 
       {/* Create Receipt modal (unchanged UI & logic) */}
       {showReceiptModal && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center overflow-auto p-6">
+        // <div className="fixed inset-0 z-50 flex items-start justify-center overflow-auto p-6">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+
           <div
             className="absolute inset-0 bg-black/40"
             onClick={() => {
@@ -8161,8 +8172,10 @@ onClick={() => openViewPaymentsDrawer(inv)}
               uploadTargetRef.current = null;
             }}
           />
-          <div className="relative z-10 w-full max-w-4xl bg-white rounded shadow-lg overflow-auto">
-            <div className="flex items-center justify-between p-4 border-b">
+          {/* <div className="relative z-10 w-full max-w-4xl bg-white rounded shadow-lg overflow-auto"> */}
+              <div className="relative z-10 w-full max-w-3xl bg-white rounded-lg shadow-xl flex flex-col max-h-[90vh]">
+
+            <div className="flex items-center justify-between p-4 border-b shrink-0 ">
               <h3 className="text-lg font-semibold">Create Receipt</h3>
               <Button
                 variant="ghost"
@@ -8175,7 +8188,7 @@ onClick={() => openViewPaymentsDrawer(inv)}
               </Button>
             </div>
 
-            <div className="p-6 space-y-6">
+            <div className="p-6 space-y-6 overflow-y-auto">
               {/* Invoice Details */}
               <div className="border rounded-lg p-4">
                 <h4 className="font-medium mb-3">Invoice Details</h4>

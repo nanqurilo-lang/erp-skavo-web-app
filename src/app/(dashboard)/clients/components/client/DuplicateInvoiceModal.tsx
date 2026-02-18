@@ -47,19 +47,23 @@ export default function DuplicateInvoiceModal({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-auto p-6">
+    // <div className="fixed inset-0 z-50 flex items-start justify-center overflow-auto p-6">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
 
-      <div className="relative z-10 w-full max-w-4xl bg-white rounded-lg shadow-lg">
+      {/* <div className="relative z-10 w-full max-w-4xl bg-white rounded-lg shadow-lg"> */}
+          <div className="relative z-10 w-full max-w-3xl bg-white rounded-lg shadow-xl flex flex-col max-h-[90vh]">
+
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b">
-          <h2 className="text-lg font-semibold">Duplicate Invoice</h2>
+        <div className="flex items-center justify-between p-4 border-b shrink-0">
+          <h2 className="text-lg font-semibold">Duplicate Invoice </h2>
           <Button variant="ghost" onClick={onClose}>
             <X className="h-4 w-4" />
           </Button>
         </div>
 
-        <div className="p-6 space-y-6">
+        <div className="p-6 space-y-6 overflow-y-auto">
           {/* Invoice Details */}
           <div className="border rounded-lg p-4">
             <h4 className="font-medium mb-3">Invoice Details</h4>
