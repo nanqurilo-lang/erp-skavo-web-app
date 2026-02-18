@@ -2402,6 +2402,8 @@ import DealTags from "../../_components/DealTags";
 import CommentForm from "../../_components/comment";
 import { createPortal } from "react-dom";
 import EditFollowupModal from "../../_components/EditFollowupModal";
+import NoteActionModal from "../../_components/NoteActionModal";
+
 
 
 type DocumentItem = {
@@ -2540,6 +2542,11 @@ export default function DealDetailPage() {
 
   //edit followup modal click-away handler
   const [editingFollowupData, setEditingFollowupData] = useState<Followup | null>(null);
+
+  //note action modal state
+  const [noteActionData, setNoteActionData] = useState<NoteItem | null>(null);
+const [noteActionMode, setNoteActionMode] = useState<"view" | "edit" | null>(null);
+
 
 
 
@@ -4173,7 +4180,9 @@ export default function DealDetailPage() {
                   </div>
 
                   {/* Notes table (styled like your screenshot) */}
-                  <div className="rounded-md border overflow-hidden">
+                  {/* <div className="rounded-md border overflow-hidden"> */}
+                  <div className="rounded-md border overflow-visible">
+
                     <div className="bg-blue-50 text-sm text-gray-700 grid grid-cols-[1fr_1fr_80px] gap-3 p-3 items-center font-medium rounded-t-md">
                       <div>Note Title</div>
                       <div>Note Type</div>
@@ -4202,16 +4211,71 @@ export default function DealDetailPage() {
                           <div className="text-center">
                             {/* action menu with centralized state */}
                            
-                            <div className="text-center">
+                            {/* <div className="text-center">
                               <button
                                 onClick={() => deleteNote(n.id)}
                                 disabled={noteDeletingId === n.id}
                                 className="text-red-600 hover:text-red-700"
                                 title="Delete Note"
                               >
-                                {noteDeletingId === n.id ? "Deleting..." : "🗑️"}
+                                {noteDeletingId === n.id ? "Deleting..." : "🗑️ "}
                               </button>
-                            </div>
+                            </div> */}
+
+
+<div className="relative flex justify-center">
+  <button
+    onClick={() =>
+      setOpenActionMenu(
+        openActionMenu === `note-${n.id ?? idx}`
+          ? null
+          : `note-${n.id ?? idx}`
+      )
+    }
+    className="p-1 rounded hover:bg-slate-100 text-gray-600"
+  >
+    ⋮
+  </button>
+
+  {openActionMenu === `note-${n.id ?? idx}` && (
+    <div className="absolute right-0 top-8 w-32 bg-white border rounded-md shadow-md z-50">
+      <button
+        onClick={() => {
+          setNoteActionData(n);
+          setNoteActionMode("view");
+          setOpenActionMenu(null);
+        }}
+        className="block w-full text-left px-3 py-2 text-sm hover:bg-gray-100"
+      >
+        View
+      </button>
+
+      <button
+        onClick={() => {
+          setNoteActionData(n);
+          setNoteActionMode("edit");
+          setOpenActionMenu(null);
+        }}
+        className="block w-full text-left px-3 py-2 text-sm hover:bg-gray-100"
+      >
+        Edit
+      </button>
+
+      <button
+        onClick={() => {
+          deleteNote(n.id);
+          setOpenActionMenu(null);
+        }}
+        className="block w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-gray-100"
+      >
+        Delete
+      </button>
+    </div>
+  )}
+</div>
+
+
+
 
 
                           </div>
@@ -4756,6 +4820,22 @@ export default function DealDetailPage() {
           }}
         />
       )}
+
+
+
+      {noteActionData && noteActionMode && (
+  <NoteActionModal
+    dealId={dealId}
+    note={noteActionData}
+    mode={noteActionMode}
+    onClose={() => {
+      setNoteActionData(null);
+      setNoteActionMode(null);
+    }}
+    onUpdated={fetchNotes}
+  />
+)}
+
 
 
 
