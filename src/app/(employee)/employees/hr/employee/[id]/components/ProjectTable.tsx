@@ -44,6 +44,7 @@ import {
     X,
     Archive,
 } from "lucide-react";
+import { format } from "date-fns";
 // import ProjectCalendarMonth from "./ProjectCalendarMonth";
 
 const MAIN = process.env.NEXT_PUBLIC_MAIN 
@@ -1336,8 +1337,14 @@ export default function AllProjectsPage({ employeeId, }: { employeeId: string })
 
     // Row component reused (same as your file) — uses clientOptions/departments/categories data loaded above
     const ProjectRow: React.FC<{ p: Project }> = ({ p }) => {
-        const start = p.startDate ? new Date(p.startDate).toLocaleDateString() : "-";
-        const dl = p.noDeadline ? "No Deadline" : p.deadline ? new Date(p.deadline).toLocaleDateString() : "-";
+        const start = p.startDate ? 
+        // new Date(p.startDate).toLocaleDateString()
+       format( new Date(p.startDate), "dd-MM-yyyy")
+        : "-";
+        const dl = p.noDeadline ? "No Deadline" : p.deadline ?
+        //  new Date(p.deadline).toLocaleDateString()
+        format( new Date(p.deadline), "dd-MM-yyyy")
+          : "-";
         const progress = Math.max(0, Math.min(100, p.progressPercent ?? 0));
         const barColor = getProgressColor(progress);
 
@@ -1873,7 +1880,10 @@ export default function AllProjectsPage({ employeeId, }: { employeeId: string })
     function groupByStartDate(items: Project[]) {
         const map: Record<string, Project[]> = {};
         items.forEach((p) => {
-            const d = p.startDate ? new Date(p.startDate).toLocaleDateString() : "No start date";
+            const d = p.startDate ? 
+            // new Date(p.startDate).toLocaleDateString() 
+                format( new Date(p.startDate), "dd-MM-yyyy")
+            : "No start date";
             (map[d] ||= []).push(p);
         });
         return map;

@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/table";
 import { CalendarIcon } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@radix-ui/react-popover";
+import { format } from "date-fns";
 
 /* =======================
    Types & constants
@@ -695,7 +696,10 @@ function LeadRow({
       </TableCell>
       <TableCell>
         <span className="text-sm">
-          {lead.createdAt ? new Date(lead.createdAt).toLocaleDateString() : "—"}
+          {lead.createdAt ?
+          //  new Date(lead.createdAt).toLocaleDateString() 
+          format (new Date(lead.createdAt), "dd-MM-yyyy")
+           : "—"}
         </span>
       </TableCell>
 
@@ -961,7 +965,13 @@ export default function LeadsAdminPage() {
                 ">Duration </div>
                 <div className="text-sm text-muted-foreground  font-medium">
                   {startDate && endDate
-                    ? `${new Date(startDate).toLocaleDateString()} to ${new Date(endDate).toLocaleDateString()}`
+                    ? `${
+                      // new Date(startDate).toLocaleDateString()
+                      format(new Date(startDate), "dd-MM-yyyy")
+                    } to ${
+                      // new Date(endDate).toLocaleDateString()
+                      format(new Date(endDate), "dd-MM-yyyy")
+                    }`
                     : <div className="flex items-center gap-3">
                       StartDate to EndDate <CalendarIcon className="w-4 h-4 text-muted-foreground" />
                     </div>}

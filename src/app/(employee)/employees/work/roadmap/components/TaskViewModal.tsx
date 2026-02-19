@@ -2,6 +2,7 @@
 "use client";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
+import { format } from "date-fns";
 
 type Employee = { employeeId: string; name: string; profileUrl?: string | null; role?: string };
 type Label = { id: number; name: string };
@@ -287,7 +288,10 @@ export default function TaskViewModal({
 
   if (!open || !task) return null;
 
-  const fmtDate = (d?: string | null) => (d ? new Date(d).toLocaleDateString() : "--");
+  const fmtDate = (d?: string | null) => (d ? 
+    // new Date(d).toLocaleDateString()
+    format(new Date(d), "dd-MM-yyyy")
+     : "--");
   const fmtDateTime = (d?: string | null) => (d ? new Date(d).toLocaleString() : "--");
   const fmtShortDate = (d?: string | null) => {
     if (!d) return "--";

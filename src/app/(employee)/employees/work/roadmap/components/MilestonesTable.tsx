@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useMemo, useState } from "react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
+import { format } from "date-fns";
 
 type Milestone = {
   id?: number;
@@ -661,13 +662,22 @@ export default function MilestonesTable({
                   <div className="mt-1 p-2 bg-gray-50 rounded text-sm">{selected.summary ?? "-"}</div>
                 </div>
                 <div>
-                  <strong>Start Date:</strong> {selected.startDate ? new Date(selected.startDate).toLocaleDateString() : "-"}
+                  <strong>Start Date:</strong> {selected.startDate ? 
+                  // new Date(selected.startDate).toLocaleDateString() 
+                  format (new Date(selected.startDate), "dd-MM-yyyy")
+                  : "-"}
                 </div>
                 <div>
-                  <strong>End Date:</strong> {selected.endDate ? new Date(selected.endDate).toLocaleDateString() : "-"}
+                  <strong>End Date:</strong> {selected.endDate ? 
+                  // new Date(selected.endDate).toLocaleDateString()
+                  format (new Date(selected.endDate), "dd-MM-yyyy")
+                   : "-"}
                 </div>
                 <div>
-                  <strong>Created At:</strong> {selected.createdAt ? new Date(selected.createdAt).toLocaleString() : "-"}
+                  <strong>Created At:</strong> {selected.createdAt ? 
+                  // new Date(selected.createdAt).toLocaleString() 
+                  format (new Date(selected.createdAt), "dd-MM-yyyy HH:mm:ss")
+                  : "-"}
                 </div>
                 <div>
                   <strong>Raw:</strong>{" "}

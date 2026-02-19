@@ -22,6 +22,7 @@ import {
   Clock,
   Globe,
 } from "lucide-react"
+import { format } from "date-fns"
 
 interface Employee {
   employeeId: string
@@ -237,7 +238,10 @@ export default function ProfilePage() {
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Joining Date</p>
-                  <p className="font-medium">{new Date(employee.joiningDate).toLocaleDateString()}</p>
+                  <p className="font-medium">{
+                  // new Date(employee.joiningDate).toLocaleDateString()
+                  format(new Date(employee.joiningDate), "dd-MM-yyyy")
+                  }</p>
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Reporting To</p>
@@ -270,7 +274,10 @@ export default function ProfilePage() {
                 {employee.probationEndDate && (
                   <div>
                     <p className="text-sm text-muted-foreground">Probation End</p>
-                    <p className="font-medium">{new Date(employee.probationEndDate).toLocaleDateString()}</p>
+                    <p className="font-medium">{
+                    // new Date(employee.probationEndDate).toLocaleDateString()
+                    format(new Date(employee.probationEndDate), "dd-MM-yyyy")
+                    }</p>
                   </div>
                 )}
               </CardContent>
@@ -332,7 +339,10 @@ export default function ProfilePage() {
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Joining Date</p>
-                    <p className="font-medium">{new Date(employee.joiningDate).toLocaleDateString()}</p>
+                    <p className="font-medium">{
+                    // new Date(employee.joiningDate).toLocaleDateString()
+                    format(new Date(employee.joiningDate), "dd-MM-yyyy")
+                    }</p>
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Employment Type</p>
@@ -401,7 +411,10 @@ export default function ProfilePage() {
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Birthday</p>
-                    <p className="font-medium">{new Date(employee.birthday).toLocaleDateString()}</p>
+                    <p className="font-medium">{
+                    // new Date(employee.birthday).toLocaleDateString()
+                    format(new Date(employee.birthday), "dd-MM-yyyy")
+                    }</p>
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Blood Group</p>
@@ -433,11 +446,17 @@ export default function ProfilePage() {
                   <div className="space-y-3">
                     <div>
                       <p className="text-sm text-muted-foreground">Notice Period Start</p>
-                      <p className="font-medium">{new Date(employee.noticePeriodStartDate).toLocaleDateString()}</p>
+                      <p className="font-medium">{
+                      // new Date(employee.noticePeriodStartDate).toLocaleDateString()
+                      format(new Date(employee.noticePeriodStartDate), "dd-MM-yyyy")
+                      }</p>
                     </div>
                     <div>
                       <p className="text-sm text-muted-foreground">Notice Period End</p>
-                      <p className="font-medium">{new Date(employee.noticePeriodEndDate).toLocaleDateString()}</p>
+                      <p className="font-medium">{
+                      // new Date(employee.noticePeriodEndDate).toLocaleDateString()
+                      format(new Date(employee.noticePeriodEndDate), "dd-MM-yyyy")
+                      }</p>
                     </div>
                     <Badge variant="destructive">Notice Period Active</Badge>
                   </div>
@@ -506,7 +525,10 @@ export default function ProfilePage() {
 
               <div>
                 <p className="text-sm text-muted-foreground mb-2">Account Created</p>
-                <p className="font-medium">{new Date(employee.createdAt).toLocaleDateString()}</p>
+                <p className="font-medium">{
+                // new Date(employee.createdAt).toLocaleDateString()
+                format(new Date(employee.createdAt), "dd-MM-yyyy")
+                }</p>
               </div>
             </CardContent>
           </Card>

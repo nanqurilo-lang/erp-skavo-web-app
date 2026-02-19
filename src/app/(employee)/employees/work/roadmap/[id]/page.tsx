@@ -10,6 +10,7 @@ import TimesheetsTableNew from "../components/TimesheetsTableNew";
 import MilestonesTable from "../components/MilestonesTable";
 // import { getStorage } from "../../../../../lib/storage/storege"; // adjust path if needed
 import axios from "axios";
+import { format } from "date-fns";
 
 interface Project {
   id: number;
@@ -525,7 +526,10 @@ export default function ProjectDetailsPage() {
                   <div>
                     <p className="text-sm text-gray-500">Start Date</p>
                     <p className="font-medium">
-                      {new Date(project.startDate).toLocaleDateString()}
+                      {
+                      // new Date(project.startDate).toLocaleDateString()
+                      format(new Date(project.startDate), "dd-MM-yyyy")
+                      }
                     </p>
                   </div>
 
@@ -535,7 +539,9 @@ export default function ProjectDetailsPage() {
                       {project.noDeadline
                         ? "No Deadline"
                         : project.deadline
-                        ? new Date(project.deadline).toLocaleDateString()
+                        ?
+                        //  new Date(project.deadline).toLocaleDateString()
+                        format(new Date(project.deadline), "dd-MM-yyyy")
                         : "TBD"}
                     </p>
                   </div>
@@ -737,18 +743,27 @@ export default function ProjectDetailsPage() {
                 <div>Created by: {project.summary}</div>
                 <div>
                   Created on:{" "}
-                  {new Date(project.createdAt || "").toLocaleDateString()}
+                  {
+                  // new Date(project.createdAt || "").toLocaleDateString()
+                  format(new Date(project.createdAt || ""), "dd-MM-yyyy")
+                  }
                 </div>
                 {project.pinned && (
                   <div>
                     Pinned on:{" "}
-                    {new Date(project.pinnedAt || "").toLocaleDateString()}
+                    {
+                    // new Date(project.pinnedAt || "").toLocaleDateString()
+                    format(new Date(project.pinnedAt || ""), "dd-MM-yyyy")
+                    }
                   </div>
                 )}
                 {project.archived && (
                   <div>
                     Archived on:{" "}
-                    {new Date(project.archivedAt || "").toLocaleDateString()}
+                    {
+                    // new Date(project.archivedAt || "").toLocaleDateString()
+                    format(new Date(project.archivedAt || ""), "dd-MM-yyyy")
+                    }
                   </div>
                 )}
               </div>

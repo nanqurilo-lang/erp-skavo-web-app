@@ -16,6 +16,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu"
 import { ChevronLeft, ChevronRight, Search, MoreVertical, Eye, Edit2, Pin, Archive, Trash2 } from "lucide-react"
+import { format } from "date-fns"
 
 interface Project {
   id: number
@@ -237,7 +238,10 @@ export default function PinnedProjectsPage() {
           <span className="text-sm">{durationDays} days</span>
         </TableCell>
         <TableCell>
-          <span className="text-sm">{new Date(project.deadline).toLocaleDateString()}</span>
+          <span className="text-sm">{
+          // new Date(project.deadline).toLocaleDateString()
+          format(new Date(project.deadline), "dd-MM-yyyy")
+          }</span>
         </TableCell>
         <TableCell>
           <div className="flex -space-x-2">

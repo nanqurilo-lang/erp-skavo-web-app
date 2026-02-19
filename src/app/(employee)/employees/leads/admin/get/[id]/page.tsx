@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { format } from "date-fns";
 
 type EmployeeMeta = {
   employeeId?: string;
@@ -123,10 +124,16 @@ function fmt(v?: string | null) {
   return v && v !== "null" ? v : "--";
 }
 function fmtDate(d?: string | null) {
-  return d ? new Date(d).toLocaleString() : "--";
+  return d ? 
+  // new Date(d).toLocaleString()
+  format(new Date(d), "dd-MM-yyyy HH:mm")
+   : "--";
 }
 function fmtShortDate(d?: string | null) {
-  return d ? new Date(d).toLocaleDateString() : "--";
+  return d ? 
+  // new Date(d).toLocaleDateString()
+  format(new Date(d), "dd-MM-yyyy")
+   : "--";
 }
 function fmtCurrency(n?: number | null) {
   if (n == null || isNaN(Number(n))) return "--";

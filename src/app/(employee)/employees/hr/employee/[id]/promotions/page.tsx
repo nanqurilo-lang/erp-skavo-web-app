@@ -219,6 +219,7 @@ import useSWR from "swr"
 import { useState } from "react"
 import AddPromotionModal from "./AddPromotionModal"
 import { MoreVertical } from "lucide-react"
+import { format } from "date-fns"
 
 const BASE_URL = process.env.NEXT_PUBLIC_MAIN
 
@@ -293,7 +294,10 @@ export default function PromotionsTab({ employeeId }: { employeeId: string }) {
                   {index + 1}
                 </span>
                 <span>
-                  {new Date(p.createdAt).toLocaleDateString()} ( Promotion From Today )
+                  {
+                  // new Date(p.createdAt).toLocaleDateString()
+                  format( new Date(p.createdAt), "dd-MM-yyyy")
+                  } ( Promotion From Today )
                 </span>
               </div>
 

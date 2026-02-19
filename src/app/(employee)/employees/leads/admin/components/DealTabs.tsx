@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Deal } from "@/types/deals";
+import { format } from "date-fns";
 
 type DocumentItem = {
     id: number;
@@ -918,7 +919,10 @@ export default function DealTabs({ dealId, deal, onDealUpdated }: DealTabsProps)
     };
 
     // Small UI helpers
-    const formatDate = (d?: string) => (d ? new Date(d).toLocaleDateString() : "—");
+    const formatDate = (d?: string) => (d ?
+        //  new Date(d).toLocaleDateString()
+        format(new Date(d), "dd-MM-yyyy")
+          : "—");
     const formatTime = (t?: string) => (t ? t : "—");
 
     // People modal search filter
@@ -1683,9 +1687,12 @@ export default function DealTabs({ dealId, deal, onDealUpdated }: DealTabsProps)
                                                 className="grid grid-cols-[140px_1fr_80px] items-start border-t p-4"
                                             >
                                                 <div className="text-sm text-gray-700">
-                                                    {new Date(
-                                                        c.createdAt
-                                                    ).toLocaleDateString()}
+                                                    {
+                                                    // new Date(
+                                                    //     c.createdAt
+                                                    // ).toLocaleDateString()
+                                                    format(new Date(c.createdAt), "dd-MM-yyyy")
+                                                    }
                                                 </div>
                                                 <div className="text-sm text-gray-700">
                                                     {c.commentText || "--"}
