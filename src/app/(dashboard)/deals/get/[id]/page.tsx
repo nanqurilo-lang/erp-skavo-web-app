@@ -3818,7 +3818,10 @@ const [noteActionMode, setNoteActionMode] = useState<"view" | "edit" | null>(nul
                 <div className="flex justify-between">
                   <span className="text-gray-600">Close Date</span>
                   <span className="text-gray-900">
-                    {deal.expectedCloseDate ? new Date(deal.expectedCloseDate).toLocaleDateString() : "—"}
+                    {deal.expectedCloseDate ?
+                    //  new Date(deal.expectedCloseDate).toLocaleDateString() : "—"
+                   format( new Date(deal.expectedCloseDate), "dd-MM-yyyy") : "—"
+                    }
                   </span>
                 </div>
 
