@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 import Modal from "./Modal";
 import InvoiceReceiptModal from "./InvoiceReceiptModal";
 import { Button } from "@/components/ui/button";
+import { format } from "date-fns";
+
 import {
   Table,
   TableBody,
@@ -224,7 +226,10 @@ async function downloadPDF(r: any) {
                       {r.currency} {r.totalAmount}
                     </TableCell>
                     <TableCell>
-                      {new Date(r.issueDate).toLocaleDateString()}
+                      {/* {new Date(r.issueDate).toLocaleDateString()} */}
+                      {r.issueDate
+    ? format(new Date(r.issueDate), "dd-MM-yyyy")
+    : "—"}
                     </TableCell>
 
                     <TableCell className="text-right">
@@ -276,7 +281,14 @@ async function downloadPDF(r: any) {
           <div className="border p-6 bg-white text-sm">
             <h2 className="text-lg font-semibold mb-2">Proforma Invoice</h2>
             <p>Invoice No.: {viewReceipt.invoiceId}</p>
-            <p>Issue Date: {new Date(viewReceipt.issueDate).toDateString()}</p>
+            {/* <p>Issue Date: {new Date(viewReceipt.issueDate).toDateString()}</p> */}
+            <p>
+  Issue Date:{" "}
+  {viewReceipt?.issueDate
+    ? format(new Date(viewReceipt.issueDate), "dd-MM-yyyy")
+    : "—"}
+</p>
+
 
             <div className="grid grid-cols-2 gap-6 mt-4 border p-4">
               <div>

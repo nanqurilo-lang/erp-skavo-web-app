@@ -9,6 +9,7 @@ import { Clock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import EmployeeLeaveQuotaTable from "./_components/EmployeeLeaveQuotaTable";
+import { format } from "date-fns";
 
 type Employee = {
   employeeId: string;
@@ -850,12 +851,19 @@ export default function Dashboard() {
             <div className="flex items-center gap-4 mb-4">
               <Clock />
               <div className="font-medium">
-                {new Date().toLocaleDateString()} |{" "}
-                {new Date().toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                  hour12: true,
-                })}
+                {
+                // new Date().toLocaleDateString()
+               format( new Date(),"dd-MM-yyyy")
+
+                } |{" "}
+                {
+                // new Date().toLocaleTimeString([], {
+                //   hour: "2-digit",
+                //   minute: "2-digit",
+                //   hour12: true,
+                // })
+                format(new Date(),"hh:mm a")
+}
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

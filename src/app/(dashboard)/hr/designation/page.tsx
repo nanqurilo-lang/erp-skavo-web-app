@@ -9,6 +9,8 @@ import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
 import DesignationHierarchy from "./DesignationHierarchy"
 import { ReactFlowProvider } from "reactflow"
+import { format } from "date-fns";
+
 
 interface Designation {
   id: number
@@ -242,7 +244,10 @@ export default function DesignationsPage() {
 
                   <td className="p-3">{d.parentDesignationName || "-"}</td>
                   <td className="p-3">
-                    {new Date(d.createDate).toLocaleDateString()}
+                    {/* {new Date(d.createDate).toLocaleDateString()} */}
+                     {d.createDate
+    ? format(new Date(d.createDate), "dd-MM-yyyy")
+    : "—"}
                   </td>
                   <td className="p-3 relative">
                     {editingId === d.id ? (

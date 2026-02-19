@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { format } from "date-fns";
 
 type Employee = { employeeId: string; name: string; designation?: string };
 type DealCategoryItem = { id: number; categoryName: string };
@@ -551,7 +552,9 @@ function LeadRow({
         </div>
       </TableCell>
       <TableCell>
-        <span className="text-sm">{lead.createdAt ? new Date(lead.createdAt).toLocaleDateString() : "—"}</span>
+        <span className="text-sm">{lead.createdAt ?
+        format( new Date(lead.createdAt), "dd-MM-yyyy")
+          : "—"}</span>
       </TableCell>
 
       <TableCell className="relative text-right">

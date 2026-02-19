@@ -8,6 +8,7 @@ import { Search, Plus, Edit2, Trash2, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
+import { format } from "date-fns"
 
 interface Designation {
   id: number
@@ -312,7 +313,10 @@ export default function DesignationsPage() {
                         )}
                       </td>
                       <td className="px-6 py-4 text-sm text-muted-foreground">
-                        {new Date(d.createDate).toLocaleDateString()}
+                        {
+                        // new Date(d.createDate).toLocaleDateString()
+                        format( new Date(d.createDate),"dd-MM-yyyy")
+                        }
                       </td>
                       <td className="px-6 py-4 text-sm">
                         {editingId === d.id ? (

@@ -1,6 +1,8 @@
 "use client"
 
 import useSWR from "swr"
+import { format } from "date-fns";
+
 
 const BASE_URL = process.env.NEXT_PUBLIC_MAIN
 
@@ -96,9 +98,13 @@ export default function AppreciationsTable({
 
                                 {/* Date */}
                                 <td className="px-4 py-3">
-                                    {item.date
+                                    {/* {item.date
                                         ? new Date(item.date).toLocaleDateString()
-                                        : "--"}
+                                        : "--"} */}
+  {item.date
+    ? format(new Date(item.date), "dd-MM-yyyy")
+    : "--"}
+
                                 </td>
 
                                 {/* Photo */}

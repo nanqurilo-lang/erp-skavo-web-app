@@ -420,6 +420,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { format } from "date-fns";
 
 
 
@@ -672,7 +673,10 @@ export default function AwardsPage() {
                       )}
                     </TableCell>
                     <TableCell className="text-sm text-muted-foreground">
-                      {new Date(award.updatedAt).toLocaleDateString()}
+                      {
+                      // new Date(award.updatedAt).toLocaleDateString()
+                     format( new Date(award.updatedAt),"dd-MM-yyyy")
+                      }
                     </TableCell>
                     <TableCell className="text-left">
                       <TableCell className="text-left">

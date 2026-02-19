@@ -17,6 +17,8 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { format } from "date-fns";
+
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -279,7 +281,11 @@ export default function AwardsPage() {
                       )}
                     </TableCell>
                     <TableCell className="text-sm text-muted-foreground">
-                      {new Date(award.updatedAt).toLocaleDateString()}
+                      {/* {new Date(award.updatedAt).toLocaleDateString()} */}
+ {award.updatedAt
+    ? format(new Date(award.updatedAt), "dd-MM-yyyy")
+    : "—"}
+
                     </TableCell>
                     <TableCell className="text-left">
                       <TableCell className="text-left">
