@@ -1340,7 +1340,13 @@ export default function LeadsAdminPage() {
                 ">Duration </div>
                 <div className="text-sm text-muted-foreground  font-medium">
                   {startDate && endDate
-                    ? `${new Date(startDate).toLocaleDateString()} to ${new Date(endDate).toLocaleDateString()}`
+                    ? `${
+                      // new Date(startDate).toLocaleDateString()
+                      format(new Date(startDate), "dd-MM-yyyy")
+                    } to ${
+                      // new Date(endDate).toLocaleDateString()
+                      format(new Date(endDate), "dd-MM-yyyy")
+                    }`
                     : <div className="flex items-center gap-3">
                       StartDate to EndDate <CalendarIcon className="w-4 h-4 text-muted-foreground" />
                     </div>}
