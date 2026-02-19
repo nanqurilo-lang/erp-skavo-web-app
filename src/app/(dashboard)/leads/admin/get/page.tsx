@@ -26,6 +26,7 @@ import {
 import { Calendar, CalendarIcon } from "lucide-react";
 
 import { createPortal } from "react-dom";
+import { format } from "date-fns";
 
 
 /* =======================
@@ -894,7 +895,11 @@ useEffect(() => {
       </TableCell>
       <TableCell>
         <span className="text-sm">
-          {lead.createdAt ? new Date(lead.createdAt).toLocaleDateString() : "—"}
+          {lead.createdAt ?
+          //  new Date(lead.createdAt).toLocaleDateString() : "—"
+          format(new Date(lead.createdAt), "dd-MM-yyyy") : "—"
+
+           }
         </span>
       </TableCell>
 
