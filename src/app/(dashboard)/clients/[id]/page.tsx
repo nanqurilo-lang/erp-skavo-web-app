@@ -49,6 +49,7 @@ import ClientCreditNotesTable from "../components/client/ClientCreditNotesTable"
 import ClientPaymentsTable from "../components/client/ClientPaymentsTable";
 import ClientDocuments from "../components/client/ClientDocuments";
 import ClientNotesTable from "../components/client/ClientNotesTable";
+import { format } from "date-fns";
 
 const API_BASE = `${process.env.NEXT_PUBLIC_MAIN}`;
 
@@ -909,12 +910,16 @@ useEffect(() => {
   // Project Row helper for consistent rendering (matching AllProjectsPage look/feel)
   function ProjectRow({ p }: { p: any }) {
     const start = p.startDate
-      ? new Date(p.startDate).toLocaleDateString()
+      ? 
+      // new Date(p.startDate).toLocaleDateString()
+      format(new Date(p.startDate), "dd-MM-yyyy")
       : "-";
     const dl = p.noDeadline
       ? "No Deadline"
       : p.deadline
-      ? new Date(p.deadline).toLocaleDateString()
+      ? 
+      // new Date(p.deadline).toLocaleDateString()
+      format(new Date(p.deadline), "dd-MM-yyyy")
       : "-";
     const progress = Math.max(0, Math.min(100, Number(p.progressPercent ?? 0)));
     const getProgressColor = (n?: number | null) => {
