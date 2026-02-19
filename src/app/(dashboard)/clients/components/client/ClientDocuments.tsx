@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { MoreHorizontal } from "lucide-react";
+import { format } from "date-fns";
 
 export type DocumentItem = {
   id: string | number;
@@ -302,7 +303,10 @@ export default function ClientDocuments({
 
                   <div className="mt-2 text-sm">
                     <div className="text-sm font-medium flex items-center gap-2">{humanName(doc.name)}{uploadingIds[String(doc.id)] && <span className="text-xs text-gray-400"> · uploading…</span>}</div>
-                    <div className="text-xs text-gray-400">{doc.createdAt ? new Date(doc.createdAt).toLocaleDateString() : ""}</div>
+                    <div className="text-xs text-gray-400">{doc.createdAt ?
+                    //  new Date(doc.createdAt).toLocaleDateString() : ""
+                    format(new Date(doc.createdAt), "dd-MM-yyyy") : ""
+                     }</div>
                   </div>
                 </div>
               ))}

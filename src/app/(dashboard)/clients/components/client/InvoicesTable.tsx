@@ -5330,6 +5330,7 @@ import {
 import CreditNoteModal from "./CreditNoteModal";
 import ViewCreditNoteModal from "./ViewCreditNoteModal";
 import DuplicateInvoiceModal from "./DuplicateInvoiceModal";
+import { format } from "date-fns";
 
 const API_BASE = `${process.env.NEXT_PUBLIC_MAIN}`;
 
@@ -7188,7 +7189,11 @@ onClick={() => openViewPaymentsDrawer(inv)}
                       <td className="px-4 py-3">{inv.invoiceNumber ?? "—"}</td>
                       <td className="px-4 py-3">
                         {inv.invoiceDate
-                          ? new Date(inv.invoiceDate).toLocaleDateString()
+                          ?
+                          //  new Date(inv.invoiceDate).toLocaleDateString()
+                           format(new Date(inv.invoiceDate), "dd-MM-yyyy")
+
+                          
                           : "—"}
                       </td>
                       <td className="px-4 py-3">

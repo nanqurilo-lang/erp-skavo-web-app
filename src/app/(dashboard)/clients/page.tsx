@@ -415,6 +415,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { format } from "date-fns";
 
 interface Company {
   companyName: string;
@@ -907,7 +908,9 @@ export default function ClientsPage() {
 
                   <TableCell>
                     {client.createdAt
-                      ? new Date(client.createdAt).toLocaleDateString()
+                      ?
+                      //  new Date(client.createdAt).toLocaleDateString()
+                      format(new Date(client.createdAt), "dd-MM-yyyy")
                       : "—"}
                   </TableCell>
 
