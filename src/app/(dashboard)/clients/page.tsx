@@ -691,7 +691,10 @@ export default function ClientsPage() {
                 ">
 
                   {startDate && endDate
-                    ? `${new Date(startDate).toLocaleDateString()} to ${new Date(endDate).toLocaleDateString()}`
+                    ? `${
+                     format( new Date(startDate), "dd-MM-yyyy")
+                    } to ${
+                      format(new Date(endDate), "dd-MM-yyyy")}`
                     : <div className="font-medium">Start Date to End Date
                       <CalendarIcon className="inline-block mb-1 ml-2 h-4 w-4" />
                     </div>
