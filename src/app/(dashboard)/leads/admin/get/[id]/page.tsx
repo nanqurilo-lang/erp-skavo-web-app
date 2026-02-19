@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import { format } from "date-fns";
+import { format, formatDate } from "date-fns";
 
 type EmployeeMeta = {
   employeeId?: string;
