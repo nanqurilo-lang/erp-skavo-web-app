@@ -23,6 +23,7 @@ import {
 import EditCreditNoteModal, {
   CreditNoteShape,
 } from "../credit-notes/components/EditCreditNoteModal";
+import { format } from "date-fns";
 
 const API_BASE = `${process.env.NEXT_PUBLIC_MAIN}`;
 
@@ -178,7 +179,8 @@ export default function CreditNotesPage() {
   const formatDate = (d?: string | null) => {
     if (!d) return "";
     try {
-      return new Date(d).toLocaleDateString("en-GB");
+      return format(new Date(d), "dd-MM-yyyy");
+      //  new Date(d).toLocaleDateString("en-GB");
     } catch {
       return d;
     }

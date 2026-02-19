@@ -124,7 +124,7 @@ export default function ClientCreditNotesTable({ clientId }: { clientId?: string
       const dd = String(dt.getDate()).padStart(2, "0");
       const mm = String(dt.getMonth() + 1).padStart(2, "0");
       const yyyy = dt.getFullYear();
-      return `${dd}/${mm}/${yyyy}`;
+      return `${dd}-${mm}-${yyyy}`;
     } catch {
       return d;
     }
