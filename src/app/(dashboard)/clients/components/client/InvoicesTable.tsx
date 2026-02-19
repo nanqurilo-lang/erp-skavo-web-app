@@ -7461,7 +7461,7 @@ onClick={() => openViewPaymentsDrawer(inv)}
                   <div className="flex items-start gap-2">
                     <div className="w-32 text-gray-500">Start Date</div>
                     <div className="font-medium">
-                      {activeInvoice.project?.startDate
+                      {/* {activeInvoice.project?.startDate
                         ? new Date(
                             activeInvoice.project.startDate,
                           ).toLocaleDateString()
@@ -7469,19 +7469,37 @@ onClick={() => openViewPaymentsDrawer(inv)}
                           ? new Date(
                               activeInvoice.startDate,
                             ).toLocaleDateString()
-                          : "—"}
+                          : "—"} */}
+
+
+
+{activeInvoice?.project?.startDate
+  ? format(new Date(activeInvoice.project.startDate), "dd-MM-yyyy")
+  : activeInvoice?.startDate
+  ? format(new Date(activeInvoice.startDate), "dd-MM-yyyy")
+  : "—"}
+
+
                     </div>
                   </div>
                   <div className="flex items-start gap-2">
                     <div className="w-32 text-gray-500">End Date</div>
                     <div className="font-medium">
-                      {activeInvoice.project?.endDate
+                      {/* {activeInvoice.project?.endDate
                         ? new Date(
                             activeInvoice.project.endDate,
                           ).toLocaleDateString()
                         : activeInvoice.endDate
                           ? new Date(activeInvoice.endDate).toLocaleDateString()
-                          : "—"}
+                          : "—"} */}
+
+{activeInvoice?.project?.endDate
+  ? format(new Date(activeInvoice.project.endDate), "dd-MM-yyyy")
+  : activeInvoice?.endDate
+  ? format(new Date(activeInvoice.endDate), "dd-MM-yyyy")
+  : "—"}
+
+
                     </div>
                   </div>
                 </div>
@@ -7503,11 +7521,17 @@ onClick={() => openViewPaymentsDrawer(inv)}
                     <div className="flex justify-between mb-2">
                       <div className="text-gray-500">Invoice Date</div>
                       <div className="font-medium">
-                        {activeInvoice.invoiceDate
+                        {/* {activeInvoice.invoiceDate
                           ? new Date(
                               activeInvoice.invoiceDate,
                             ).toLocaleDateString()
-                          : "—"}
+                          : "—"} */}
+
+
+                          {activeInvoice?.invoiceDate
+  ? format(new Date(activeInvoice.invoiceDate), "dd-MM-yyyy")
+  : "—"}
+
                       </div>
                     </div>
 
@@ -7762,7 +7786,12 @@ onClick={() => openViewPaymentsDrawer(inv)}
                             {r.currency} {amount}
                           </td>
                           <td className="px-4 py-3">
-                            {new Date(r.issueDate).toLocaleDateString()}
+                            {/* {new Date(r.issueDate).toLocaleDateString()} */}
+{r?.issueDate
+  ? format(new Date(r.issueDate), "dd-MM-yyyy")
+  : "—"}
+
+
                           </td>
 
                           <td className="px-4 py-3 text-right">
@@ -7814,7 +7843,14 @@ onClick={() => openViewPaymentsDrawer(inv)}
           <div className="relative z-10 w-full max-w-4xl bg-white rounded shadow-lg p-6 text-sm">
             <h2 className="text-lg font-semibold mb-2">Proforma Invoice</h2>
             <p>Invoice No.: {viewReceipt.invoiceId}</p>
-            <p>Issue Date: {new Date(viewReceipt.issueDate).toDateString()}</p>
+            {/* <p>Issue Date: {new Date(viewReceipt.issueDate).toDateString()}</p> */}
+            <p>
+  Issue Date:{" "}
+  {viewReceipt?.issueDate
+    ? format(new Date(viewReceipt.issueDate), "dd-MM-yyyy")
+    : "—"}
+</p>
+
 
             <div className="grid grid-cols-2 gap-6 mt-4 border p-4">
               <div>

@@ -8,6 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Clock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { format } from "date-fns";
 
 type Employee = {
   employeeId: string;
@@ -558,9 +559,11 @@ export default function Dashboard() {
   const durS = Math.floor((durationMs % 60000) / 1000);
   const durationLabel = `${durH}h ${durM}m ${durS}s`;
 
-  const headerWeekday = new Date().toLocaleDateString(undefined, {
-    weekday: "long",
-  });
+  const headerWeekday = 
+  // new Date().toLocaleDateString(undefined, {
+  //   weekday: "long",
+  // });
+format(new Date(), "EEEE");
 
   // derived flag: show Clock Out only when server indicates clocked in AND we don't have a clocked-out lock
   const showClockOutButton = isClockedIn && !hasClockedOut;
@@ -914,12 +917,19 @@ export default function Dashboard() {
             <div className="flex items-center gap-4 mb-4">
               <Clock />
               <div className="font-medium">
-                {new Date().toLocaleDateString()} |{" "}
-                {new Date().toLocaleTimeString([], {
+                {
+                // new Date().toLocaleDateString()
+                format(new Date(), "dd-MM-yyyy")
+                } |{" "}
+                {/* {new Date().toLocaleTimeString([], {
                   hour: "2-digit",
                   minute: "2-digit",
                   hour12: true,
-                })}
+                })} */}
+
+{format(new Date(), "hh:mm a")}
+
+
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -991,12 +1001,15 @@ export default function Dashboard() {
               <div className="rounded border p-4">
                 <div className="text-sm mb-2">
                   Date -{" "}
-                  {new Date(selectedDay).toLocaleDateString(undefined, {
+                  {/* {new Date(selectedDay).toLocaleDateString(undefined, {
                     weekday: "long",
                     day: "2-digit",
                     month: "short",
                     year: "numeric",
-                  })}
+                  })} */}
+
+                  {format(new Date(selectedDay), "EEEE, dd-MM-yyyy")}
+
                 </div>
 
                 <div className="bg-gray-50 rounded p-3 mb-4">

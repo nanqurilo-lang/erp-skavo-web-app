@@ -1788,9 +1788,14 @@ const selectedPriority = priorities.find(
                     </TableCell>
 
                     <TableCell>
-                      {deal.expectedCloseDate
+                      {/* {deal.expectedCloseDate
                         ? new Date(deal.expectedCloseDate).toLocaleDateString()
-                        : "—"}
+                        : "—"} */}
+
+{deal.expectedCloseDate
+    ? format(new Date(deal.expectedCloseDate), "dd-MM-yyyy")
+    : "—"}
+
                     </TableCell>
 
                     {/* <TableCell>{nextFollowUpDisplay}</TableCell> */}

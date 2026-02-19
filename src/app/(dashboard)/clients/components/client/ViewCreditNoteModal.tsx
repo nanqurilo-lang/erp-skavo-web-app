@@ -2,6 +2,8 @@
 
 import { X, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { format } from "date-fns";
+
 
 export default function ViewCreditNoteModal({
   open,
@@ -40,9 +42,15 @@ export default function ViewCreditNoteModal({
             <div>
               <div className="text-gray-500">Credit Date</div>
               <div className="font-medium">
-                {credit.creditDate
+                {/* {credit.creditDate
                   ? new Date(credit.creditDate).toLocaleDateString()
-                  : "—"}
+                  : "—"} */}
+
+{credit?.creditDate
+  ? format(new Date(credit.creditDate), "dd-MM-yyyy")
+  : "—"}
+
+
               </div>
             </div>
 

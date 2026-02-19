@@ -530,13 +530,29 @@ function initials(name: string) {
     .toUpperCase();
 }
 
+// function formatDateShort(d: Date) {
+//   try {
+
+
+
+
+//     return d.toLocaleDateString();
+//   } catch {
+//     return String(d);
+//   }
+// }
+
+
 function formatDateShort(d: Date) {
-  try {
-    return d.toLocaleDateString();
-  } catch {
-    return String(d);
-  }
+  const dy = new Date(d);
+
+  const day = String(dy.getDate()).padStart(2, "0");
+  const month = String(dy.getMonth() + 1).padStart(2, "0"); // month starts from 0
+  const year = dy.getFullYear();
+
+  return `${day}-${month}-${year}`;
 }
+
 
 /* ------------------- DealCard ------------------- */
 
@@ -1137,17 +1153,8 @@ function DealCard({
     }
   };
 
-  console.log("DEAL RAW OBJECT:", deal);
 
-  // compute most recent followup created from localFollowupsCreated + initialFollowups (so local changes reflect)
-  // const mostRecentFollowupFromLocal = pickMostRecentDate([
-  //   ...localFollowupsCreated,
-  //   ...initialFollowups,
-  // ]);
 
-  // Determine final followup date to show in the "followup" place:
-  // prefer explicit nextFollowup field, else fallback to the most recent created followup (from local/server)
-  // const displayFollowupDate = nextFollowup ?? mostRecentFollowupFromLocal;
 
   return (
     <div className="group rounded-lg border border-border bg-card hover:border-primary/50 hover:shadow-md transition-all duration-200 cursor-default">

@@ -3551,7 +3551,10 @@ const [noteActionMode, setNoteActionMode] = useState<"view" | "edit" | null>(nul
   };
 
   // Small UI helpers
-  const formatDate = (d?: string) => (d ? new Date(d).toLocaleDateString() : "—");
+  const formatDate = (d?: string) => (d ? 
+    // new Date(d).toLocaleDateString() 
+   format(new Date(d), "dd-MM-yyyy")
+    : "—");
   const formatTime = (t?: string) => (t ? t : "—");
 
   // People modal search filter
@@ -3954,7 +3957,13 @@ const [noteActionMode, setNoteActionMode] = useState<"view" | "edit" | null>(nul
                             </div>
                             <div className="text-sm">
                               <div className="font-medium">{doc.filename}</div>
-                              <div className="text-xs text-gray-500">Uploaded: {doc.uploadedAt ? new Date(doc.uploadedAt).toLocaleString() : "—"}</div>
+                              <div className="text-xs text-gray-500">
+                                {/* Uploaded: {doc.uploadedAt ? new Date(doc.uploadedAt).toLocaleString() : "—"} */}
+
+                                 Uploaded: {doc.uploadedAt
+    ? format(new Date(doc.uploadedAt), "dd-MM-yyyy hh:mm a")
+    : "—"}
+                                </div>
                             </div>
                           </div>
 
@@ -3993,7 +4002,7 @@ const [noteActionMode, setNoteActionMode] = useState<"view" | "edit" | null>(nul
                         <path d="M12 5v14" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                         <path d="M5 12h14" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
-                      Add a Follow Up
+                      Add a Follow Up 
                     </button>
                   </div>
 
@@ -4319,7 +4328,10 @@ const [noteActionMode, setNoteActionMode] = useState<"view" | "edit" | null>(nul
 
                       {deal.comments && deal.comments.length > 0 && deal.comments.map((c: any, idx: number) => (
                         <div key={c.id || `${c.employeeId ?? "emp"}-${c.createdAt ?? idx}`} className="grid grid-cols-[140px_1fr_80px] items-start border-t p-4">
-                          <div className="text-sm text-gray-700">{new Date(c.createdAt).toLocaleDateString()}</div>
+                          <div className="text-sm text-gray-700">{
+                          // new Date(c.createdAt).toLocaleDateString()
+                          format(new Date(c.createdAt), "dd-MM-yyyy")
+                          }</div>
                           <div className="text-sm text-gray-700">{c.commentText || "--"}</div>
                           <div className="text-center">
                             <button
