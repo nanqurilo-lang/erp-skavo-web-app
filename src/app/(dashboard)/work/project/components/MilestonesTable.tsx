@@ -702,15 +702,15 @@ export default function MilestonesTable({
                    : "-"}
                 </div>
                 <div>
-                  <strong>Created At:</strong> {selected.createdAt ?
+                  <strong>Created At: </strong> {selected.createdAt ?
                   //  new Date(selected.createdAt).toLocaleString()
                     format(new Date(selected.createdAt), "dd-MM-yyyy HH:mm:ss") 
                    : "-"}
                 </div>
-                <div>
+                {/* <div>
                   <strong>Raw:</strong>{" "}
                   <pre className="text-xs bg-gray-50 p-2 rounded">{JSON.stringify(selected, null, 2)}</pre>
-                </div>
+                </div> */}
               </div>
 
               <div className="flex items-center justify-center gap-6 mt-6 pb-6">
