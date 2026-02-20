@@ -1732,9 +1732,9 @@ export default function DealsPage() {
 
 
 
-const selectedPriority = priorities.find(
-  (p) => String(p.id) === prioritySelectValue
-);
+                const selectedPriority = priorities.find(
+                  (p) => String(p.id) === prioritySelectValue
+                );
 
 
 
@@ -1792,9 +1792,9 @@ const selectedPriority = priorities.find(
                         ? new Date(deal.expectedCloseDate).toLocaleDateString()
                         : "—"} */}
 
-{deal.expectedCloseDate
-    ? format(new Date(deal.expectedCloseDate), "dd-MM-yyyy")
-    : "—"}
+                      {deal.expectedCloseDate
+                        ? format(new Date(deal.expectedCloseDate), "dd-MM-yyyy")
+                        : "—"}
 
                     </TableCell>
 
@@ -1916,26 +1916,26 @@ const selectedPriority = priorities.find(
                               <SelectValue placeholder="Priority" />
                             </SelectTrigger> */}
 
-<SelectTrigger
-  className="w-32 text-sm py-1"
-  aria-label="Priority status"
->
-  {selectedPriority ? (
-    <div className="flex items-center gap-2">
-      <span
-        className="inline-block w-2 h-2 rounded-full"
-        style={{ backgroundColor: selectedPriority.color }}
-      />
-      <span className="text-sm">
-        {selectedPriority.status}
-      </span>
-    </div>
-  ) : (
-    <span className="text-sm text-muted-foreground">
-      Priority
-    </span>
-  )}
-</SelectTrigger>
+                            <SelectTrigger
+                              className="w-32 text-sm py-1"
+                              aria-label="Priority status"
+                            >
+                              {selectedPriority ? (
+                                <div className="flex items-center gap-2">
+                                  <span
+                                    className="inline-block w-2 h-2 rounded-full"
+                                    style={{ backgroundColor: selectedPriority.color }}
+                                  />
+                                  <span className="text-sm">
+                                    {selectedPriority.status}
+                                  </span>
+                                </div>
+                              ) : (
+                                <span className="text-sm text-muted-foreground">
+                                  Priority
+                                </span>
+                              )}
+                            </SelectTrigger>
 
 
 
@@ -2142,20 +2142,20 @@ const selectedPriority = priorities.find(
                     ))} */}
 
 
-{priorities
-  .filter((p) =>
-    ["high", "medium", "low"].includes(
-      String(p.status).toLowerCase()
-    )
-  )
-  .map((p) => (
-    <SelectItem
-      key={p.id}
-      value={String(p.status).toLowerCase()}
-    >
-      {p.status}
-    </SelectItem>
-  ))}
+                  {priorities
+                    .filter((p) =>
+                      ["high", "medium", "low"].includes(
+                        String(p.status).toLowerCase()
+                      )
+                    )
+                    .map((p) => (
+                      <SelectItem
+                        key={p.id}
+                        value={String(p.status).toLowerCase()}
+                      >
+                        {p.status}
+                      </SelectItem>
+                    ))}
 
 
 

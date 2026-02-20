@@ -163,7 +163,7 @@ function TaskStatistics({ projectId }: { projectId: number }) {
       setError(null);
       try {
         // fetch statuses
-          const token = localStorage.getItem("accessToken") || "";
+        const token = localStorage.getItem("accessToken") || "";
 
         const statusUrl = `${MAIN}/status`;
         const [sRes, tRes] = await Promise.all([
@@ -498,8 +498,8 @@ export default function ProjectDetailsPage() {
                     <p className="text-sm text-gray-500">Start Date</p>
                     <p className="font-medium">
                       {
-                      // new Date(project.startDate).toLocaleDateString()
-                      format(new Date(project.startDate), "dd-MM-yyyy")
+                        // new Date(project.startDate).toLocaleDateString()
+                        format(new Date(project.startDate), "dd-MM-yyyy")
                       }
                     </p>
                   </div>
@@ -510,10 +510,10 @@ export default function ProjectDetailsPage() {
                       {project.noDeadline
                         ? "No Deadline"
                         : project.deadline
-                        ? 
-                        // new Date(project.deadline).toLocaleDateString()
-                        format(new Date(project.deadline), "dd-MM-yyyy")
-                        : "TBD"}
+                          ?
+                          // new Date(project.deadline).toLocaleDateString()
+                          format(new Date(project.deadline), "dd-MM-yyyy")
+                          : "TBD"}
                     </p>
                   </div>
                 </div>
@@ -608,7 +608,7 @@ export default function ProjectDetailsPage() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {project.assignedEmployees &&
-                project.assignedEmployees.length ? (
+                  project.assignedEmployees.length ? (
                   project.assignedEmployees.map((emp) => (
                     <div
                       key={emp.employeeId}
@@ -650,16 +650,16 @@ export default function ProjectDetailsPage() {
                 <div>
                   Created on:{" "}
                   {
-                  // new Date(project.createdAt || "").toLocaleDateString()
-                  format(new Date(project.createdAt || ""), "dd-MM-yyyy")
+                    // new Date(project.createdAt || "").toLocaleDateString()
+                    format(new Date(project.createdAt || ""), "dd-MM-yyyy")
                   }
                 </div>
                 {project.pinned && (
                   <div>
                     Pinned on:{" "}
                     {
-                    // new Date(project.pinnedAt || "").toLocaleDateString()
-                    format(new Date(project.pinnedAt || ""), "dd-MM-yyyy")
+                      // new Date(project.pinnedAt || "").toLocaleDateString()
+                      format(new Date(project.pinnedAt || ""), "dd-MM-yyyy")
                     }
                   </div>
                 )}
@@ -667,8 +667,8 @@ export default function ProjectDetailsPage() {
                   <div>
                     Archived on:{" "}
                     {
-                    // new Date(project.archivedAt || "").toLocaleDateString()
-                    format(new Date(project.archivedAt || ""), "dd-MM-yyyy")
+                      // new Date(project.archivedAt || "").toLocaleDateString()
+                      format(new Date(project.archivedAt || ""), "dd-MM-yyyy")
                     }
                   </div>
                 )}

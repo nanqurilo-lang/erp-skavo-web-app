@@ -121,8 +121,8 @@ export default function Dashboard() {
     s.includes("Incomplete")
       ? "bg-red-100 text-red-800 border-red-200"
       : s === "Doing"
-      ? "bg-blue-100 text-blue-800 border-blue-200"
-      : "bg-yellow-100 text-yellow-800 border-yellow-200";
+        ? "bg-blue-100 text-blue-800 border-blue-200"
+        : "bg-yellow-100 text-yellow-800 border-yellow-200";
 
   // fast local read for today's lock so initial render isn't janky
   useEffect(() => {
@@ -275,11 +275,11 @@ export default function Dashboard() {
           const lr = await leaveRes.json();
           const flat = Array.isArray(lr)
             ? lr.flatMap((entry: any) =>
-                (entry.employeesOnLeave || []).map((e: any) => ({
-                  ...e,
-                  date: entry.date,
-                }))
-              )
+              (entry.employeesOnLeave || []).map((e: any) => ({
+                ...e,
+                date: entry.date,
+              }))
+            )
             : [];
           setLeaves(flat);
         }
@@ -369,11 +369,11 @@ export default function Dashboard() {
         const lr = await leaveRes.json();
         const flat = Array.isArray(lr)
           ? lr.flatMap((entry: any) =>
-              (entry.employeesOnLeave || []).map((e: any) => ({
-                ...e,
-                date: entry.date,
-              }))
-            )
+            (entry.employeesOnLeave || []).map((e: any) => ({
+              ...e,
+              date: entry.date,
+            }))
+          )
           : [];
         setLeaves(flat);
       } else setLeaves([]);
@@ -529,18 +529,18 @@ export default function Dashboard() {
 
   const clockInLabel = clockInTime
     ? new Date(`${selectedDay}T${clockInTime}`).toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true,
-      })
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    })
     : "—";
 
   const clockOutLabel = clockOutTime
     ? new Date(`${selectedDay}T${clockOutTime}`).toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true,
-      })
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    })
     : "Did not clock out";
   const previewClockOutLabel = new Date().toLocaleTimeString([], {
     hour: "2-digit",
@@ -551,7 +551,7 @@ export default function Dashboard() {
   const durationMs = clockInTime
     ? clockOutTime
       ? new Date(`${selectedDay}T${clockOutTime}`).getTime() -
-        new Date(`${selectedDay}T${clockInTime}`).getTime()
+      new Date(`${selectedDay}T${clockInTime}`).getTime()
       : Date.now() - new Date(`${selectedDay}T${clockInTime}`).getTime()
     : 0;
   const durH = Math.floor(durationMs / 3600000);
@@ -559,11 +559,11 @@ export default function Dashboard() {
   const durS = Math.floor((durationMs % 60000) / 1000);
   const durationLabel = `${durH}h ${durM}m ${durS}s`;
 
-  const headerWeekday = 
-  // new Date().toLocaleDateString(undefined, {
-  //   weekday: "long",
-  // });
-format(new Date(), "EEEE");
+  const headerWeekday =
+    // new Date().toLocaleDateString(undefined, {
+    //   weekday: "long",
+    // });
+    format(new Date(), "EEEE");
 
   // derived flag: show Clock Out only when server indicates clocked in AND we don't have a clocked-out lock
   const showClockOutButton = isClockedIn && !hasClockedOut;
@@ -602,156 +602,155 @@ format(new Date(), "EEEE");
         )}
       </div>
 
-    {/* Replace your existing fragment with this JSX (keeps all logic/props unchanged) */}
-<div className="mt-4">
-  {/* Top-level grid: left = profile + tasks (2 cols), right = small summaries + timelogs (1 col) */}
-  <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-    {/* Left column: Profile card (spans 2 cols on lg) */}
-    <div className="lg:col-span-2">
-      <div className=" ">
-        <div className="flex items-center rounded-lg border bg-white p-6 gap-6">
-          {/* Avatar */}
-          <div className="h-20 w-20 rounded-full overflow-hidden border">
-            {employee.profilePictureUrl ? (
-              <img
-                src={employee.profilePictureUrl}
-                alt={employee.name}
-                className="h-full w-full object-cover"
-              />
-            ) : (
-              <div className="h-full w-full flex items-center justify-center text-sm text-muted-foreground">
-                No Img
+      {/* Replace your existing fragment with this JSX (keeps all logic/props unchanged) */}
+      <div className="mt-4">
+        {/* Top-level grid: left = profile + tasks (2 cols), right = small summaries + timelogs (1 col) */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          {/* Left column: Profile card (spans 2 cols on lg) */}
+          <div className="lg:col-span-2">
+            <div className=" ">
+              <div className="flex items-center rounded-lg border bg-white p-6 gap-6">
+                {/* Avatar */}
+                <div className="h-20 w-20 rounded-full overflow-hidden border">
+                  {employee.profilePictureUrl ? (
+                    <img
+                      src={employee.profilePictureUrl}
+                      alt={employee.name}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <div className="h-full w-full flex items-center justify-center text-sm text-muted-foreground">
+                      No Img
+                    </div>
+                  )}
+                </div>
+
+                {/* Profile details */}
+                <div className="flex-1">
+                  <div className="text-lg font-medium">{employee.name}</div>
+                  <div className="text-sm text-muted-foreground">
+                    {employee.designationName} · {employee.departmentName}
+                  </div>
+                  <div className="text-xs text-muted-foreground mt-1">
+                    Employee Code - {employee.employeeId}
+                  </div>
+                </div>
               </div>
-            )}
+
+              {/* Stats row under profile (small boxes) */}
+
+
+              {/* My Tasks card (below profile + stats) */}
+              <div className="mt-6">
+                <Card className="border-0 shadow-sm">
+                  <CardContent>
+                    <div className="text-lg font-medium mb-3">My Tasks</div>
+                    <div className="border rounded overflow-hidden">
+                      <table className="w-full text-sm">
+                        <thead className="bg-blue-50">
+                          <tr>
+                            <th className="p-3 text-left">Task #</th>
+                            <th className="p-3 text-left">Task Name</th>
+                            <th className="p-3 text-left">Status</th>
+                            <th className="p-3 text-left">Due Date</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {tasks.map((t, i) => (
+                            <tr key={i} className="border-t">
+                              <td className="p-3 text-xs text-muted-foreground">RTA-40</td>
+                              <td className="p-3">{t.title ?? t.name}</td>
+                              <td className="p-3">
+                                <Badge className={`${statusColor(t.status)} border`}>
+                                  {t.status}
+                                </Badge>
+                              </td>
+                              <td className="p-3">{t.dueDate ?? "-"}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
           </div>
 
-          {/* Profile details */}
-          <div className="flex-1">
-            <div className="text-lg font-medium">{employee.name}</div>
-            <div className="text-sm text-muted-foreground">
-              {employee.designationName} · {employee.departmentName}
+          {/* Right column: compact summary cards stacked and Week Timelogs (matches screenshot) */}
+          <div className="space-y-4">
+            {/* Compact summaries row (two columns inside each small card container to match screenshot feel) */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="rounded-lg ">
+                <Summary
+                  title="Projects"
+                  a={pad(projectsCnt.pending)}
+                  aLabel="Pending"
+                  b={pad(projectsCnt.overdue)}
+                  bLabel="Overdue"
+                />
+              </div>
+
+              <div className="rounded-lg ">
+                <Summary
+                  title="Tasks"
+                  a={pad(tasksCnt.pending)}
+                  aLabel="Pending"
+                  b={pad(tasksCnt.overdue)}
+                  bLabel="Overdue"
+                />
+              </div>
+
+              <div className="rounded-lg ">
+                <Summary
+                  title="Follow Ups"
+                  a={pad(followUpCnt.pending)}
+                  aLabel="Pending"
+                  b={pad(followUpCnt.upcoming)}
+                  bLabel="Upcoming"
+                />
+              </div>
+
+              <div className="rounded-lg ">
+                <Summary
+                  title="Deals"
+                  a={pad(dealsCnt.totalDeals)}
+                  aLabel="Total Deals"
+                  b={pad(dealsCnt.convertedDeals)}
+                  bLabel="Converted Deals"
+                />
+              </div>
             </div>
-            <div className="text-xs text-muted-foreground mt-1">
-              Employee Code - {employee.employeeId}
+
+            {/* Week Timelogs card */}
+            <div className="rounded-lg border p-4 bg-white shadow-sm">
+              <div className="text-lg font-medium">Week Timelogs</div>
+
+              <div className="mt-4 flex justify-center gap-3 text-sm">
+                {weekDates(selectedDay).map((d) => {
+                  const iso = d.toISOString().slice(0, 10);
+                  const sel = iso === selectedDay;
+                  return (
+                    <button
+                      key={iso}
+                      onClick={() => setSelectedDay(iso)}
+                      className={`w-10 h-10 rounded-full flex items-center justify-center text-sm ${sel ? "bg-primary text-white" : "bg-muted text-muted-foreground"
+                        }`}
+                    >
+                      {d.toLocaleDateString([], { weekday: "short" }).slice(0, 2)}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div className="mt-4">
+                <Progress value={timelog.progress} className="h-3 rounded-full" />
+                <div className="text-xs text-muted-foreground mt-2">Duration: {timelog.duration}</div>
+              </div>
             </div>
           </div>
         </div>
-
-        {/* Stats row under profile (small boxes) */}
-       
-
-        {/* My Tasks card (below profile + stats) */}
-        <div className="mt-6">
-          <Card className="border-0 shadow-sm">
-            <CardContent>
-              <div className="text-lg font-medium mb-3">My Tasks</div>
-              <div className="border rounded overflow-hidden">
-                <table className="w-full text-sm">
-                  <thead className="bg-blue-50">
-                    <tr>
-                      <th className="p-3 text-left">Task #</th>
-                      <th className="p-3 text-left">Task Name</th>
-                      <th className="p-3 text-left">Status</th>
-                      <th className="p-3 text-left">Due Date</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {tasks.map((t, i) => (
-                      <tr key={i} className="border-t">
-                        <td className="p-3 text-xs text-muted-foreground">RTA-40</td>
-                        <td className="p-3">{t.title ?? t.name}</td>
-                        <td className="p-3">
-                          <Badge className={`${statusColor(t.status)} border`}>
-                            {t.status}
-                          </Badge>
-                        </td>
-                        <td className="p-3">{t.dueDate ?? "-"}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
       </div>
-    </div>
-
-    {/* Right column: compact summary cards stacked and Week Timelogs (matches screenshot) */}
-    <div className="space-y-4">
-      {/* Compact summaries row (two columns inside each small card container to match screenshot feel) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="rounded-lg ">
-          <Summary
-            title="Projects"
-            a={pad(projectsCnt.pending)}
-            aLabel="Pending"
-            b={pad(projectsCnt.overdue)}
-            bLabel="Overdue"
-          />
-        </div>
-
-        <div className="rounded-lg ">
-          <Summary
-            title="Tasks"
-            a={pad(tasksCnt.pending)}
-            aLabel="Pending"
-            b={pad(tasksCnt.overdue)}
-            bLabel="Overdue"
-          />
-        </div>
-
-        <div className="rounded-lg ">
-           <Summary
-            title="Follow Ups"
-            a={pad(followUpCnt.pending)}
-            aLabel="Pending"
-            b={pad(followUpCnt.upcoming)}
-            bLabel="Upcoming"
-          />
-        </div>
-
-        <div className="rounded-lg ">
-           <Summary
-            title="Deals"
-            a={pad(dealsCnt.totalDeals)}
-            aLabel="Total Deals"
-            b={pad(dealsCnt.convertedDeals)}
-            bLabel="Converted Deals"
-          />
-        </div>
-      </div>
-
-      {/* Week Timelogs card */}
-      <div className="rounded-lg border p-4 bg-white shadow-sm">
-        <div className="text-lg font-medium">Week Timelogs</div>
-
-        <div className="mt-4 flex justify-center gap-3 text-sm">
-          {weekDates(selectedDay).map((d) => {
-            const iso = d.toISOString().slice(0, 10);
-            const sel = iso === selectedDay;
-            return (
-              <button
-                key={iso}
-                onClick={() => setSelectedDay(iso)}
-                className={`w-10 h-10 rounded-full flex items-center justify-center text-sm ${
-                  sel ? "bg-primary text-white" : "bg-muted text-muted-foreground"
-                }`}
-              >
-                {d.toLocaleDateString([], { weekday: "short" }).slice(0, 2)}
-              </button>
-            );
-          })}
-        </div>
-
-        <div className="mt-4">
-          <Progress value={timelog.progress} className="h-3 rounded-full" />
-          <div className="text-xs text-muted-foreground mt-2">Duration: {timelog.duration}</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 
 
       <div>
@@ -918,8 +917,8 @@ format(new Date(), "EEEE");
               <Clock />
               <div className="font-medium">
                 {
-                // new Date().toLocaleDateString()
-                format(new Date(), "dd-MM-yyyy")
+                  // new Date().toLocaleDateString()
+                  format(new Date(), "dd-MM-yyyy")
                 } |{" "}
                 {/* {new Date().toLocaleTimeString([], {
                   hour: "2-digit",
@@ -927,7 +926,7 @@ format(new Date(), "EEEE");
                   hour12: true,
                 })} */}
 
-{format(new Date(), "hh:mm a")}
+                {format(new Date(), "hh:mm a")}
 
 
               </div>

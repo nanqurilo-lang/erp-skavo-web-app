@@ -43,7 +43,7 @@ const COUNTRIES = [
   "Norway", "Pakistan", "Philippines", "Poland", "Portugal", "Qatar",
   "Romania", "Russia", "Saudi Arabia", "Singapore", "South Africa",
   "South Korea", "Spain", "Sri Lanka", "Sweden", "Switzerland", "Thailand",
-  "Turkey", "UAE", "UK", "Ukraine", "USA", "Vietnam", "Zimbabwe","Others"
+  "Turkey", "UAE", "UK", "Ukraine", "USA", "Vietnam", "Zimbabwe", "Others"
 ];
 
 
@@ -808,7 +808,7 @@ function LeadRow({
   const [open, setOpen] = useState(false);
 
 
- // ✅ ADD HERE (inside component)
+  // ✅ ADD HERE (inside component)
   const [menuPos, setMenuPos] = useState<{ top: number; left: number }>({
     top: 0,
     left: 0,
@@ -830,25 +830,25 @@ function LeadRow({
 
 
 
-useEffect(() => {
-  if (!open) return;
+  useEffect(() => {
+    if (!open) return;
 
-  const handleClickOutside = (e: MouseEvent) => {
-    const target = e.target as Node;
+    const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as Node;
 
-    // If click is inside row → ignore
-    if (rowRef.current?.contains(target)) return;
+      // If click is inside row → ignore
+      if (rowRef.current?.contains(target)) return;
 
-    // If click is inside dropdown → ignore
-    if (dropdownRef.current?.contains(target)) return;
+      // If click is inside dropdown → ignore
+      if (dropdownRef.current?.contains(target)) return;
 
-    // Otherwise close
-    setOpen(false);
-  };
+      // Otherwise close
+      setOpen(false);
+    };
 
-  document.addEventListener("mousedown", handleClickOutside);
-  return () => document.removeEventListener("mousedown", handleClickOutside);
-}, [open]);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [open]);
 
 
 
@@ -896,10 +896,10 @@ useEffect(() => {
       <TableCell>
         <span className="text-sm">
           {lead.createdAt ?
-          //  new Date(lead.createdAt).toLocaleDateString() : "—"
-          format(new Date(lead.createdAt), "dd-MM-yyyy") : "—"
+            //  new Date(lead.createdAt).toLocaleDateString() : "—"
+            format(new Date(lead.createdAt), "dd-MM-yyyy") : "—"
 
-           }
+          }
         </span>
       </TableCell>
 
@@ -907,20 +907,20 @@ useEffect(() => {
         <button
           // onClick={() => setOpen((s) => !s)}
 
-onClick={(e) => {
-  e.stopPropagation();
+          onClick={(e) => {
+            e.stopPropagation();
 
-  const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+            const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
 
-  const menuWidth = 224; // w-56 = 224px
+            const menuWidth = 224; // w-56 = 224px
 
-  setMenuPos({
-    top: rect.bottom + window.scrollY,
-    left: rect.right + window.scrollX - menuWidth,
-  });
+            setMenuPos({
+              top: rect.bottom + window.scrollY,
+              left: rect.right + window.scrollX - menuWidth,
+            });
 
-  setOpen((prev) => !prev);
-}}
+            setOpen((prev) => !prev);
+          }}
 
 
 
@@ -1058,70 +1058,70 @@ onClick={(e) => {
 
 
 
-{open &&
-  typeof window !== "undefined" &&
-  createPortal(
-    <div
-          ref={dropdownRef}
+        {open &&
+          typeof window !== "undefined" &&
+          createPortal(
+            <div
+              ref={dropdownRef}
 
-      style={{
-        position: "absolute",
-        top: menuPos.top,
-        left: menuPos.left,
-        width: "224px",
-        zIndex: 9999,
-      }}
-      className="rounded-md bg-white shadow-xl border bg-white"
-    >
-      <ul className="py-1">
-        <li>
-          <button
-            onClick={() => {
-              setOpen(false);
-              onView(lead.id);
-            }}
-            className="w-full flex items-center gap-3 px-4 py-3 text-sm hover:bg-slate-50"
-          >
-            View
-          </button>
-        </li>
+              style={{
+                position: "absolute",
+                top: menuPos.top,
+                left: menuPos.left,
+                width: "224px",
+                zIndex: 9999,
+              }}
+              className="rounded-md bg-white shadow-xl border bg-white"
+            >
+              <ul className="py-1">
+                <li>
+                  <button
+                    onClick={() => {
+                      setOpen(false);
+                      onView(lead.id);
+                    }}
+                    className="w-full flex items-center gap-3 px-4 py-3 text-sm hover:bg-slate-50"
+                  >
+                    View
+                  </button>
+                </li>
 
-        <li>
-          <button
-            onClick={() => {
-              setOpen(false);
-              onEdit(lead.id);
-            }}
-            className="w-full flex items-center gap-3 px-4 py-3 text-sm hover:bg-slate-50"
-          >
-            Edit
-          </button>
-        </li>
+                <li>
+                  <button
+                    onClick={() => {
+                      setOpen(false);
+                      onEdit(lead.id);
+                    }}
+                    className="w-full flex items-center gap-3 px-4 py-3 text-sm hover:bg-slate-50"
+                  >
+                    Edit
+                  </button>
+                </li>
 
-        <li>
-          <button
-            onClick={() => {
-              setOpen(false);
-              onChangeToClient(lead.id);
-            }}
-            className="w-full flex items-center gap-3 px-4 py-3 text-sm hover:bg-slate-50"
-          >
-            Change to Client
-          </button>
-        </li>
+                <li>
+                  <button
+                    onClick={() => {
+                      setOpen(false);
+                      onChangeToClient(lead.id);
+                    }}
+                    className="w-full flex items-center gap-3 px-4 py-3 text-sm hover:bg-slate-50"
+                  >
+                    Change to Client
+                  </button>
+                </li>
 
-        <li>
-          <button
-            onClick={remove}
-            className="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-600 hover:bg-slate-50"
-          >
-            Delete
-          </button>
-        </li>
-      </ul>
-    </div>,
-    document.body
-  )}
+                <li>
+                  <button
+                    onClick={remove}
+                    className="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-600 hover:bg-slate-50"
+                  >
+                    Delete
+                  </button>
+                </li>
+              </ul>
+            </div>,
+            document.body
+          )}
 
 
 
@@ -1341,11 +1341,11 @@ export default function LeadsAdminPage() {
                 <div className="text-sm text-muted-foreground  font-medium">
                   {startDate && endDate
                     ? `${
-                      // new Date(startDate).toLocaleDateString()
-                      format(new Date(startDate), "dd-MM-yyyy")
+                    // new Date(startDate).toLocaleDateString()
+                    format(new Date(startDate), "dd-MM-yyyy")
                     } to ${
-                      // new Date(endDate).toLocaleDateString()
-                      format(new Date(endDate), "dd-MM-yyyy")
+                    // new Date(endDate).toLocaleDateString()
+                    format(new Date(endDate), "dd-MM-yyyy")
                     }`
                     : <div className="flex items-center gap-3">
                       StartDate to EndDate <CalendarIcon className="w-4 h-4 text-muted-foreground" />
