@@ -59,7 +59,7 @@ type StatusItem = {
   createdBy?: string;
 };
 
-const MAIN = process.env.NEXT_PUBLIC_MAIN ;
+const MAIN = process.env.NEXT_PUBLIC_MAIN;
 
 export default function TasksTable({ projectId }: { projectId: number }) {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -364,12 +364,12 @@ export default function TasksTable({ projectId }: { projectId: number }) {
           </button> */}
 
 
-<button
-  onClick={() => setShowCreate(true)}
-  className="px-3 py-2 bg-blue-600 text-white rounded"
->
-  + Add Task
-</button>
+          <button
+            onClick={() => setShowCreate(true)}
+            className="px-3 py-2 bg-blue-600 text-white rounded"
+          >
+            + Add Task
+          </button>
 
 
 
@@ -396,7 +396,8 @@ export default function TasksTable({ projectId }: { projectId: number }) {
         <div className="py-6 text-center text-red-500">{error}</div>
       ) : (
         <div className="overflow-x-auto">
-          <table className="min-w-full text-sm">
+          {/* <table className="min-w-full text-sm"> */}
+          <table className="min-w-full text-sm border-separate border-spacing-y-2">
             <thead>
               <tr className="bg-blue-50 text-left text-gray-600">
                 <th className="px-4 py-3">Code</th>
@@ -426,26 +427,37 @@ export default function TasksTable({ projectId }: { projectId: number }) {
                   const displayStatus = getDisplayStatus(t);
                   const statusName = displayStatus?.name ?? "Doing";
                   return (
-                    <tr key={t.id} className="border-b last:border-b-0 bg-white hover:bg-gray-50">
-                      <td className="px-4 py-4 align-top">RTA-{String(t.id).padStart(2, "0")}</td>
+                    // <tr key={t.id} className="border-b last:border-b-0 bg-white hover:bg-gray-50">
+                    <tr key={t.id} className="border-b last:border-b-0 bg-white hover:bg-gray-50 h-20">
 
-                      <td className="px-4 py-4 align-top">
+                      {/* <td className="px-4 py-4 align-top"> */}
+
+                      <td className="px-4 py-4 align-top whitespace-nowrap">
+
+                        RTA-{String(t.id).padStart(2, "0")}</td>
+
+                      {/* <td className="px-4 py-4 align-top"> */}
+                      <td className="px-4 py-4 align-top whitespace-nowrap">
+
+
                         <div className="font-medium">{t.title}</div>
                         <div className="text-xs text-gray-500 mt-1">{t.projectName ?? `Project ${t.projectId}`}</div>
                       </td>
 
                       <td className="px-4 py-4 align-top">--</td>
 
-                      <td className="px-4 py-4 align-top">{t.startDate ?
-                      //  new Date(t.startDate).toLocaleDateString() 
-                      format(new Date(t.startDate), "dd-MM-yyyy")
-                       : "--"}</td>
+                      <td className="px-4 py-4 align-top whitespace-nowrap">{t.startDate ?
+                        //  new Date(t.startDate).toLocaleDateString() 
+                        format(new Date(t.startDate), "dd-MM-yyyy")
+                        : "--"}</td>
 
-                      <td className={`px-4 py-4 align-top ${isOverdue ? "text-red-600" : ""}`}>
-                        {t.noDueDate ? "--" : t.dueDate ? 
-                        // new Date(t.dueDate).toLocaleDateString()
+                      {/* <td className={`px-4 py-4 align-top ${isOverdue ? "text-red-600" : ""}`}> */}
+                      <td className={`px-4 py-4 align-top whitespace-nowrap ${isOverdue ? "text-red-600" : ""}`}>
+
+                        {t.noDueDate ? "--" : t.dueDate ?
+                          // new Date(t.dueDate).toLocaleDateString()
                           format(new Date(t.dueDate), "dd-MM-yyyy")
-                         : "--"}
+                          : "--"}
                       </td>
 
                       <td className="px-4 py-4 align-top">{minsToHuman(t.hoursLoggedMinutes ?? null)}</td>
@@ -780,14 +792,14 @@ export default function TasksTable({ projectId }: { projectId: number }) {
       />
 
 
-<CreateTaskModal
-  open={showCreate}
-  onClose={() => setShowCreate(false)}
-  projectId={projectId}
-  onCreated={() => {
-    fetchTasks(); // tumhara existing reload fn
-  }}
-/>
+      <CreateTaskModal
+        open={showCreate}
+        onClose={() => setShowCreate(false)}
+        projectId={projectId}
+        onCreated={() => {
+          fetchTasks(); // tumhara existing reload fn
+        }}
+      />
 
 
     </div>

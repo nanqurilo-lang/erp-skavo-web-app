@@ -1478,7 +1478,7 @@ export default function LeadsAdminPage() {
         {/* controls */}
         <div className="flex items-start md:items-center justify-between mb-4 gap-3">
           <div className="flex items-center gap-3">
-            <button onClick={() => setAddModalOpen(true)} className="inline-flex items-center gap-2 rounded-md bg-sky-600 px-4 py-2 text-white text-sm font-medium shadow-sm hover:bg-sky-700">
+            <button onClick={() => setAddModalOpen(true)} className="inline-flex items-center gap-2 rounded-md bg-blue-700  px-4 py-2 text-white text-sm font-medium shadow-sm hover:bg-blue-600">
               + Add Lead
             </button>
           </div>

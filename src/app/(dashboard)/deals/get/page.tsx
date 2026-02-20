@@ -1619,7 +1619,7 @@ export default function DealsPage() {
         {/* Header row: Add Deal left, search + view toggles right (matches image layout) */}
         <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-4">
-            <Button asChild>
+            <Button asChild >
               <Link href="/deals/create">+ Add Deal</Link>
             </Button>
           </div>

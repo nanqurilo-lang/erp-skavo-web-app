@@ -590,7 +590,7 @@ format(new Date(), "EEEE");
                 : undefined
             }
           >
-            <Clock className="mr-2 h-4 w-4" /> Clock In
+            <Clock className=" h-4 w-4" /> Clock In
           </Button>
         ) : (
           <Button
