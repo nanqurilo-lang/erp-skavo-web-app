@@ -247,8 +247,8 @@ export default function ProjectMembersTableFetch({
       {!loading && (
         <table className="min-w-full text-sm">
           <thead>
-            <tr className="bg-blue-50">
-              <th className="px-4 py-3">Name</th>
+            <tr className="bg-blue-50 text-left ">
+              <th className="px-4 py-3 ">Name</th>
               <th className="px-4 py-3">User Role</th>
               <th className="px-4 py-3">Action</th>
             </tr>
