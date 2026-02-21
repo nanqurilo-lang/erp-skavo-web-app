@@ -429,7 +429,8 @@ export default function MilestonesTable({
       </div>
 
       {/* table */}
-      <div className="rounded-md border overflow-hidden">
+      {/* <div className="rounded-md border overflow-hidden"> */}
+      <div className="rounded-md border overflow-visible">
         <div className="bg-blue-50 text-gray-700 text-sm">
           <div className="grid grid-cols-12 gap-0 items-center px-4 py-3">
             <div className="col-span-4 font-medium">Title</div>
@@ -449,7 +450,9 @@ export default function MilestonesTable({
         ) : (
           <div>
             {rows.map((m) => (
-              <div key={m.id ?? Math.random()} className="grid grid-cols-12 gap-0 items-center px-4 py-4 border-t">
+              // <div key={m.id ?? Math.random()} className="grid grid-cols-12 gap-0 items-center px-4 py-4 border-t">
+
+              <div key={m.id ?? Math.random()} className="relative grid grid-cols-12 gap-0 items-center px-4 py-4 border-t">
                 <div className="col-span-4 text-sm">{m.title}</div>
                 <div className="col-span-2 text-sm">{formatCurrency(m.milestoneCost)}</div>
                 <div className="col-span-2 text-sm">{String(m.taskCount ?? "00").padStart(2, "0")}</div>
@@ -518,7 +521,8 @@ export default function MilestonesTable({
                   </button>
 
                   {actionOpenFor === m.id && (
-                    <div className="absolute right-0 mt-2 z-30 w-44 bg-white border rounded-md shadow-lg text-sm">
+                    // <div className="absolute right-0 mt-2 z-30 w-44 bg-white border rounded-md shadow-lg text-sm">
+                    <div className="absolute right-0 top-full mt-2 z-[999] w-44 bg-white border rounded-md shadow-lg text-sm">
                       <button
                         onClick={() => {
                           openView(m);
