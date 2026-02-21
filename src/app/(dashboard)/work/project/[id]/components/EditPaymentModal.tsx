@@ -383,28 +383,62 @@ if (!res.ok) {
     }
   };
 
-  return (
-    <div className="fixed inset-0 z-[13000] flex items-start justify-center pt-8 px-4 overflow-y-auto">
-      <div
-        className="fixed inset-0 bg-black/40"
-        onClick={onClose}
-      />
+  // return (
+    // <div className="fixed inset-0 z-[13000] flex items-start justify-center pt-8 px-4 overflow-y-auto">
+    //   <div
+    //     className="fixed inset-0 bg-black/40"
+    //     onClick={onClose}
+    //   />
 
 
 
-      <div className="relative w-full max-w-3xl bg-white rounded-xl shadow-2xl z-10">
-        {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b">
-          <h3 className="text-lg font-semibold">
-            Edit Payment Details
-          </h3>
-          <button
-            onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded"
-          >
-            <X />
-          </button>
-        </div>
+    //   <div className="relative w-full max-w-3xl bg-white rounded-xl shadow-2xl z-10">
+    //     {/* Header */}
+    //     <div className="flex items-center justify-between p-4 border-b">
+    //       <h3 className="text-lg font-semibold">
+    //         Edit Payment Details
+    //       </h3>
+    //       <button
+    //         onClick={onClose}
+    //         className="p-2 hover:bg-gray-100 rounded"
+    //       >
+    //         <X />
+    //       </button>
+    //     </div>
+
+
+
+
+
+
+return (
+  <div className="fixed inset-0 z-[13000] flex justify-end">
+    
+    {/* Overlay */}
+    <div
+      className="absolute inset-0 bg-black/40"
+      onClick={onClose}
+    />
+
+    {/* Right Drawer */}
+    <div className="relative w-[83%] max-w-[1280px] h-full bg-white shadow-2xl border-l overflow-y-auto">
+      
+      {/* Header */}
+      <div className="flex items-center justify-between p-4 border-b">
+        <h3 className="text-lg font-semibold">
+          Edit Payment Details
+        </h3>
+        <button
+          onClick={onClose}
+          className="p-2 hover:bg-gray-100 rounded"
+        >
+          <X />
+        </button>
+      </div>
+
+
+
+
 
         {/* Body */}
         <div className="p-6 space-y-5">

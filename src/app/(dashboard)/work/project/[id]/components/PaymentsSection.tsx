@@ -1,16 +1,3 @@
-// // "use client";
-
-// // export default function PaymentsSection({ projectId }: { projectId: number }) {
-// //     return (
-// //         <div>
-// //             <h3 className="text-lg font-medium mb-4">Payments</h3>
-// //             <div className="border rounded-md p-4 text-gray-400 text-center">
-// //                 No payments recorded
-// //             </div>
-// //         </div>
-// //     );
-// // }
-
 
 // // src/components/ClientPaymentsTable.tsx
 // "use client";
@@ -18,6 +5,8 @@
 // import React, { useEffect, useState, useMemo, useRef } from "react";
 // import Image from "next/image";
 // import { MoreHorizontal, X, Trash2 } from "lucide-react";
+// import PaymentViewDrawer from "./PaymentViewDrawer";
+// import EditPaymentModal from "./EditPaymentModal";
 
 // type PaymentClient = {
 //   clientId?: string;
@@ -100,6 +89,14 @@
 //   const [gateways, setGateways] = useState<{ id: number; name: string }[]>([]);
 //   const [gatewayInput, setGatewayInput] = useState<string>("");
 
+
+
+
+//   const [activeMenu, setActiveMenu] = useState<number | string | null>(null);
+// const [viewPayment, setViewPayment] = useState<Payment | null>(null);
+// const [editPayment, setEditPayment] = useState<Payment | null>(null);
+
+
 //   // fetch payments for client (unchanged)
 //   useEffect(() => {
 //     if (!projectId && projectId !== 0) {
@@ -163,8 +160,8 @@
 //           paidOn: p.paymentDate ?? undefined,
 //           paymentGateway: p.paymentGateway?.name ?? undefined,
 //           status: p.status
-//             ? String(p.status).toLowerCase() === "completed"
-//               ? "Complete"
+//             ? String(p.status) === "COMPLETED"
+//               ? "COMPLETED"
 //               : p.status
 //             : undefined,
 //           receiptFileUrl: p.receiptFileUrl ?? undefined,
@@ -480,13 +477,52 @@
 //                       </div>
 
 //                       <div className="w-10 text-center">
-//                         <button
+//                         {/* <button
 //                           onClick={() => (onAction ? onAction(p) : undefined)}
 //                           className="p-2 rounded hover:bg-gray-100 inline-flex items-center justify-center"
 //                           title="Actions"
 //                         >
 //                           <MoreHorizontal size={16} />
-//                         </button>
+//                         </button> */}
+
+
+// <div className="relative">
+//   <button
+//     onClick={() =>
+//       setActiveMenu(activeMenu === p.id ? null : p.id)
+//     }
+//     className="p-2 rounded hover:bg-gray-100"
+//   >
+//     <MoreHorizontal size={16} />
+//   </button>
+
+//   {activeMenu === p.id && (
+//     <div className="absolute right-0 mt-2 w-32 bg-white border rounded shadow-lg z-50">
+//       <button
+//         onClick={() => {
+//           setViewPayment(p);
+//           setActiveMenu(null);
+//         }}
+//         className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
+//       >
+//         View
+//       </button>
+
+//       <button
+//         onClick={() => {
+//           setEditPayment(p);
+//           setActiveMenu(null);
+//         }}
+//         className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
+//       >
+//         Edit
+//       </button>
+//     </div>
+//   )}
+// </div>
+
+
+
 //                       </div>
 //                     </div>
 //                   ))}
@@ -744,6 +780,21 @@
 //           </div>
 //         </div>
 //       )}
+
+
+
+// {viewPayment && (
+//   <PaymentViewDrawer
+//     payment={viewPayment}
+//     onClose={() => setViewPayment(null)}
+//   />
+// )}
+// {editPayment && (
+//   <EditPaymentModal
+//     payment={editPayment}
+//     onClose={() => setEditPayment(null)}
+//   />
+// )}
 //     </div>
 //   );
 // }
@@ -755,18 +806,8 @@
 
 
 
-// "use client";
 
-// export default function PaymentsSection({ projectId }: { projectId: number }) {
-//     return (
-//         <div>
-//             <h3 className="text-lg font-medium mb-4">Payments</h3>
-//             <div className="border rounded-md p-4 text-gray-400 text-center">
-//                 No payments recorded
-//             </div>
-//         </div>
-//     );
-// }
+
 
 
 // src/components/ClientPaymentsTable.tsx
@@ -1304,7 +1345,7 @@ const [editPayment, setEditPayment] = useState<Payment | null>(null);
       </div>
 
       {/* Add Payment Modal (UI exact like screenshot) */}
-      {showAddModal && (
+      {/* {showAddModal && (
         <div className="fixed inset-0 z-[10000] flex items-start justify-center pt-8 px-4 overflow-y-auto">
           <div
             className="fixed inset-0 bg-black/40"
@@ -1320,7 +1361,35 @@ const [editPayment, setEditPayment] = useState<Payment | null>(null);
               >
                 <X className="w-5 h-5" />
               </button>
-            </div>
+            </div> */}
+
+
+
+
+{showAddModal && (
+  <div className="fixed inset-0 z-[10000] flex justify-end">
+    {/* Overlay */}
+    <div
+      className="absolute inset-0 bg-black/40"
+      onClick={() => setShowAddModal(false)}
+    />
+
+    {/* Drawer */}
+    <div className="relative w-[83%] max-w-[1280px] h-full bg-white shadow-2xl border-l overflow-y-auto">
+      
+      {/* Header */}
+      <div className="flex items-center justify-between p-4 border-b">
+        <h3 className="text-lg font-semibold">Add Payment Details</h3>
+        <button
+          onClick={() => setShowAddModal(false)}
+          className="p-2 rounded hover:bg-gray-100"
+        >
+          <X className="w-5 h-5" />
+        </button>
+      </div>
+
+
+
 
             <div className="p-6 space-y-6">
               <div className="rounded-lg border p-4">
