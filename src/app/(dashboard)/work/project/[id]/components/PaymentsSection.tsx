@@ -812,7 +812,7 @@
 
 // src/components/ClientPaymentsTable.tsx
 "use client";
-
+import { createPortal } from "react-dom";
 import React, { useEffect, useState, useMemo, useRef } from "react";
 import Image from "next/image";
 import { MoreHorizontal, X, Trash2 } from "lucide-react";
@@ -906,6 +906,8 @@ export default  function PaymentsSection({
   const [activeMenu, setActiveMenu] = useState<number | string | null>(null);
 const [viewPayment, setViewPayment] = useState<Payment | null>(null);
 const [editPayment, setEditPayment] = useState<Payment | null>(null);
+
+const [menuPosition, setMenuPosition] = useState<{ top: number; left: number } | null>(null);
 
 
   // fetch payments for client (unchanged)
@@ -1299,15 +1301,34 @@ const [editPayment, setEditPayment] = useState<Payment | null>(null);
 
 <div className="relative">
   <button
-    onClick={() =>
-      setActiveMenu(activeMenu === p.id ? null : p.id)
-    }
+    // onClick={() =>
+    //   setActiveMenu(activeMenu === p.id ? null : p.id)
+    // }
+
+
+
+onClick={(e) => {
+  if (activeMenu === p.id) {
+    setActiveMenu(null);
+    setMenuPosition(null);
+  } else {
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    setMenuPosition({
+      top: rect.bottom + window.scrollY,
+      left: rect.right + window.scrollX - 140, // width adjust
+    });
+    setActiveMenu(p.id);
+  }
+}}
+
+
+
     className="p-2 rounded hover:bg-gray-100"
   >
     <MoreHorizontal size={16} />
   </button>
 
-  {activeMenu === p.id && (
+  {/* {activeMenu === p.id && (
     <div className="absolute right-0 mt-2 w-32 bg-white border rounded shadow-lg z-50">
       <button
         onClick={() => {
@@ -1329,7 +1350,49 @@ const [editPayment, setEditPayment] = useState<Payment | null>(null);
         Edit
       </button>
     </div>
+  )} */}
+
+
+
+
+{activeMenu === p.id &&
+  menuPosition &&
+  createPortal(
+    <div
+      style={{
+        position: "absolute",
+        top: menuPosition.top,
+        left: menuPosition.left,
+      }}
+      className="w-36 bg-white border rounded-lg shadow-xl z-[99999]"
+    >
+      <button
+        onClick={() => {
+          setViewPayment(p);
+          setActiveMenu(null);
+          setMenuPosition(null);
+        }}
+        className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
+      >
+        View
+      </button>
+
+      <button
+        onClick={() => {
+          setEditPayment(p);
+          setActiveMenu(null);
+          setMenuPosition(null);
+        }}
+        className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
+      >
+        Edit
+      </button>
+    </div>,
+    document.body
   )}
+
+
+
 </div>
 
 
