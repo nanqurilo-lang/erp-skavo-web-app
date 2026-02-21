@@ -382,16 +382,38 @@ export default function ProjectNotesTable({
 
 /* ================= REUSABLE UI ================= */
 
+// function ModalWrapper({ children, onClose }: any) {
+//   return (
+//     <div className="fixed inset-0 z-50 flex justify-center pt-12">
+//       <div className="absolute inset-0 bg-black/30" onClick={onClose} />
+//       <div className="relative bg-white w-[900px] max-w-[95%] rounded border shadow">
+//         {children}
+//       </div>
+//     </div>
+//   );
+// }
+
+
+
+
 function ModalWrapper({ children, onClose }: any) {
   return (
-    <div className="fixed inset-0 z-50 flex justify-center pt-12">
-      <div className="absolute inset-0 bg-black/30" onClick={onClose} />
-      <div className="relative bg-white w-[900px] max-w-[95%] rounded border shadow">
+    <div className="fixed inset-0 z-50 flex justify-end">
+      {/* Overlay */}
+      <div
+        className="absolute inset-0 bg-black/30"
+        onClick={onClose}
+      />
+
+      {/* Right Drawer */}
+      <div className="relative bg-white h-full w-[83%] max-w-[1280px] shadow-xl border-l transition-transform duration-300 ease-in-out">
         {children}
       </div>
     </div>
   );
 }
+
+
 
 function ModalHeader({ title, onClose }: any) {
   return (
