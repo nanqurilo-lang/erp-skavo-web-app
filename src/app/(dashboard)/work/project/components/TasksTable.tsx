@@ -82,6 +82,7 @@ export default function TasksTable({ projectId }: { projectId: number }) {
   // separate menus for action and status (to avoid conflicts)
   const [actionOpenFor, setActionOpenFor] = useState<number | null>(null);
   const [statusOpenFor, setStatusOpenFor] = useState<number | null>(null);
+  const [menuPosition, setMenuPosition] = useState<{ top: number; left: number } | null>(null);
 
   // form helpers
   const emptyForm = {
@@ -428,7 +429,8 @@ export default function TasksTable({ projectId }: { projectId: number }) {
                   const statusName = displayStatus?.name ?? "Doing";
                   return (
                     // <tr key={t.id} className="border-b last:border-b-0 bg-white hover:bg-gray-50">
-                    <tr key={t.id} className="border-b last:border-b-0 bg-white hover:bg-gray-50 h-20">
+                    // <tr key={t.id} className="border-b last:border-b-0 bg-white hover:bg-gray-50 h-20">
+                    <tr key={t.id} className="relative border-b last:border-b-0 bg-white hover:bg-gray-50 h-20">
 
                       {/* <td className="px-4 py-4 align-top"> */}
 
@@ -507,7 +509,11 @@ export default function TasksTable({ projectId }: { projectId: number }) {
                           </button>
 
                           {statusOpenFor === t.id && (
-                            <div onClick={(e) => e.stopPropagation()} className="absolute right-0 mt-2 z-30 w-44 bg-white border rounded-md shadow-lg text-sm">
+                            // <div onClick={(e) => e.stopPropagation()} className="absolute right-0 mt-2 z-30 w-44 bg-white border rounded-md shadow-lg text-sm">
+                            <div
+                              onClick={(e) => e.stopPropagation()}
+                              className="absolute right-0 top-full mt-2 z-[9999] w-44 bg-white border rounded-md shadow-lg text-sm"
+                            >
                               {statuses.length > 0 ? (
                                 statuses.map((st) => (
                                   <button
@@ -543,7 +549,7 @@ export default function TasksTable({ projectId }: { projectId: number }) {
                       </td>
 
                       <td className="px-4 py-4 align-top relative">
-                        <button
+                        {/* <button
                           onClick={(ev) => {
                             ev.stopPropagation();
                             setStatusOpenFor(null);
@@ -555,11 +561,38 @@ export default function TasksTable({ projectId }: { projectId: number }) {
                           title="More"
                         >
                           ⋮
+                        </button> */}
+
+
+
+
+                        <button
+                          onClick={(ev) => {
+                            ev.stopPropagation();
+                            const rect = (ev.currentTarget as HTMLElement).getBoundingClientRect();
+
+                            setMenuPosition({
+                              top: rect.bottom + 6,
+                              left: rect.right - 180, // width adjust
+                            });
+
+                            setStatusOpenFor(null);
+                            setActionOpenFor((cur) => (cur === t.id ? null : t.id));
+                          }}
+                          className="p-1 rounded hover:bg-gray-100"
+                        >
+                          ⋮
                         </button>
 
+
+
                         {/* ACTION menu - anchored to row */}
-                        {actionOpenFor === t.id && (
-                          <div onClick={(e) => e.stopPropagation()} className="absolute right-2 top-10 z-20 w-48 bg-white border rounded-md shadow-md">
+                        {/* {actionOpenFor === t.id && (
+                          // <div onClick={(e) => e.stopPropagation()} className="absolute right-2 top-10 z-20 w-48 bg-white border rounded-md shadow-md">
+                          <div
+  onClick={(e) => e.stopPropagation()}
+  className="absolute right-4 top-full mt-2 z-[9999] w-48 bg-white border rounded-md shadow-lg"
+>
                             <button
                               onClick={() => {
                                 // OPEN external TaskViewModal
@@ -591,7 +624,52 @@ export default function TasksTable({ projectId }: { projectId: number }) {
                               Delete
                             </button>
                           </div>
+                        )} */}
+
+
+                        {actionOpenFor === t.id && menuPosition && (
+                          <div
+                            style={{
+                              position: "fixed",
+                              top: menuPosition.top,
+                              left: menuPosition.left,
+                              zIndex: 99999,
+                            }}
+                            className="w-48 bg-white border rounded-md shadow-lg"
+                          >
+                            <button
+                              onClick={() => {
+                                openView(t);
+                                setActionOpenFor(null);
+                              }}
+                              className="w-full text-left px-4 py-2 hover:bg-gray-50"
+                            >
+                              View
+                            </button>
+
+                            <button
+                              onClick={() => {
+                                openEdit(t);
+                                setActionOpenFor(null);
+                              }}
+                              className="w-full text-left px-4 py-2 hover:bg-gray-50"
+                            >
+                              Edit
+                            </button>
+
+                            <button
+                              onClick={() => {
+                                setActionOpenFor(null);
+                                handleDelete(t.id);
+                              }}
+                              className="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-50"
+                            >
+                              Delete
+                            </button>
+                          </div>
                         )}
+
+
                       </td>
                     </tr>
                   );
