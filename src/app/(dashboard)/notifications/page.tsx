@@ -112,7 +112,7 @@ export default function NotificationsPage() {
       ) : !data || data.length === 0 ? (
         <Card>
           <CardHeader>
-            <CardTitle>No notifications</CardTitle>
+            <CardTitle>No notifications </CardTitle>
           </CardHeader>
           <CardContent className="text-sm text-muted-foreground">You’re all caught up.</CardContent>
         </Card>

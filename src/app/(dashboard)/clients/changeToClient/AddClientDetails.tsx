@@ -8,7 +8,7 @@ import ClientDetailPage from "../[id]/page";
 import { CommonNavbar } from "@/components/Navbar";
 
 // const API_BASE = "https";
-const API_BASE = process.env.NEXT_PUBLIC_MAIN!;
+const API_BASE = process.env.NEXT_PUBLIC_MAIN;
 
 
 const countryOptions = [
