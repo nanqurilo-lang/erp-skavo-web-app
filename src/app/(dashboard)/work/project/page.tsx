@@ -2021,45 +2021,127 @@ export default function AllProjectsPage() {
     setCurrentPage(1);
   };
 
-  const filteredProjects = useMemo(() => {
-    return projects.filter((p) => {
-      /* -------- STATUS -------- */
-      if (statusFilter !== "all") {
-        if (!p.projectStatus) return false;
-        if (p.projectStatus !== statusFilter) return false;
+  // const filteredProjects = useMemo(() => {
+  //   return projects.filter((p) => {
+  //     /* -------- STATUS -------- */
+  //     if (statusFilter !== "all") {
+  //       if (!p.projectStatus) return false;
+  //       if (p.projectStatus !== statusFilter) return false;
+  //     }
+
+  //     /* -------- PROGRESS -------- */
+  //     if (progressFilter !== "all") {
+  //       if (typeof p.progressPercent !== "number") return false;
+
+  //       const v = p.progressPercent;
+  //       if (progressFilter === "0-33" && !(v >= 0 && v <= 33)) return false;
+  //       if (progressFilter === "34-66" && !(v >= 34 && v <= 66)) return false;
+  //       if (progressFilter === "67-100" && !(v >= 67 && v <= 100)) return false;
+  //     }
+
+  //     /* -------- DURATION (CALENDAR) -------- */
+  //     if (durationFrom || durationTo) {
+  //       const start = p.startDate ? new Date(p.startDate) : null;
+  //       const end = p.deadline ? new Date(p.deadline) : null;
+
+  //       if (!start || !end) return false;
+
+  //       if (durationFrom) {
+  //         const from = new Date(durationFrom);
+  //         if (start < from) return false;
+  //       }
+
+  //       if (durationTo) {
+  //         const to = new Date(durationTo);
+  //         if (end > to) return false;
+  //       }
+  //     }
+
+  //     return true;
+  //   });
+  // }, [projects, statusFilter, progressFilter, durationFrom, durationTo]);
+
+
+
+const filteredProjects = useMemo(() => {
+  return projects.filter((p) => {
+
+    /* -------- PROJECT FILTER -------- */
+    if (filterProject !== "all") {
+      if (String(p.id) !== String(filterProject)) return false;
+    }
+
+    /* -------- MEMBER FILTER -------- */
+    if (filterMember !== "all") {
+      const hasMember = (p.assignedEmployees || []).some(
+        (emp) => String(emp.employeeId) === String(filterMember)
+      );
+      if (!hasMember) return false;
+    }
+
+    /* -------- CLIENT FILTER -------- */
+    if (filterClient !== "all") {
+      if (!p.client?.clientId) return false;
+      if (String(p.client.clientId) !== String(filterClient)) return false;
+    }
+
+    /* -------- STATUS -------- */
+    if (statusFilter !== "all") {
+      if (!p.projectStatus) return false;
+      if (p.projectStatus !== statusFilter) return false;
+    }
+
+    /* -------- PROGRESS -------- */
+    if (progressFilter !== "all") {
+      if (typeof p.progressPercent !== "number") return false;
+
+      const v = p.progressPercent;
+
+      if (progressFilter === "0-33" && !(v >= 0 && v <= 33)) return false;
+      if (progressFilter === "34-66" && !(v >= 34 && v <= 66)) return false;
+      if (progressFilter === "67-100" && !(v >= 67 && v <= 100)) return false;
+    }
+
+    /* -------- DURATION -------- */
+    if (durationFrom || durationTo) {
+      const start = p.startDate ? new Date(p.startDate) : null;
+      const end = p.deadline ? new Date(p.deadline) : null;
+
+      if (!start || !end) return false;
+
+      if (durationFrom) {
+        const from = new Date(durationFrom);
+        if (start < from) return false;
       }
 
-      /* -------- PROGRESS -------- */
-      if (progressFilter !== "all") {
-        if (typeof p.progressPercent !== "number") return false;
-
-        const v = p.progressPercent;
-        if (progressFilter === "0-33" && !(v >= 0 && v <= 33)) return false;
-        if (progressFilter === "34-66" && !(v >= 34 && v <= 66)) return false;
-        if (progressFilter === "67-100" && !(v >= 67 && v <= 100)) return false;
+      if (durationTo) {
+        const to = new Date(durationTo);
+        if (end > to) return false;
       }
+    }
 
-      /* -------- DURATION (CALENDAR) -------- */
-      if (durationFrom || durationTo) {
-        const start = p.startDate ? new Date(p.startDate) : null;
-        const end = p.deadline ? new Date(p.deadline) : null;
+    /* -------- ARCHIVED FILTER -------- */
+    if (showArchivedOnly && !p.archived) return false;
 
-        if (!start || !end) return false;
+    /* -------- PINNED FILTER -------- */
+    if (showPinnedOnly && !p.pinned) return false;
 
-        if (durationFrom) {
-          const from = new Date(durationFrom);
-          if (start < from) return false;
-        }
+    return true;
+  });
+}, [
+  projects,
+  statusFilter,
+  progressFilter,
+  durationFrom,
+  durationTo,
+  filterProject,
+  filterMember,
+  filterClient,
+  showArchivedOnly,
+  showPinnedOnly,
+]);
 
-        if (durationTo) {
-          const to = new Date(durationTo);
-          if (end > to) return false;
-        }
-      }
 
-      return true;
-    });
-  }, [projects, statusFilter, progressFilter, durationFrom, durationTo]);
 
   if (loading) return <p className="p-8 text-center">Loading projects...</p>;
 
@@ -2709,23 +2791,7 @@ export default function AllProjectsPage() {
         <div className="p-4 space-y-4 overflow-auto h-[calc(100%-140px)]">
           <div>
             <label className="block text-sm text-gray-600 mb-2">Project</label>
-            {/* <Select
-              value={filterProject}
-              onValueChange={(v) => setFilterProject(v)}
-            >
-              <SelectTrigger className="w-full rounded border px-3 py-2">
-                <SelectValue placeholder="All" />
-              </SelectTrigger>
-              <SelectContent className="z-[10001] pointer-events-auto">
-                <SelectItem value="all">All</SelectItem>
-                {projectOptions.map((name) => (
-                  <SelectItem key={name} value={name}>
-                    {name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select> */}
-
+           
 
             <Select
               modal={false}
@@ -2754,22 +2820,7 @@ export default function AllProjectsPage() {
             <label className="block text-sm text-gray-600 mb-2">
               Project Members
             </label>
-            {/* <Select
-              value={filterMember}
-              onValueChange={(v) => setFilterMember(v)}
-            >
-              <SelectTrigger className="w-full rounded border px-3 py-2">
-                <SelectValue placeholder="All" />
-              </SelectTrigger>
-              <SelectContent className="z-[10001] pointer-events-auto">
-                <SelectItem value="all">All</SelectItem>
-                {memberOptions.map((m) => (
-                  <SelectItem key={m} value={m}>
-                    {m}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select> */}
+           
 
             <Select
               modal={false}
