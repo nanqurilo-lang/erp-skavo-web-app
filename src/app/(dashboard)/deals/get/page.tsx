@@ -2228,14 +2228,35 @@ const matchesStage =
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All</SelectItem>
-            {priorities.map((p) => (
+            {/* {priorities.map((p) => (
               <SelectItem
                 key={p.id}
                 value={String(p.status).toLowerCase()}
               >
                 {p.status}
               </SelectItem>
-            ))}
+            ))} */}
+
+
+
+
+{[
+  ...new Map(
+    priorities.map((p) => [
+      String(p.status).toLowerCase(),
+      p,
+    ])
+  ).values(),
+].map((p) => (
+  <SelectItem
+    key={p.status}
+    value={String(p.status).toLowerCase()}
+  >
+    {p.status}
+  </SelectItem>
+))}
+
+
           </SelectContent>
         </Select>
       </div>
