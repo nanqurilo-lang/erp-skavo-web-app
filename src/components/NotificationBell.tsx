@@ -500,6 +500,9 @@ useEffect(() => {
 // Play sound on new notification
 
       const playNotificationSound = () => {
+
+
+
           if (!soundEnabled) return; // 👈 IMPORTANT
 
   if (audioRef.current) {
@@ -542,6 +545,7 @@ const toggleSound = () => {
       const data = await res.json();
 
       
+      
 
       // setNotifications(Array.isArray(data) ? data : []);
 
@@ -551,9 +555,27 @@ if (Array.isArray(data)) {
   const newNotifications = data;
 
   // Detect new notifications
-  if (previousCountRef.current !== 0 && newNotifications.length > previousCountRef.current) {
+  // if (previousCountRef.current !== 0 && newNotifications.length > previousCountRef.current) {
+  //   playNotificationSound();
+  // }
+
+if (previousCountRef.current !== 0) {
+  const oldIds = notifications.map((n) => n.id);
+
+  const hasNewNotification = newNotifications.some(
+    (n) => !oldIds.includes(n.id)
+  );
+
+  if (hasNewNotification) {
+    // console.log("Playing sound...");
     playNotificationSound();
   }
+}
+
+
+
+
+
 
   previousCountRef.current = newNotifications.length;
 
@@ -927,6 +949,10 @@ const deleteNotification = async (id: number) => {
     Delete
   </button>
 
+{/* 
+<button onClick={playNotificationSound}>
+  Test Sound
+</button> */}
 
 
 
@@ -951,11 +977,11 @@ const deleteNotification = async (id: number) => {
 
 
 
-<audio
+{/* <audio
   ref={audioRef}
   src="/sounds/notificationSound.wav"
   preload="auto"
-/>
+/> */}
 
 
 
