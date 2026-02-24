@@ -45,6 +45,8 @@ const [filterStatus, setFilterStatus] = useState("all");
   const [inviteLoading, setInviteLoading] = useState(false);
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
 
+  const [menuPosition, setMenuPosition] = useState<{ top: number; left: number } | null>(null);
+
   /* ================= FETCH EMPLOYEES ================= */
   useEffect(() => {
     const fetchEmployees = async () => {
@@ -287,13 +289,16 @@ const handleRoleChange = async (employeeId: string, newRole: string) => {
             onClick={() => setInviteOpen(true)}
             className="border px-4 py-2 rounded"
           >
-            + Invite Employee
+            + Invite Employee   
           </button>
         </div>
       </div>
 
       {/* ================= TABLE ================= */}
-      <div className="bg-white border rounded-lg overflow-x-auto">
+     
+      {/* <div className="bg-white border rounded-lg overflow-x-auto"> */}
+      <div className="bg-white border rounded-lg relative">
+  <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-gray-100">
             <tr>
@@ -340,7 +345,7 @@ const handleRoleChange = async (employeeId: string, newRole: string) => {
                   </span>
                 </td>
                 <td className="p-3 relative">
-                  <button
+                  {/* <button
                     onClick={() =>
                       setOpenMenuId(
                         openMenuId === e.employeeId ? null : e.employeeId
@@ -349,10 +354,33 @@ const handleRoleChange = async (employeeId: string, newRole: string) => {
                     className="px-2 py-1 rounded hover:bg-gray-100"
                   >
                     ⋮
-                  </button>
+                  </button> */}
+
+<button
+  onClick={(event) => {
+    const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
+
+    if (openMenuId === e.employeeId) {
+      setOpenMenuId(null); 
+      setMenuPosition(null);
+    } else {
+      setOpenMenuId(e.employeeId);
+      setMenuPosition({
+        top: rect.bottom + window.scrollY,
+        left: rect.left + window.scrollX,
+      });
+    }
+  }}
+  className="px-2 py-1 rounded hover:bg-gray-100"
+>
+  ⋮
+</button>
+
+
 
                   {openMenuId === e.employeeId && (
-                    <div className="absolute right-0 mt-2 w-32 bg-white border rounded-lg shadow-lg z-50">
+                    // <div className="absolute right-0 mt-2 w-32 bg-white border rounded-lg shadow-lg z-50">
+                    <div className="absolute right-0 top-8 w-32 bg-white border rounded-lg shadow-xl z-[9999]">
                       <Link
                         href={`/hr/employee/${e.employeeId}`}
                         className="block px-4 py-2 text-sm hover:bg-gray-100"
@@ -398,7 +426,7 @@ const handleRoleChange = async (employeeId: string, newRole: string) => {
 
 
 
-
+</div>
 
 
 
