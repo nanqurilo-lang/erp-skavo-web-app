@@ -152,6 +152,8 @@ const filtered = employees.filter((e) => {
   // const data = filtered.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
   const data = filtered;
 
+  console.log("Rendered with data:", data);
+
   if (loading) return <div className="p-6">Loading...</div>;
 
   const deleteEmployee = async (id: string) => {
@@ -170,6 +172,61 @@ const filtered = employees.filter((e) => {
       alert("Failed to delete employee");
     }
   };
+
+
+const getRoleLabel = (role: string) => {
+  switch (role) {
+    case "ROLE_EMPLOYEE":
+      return "Employee";
+    case "ROLE_ADMIN":
+      return "Admin";
+    default:
+      return role;
+  }
+};
+
+
+
+
+
+
+const handleRoleChange = async (employeeId: string, newRole: string) => {
+  try {
+    const token = localStorage.getItem("accessToken");
+
+    const response = await fetch(
+      `${BASE_URL}/employee/${employeeId}/role`,
+      {
+        method: "PATCH", // agar backend PATCH expect karta hai
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          role: newRole,
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to update role");
+    }
+
+    // ✅ UI instant update
+    setEmployees((prev) =>
+      prev.map((emp) =>
+        emp.employeeId === employeeId
+          ? { ...emp, role: newRole }
+          : emp
+      )
+    );
+
+    alert("Role updated successfully");
+  } catch (error) {
+    console.error(error);
+    alert("Error updating role");
+  }
+};
 
   return (
     <div className="p-6 space-y-6">
@@ -258,7 +315,19 @@ const filtered = employees.filter((e) => {
                 <td className="p-3">{e.email}</td>
                 <td className="p-3">{e.departmentName || "—"}</td>
                 <td className="p-3">{e.designationName || "—"}</td>
-                <td className="p-3">{e.role}</td>
+                {/* <td className="p-3">{e.role } </td> */}
+
+
+<td className="p-3">
+  <select
+    value={e.role}
+    onChange={(event) => handleRoleChange(e.employeeId, event.target.value)}
+    className="border rounded-md px-2 py-1"
+  >
+    <option value="ROLE_EMPLOYEE">Employee</option>
+    <option value="ROLE_ADMIN">Admin</option>
+  </select>
+</td>
                 <td className="p-3">
                   <span
                     className={`px-2 py-1 text-xs rounded ${
