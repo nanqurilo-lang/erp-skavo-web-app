@@ -24,6 +24,12 @@ const STAGE_DELETE = (stageId: string | number) =>
   `${API_BASE}/stages/${stageId}`;
 // ---------------
 
+
+const DEAL_STAGE_UPDATE = (dealId: string | number) =>
+  `${API_BASE}/deals/${dealId}/stage`;
+
+
+
 export default function KanbanBoard({
   stages,
   deals,
@@ -43,7 +49,17 @@ export default function KanbanBoard({
     setStagesState(stages);
   }, [stages]);
 
-  const filteredDeals = deals.filter((d) => {
+
+  const [dealsState, setDealsState] = useState<Deal[]>(deals);
+
+useEffect(() => {
+  setDealsState(deals);
+}, [deals]);
+
+console.log("KanbanBoard render", { stages, dealsState, filters, search });
+
+  // const filteredDeals = deals.filter((d) => {
+  const filteredDeals = dealsState.filter((d) => {
     if (
       filters.pipeline &&
       d.pipeline?.trim().toLowerCase() !== filters.pipeline.trim().toLowerCase()
@@ -387,6 +403,9 @@ function getDealFollowupDate(deal: Deal): Date | null {
     string | number | null
   >(null);
   const deleteStage = async (stageId: string | number) => {
+
+
+    
     try {
       const headers: Record<string, string> = {
         "Content-Type": "application/json",
@@ -411,6 +430,95 @@ function getDealFollowupDate(deal: Deal): Date | null {
     }
   };
 
+
+
+//
+//   dealId: string | number,
+//   newStage: string
+// ) => {
+//   try {
+//     const headers: Record<string, string> = {
+//       "Content-Type": "application/json",
+//     };
+//     if (token) headers["Authorization"] = `Bearer ${token}`;
+
+//     const res = await fetch(
+//       (dealId), {
+//       method: "PUT",
+//       headers,
+//       body: JSON.stringify({ dealStage: newStage }),
+//     });
+
+//     if (!res.ok) {
+//       const t = await safeReadResponseText(res);
+//       throw new Error(`Stage update failed: ${res.status} ${t}`);
+//     }
+
+//     // setDealsState((prev) =>
+//     //   prev.map((d) =>
+//     //     String(d.id) === String(dealId)
+//     //       ? { ...d, dealStage: newStage }
+//     //       : d
+//     //   )
+//     // );
+
+
+
+
+
+
+// const stageDeals = filteredDeals
+//   .filter(
+//     (deal) =>
+//       deal.dealStage?.trim().toLowerCase() ===
+//       stage.name?.trim().toLowerCase()
+//   )
+//   .sort((a, b) => {
+//     const dateA = getDealFollowupDate(a);
+//     const dateB = getDealFollowupDate(b);
+
+//     if (!dateA && !dateB) return 0;
+//     if (!dateA) return 1;
+//     if (!dateB) return -1;
+
+//     return dateA.getTime() - dateB.getTime();
+//   });
+
+
+
+//   } catch (err) {
+//     console.error("Stage update error:", err);
+//   }
+// };
+
+const updateDealStage = async (
+    dealId: number | string,
+    newStage: string,
+  ) => {
+    if (!token) return;
+    try {
+      const url = `${process.env.NEXT_PUBLIC_MAIN}/deals/${dealId}/stage?stage=${encodeURIComponent(
+        newStage,
+      )}`;
+      const res = await fetch(url, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!res.ok) {
+        const txt = await res.text().catch(() => "");
+        console.error("Failed to update stage:", res.status, txt);
+        return;
+      }
+      //await mutateDeals();
+    } catch (err) {
+      console.error("Error updating stage:", err);
+    }
+  };
+
+
+  
   return (
     <div className="relative w-full h-full flex flex-col min-h-0">
       <div className="flex gap-6 flex-1 min-h-0 overflow-x-auto pb-4 px-1">
@@ -422,7 +530,14 @@ function getDealFollowupDate(deal: Deal): Date | null {
 
 
 const stageDeals = filteredDeals
-  .filter((deal) => deal.dealStage === stage.name)
+  // .filter((deal) => deal.dealStage === stage.name)
+
+.filter(
+  (deal) =>
+    deal.dealStage?.trim().toLowerCase() ===
+    stage.name?.trim().toLowerCase()
+)
+
   .sort((a, b) => {
     const dateA = getDealFollowupDate(a);
     const dateB = getDealFollowupDate(b);
@@ -482,7 +597,7 @@ const stageDeals = filteredDeals
                         >
                           <Trash2 className="w-4 h-4 text-red-600" />
                           <span className="text-sm text-red-600 font-medium">
-                            Delete
+                            Delete 
                           </span>
                         </button>
                       </div>
@@ -503,6 +618,9 @@ const stageDeals = filteredDeals
                     <DealCard
                       key={deal.id}
                       deal={deal}
+                        stages={stagesState}
+  onStageChange={updateDealStage}
+
                       palette={globalPalette}
                       paletteLoading={paletteLoading}
                       addPriorityAndAssignFlow={addPriorityAndAssignFlow}
@@ -558,12 +676,21 @@ function formatDateShort(d: Date) {
 
 function DealCard({
   deal,
+  stages,
+  onStageChange,
+
   palette,
   paletteLoading,
   addPriorityAndAssignFlow,
   token,
 }: {
   deal: Deal;
+    stages: Stage[];
+onStageChange: (
+  dealId: string | number,
+  stage: string
+) => Promise<void>;
+
   palette: Array<{ id?: number; name: string; color: string }>;
   paletteLoading: boolean;
   addPriorityAndAssignFlow: (
@@ -1252,9 +1379,27 @@ function DealCard({
               {leadName}
             </div>
             <div className="flex items-center gap-2 mt-1">
-              <div className="text-xs text-muted-foreground truncate">
+              {/* <div className="text-xs text-muted-foreground truncate">
                 {dealName}
-              </div>
+              </div> */}
+
+
+<div className="mt-2">
+  <select
+    value={deal.dealStage}
+    onChange={(e) =>
+      onStageChange(deal.id as any, e.target.value)
+    }
+    className="w-full text-xs border border-border rounded-md px-2 py-1 bg-white"
+  >
+    {stages.map((stage) => (
+      <option key={stage.id} value={stage.name}>
+        {stage.name}
+      </option>
+    ))}
+  </select>
+</div>
+
             </div>
 
             {/* comments (small pills) */}
