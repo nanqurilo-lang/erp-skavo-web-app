@@ -519,7 +519,7 @@ const loadEmployees = useCallback(async () => {
       const fd = new FormData();
       fd.append("status", newStatus);
       const res = await fetch(`${API_BASE}/api/projects/${projectId}/status`, {
-        method: "PATCH",
+        method: "PUT",
         body: fd,
         headers: { Authorization: `Bearer ${getToken()}` },
       });
