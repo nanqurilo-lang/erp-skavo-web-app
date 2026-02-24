@@ -155,7 +155,7 @@ export function AddLeadModal({
   employees: Employee[];
 }) {
   const defaultPipelines = ["Default Pipeline", "Sales Pipeline", "Enterprise Pipeline"];
-  const defaultDealStages = ["Generated", "Qualification", "Proposal", "Win", "Lost"];
+  const defaultDealStages = ["Generated", "Qualification", "Proposal",  "Lost"];
 
   const [dealCategories, setDealCategories] = useState<DealCategoryItem[]>([]);
   const [leadSources, setLeadSources] = useState<LeadSourceItem[]>([]);
@@ -538,7 +538,7 @@ export function AddLeadModal({
             </div>
 
             <div>
-              <label className="block text-xs text-left text-muted-foreground mb-1">Deal Stage *</label>
+              <label className="block text-xs text-left text-muted-foreground mb-1">Deal Stage  *</label>
               <select className="w-full border rounded-md px-3 py-2 text-sm" value={payload.deal!.dealStage} onChange={(e) => updateDeal("dealStage", e.target.value)}>
                 {defaultDealStages.map((s) => <option key={s} value={s}>{s}</option>)}
               </select>
