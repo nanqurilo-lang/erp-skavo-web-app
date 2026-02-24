@@ -1994,7 +1994,25 @@ const matchesStage =
                               <MoreVertical className="h-4 w-4" />
                             </Button>
                           </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
+                          {deal?.dealStage === "Win" ? <DropdownMenuContent align="end">
+                            <DropdownMenuItem asChild>
+                              <Link href={`/deals/get/${deal.id}`}>View</Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem asChild>
+                              <Link href={`/deals/create/${deal.id}`}>
+                                Edit
+                              </Link>
+                            </DropdownMenuItem>
+
+
+                           
+                            <DropdownMenuItem
+                              className="text-destructive focus:text-destructive"
+                              onClick={() => handleDeleteDeal(deal.id)}
+                            >
+                              Delete
+                            </DropdownMenuItem>
+                          </DropdownMenuContent> : (<DropdownMenuContent align="end">
                             <DropdownMenuItem asChild>
                               <Link href={`/deals/get/${deal.id}`}>View</Link>
                             </DropdownMenuItem>
@@ -2019,7 +2037,8 @@ const matchesStage =
                             >
                               Delete
                             </DropdownMenuItem>
-                          </DropdownMenuContent>
+                          </DropdownMenuContent>)
+                            }
                         </DropdownMenu>
                       </div>
                     </TableCell>
