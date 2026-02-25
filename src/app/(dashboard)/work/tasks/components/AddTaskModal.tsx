@@ -67,6 +67,9 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
 
   const [labelModalOpen, setLabelModalOpen] = useState(false);
 
+  const [projectTasks, setProjectTasks] = useState<any[]>([]);
+
+
   // ---------------- API FETCH ----------------
   const token =
     typeof window !== "undefined"
@@ -141,6 +144,19 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
     setLabels(data);
   };
 
+
+
+const fetchProjectTasks = async (pid: string) => {
+  const res = await fetch(`${MAIN}/projects/${pid}/tasks`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  const data = await res.json();
+  setProjectTasks(data);
+};
+
+
+
   // Initial load
   useEffect(() => {
     if (open) {
@@ -156,8 +172,30 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
     if (projectId) {
       fetchMilestones(projectId);
       fetchLabels(projectId);
+    fetchProjectTasks(projectId); // 👈 add this
+
+
     }
   }, [projectId]);
+
+
+
+const projectAssignedEmployees = React.useMemo(() => {
+  if (!projectTasks.length) return [];
+
+  const uniqueMap = new Map();
+
+  projectTasks.forEach((task) => {
+    task.assignedEmployees?.forEach((emp: any) => {
+      if (!uniqueMap.has(emp.employeeId)) {
+        uniqueMap.set(emp.employeeId, emp);
+      }
+    });
+  });
+
+  return Array.from(uniqueMap.values());
+}, [projectTasks]);
+
 
   // Multi-select toggle
   const toggle = (arr: string[], v: string) =>
@@ -226,7 +264,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
       >
         <DialogHeader className="px-6 py-4 border-b bg-slate-50">
           <DialogTitle className="text-lg font-semibold">
-            Add New Task
+            Add New Task 
           </DialogTitle>
         </DialogHeader>
 
@@ -310,7 +348,8 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
           <div>
             <Label>Assign To *</Label>
             <div className="grid grid-cols-2 gap-2 pt-2">
-              {employees.map((emp) => (
+              {/* {employees.map((emp) => ( */}
+              {/* {projectAssignedEmployees.map((emp) => (
                 <div key={emp.employeeId} className="flex items-center gap-2">
                   <Checkbox
                     checked={assignedEmployeeIds.includes(emp.employeeId)}
@@ -322,7 +361,27 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
                   />
                   <span className="text-sm">{emp.name}</span>
                 </div>
-              ))}
+              ))} */}
+
+
+
+{projectAssignedEmployees.length > 0
+  ? projectAssignedEmployees.map((emp) => (
+      <div key={emp.employeeId} className="flex items-center gap-2">
+        <Checkbox
+          checked={assignedEmployeeIds.includes(emp.employeeId)}
+          onCheckedChange={() =>
+            setAssignedEmployeeIds(
+              toggle(assignedEmployeeIds, emp.employeeId)
+            )
+          }
+        />
+        <span className="text-sm">{emp.name}</span>
+      </div>
+    ))
+  : <p className="text-sm text-muted-foreground">No employees found</p>}
+
+
             </div>
           </div>
 

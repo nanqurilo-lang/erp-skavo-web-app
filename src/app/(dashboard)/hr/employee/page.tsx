@@ -517,7 +517,7 @@ const handleRoleChange = async (employeeId: string, newRole: string) => {
                         className="block px-4 py-2 text-sm hover:bg-gray-100"
                         onClick={() => setOpenMenuId(null)}
                       >
-                        View
+                        View 
                       </Link>
 
                       {/* <Link
