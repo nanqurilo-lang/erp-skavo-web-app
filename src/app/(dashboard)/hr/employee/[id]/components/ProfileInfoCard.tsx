@@ -23,6 +23,8 @@ export default function ProfileInfoCard({ employee }: { employee: any }) {
                 <Row label="Language" value={employee.language} />
                 <Row label="Employment Type" value={employee.employmentType} />
                 <Row label="Joining Date" value={employee.joiningDate} />
+                <Row label="Reporting To" value={employee.reportingToName} />
+
             </div>
         </div>
     )

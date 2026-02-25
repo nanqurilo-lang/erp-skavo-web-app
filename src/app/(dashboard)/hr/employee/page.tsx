@@ -3,16 +3,38 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
+// interface Employee {
+//   employeeId: string;
+//   name: string;
+//   email: string;
+//   departmentName: string | null;
+//   designationName: string | null;
+//   role: string;
+//   skills: string[];
+//   active: boolean;
+// }
+
+
+
 interface Employee {
   employeeId: string;
   name: string;
   email: string;
-  departmentName: string | null;
+  profilePictureUrl: string | null;
+
   designationName: string | null;
+
+  reportingToName: string | null;
+
   role: string;
-  skills: string[];
   active: boolean;
+
+  probationEndDate: string | null;
+  noticePeriodStartDate: string | null;
+  noticePeriodEndDate: string | null;
 }
+
+
 
 const BASE_URL = process.env.NEXT_PUBLIC_MAIN;
 
@@ -60,6 +82,27 @@ const [filterStatus, setFilterStatus] = useState("all");
     };
     fetchEmployees();
   }, []);
+
+
+
+const today = new Date();
+
+const isOnProbation = (e: Employee) => {
+  if (!e.probationEndDate) return false;
+  return today <= new Date(e.probationEndDate);
+};
+
+const isOnNotice = (e: Employee) => {
+  if (!e.noticePeriodStartDate || !e.noticePeriodEndDate) return false;
+
+  const start = new Date(e.noticePeriodStartDate);
+  const end = new Date(e.noticePeriodEndDate);
+
+  return today >= start && today <= end;
+};
+
+
+
 
 // dropdown options (table data se)
 const roleOptions = Array.from(
@@ -305,8 +348,11 @@ const handleRoleChange = async (employeeId: string, newRole: string) => {
               <th className="p-3 text-left">Employee ID </th>
               <th className="p-3 text-left">Name</th>
               <th className="p-3 text-left">Email</th>
-              <th className="p-3 text-left">Department</th>
-              <th className="p-3 text-left">Designation</th>
+              {/* <th className="p-3 text-left">Department</th>
+              <th className="p-3 text-left">Designation</th> */}
+
+
+              <th className="p-3 text-left">Reporting To</th>
               <th className="p-3 text-left">Role</th>
               <th className="p-3 text-left">Status</th>
               <th className="p-3 text-left">Action</th>
@@ -316,12 +362,97 @@ const handleRoleChange = async (employeeId: string, newRole: string) => {
             {data.map((e) => (
               <tr key={e.employeeId} className="border-t">
                 <td className="p-3">{e.employeeId}</td>
-                <td className="p-3">{e.name}</td>
-                <td className="p-3">{e.email}</td>
-                <td className="p-3">{e.departmentName || "—"}</td>
-                <td className="p-3">{e.designationName || "—"}</td>
-                {/* <td className="p-3">{e.role } </td> */}
+                {/* <td className="p-3">{e.name}</td> */}
 
+{/* 
+<td className="p-3">
+  <div className="flex items-start gap-3">
+    
+    {/* Avatar */}
+    {/* <div className="w-9 h-9 rounded-full bg-gray-200 flex items-center justify-center text-sm font-semibold">
+      {e.name?.charAt(0)}
+    </div> */}
+
+    {/* Name + Designation + Status Badge */}
+    {/* <div>
+      <div className="font-medium">{e.name}</div>
+
+      {/* Designation */}
+      {/* {e.designationName && (
+        <div className="text-xs text-gray-500">
+          {e.designationName}
+        </div>
+      )} */} 
+
+      {/* Probation / Notice Badge (Example Logic) */}
+      {/* {e.active && (
+        <div className="mt-1">
+          <span className="px-2 py-0.5 text-[10px] rounded-full bg-purple-100 text-purple-700">
+            On Probation
+          </span>
+        </div>
+      )}
+    </div>
+  </div>
+</td>  */}
+
+
+
+
+
+<td className="p-3">
+  <div className="flex items-start gap-3">
+
+    {/* Profile Picture */}
+    {e.profilePictureUrl ? (
+      <img
+        src={e.profilePictureUrl}
+        alt={e.name}
+        className="w-9 h-9 rounded-full object-cover"
+      />
+    ) : (
+      <div className="w-9 h-9 rounded-full bg-gray-200 flex items-center justify-center text-sm font-semibold">
+        {e.name?.charAt(0)}
+      </div>
+    )}
+
+    <div>
+      <div className="font-medium">{e.name}</div>
+
+      {/* Designation */}
+      {e.designationName && (
+        <div className="text-xs text-gray-500">
+          {e.designationName}
+        </div>
+      )}
+
+      {/* BADGES */}
+      <div className="mt-1 flex gap-2">
+
+        {isOnProbation(e) && (
+          <span className="px-2 py-0.5 text-[10px] rounded-full bg-purple-100 text-purple-700">
+            On Probation
+          </span>
+        )}
+
+        {isOnNotice(e) && (
+          <span className="px-2 py-0.5 text-[10px] rounded-full bg-orange-100 text-orange-700">
+            On Notice Period
+          </span>
+        )}
+
+      </div>
+    </div>
+  </div>
+</td>
+
+
+
+
+                <td className="p-3">{e.email}</td>
+                {/* <td className="p-3">{e.departmentName || "—"}</td>
+                <td className="p-3">{e.designationName || "—"}</td> */}
+                <td className="p-3">{e.reportingToName || "—"}</td>
 
 <td className="p-3">
   <select
