@@ -1733,7 +1733,7 @@ export default function TimesheetSummaryList() {
                         <th className="w-1/3 py-2 px-3">Task</th>
                         <th className="w-1/3 py-2 px-3">Time</th>
                         <th className="w-1/6 py-2 px-3 text-center">Total Hours</th>
-                        <th className="w-1/6 py-2 px-3 text-center">Actions</th>
+                        <th className="w-1/6 py-2 px-3 text-center">Actions </th>
                       </tr>
                     </thead>
                     <tbody>
@@ -1835,9 +1835,11 @@ export default function TimesheetSummaryList() {
 
       {/* View Modal */}
       {isViewOpen && selectedLog && (
-        <div className="fixed inset-0 z-[10030] flex items-start justify-center pt-8 px-6">
+        // <div className="fixed inset-0 z-[10020] flex items-start justify-center pt-8 px-6">
+                <div className="fixed inset-0 z-[10020] flex items-start justify-center pt-8 px-4">
+
           <div className="absolute inset-0 bg-black/40" onClick={() => setIsViewOpen(false)} />
-          <div className="relative bg-white w-full max-w-6xl rounded-xl shadow-xl overflow-hidden">
+          <div className="relative bg-white w-full max-w-4xl rounded-xl shadow-xl overflow-hidden">
             <div className="flex items-center justify-between px-6 py-4 border-b">
               <h3 className="text-xl font-semibold">Timesheet</h3>
               <button

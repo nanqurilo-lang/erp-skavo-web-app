@@ -233,13 +233,13 @@ function DealViewModal({
     <div className="fixed inset-0 z-50">
       <div className="absolute inset-0 bg-black/30" onClick={onClose} />
       <div className="fixed inset-0 flex items-start justify-center px-4 pt-8">
-        <div
+        {/* <div
           className="max-w-5xl w-full bg-white rounded-lg shadow-lg border overflow-auto"
           style={{ maxHeight: "92vh" }}
-        >
-          <div className="flex items-center justify-between p-4 border-b">
-            <h3 className="text-lg font-semibold">Deal {deal.id ?? ""}</h3>
-            <button
+        > */}
+          {/* <div className="flex items-center justify-between p-4 border-b"> */}
+            {/* <h3 className="text-lg font-semibold">Deal {deal.id ?? ""}</h3> */}
+            {/* <button
               onClick={onClose}
               className="text-muted-foreground p-1 rounded hover:bg-slate-100"
             >
@@ -256,10 +256,10 @@ function DealViewModal({
                   d="M6 18L18 6M6 6l12 12"
                 />
               </svg>
-            </button>
+            </button> */}
           </div>
 
-          <div className="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* <div className="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 rounded-lg border p-4">
               <h4 className="font-medium mb-2">Deal Information</h4>
               <div className="text-sm text-muted-foreground mb-4">
@@ -525,9 +525,9 @@ function DealViewModal({
                 <div className="mt-4 p-6 border-1">Follow ups</div>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
+          </div> */}
+        {/* </div> */}
+      {/* </div> */}
     </div>
   );
 }
