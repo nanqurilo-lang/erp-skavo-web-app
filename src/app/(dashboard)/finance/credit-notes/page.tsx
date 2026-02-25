@@ -1,9 +1,13 @@
 // src/app/finance/credit-notes/page.tsx
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+// import React, { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+// import React, { useEffect, useMemo, useState, useRef } from "react";
+import React, { useEffect, useMemo, useState, useRef } from "react";
+import { createPortal } from "react-dom";
+
 import { MoreHorizontal, Eye, Edit, Trash2, X } from "lucide-react";
 import {
   Table,
@@ -70,6 +74,16 @@ export default function CreditNotesPage() {
   const [clientFilter, setClientFilter] = useState<string>("all");
   const [openMenuFor, setOpenMenuFor] = useState<number | null>(null);
 
+
+const [menuPosition, setMenuPosition] = useState<{
+  top: number;
+  left: number;
+} | null>(null);
+
+const menuRef = useRef<HTMLDivElement | null>(null);
+
+
+
   // Modal state
   const [editing, setEditing] = useState<CreditNote | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -121,6 +135,35 @@ export default function CreditNotesPage() {
       mounted = false;
     };
   }, []);
+
+
+
+
+  useEffect(() => {
+  const handleClickOutside = (event: MouseEvent) => {
+    if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+      setOpenMenuFor(null);
+      setMenuPosition(null);
+    }
+  };
+
+  const handleEscape = (event: KeyboardEvent) => {
+    if (event.key === "Escape") {
+      setOpenMenuFor(null);
+      setMenuPosition(null);
+    }
+  };
+
+  if (openMenuFor !== null) {
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleEscape);
+  }
+
+  return () => {
+    document.removeEventListener("mousedown", handleClickOutside);
+    document.removeEventListener("keydown", handleEscape);
+  };
+}, [openMenuFor]);
 
   const projects = useMemo(() => {
     const map = new Map<string, string>();
@@ -409,7 +452,7 @@ export default function CreditNotesPage() {
                       {/* Action */}
                       <TableCell className="pr-6 align-middle">
                         <div className="flex justify-between relative">
-                          <button
+                          {/* <button
                             onClick={() =>
                               setOpenMenuFor(
                                 openMenuFor === cn.id ? null : cn.id
@@ -419,9 +462,48 @@ export default function CreditNotesPage() {
                             title="More"
                           >
                             <MoreHorizontal className="w-5 h-5 text-slate-600" />
-                          </button>
+                          </button> */}
 
-                          {openMenuFor === cn.id && (
+
+<button
+  onClick={(e) => {
+    e.stopPropagation();
+
+    if (openMenuFor === cn.id) {
+      setOpenMenuFor(null);
+      setMenuPosition(null);
+      return;
+    }
+
+    const rect =
+      (e.currentTarget as HTMLElement).getBoundingClientRect();
+
+    const menuWidth = 170;
+    const menuHeight = 120;
+
+    let left = rect.right - menuWidth;
+    let top = rect.bottom + 6;
+
+    if (left + menuWidth > window.innerWidth) {
+      left = window.innerWidth - menuWidth - 10;
+    }
+
+    if (top + menuHeight > window.innerHeight) {
+      top = rect.top - menuHeight - 6;
+    }
+
+    setOpenMenuFor(cn.id);
+    setMenuPosition({ top, left });
+  }}
+  className="p-1 rounded hover:bg-slate-100"
+  title="More"
+>
+  <MoreHorizontal className="w-5 h-5 text-slate-600" />
+</button>
+
+
+
+                          {/* {openMenuFor === cn.id && (
                             <div
                               className="absolute right-0 top-8 z-30 bg-white border rounded-md shadow-md w-40"
                               onMouseLeave={() => setOpenMenuFor(null)}
@@ -459,7 +541,54 @@ export default function CreditNotesPage() {
                                 <span className="text-sm">Delete</span>
                               </button>
                             </div>
-                          )}
+                          )} */}
+
+
+
+
+{openMenuFor === cn.id &&
+  menuPosition &&
+  createPortal(
+    <div
+      ref={menuRef}
+      className="fixed w-44 bg-white border rounded-md shadow-2xl z-[99999]"
+      style={{
+        top: menuPosition.top,
+        left: menuPosition.left,
+      }}
+    >
+      <button
+        className="w-full text-left px-3 py-2 hover:bg-slate-50 flex items-center gap-2"
+        onClick={() => handleView(cn)}
+      >
+        <Eye className="w-4 h-4" />
+        <span className="text-sm">View</span>
+      </button>
+
+      <button
+        className="w-full text-left px-3 py-2 hover:bg-slate-50 flex items-center gap-2"
+        onClick={() => handleOpenEdit(cn)}
+      >
+        <Edit className="w-4 h-4" />
+        <span className="text-sm">Edit</span>
+      </button>
+
+      <button
+        className="w-full text-left px-3 py-2 hover:bg-slate-50 flex items-center gap-2 text-red-600"
+        onClick={() => {
+          setOpenMenuFor(null);
+          setMenuPosition(null);
+          handleDelete(cn);
+        }}
+      >
+        <Trash2 className="w-4 h-4" />
+        <span className="text-sm">Delete</span>
+      </button>
+    </div>,
+    document.body
+  )}
+
+
                         </div>
                       </TableCell>
                     </TableRow>
