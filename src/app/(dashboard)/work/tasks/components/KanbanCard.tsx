@@ -17,6 +17,8 @@ export const KanbanCard: React.FC<{ task: Task }> = ({ task }) => {
                 {task?.projectName}
             </div>
 
+            <div className="mt-3 text-xs text-slate-500">{task?.dueDate}</div>
+
             {/* Labels */}
             {task.labels && (
                 <div className="mt-2 flex flex-wrap gap-2">
