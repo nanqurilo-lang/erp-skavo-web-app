@@ -157,15 +157,15 @@ export default function CompanySettingsFormPage() {
         <div className="flex items-center justify-between mb-6">
           <div>
             <h2 className="text-2xl font-semibold text-slate-900">Company Settings</h2>
-            <p className="text-sm text-slate-600 mt-1">Manage company profile and logo</p>
+            {/* <p className="text-sm text-slate-600 mt-1">Manage company profile and logo</p> */}
           </div>
           <div className="flex items-center gap-3">
             <Link href="/settings/company-settings">
-              <Button variant="ghost">Back</Button>
+              {/* <Button variant="ghost">Back</Button> */}
             </Link>
-            <Button onClick={onPickFileClick}>
+            {/* <Button onClick={onPickFileClick}>
               <Plus className="mr-2 w-4 h-4" /> Upload Logo
-            </Button>
+            </Button> */}
           </div>
         </div>
 
