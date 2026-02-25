@@ -559,14 +559,14 @@ export default function AwardsPage() {
   return (
     <div className="container mx-auto py-10 px-4">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-        <div>
+        {/* <div>
           <h1 className="text-3xl font-bold flex items-center gap-3">
             <Award className="h-8 w-8 text-primary" /> Awards
           </h1>
           <p className="text-muted-foreground">
             Manage all employee awards and achievements
           </p>
-        </div>
+        </div> */}
 
 
 
@@ -614,7 +614,7 @@ export default function AwardsPage() {
 
         <div className="flex items-center gap-2 w-full sm:w-auto">
           <Select value={filterStatus} onValueChange={setFilterStatus}>
-            <SelectTrigger className="w-[160px]">
+            <SelectTrigger className="w-[100px]">
               <Filter className="mr-2 h-4 w-4" />
               <SelectValue placeholder="Filter Status" />
             </SelectTrigger>
