@@ -1864,56 +1864,7 @@ const getLogById = (id: number) => {
 
 
 
-{/* 
-{openMenuId !== null && menuPosition &&
-  createPortal(
-    <div
-      className="fixed z-[10050] w-44 bg-white rounded-md shadow-xl border"
-      style={{ top: menuPosition.top, left: menuPosition.left }}
-    >
-      <div className="py-1">
-        <button
-          onClick={() => {
-            const log = data
-              ?.flatMap((e) => e.timeLogs)
-              .find((l) => l.id === openMenuId);
-            if (log) openView(log);
-            setOpenMenuId(null);
-          }}
-          className="w-full text-left px-4 py-2 flex items-center gap-3 text-sm hover:bg-gray-50"
-        >
-          View
-        </button>
 
-        <button
-          onClick={() => {
-            const log = data
-              ?.flatMap((e) => e.timeLogs)
-              .find((l) => l.id === openMenuId);
-            if (log) openLogForm(log);
-            setOpenMenuId(null);
-          }}
-          className="w-full text-left px-4 py-2 flex items-center gap-3 text-sm hover:bg-gray-50"
-        >
-          Edit
-        </button>
-
-        <button
-          onClick={() => {
-            const log = data
-              ?.flatMap((e) => e.timeLogs)
-              .find((l) => l.id === openMenuId);
-            if (log) openDelete(log);
-            setOpenMenuId(null);
-          }}
-          className="w-full text-left px-4 py-2 flex items-center gap-3 text-sm hover:bg-gray-50 text-red-600"
-        >
-          Delete
-        </button>
-      </div>
-    </div>,
-    document.body
-  )} */}
 
 
 
