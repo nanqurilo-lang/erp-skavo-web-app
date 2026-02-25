@@ -210,7 +210,81 @@ export default function InvoiceTable({
                                     </div>
                                 </TableCell>
 
-                                <TableCell>{inv.currency} {Number(inv.total).toFixed(2)}</TableCell>
+                                {/* <TableCell>{inv.currency} {Number(inv.total).toFixed(2)}</TableCell> */}
+
+{/* 
+<TableCell>
+    <div className="space-y-1 text-sm">
+        <div>
+            <span className="text-gray-500">Total :</span>{" "}
+            <span className="text-gray-800 font-medium">
+                {inv.currency} {Number(inv.total || 0).toLocaleString()}
+            </span>
+        </div>
+
+        <div>
+            <span className="text-gray-500">Paid :</span>{" "}
+            <span className="text-green-600">
+                {inv.currency} {Number(inv.paidAmount || 0).toLocaleString()}
+            </span>
+        </div>
+
+        <div>
+            <span className="text-gray-500">Unpaid :</span>{" "}
+            <span className="text-red-600">
+                {inv.currency} {Number(inv.unpaidAmount || 0).toLocaleString()}
+            </span>
+        </div>
+
+        {inv.adjustmentAmount > 0 && (
+            <div>
+                <span className="text-yellow-600">Adjustment :</span>{" "}
+                <span className="text-yellow-600">
+                    {inv.currency} {Number(inv.adjustmentAmount).toLocaleString()}
+                </span>
+            </div>
+        )}
+    </div>
+</TableCell> */}
+
+
+
+<TableCell>
+    <div className="space-y-1 text-sm">
+        <div>
+            <span className="text-gray-500">Total :</span>{" "}
+            <span className="text-gray-800 font-medium">
+                {inv.currency} {Number(inv.total || 0).toLocaleString()}
+            </span>
+        </div>
+
+        <div>
+            <span className="text-gray-500">Paid :</span>{" "}
+            <span className="text-green-500 sm">
+                {inv.currency} {Number(inv.paidAmount || 0).toLocaleString()}
+            </span>
+        </div>
+
+        <div>
+            <span className="text-gray-500">Unpaid :</span>{" "}
+            <span className="text-red-600">
+                {inv.currency} {Number(inv.unpaidAmount || 0).toLocaleString()}
+            </span>
+        </div>
+
+        {/* ✅ Always show adjustment for Credit Notes */}
+        {(inv.status === "CREDIT_NOTES" || inv.adjustmentAmount > 0) && (
+            <div>
+                <span className="text-yellow-500">Adjustment :</span>{" "}
+                <span className="text-yellow-500">
+                    {inv.currency} {Number(inv.adjustmentAmount || 0).toLocaleString()}
+                </span>
+            </div>
+        )}
+    </div>
+</TableCell>
+
+
                                 <TableCell>{safeDate(inv.invoiceDate)}</TableCell>
                                 <TableCell>{statusBadge(inv.status)}</TableCell>
 

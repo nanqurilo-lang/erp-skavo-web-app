@@ -88,23 +88,28 @@ export default function InvoiceList() {
     
     <div className="py-6 px-4">
       {/* HEADER */}
+
+
+<InvoiceFilters filters={filters} setFilters={setFilters} invoices={invoices} />
+
+
       <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <Button onClick={() => setModal(m => ({ ...m, create: true }))}>
-            <Plus className="mr-2 h-4 w-4" /> Create Invoice 
+            <Plus className=" h-4 w-4" /> Create Invoice 
           </Button>
 
-          <div>
+          {/* <div>
             <h1 className="text-3xl font-bold">Invoices</h1>
             <p className="text-gray-600">Manage and track all invoices</p>
-          </div>
+          </div> */}
         </div>
       </div>
       
 
       {/* FILTERS */}
       
-      <InvoiceFilters filters={filters} setFilters={setFilters} invoices={invoices} />
+      {/* <InvoiceFilters filters={filters} setFilters={setFilters} invoices={invoices} /> */}
      
 
       {/* TABLE */}
