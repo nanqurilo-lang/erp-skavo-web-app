@@ -1048,6 +1048,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 
 type EmployeeAvatar = {
   employeeId: string;
@@ -1163,6 +1164,14 @@ export default function TimesheetSummaryList() {
 
   const [showLogModal, setShowLogModal] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
+
+const [menuPosition, setMenuPosition] = useState<{ top: number; left: number } | null>(null);
+
+const getLogById = (id: number) => {
+  return data?.flatMap((e) => e.timeLogs).find((l) => l.id === id) || null;
+};
+
+
   const [form, setForm] = useState({
     projectId: "",
     taskId: "",
@@ -1595,9 +1604,44 @@ export default function TimesheetSummaryList() {
   // ---------------------
   // Menu open/close handlers and outside click / ESC handling
   // ---------------------
-  const toggleMenu = (id: number) => {
-    setOpenMenuId((prev) => (prev === id ? null : id));
-  };
+  // const toggleMenu = (id: number) => {
+  //   setOpenMenuId((prev) => (prev === id ? null : id));
+  // };
+
+
+
+
+  const toggleMenu = (id: number, event?: React.MouseEvent<HTMLButtonElement>) => {
+  if (openMenuId === id) {
+    setOpenMenuId(null);
+    setMenuPosition(null);
+    return;
+  }
+
+  if (event) {
+    const rect = event.currentTarget.getBoundingClientRect();
+
+    const menuWidth = 180;
+    const menuHeight = 120;
+
+    let left = rect.right - menuWidth;
+    let top = rect.bottom + 6;
+
+    // prevent right overflow
+    if (left + menuWidth > window.innerWidth) {
+      left = window.innerWidth - menuWidth - 10;
+    }
+
+    // prevent bottom overflow
+    if (top + menuHeight > window.innerHeight) {
+      top = rect.top - menuHeight - 6;
+    }
+
+    setMenuPosition({ top, left });
+  }
+
+  setOpenMenuId(id);
+};
 
   useEffect(() => {
     if (openMenuId == null) return;
@@ -1760,7 +1804,8 @@ export default function TimesheetSummaryList() {
                               <div className="inline-flex items-center gap-2 justify-center relative" data-menu-wrapper>
                                 <button
                                   title="Actions"
-                                  onClick={() => toggleMenu(tl.id)}
+                                  // onClick={() => toggleMenu(tl.id)}
+                                  onClick={(e) => toggleMenu(tl.id, e)}
                                   className="p-1 rounded hover:bg-gray-100"
                                   aria-haspopup="true"
                                   aria-expanded={openMenuId === tl.id}
@@ -1771,7 +1816,7 @@ export default function TimesheetSummaryList() {
                                   </svg>
                                 </button>
 
-                                {openMenuId === tl.id && (
+                                {/* {openMenuId === tl.id && (
                                   <div
                                     data-menu-id
                                     className="absolute right-0 top-full mt-2 w-44 bg-white rounded-md shadow-lg border z-50"
@@ -1780,39 +1825,155 @@ export default function TimesheetSummaryList() {
                                       <button
                                         onClick={() => { openView(tl); setOpenMenuId(null); }}
                                         className="w-full text-left px-4 py-2 flex items-center gap-3 text-sm hover:bg-gray-50"
-                                      >
+                                      > */}
                                         {/* eye icon */}
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-700" viewBox="0 0 20 20" fill="currentColor">
+                                        {/* <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-700" viewBox="0 0 20 20" fill="currentColor">
                                           <path d="M10 3C6 3 2.7 5.1 1 8c1.7 2.9 5 5 9 5s7.3-2.1 9-5c-1.7-2.9-5-5-9-5zM10 12a4 4 0 110-8 4 4 0 010 8z" />
                                           <path d="M10 7a3 3 0 100 6 3 3 0 000-6z" />
                                         </svg>
                                         <span className="text-gray-800">View</span>
-                                      </button>
+                                      </button> */}
 
-                                      <button
+                                      {/* <button
                                         onClick={() => { openLogForm(tl); setOpenMenuId(null); }}
                                         className="w-full text-left px-4 py-2 flex items-center gap-3 text-sm hover:bg-gray-50"
-                                      >
+                                      > */}
                                         {/* pencil icon */}
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-700" viewBox="0 0 20 20" fill="currentColor">
+                                        {/* <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-700" viewBox="0 0 20 20" fill="currentColor">
                                           <path d="M17.414 2.586a2 2 0 010 2.828l-9.9 9.9a1 1 0 01-.465.263l-4 1a1 1 0 01-1.212-1.212l1-4a1 1 0 01.263-.465l9.9-9.9a2 2 0 012.828 0z" />
                                         </svg>
                                         <span className="text-gray-800">Edit</span>
-                                      </button>
+                                      </button> */}
 
-                                      <button
+                                      {/* <button
                                         onClick={() => { openDelete(tl); setOpenMenuId(null); }}
                                         className="w-full text-left px-4 py-2 flex items-center gap-3 text-sm hover:bg-gray-50"
-                                      >
+                                      > */}
                                         {/* trash - red */}
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-red-600" viewBox="0 0 20 20" fill="currentColor">
+                                        {/* <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-red-600" viewBox="0 0 20 20" fill="currentColor">
                                           <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H3a1 1 0 000 2h14a1 1 0 100-2h-2V3a1 1 0 00-1-1H6zm2 6a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 10-2 0v6a1 1 0 102 0V8z" clipRule="evenodd" />
                                         </svg>
                                         <span className="text-red-600">Delete</span>
                                       </button>
                                     </div>
                                   </div>
-                                )}
+                                )} */}
+
+
+
+
+
+
+{/* 
+{openMenuId !== null && menuPosition &&
+  createPortal(
+    <div
+      className="fixed z-[10050] w-44 bg-white rounded-md shadow-xl border"
+      style={{ top: menuPosition.top, left: menuPosition.left }}
+    >
+      <div className="py-1">
+        <button
+          onClick={() => {
+            const log = data
+              ?.flatMap((e) => e.timeLogs)
+              .find((l) => l.id === openMenuId);
+            if (log) openView(log);
+            setOpenMenuId(null);
+          }}
+          className="w-full text-left px-4 py-2 flex items-center gap-3 text-sm hover:bg-gray-50"
+        >
+          View
+        </button>
+
+        <button
+          onClick={() => {
+            const log = data
+              ?.flatMap((e) => e.timeLogs)
+              .find((l) => l.id === openMenuId);
+            if (log) openLogForm(log);
+            setOpenMenuId(null);
+          }}
+          className="w-full text-left px-4 py-2 flex items-center gap-3 text-sm hover:bg-gray-50"
+        >
+          Edit
+        </button>
+
+        <button
+          onClick={() => {
+            const log = data
+              ?.flatMap((e) => e.timeLogs)
+              .find((l) => l.id === openMenuId);
+            if (log) openDelete(log);
+            setOpenMenuId(null);
+          }}
+          className="w-full text-left px-4 py-2 flex items-center gap-3 text-sm hover:bg-gray-50 text-red-600"
+        >
+          Delete
+        </button>
+      </div>
+    </div>,
+    document.body
+  )} */}
+
+
+
+
+
+
+
+
+{openMenuId !== null && menuPosition &&
+  createPortal(
+    <div
+      className="fixed z-[99999]"
+      style={{ top: menuPosition.top, left: menuPosition.left }}
+      onMouseDown={(e) => e.stopPropagation()} // prevent outside close
+    >
+      <div className="w-44 bg-white rounded-md shadow-xl border overflow-hidden">
+        <button
+          onClick={() => {
+            const log = getLogById(openMenuId);
+            if (log) openView(log);
+            setOpenMenuId(null);
+            setMenuPosition(null);
+          }}
+          className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
+        >
+          View
+        </button>
+
+        <button
+          onClick={() => {
+            const log = getLogById(openMenuId);
+            if (log) openLogForm(log);
+            setOpenMenuId(null);
+            setMenuPosition(null);
+          }}
+          className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
+        >
+          Edit
+        </button>
+
+        <button
+          onClick={() => {
+            const log = getLogById(openMenuId);
+            if (log) openDelete(log);
+            setOpenMenuId(null);
+            setMenuPosition(null);
+          }}
+          className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50 text-red-600"
+        >
+          Delete
+        </button>
+      </div>
+    </div>,
+    document.body
+  )}
+
+
+
+
+
                               </div>
                             </td>
                           </tr>
