@@ -3,6 +3,9 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
+import { createPortal } from "react-dom";
+import { useRef } from "react";
+
 // interface Employee {
 //   employeeId: string;
 //   name: string;
@@ -46,13 +49,13 @@ export default function EmployeePage() {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("all");
 
- // filter drawer
-const [filterOpen, setFilterOpen] = useState(false);
+  // filter drawer
+  const [filterOpen, setFilterOpen] = useState(false);
 
-// image-style filters
-const [filterRole, setFilterRole] = useState("all");
-const [filterDepartment, setFilterDepartment] = useState("all");
-const [filterStatus, setFilterStatus] = useState("all");
+  // image-style filters
+  const [filterRole, setFilterRole] = useState("all");
+  const [filterDepartment, setFilterDepartment] = useState("all");
+  const [filterStatus, setFilterStatus] = useState("all");
 
 
 
@@ -68,6 +71,7 @@ const [filterStatus, setFilterStatus] = useState("all");
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
 
   const [menuPosition, setMenuPosition] = useState<{ top: number; left: number } | null>(null);
+  const menuRef = useRef<HTMLDivElement | null>(null);
 
   /* ================= FETCH EMPLOYEES ================= */
   useEffect(() => {
@@ -85,33 +89,66 @@ const [filterStatus, setFilterStatus] = useState("all");
 
 
 
-const today = new Date();
 
-const isOnProbation = (e: Employee) => {
-  if (!e.probationEndDate) return false;
-  return today <= new Date(e.probationEndDate);
-};
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(event.target as Node)
+      ) {
+        setOpenMenuId(null);
+        setMenuPosition(null);
+      }
+    };
 
-const isOnNotice = (e: Employee) => {
-  if (!e.noticePeriodStartDate || !e.noticePeriodEndDate) return false;
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setOpenMenuId(null);
+        setMenuPosition(null);
+      }
+    };
 
-  const start = new Date(e.noticePeriodStartDate);
-  const end = new Date(e.noticePeriodEndDate);
+    if (openMenuId) {
+      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("keydown", handleEscape);
+    }
 
-  return today >= start && today <= end;
-};
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [openMenuId]);
 
 
 
 
-// dropdown options (table data se)
-const roleOptions = Array.from(
-  new Set(employees.map(e => e.role).filter(Boolean))
-);
+  const today = new Date();
 
-const departmentOptions = Array.from(
-  new Set(employees.map(e => e.departmentName).filter(Boolean))
-);
+  const isOnProbation = (e: Employee) => {
+    if (!e.probationEndDate) return false;
+    return today <= new Date(e.probationEndDate);
+  };
+
+  const isOnNotice = (e: Employee) => {
+    if (!e.noticePeriodStartDate || !e.noticePeriodEndDate) return false;
+
+    const start = new Date(e.noticePeriodStartDate);
+    const end = new Date(e.noticePeriodEndDate);
+
+    return today >= start && today <= end;
+  };
+
+
+
+
+  // dropdown options (table data se)
+  const roleOptions = Array.from(
+    new Set(employees.map(e => e.role).filter(Boolean))
+  );
+
+  const departmentOptions = Array.from(
+    new Set(employees.map(e => e.departmentName).filter(Boolean))
+  );
 
 
 
@@ -167,27 +204,27 @@ const departmentOptions = Array.from(
   //   return matchSearch && matchStatus;
   // });
 
-const filtered = employees.filter((e) => {
-  const matchSearch =
-    e.name.toLowerCase().includes(search.toLowerCase()) ||
-    e.email.toLowerCase().includes(search.toLowerCase()) ||
-    e.employeeId.toLowerCase().includes(search.toLowerCase());
+  const filtered = employees.filter((e) => {
+    const matchSearch =
+      e.name.toLowerCase().includes(search.toLowerCase()) ||
+      e.email.toLowerCase().includes(search.toLowerCase()) ||
+      e.employeeId.toLowerCase().includes(search.toLowerCase());
 
-  const matchStatus =
-    filterStatus === "all" ||
-    (filterStatus === "active" && e.active) ||
-    (filterStatus === "inactive" && !e.active);
+    const matchStatus =
+      filterStatus === "all" ||
+      (filterStatus === "active" && e.active) ||
+      (filterStatus === "inactive" && !e.active);
 
-  const matchDepartment =
-    filterDepartment === "all" ||
-    e.departmentName === filterDepartment;
+    const matchDepartment =
+      filterDepartment === "all" ||
+      e.departmentName === filterDepartment;
 
-  const matchRole =
-    filterRole === "all" ||
-    e.role === filterRole;
+    const matchRole =
+      filterRole === "all" ||
+      e.role === filterRole;
 
-  return matchSearch && matchStatus && matchDepartment && matchRole;
-});
+    return matchSearch && matchStatus && matchDepartment && matchRole;
+  });
 
 
 
@@ -219,59 +256,59 @@ const filtered = employees.filter((e) => {
   };
 
 
-const getRoleLabel = (role: string) => {
-  switch (role) {
-    case "ROLE_EMPLOYEE":
-      return "Employee";
-    case "ROLE_ADMIN":
-      return "Admin";
-    default:
-      return role;
-  }
-};
-
-
-
-
-
-
-const handleRoleChange = async (employeeId: string, newRole: string) => {
-  try {
-    const token = localStorage.getItem("accessToken");
-
-    const response = await fetch(
-      `${BASE_URL}/employee/${employeeId}/role`,
-      {
-        method: "PATCH", // agar backend PATCH expect karta hai
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          role: newRole,
-        }),
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error("Failed to update role");
+  const getRoleLabel = (role: string) => {
+    switch (role) {
+      case "ROLE_EMPLOYEE":
+        return "Employee";
+      case "ROLE_ADMIN":
+        return "Admin";
+      default:
+        return role;
     }
+  };
 
-    // ✅ UI instant update
-    setEmployees((prev) =>
-      prev.map((emp) =>
-        emp.employeeId === employeeId
-          ? { ...emp, role: newRole }
-          : emp
-      )
-    );
 
-    alert("Role updated successfully");
-  } catch (error) {
-    console.error(error);
-    alert("Error updating role");
-  }
-};
+
+
+
+
+  const handleRoleChange = async (employeeId: string, newRole: string) => {
+    try {
+      const token = localStorage.getItem("accessToken");
+
+      const response = await fetch(
+        `${BASE_URL}/employee/${employeeId}/role`,
+        {
+          method: "PATCH", // agar backend PATCH expect karta hai
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            role: newRole,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to update role");
+      }
+
+      // ✅ UI instant update
+      setEmployees((prev) =>
+        prev.map((emp) =>
+          emp.employeeId === employeeId
+            ? { ...emp, role: newRole }
+            : emp
+        )
+      );
+
+      alert("Role updated successfully");
+    } catch (error) {
+      console.error(error);
+      alert("Error updating role");
+    }
+  };
 
   return (
     <div className="p-6 space-y-6">
@@ -301,20 +338,20 @@ const handleRoleChange = async (employeeId: string, newRole: string) => {
         </select>
 
 
-  {/* FILTER BUTTON */}
-  <button
-    onClick={() => setFilterOpen(true)}
-    className="border px-4 py-2 rounded flex items-right gap-2 ml-auto"
-  >
-    🔍 Filters
+        {/* FILTER BUTTON */}
+        <button
+          onClick={() => setFilterOpen(true)}
+          className="border px-4 py-2 rounded flex items-right gap-2 ml-auto"
+        >
+          🔍 Filters
 
-</button>
+        </button>
       </div>
 
 
 
-      
-  
+
+
 
       {/* ================= ACTIONS ================= */}
       <div className="flex justify-between items-center">
@@ -332,60 +369,60 @@ const handleRoleChange = async (employeeId: string, newRole: string) => {
             onClick={() => setInviteOpen(true)}
             className="border px-4 py-2 rounded"
           >
-            + Invite Employee   
+            + Invite Employee
           </button>
         </div>
       </div>
 
       {/* ================= TABLE ================= */}
-     
+
       {/* <div className="bg-white border rounded-lg overflow-x-auto"> */}
       <div className="bg-white border rounded-lg relative">
-  <div className="overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="p-3 text-left">Employee ID </th>
-              <th className="p-3 text-left">Name</th>
-              <th className="p-3 text-left">Email</th>
-              {/* <th className="p-3 text-left">Department</th>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="p-3 text-left">Employee ID </th>
+                <th className="p-3 text-left">Name</th>
+                <th className="p-3 text-left">Email</th>
+                {/* <th className="p-3 text-left">Department</th>
               <th className="p-3 text-left">Designation</th> */}
 
 
-              <th className="p-3 text-left">Reporting To</th>
-              <th className="p-3 text-left">Role</th>
-              <th className="p-3 text-left">Status</th>
-              <th className="p-3 text-left">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((e) => (
-              <tr key={e.employeeId} className="border-t">
-                <td className="p-3">{e.employeeId}</td>
-                {/* <td className="p-3">{e.name}</td> */}
+                <th className="p-3 text-left">Reporting To</th>
+                <th className="p-3 text-left">Role</th>
+                <th className="p-3 text-left">Status</th>
+                <th className="p-3 text-left">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.map((e) => (
+                <tr key={e.employeeId} className="border-t">
+                  <td className="p-3">{e.employeeId}</td>
+                  {/* <td className="p-3">{e.name}</td> */}
 
-{/* 
+                  {/* 
 <td className="p-3">
   <div className="flex items-start gap-3">
     
     {/* Avatar */}
-    {/* <div className="w-9 h-9 rounded-full bg-gray-200 flex items-center justify-center text-sm font-semibold">
+                  {/* <div className="w-9 h-9 rounded-full bg-gray-200 flex items-center justify-center text-sm font-semibold">
       {e.name?.charAt(0)}
     </div> */}
 
-    {/* Name + Designation + Status Badge */}
-    {/* <div>
+                  {/* Name + Designation + Status Badge */}
+                  {/* <div>
       <div className="font-medium">{e.name}</div>
 
       {/* Designation */}
-      {/* {e.designationName && (
+                  {/* {e.designationName && (
         <div className="text-xs text-gray-500">
           {e.designationName}
         </div>
-      )} */} 
+      )} */}
 
-      {/* Probation / Notice Badge (Example Logic) */}
-      {/* {e.active && (
+                  {/* Probation / Notice Badge (Example Logic) */}
+                  {/* {e.active && (
         <div className="mt-1">
           <span className="px-2 py-0.5 text-[10px] rounded-full bg-purple-100 text-purple-700">
             On Probation
@@ -400,83 +437,82 @@ const handleRoleChange = async (employeeId: string, newRole: string) => {
 
 
 
-<td className="p-3">
-  <div className="flex items-start gap-3">
+                  <td className="p-3">
+                    <div className="flex items-start gap-3">
 
-    {/* Profile Picture */}
-    {e.profilePictureUrl ? (
-      <img
-        src={e.profilePictureUrl}
-        alt={e.name}
-        className="w-9 h-9 rounded-full object-cover"
-      />
-    ) : (
-      <div className="w-9 h-9 rounded-full bg-gray-200 flex items-center justify-center text-sm font-semibold">
-        {e.name?.charAt(0)}
-      </div>
-    )}
+                      {/* Profile Picture */}
+                      {e.profilePictureUrl ? (
+                        <img
+                          src={e.profilePictureUrl}
+                          alt={e.name}
+                          className="w-9 h-9 rounded-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-9 h-9 rounded-full bg-gray-200 flex items-center justify-center text-sm font-semibold">
+                          {e.name?.charAt(0)}
+                        </div>
+                      )}
 
-    <div>
-      <div className="font-medium">{e.name}</div>
+                      <div>
+                        <div className="font-medium">{e.name}</div>
 
-      {/* Designation */}
-      {e.designationName && (
-        <div className="text-xs text-gray-500">
-          {e.designationName}
-        </div>
-      )}
+                        {/* Designation */}
+                        {e.designationName && (
+                          <div className="text-xs text-gray-500">
+                            {e.designationName}
+                          </div>
+                        )}
 
-      {/* BADGES */}
-      <div className="mt-1 flex gap-2">
+                        {/* BADGES */}
+                        <div className="mt-1 flex gap-2">
 
-        {isOnProbation(e) && (
-          <span className="px-2 py-0.5 text-[10px] rounded-full bg-purple-100 text-purple-700">
-            On Probation
-          </span>
-        )}
+                          {isOnProbation(e) && (
+                            <span className="px-2 py-0.5 text-[10px] rounded-full bg-purple-100 text-purple-700">
+                              On Probation
+                            </span>
+                          )}
 
-        {isOnNotice(e) && (
-          <span className="px-2 py-0.5 text-[10px] rounded-full bg-orange-100 text-orange-700">
-            On Notice Period
-          </span>
-        )}
+                          {isOnNotice(e) && (
+                            <span className="px-2 py-0.5 text-[10px] rounded-full bg-orange-100 text-orange-700">
+                              On Notice Period
+                            </span>
+                          )}
 
-      </div>
-    </div>
-  </div>
-</td>
-
-
+                        </div>
+                      </div>
+                    </div>
+                  </td>
 
 
-                <td className="p-3">{e.email}</td>
-                {/* <td className="p-3">{e.departmentName || "—"}</td>
+
+
+                  <td className="p-3">{e.email}</td>
+                  {/* <td className="p-3">{e.departmentName || "—"}</td>
                 <td className="p-3">{e.designationName || "—"}</td> */}
-                <td className="p-3">{e.reportingToName || "—"}</td>
+                  <td className="p-3">{e.reportingToName || "—"}</td>
 
-<td className="p-3">
-  <select
-    value={e.role}
-    onChange={(event) => handleRoleChange(e.employeeId, event.target.value)}
-    className="border rounded-md px-2 py-1"
-  >
-    <option value="ROLE_EMPLOYEE">Employee</option>
-    <option value="ROLE_ADMIN">Admin</option>
-  </select>
-</td>
-                <td className="p-3">
-                  <span
-                    className={`px-2 py-1 text-xs rounded ${
-                      e.active
-                        ? "bg-green-100 text-green-700"
-                        : "bg-red-100 text-red-700"
-                    }`}
-                  >
-                    {e.active ? "Active" : "Inactive"}
-                  </span>
-                </td>
-                <td className="p-3 relative">
-                  {/* <button
+                  <td className="p-3">
+                    <select
+                      value={e.role}
+                      onChange={(event) => handleRoleChange(e.employeeId, event.target.value)}
+                      className="border rounded-md px-2 py-1"
+                    >
+                      <option value="ROLE_EMPLOYEE">Employee</option>
+                      <option value="ROLE_ADMIN">Admin</option>
+                    </select>
+                  </td>
+                  <td className="p-3">
+                    <span
+                      className={`px-2 py-1 text-xs rounded ${e.active
+                          ? "bg-green-100 text-green-700"
+                          : "bg-red-100 text-red-700"
+                        }`}
+                    >
+                      {e.active ? "Active" : "Inactive"}
+                    </span>
+                  </td>
+                  <td className="p-3 relative">
+                    {/* <button
                     onClick={() =>
                       setOpenMenuId(
                         openMenuId === e.employeeId ? null : e.employeeId
@@ -487,77 +523,98 @@ const handleRoleChange = async (employeeId: string, newRole: string) => {
                     ⋮
                   </button> */}
 
-<button
-  onClick={(event) => {
-    const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
-
-    if (openMenuId === e.employeeId) {
-      setOpenMenuId(null); 
-      setMenuPosition(null);
-    } else {
-      setOpenMenuId(e.employeeId);
-      setMenuPosition({
-        top: rect.bottom + window.scrollY,
-        left: rect.left + window.scrollX,
-      });
-    }
-  }}
-  className="px-2 py-1 rounded hover:bg-gray-100"
->
-  ⋮
-</button>
 
 
 
-                  {openMenuId === e.employeeId && (
-                    // <div className="absolute right-0 mt-2 w-32 bg-white border rounded-lg shadow-lg z-50">
-                    <div className="absolute right-0 top-8 w-32 bg-white border rounded-lg shadow-xl z-[9999]">
-                      <Link
-                        href={`/hr/employee/${e.employeeId}`}
-                        className="block px-4 py-2 text-sm hover:bg-gray-100"
-                        onClick={() => setOpenMenuId(null)}
-                      >
-                        View 
-                      </Link>
+                    <button
+                      onClick={(event) => {
+                        const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
 
-                      {/* <Link
-                        href={`/hr/employee/${e.employeeId}/edit`}
-                        className="block px-4 py-2 text-sm hover:bg-gray-100"
-                        onClick={() => setOpenMenuId(null)}
-                      >
-                        Edit
-                      </Link> */}
-
-                      <Link
-                        href={`/hr/employee/${e.employeeId}/edit`}
-                        className="block px-4 py-2 text-sm hover:bg-gray-100"
-                      >
-                        Edit
-                      </Link>
-
-                      <button
-                        onClick={() => {
-                          //("ggggggg")
+                        if (openMenuId === e.employeeId) {
                           setOpenMenuId(null);
-                          deleteEmployee(e.employeeId);
-                        }}
-                        className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                          setMenuPosition(null);
+                          return;
+                        }
+
+                        const menuWidth = 160;
+                        const menuHeight = 120;
+
+                        let left = rect.right - menuWidth;
+                        let top = rect.bottom + 6;
+
+                        // prevent right overflow
+                        if (left + menuWidth > window.innerWidth) {
+                          left = window.innerWidth - menuWidth - 10;
+                        }
+
+                        // prevent bottom overflow
+                        if (top + menuHeight > window.innerHeight) {
+                          top = rect.top - menuHeight - 6;
+                        }
+
+                        setOpenMenuId(e.employeeId);
+                        setMenuPosition({ top, left });
+                      }}
+                      className="px-2 py-1 rounded hover:bg-gray-100"
+                    >
+                      ⋮
+                    </button>
+
+
+                    {openMenuId === e.employeeId &&
+                      menuPosition &&
+                      createPortal(
+                        <div
+                          ref={menuRef}
+                          className="fixed w-40 bg-white border rounded-xl shadow-2xl z-[99999] py-1"
+                          style={{
+                            top: menuPosition.top,
+                            left: menuPosition.left,
+                          }}
+                        >
+                          <Link
+                            href={`/hr/employee/${e.employeeId}`}
+                            className="block px-4 py-2 text-sm hover:bg-gray-100"
+                            onClick={() => setOpenMenuId(null)}
+                          >
+                            View
+                          </Link>
+
+                          <Link
+                            href={`/hr/employee/${e.employeeId}/edit`}
+                            className="block px-4 py-2 text-sm hover:bg-gray-100"
+                            onClick={() => setOpenMenuId(null)}
+                          >
+                            Edit
+                          </Link>
+
+                          <button
+                            onClick={() => {
+                              setOpenMenuId(null);
+                              deleteEmployee(e.employeeId);
+                            }}
+                            className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                          >
+                            Delete
+                          </button>
+                        </div>,
+                        document.body
+                      )}
+
+
+
+
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
 
 
 
 
 
-</div>
+        </div>
 
 
 
@@ -569,96 +626,96 @@ const handleRoleChange = async (employeeId: string, newRole: string) => {
 
 
 
-{/* ================= FILTER DRAWER ================= */}
-{filterOpen && (
-  <div className="fixed inset-0 bg-black/40 z-50 flex justify-end">
-    <div className="bg-white w-full max-w-sm h-full p-6 relative">
-      
-      {/* Header */}
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-lg font-semibold">Filters</h2>
-        <button
-          onClick={() => setFilterOpen(false)}
-          className="text-xl text-gray-400"
-        >
-          ×
-        </button>
-      </div>
+      {/* ================= FILTER DRAWER ================= */}
+      {filterOpen && (
+        <div className="fixed inset-0 bg-black/40 z-50 flex justify-end">
+          <div className="bg-white w-full max-w-sm h-full p-6 relative">
 
-      <div className="space-y-5">
+            {/* Header */}
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-lg font-semibold">Filters</h2>
+              <button
+                onClick={() => setFilterOpen(false)}
+                className="text-xl text-gray-400"
+              >
+                ×
+              </button>
+            </div>
 
-        {/* Reporting To (future ready – disabled) */}
-        <div>
-          <label className="text-sm font-medium">Reporting to</label>
-          <select
-            disabled
-            className="w-full border rounded px-3 py-2 mt-1 bg-gray-100"
-          >
-            <option>All</option>
-          </select>
+            <div className="space-y-5">
+
+              {/* Reporting To (future ready – disabled) */}
+              <div>
+                <label className="text-sm font-medium">Reporting to</label>
+                <select
+                  disabled
+                  className="w-full border rounded px-3 py-2 mt-1 bg-gray-100"
+                >
+                  <option>All</option>
+                </select>
+              </div>
+
+              {/* Role */}
+              <div>
+                <label className="text-sm font-medium">Role</label>
+                <select
+                  className="w-full border rounded px-3 py-2 mt-1"
+                  value={filterRole}
+                  onChange={(e) => setFilterRole(e.target.value)}
+                >
+                  <option value="all">All</option>
+                  {roleOptions.map((r) => (
+                    <option key={r} value={r}>{r}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Department */}
+              <div>
+                <label className="text-sm font-medium">Department</label>
+                <select
+                  className="w-full border rounded px-3 py-2 mt-1"
+                  value={filterDepartment}
+                  onChange={(e) => setFilterDepartment(e.target.value)}
+                >
+                  <option value="all">All</option>
+                  {departmentOptions.map((d) => (
+                    <option key={d} value={d}>{d}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Status */}
+              <div>
+                <label className="text-sm font-medium">Status</label>
+                <select
+                  className="w-full border rounded px-3 py-2 mt-1"
+                  value={filterStatus}
+                  onChange={(e) => setFilterStatus(e.target.value)}
+                >
+                  <option value="all">All</option>
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                </select>
+              </div>
+
+              {/* Clear */}
+              <div className="pt-6 flex justify-end">
+                <button
+                  onClick={() => {
+                    setFilterRole("all");
+                    setFilterDepartment("all");
+                    setFilterStatus("all");
+                  }}
+                  className="border px-6 py-2 rounded text-blue-600"
+                >
+                  Clear
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
-
-        {/* Role */}
-        <div>
-          <label className="text-sm font-medium">Role</label>
-          <select
-            className="w-full border rounded px-3 py-2 mt-1"
-            value={filterRole}
-            onChange={(e) => setFilterRole(e.target.value)}
-          >
-            <option value="all">All</option>
-            {roleOptions.map((r) => (
-              <option key={r} value={r}>{r}</option>
-            ))}
-          </select>
-        </div>
-
-        {/* Department */}
-        <div>
-          <label className="text-sm font-medium">Department</label>
-          <select
-            className="w-full border rounded px-3 py-2 mt-1"
-            value={filterDepartment}
-            onChange={(e) => setFilterDepartment(e.target.value)}
-          >
-            <option value="all">All</option>
-            {departmentOptions.map((d) => (
-              <option key={d} value={d}>{d}</option>
-            ))}
-          </select>
-        </div>
-
-        {/* Status */}
-        <div>
-          <label className="text-sm font-medium">Status</label>
-          <select
-            className="w-full border rounded px-3 py-2 mt-1"
-            value={filterStatus}
-            onChange={(e) => setFilterStatus(e.target.value)}
-          >
-            <option value="all">All</option>
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
-          </select>
-        </div>
-
-        {/* Clear */}
-        <div className="pt-6 flex justify-end">
-          <button
-            onClick={() => {
-              setFilterRole("all");
-              setFilterDepartment("all");
-              setFilterStatus("all");
-            }}
-            className="border px-6 py-2 rounded text-blue-600"
-          >
-            Clear
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-)}
+      )}
 
 
 
