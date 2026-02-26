@@ -214,21 +214,6 @@ export default function Dashboard() {
             overdue: tk.overdueCount ?? 0,
           });
         }
-        // if (dRes.ok) {
-        //   const d = await dRes.json();
-        //   setDealsCnt({
-        //     totalDeals: d.totalDeals ?? 0,
-        //     convertedDeals: d.convertedDeals ?? 0,
-        //   });
-        // }
-        // if (fRes.ok) {
-        //   const f = await fRes.json();
-        //   setFollowUpCnt({
-        //     pending: f.pendingCount ?? 0,
-        //     upcoming: f.upcomingCount ?? 0,
-        //   });
-        // }
-
 
         if (tsRes.ok) {
           const ts = await tsRes.json();
@@ -634,7 +619,7 @@ export default function Dashboard() {
                   ) : (
                     <div className="h-full w-full flex items-center justify-center text-sm text-muted-foreground">
                       No Img
-                    </div> 
+                    </div>
                   )}
                 </div>
 
@@ -852,18 +837,14 @@ export default function Dashboard() {
               <Clock />
               <div className="font-medium">
                 {
-                // new Date().toLocaleDateString()
-               format( new Date(),"dd-MM-yyyy")
+                  // new Date().toLocaleDateString()
+                  format(new Date(), "dd-MM-yyyy")
 
                 } |{" "}
                 {
-                // new Date().toLocaleTimeString([], {
-                //   hour: "2-digit",
-                //   minute: "2-digit",
-                //   hour12: true,
-                // })
-                format(new Date(),"hh:mm a")
-}
+
+                  format(new Date(), "hh:mm a")
+                }
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -30,7 +30,7 @@ import FullCalendarView from "./components/FullCalendarView";
 import TimesheetSummaryList from "./components/TimesheetSummaryList";
 
 const MAIN =
-  process.env.NEXT_PUBLIC_MAIN ;
+  process.env.NEXT_PUBLIC_MAIN;
 
 export type EmployeeItem = {
   employeeId: string;

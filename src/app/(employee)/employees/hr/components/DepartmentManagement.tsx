@@ -34,9 +34,6 @@ export function DepartmentManagement() {
           },
         })
 
-
-
-
         if (!res.ok) throw new Error("Failed to fetch departments")
         const data: Department[] = await res.json()
         setDepartments(data)

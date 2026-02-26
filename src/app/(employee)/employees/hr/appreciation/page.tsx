@@ -190,28 +190,15 @@ export default function AppreciationPage() {
       <div className="container mx-auto px-4 py-8">
         {/* HEADER */}
         <div className="flex flex-col sm:flex-row justify-between gap-4 mb-6">
-          {/* <div> */}
-            {/* <h1 className="text-4xl font-bold flex items-center gap-3">
-              <Award className="h-10 w-10 text-primary" />
-              Employee Appreciations */}
-            {/* </h1> */}
-            {/* <p className="text-muted-foreground">
-              Celebrating outstanding achievements
-            </p> */}
-          {/* </div> */}
+
           <div className="gap-8">
 
             <Link href="/employees/hr/appreciation">
-
-
-
               <Button>
                 <Trophy className="h-4 w-4 mr-2" />
 
               </Button>
             </Link>
-
-
             <Link href="/employees/hr/awards" className="ml-2">
               <Button>
                 <Award className="h-4 w-4 mr-2" />
@@ -223,144 +210,135 @@ export default function AppreciationPage() {
         </div>
 
         {/* SEARCH + FILTERS */}
-      
 
+        <div className="flex justify-end mb-6">
+          <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
 
+            {/* SEARCH */}
+            <div className="relative">
+              <Search className="absolute left-3 top-3 text-muted-foreground h-4 w-4" />
+              <Input
+                className="pl-10 w-64"
+                placeholder="Search by name, award, summary..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
 
+            {/* FILTER DROPDOWN */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline">Filters</Button>
+              </DropdownMenuTrigger>
 
+              <DropdownMenuContent
+                align="end"
+                className="w-80 p-4 space-y-4"
+              >
+                {/* Award Filter */}
+                <div>
+                  <label className="text-sm font-medium">Award</label>
+                  <select
+                    className="w-full mt-1 p-2 border rounded"
+                    value={awardFilter}
+                    onChange={(e) => setAwardFilter(e.target.value)}
+                  >
+                    <option value="">All Awards</option>
+                    {[
+                      ...new Map(
+                        appreciations.map((a) => [
+                          a.awardId,
+                          { id: a.awardId, title: a.awardTitle },
+                        ])
+                      ).values(),
+                    ].map((award) => (
+                      <option key={award.id} value={award.id}>
+                        {award.title}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-<div className="flex justify-end mb-6">
-  <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
+                {/* Employee Filter */}
+                <div>
+                  <label className="text-sm font-medium">Employee</label>
+                  <select
+                    className="w-full mt-1 p-2 border rounded"
+                    value={employeeFilter}
+                    onChange={(e) => setEmployeeFilter(e.target.value)}
+                  >
+                    <option value="">All Employees</option>
+                    {[
+                      ...new Map(
+                        appreciations.map((a) => [
+                          a.givenToEmployeeId,
+                          {
+                            id: a.givenToEmployeeId,
+                            name: a.givenToEmployeeName,
+                          },
+                        ])
+                      ).values(),
+                    ].map((emp) => (
+                      <option key={emp.id} value={emp.id}>
+                        {emp.name} ({emp.id})
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-    {/* SEARCH */}
-    <div className="relative">
-      <Search className="absolute left-3 top-3 text-muted-foreground h-4 w-4" />
-      <Input
-        className="pl-10 w-64"
-        placeholder="Search by name, award, summary..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
-    </div>
+                {/* Status Filter */}
+                <div>
+                  <label className="text-sm font-medium">Status</label>
+                  <select
+                    className="w-full mt-1 p-2 border rounded"
+                    value={statusFilter}
+                    onChange={(e) => setStatusFilter(e.target.value)}
+                  >
+                    <option value="">All</option>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                  </select>
+                </div>
 
-    {/* FILTER DROPDOWN */}
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="outline">Filters</Button>
-      </DropdownMenuTrigger>
+                {/* DATE RANGE */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-sm font-medium">From</label>
+                    <Input
+                      type="date"
+                      value={startDate}
+                      onChange={(e) => setStartDate(e.target.value)}
+                    />
+                  </div>
 
-      <DropdownMenuContent
-        align="end"
-        className="w-80 p-4 space-y-4"
-      >
-        {/* Award Filter */}
-        <div>
-          <label className="text-sm font-medium">Award</label>
-          <select
-            className="w-full mt-1 p-2 border rounded"
-            value={awardFilter}
-            onChange={(e) => setAwardFilter(e.target.value)}
-          >
-            <option value="">All Awards</option>
-            {[
-              ...new Map(
-                appreciations.map((a) => [
-                  a.awardId,
-                  { id: a.awardId, title: a.awardTitle },
-                ])
-              ).values(),
-            ].map((award) => (
-              <option key={award.id} value={award.id}>
-                {award.title}
-              </option>
-            ))}
-          </select>
-        </div>
+                  <div>
+                    <label className="text-sm font-medium">To</label>
+                    <Input
+                      type="date"
+                      value={endDate}
+                      onChange={(e) => setEndDate(e.target.value)}
+                    />
+                  </div>
+                </div>
 
-        {/* Employee Filter */}
-        <div>
-          <label className="text-sm font-medium">Employee</label>
-          <select
-            className="w-full mt-1 p-2 border rounded"
-            value={employeeFilter}
-            onChange={(e) => setEmployeeFilter(e.target.value)}
-          >
-            <option value="">All Employees</option>
-            {[
-              ...new Map(
-                appreciations.map((a) => [
-                  a.givenToEmployeeId,
-                  {
-                    id: a.givenToEmployeeId,
-                    name: a.givenToEmployeeName,
-                  },
-                ])
-              ).values(),
-            ].map((emp) => (
-              <option key={emp.id} value={emp.id}>
-                {emp.name} ({emp.id})
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Status Filter */}
-        <div>
-          <label className="text-sm font-medium">Status</label>
-          <select
-            className="w-full mt-1 p-2 border rounded"
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-          >
-            <option value="">All</option>
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
-          </select>
-        </div>
-
-        {/* DATE RANGE */}
-        <div className="grid grid-cols-2 gap-3">
-          <div>
-            <label className="text-sm font-medium">From</label>
-            <Input
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-            />
+                {/* CLEAR FILTERS */}
+                <Button
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                  variant="destructive"
+                  onClick={() => {
+                    setAwardFilter("");
+                    setEmployeeFilter("");
+                    setStatusFilter("");
+                    setStartDate("");
+                    setEndDate("");
+                  }}
+                >
+                  Clear Filters
+                </Button>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
-
-          <div>
-            <label className="text-sm font-medium">To</label>
-            <Input
-              type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-            />
-          </div>
         </div>
-
-        {/* CLEAR FILTERS */}
-        <Button
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-          variant="destructive"
-          onClick={() => {
-            setAwardFilter("");
-            setEmployeeFilter("");
-            setStatusFilter("");
-            setStartDate("");
-            setEndDate("");
-          }}
-        >
-          Clear Filters
-        </Button>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  </div>
-</div>
-
-
-
-
 
         {/* TABLE */}
         <Card>

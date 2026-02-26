@@ -13,7 +13,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 
-const DEFAULT_API_BASE =  `${process.env.NEXT_PUBLIC_MAIN}`;
+const DEFAULT_API_BASE = `${process.env.NEXT_PUBLIC_MAIN}`;
 const ENDPOINT = "/timesheets/weekly";
 const API_TIMEOUT_MS = 15000;
 
@@ -84,7 +84,7 @@ const WeeklyTimesheetModal: React.FC<WeeklyTimesheetModalProps> = ({
     try {
       const t = localStorage.getItem("accessToken");
       if (t && t.trim() !== "") return t.trim();
-    } catch {}
+    } catch { }
     return authToken ?? null;
   }
 
@@ -138,11 +138,11 @@ const WeeklyTimesheetModal: React.FC<WeeklyTimesheetModalProps> = ({
       prev.map((r, i) =>
         i === rowIndex
           ? {
-              ...r,
-              hours: r.hours.map((h, j) =>
-                j === dayIndex ? clampNumberFromString(value) : h
-              ),
-            }
+            ...r,
+            hours: r.hours.map((h, j) =>
+              j === dayIndex ? clampNumberFromString(value) : h
+            ),
+          }
           : r
       )
     );

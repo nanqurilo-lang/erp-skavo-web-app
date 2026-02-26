@@ -97,25 +97,25 @@ export default function TimesheetPage() {
 
 
 
-const isWithinDateRange = (
-  date?: string,
-  start?: string,
-  end?: string
-) => {
-  if (!date) return false;
+  const isWithinDateRange = (
+    date?: string,
+    start?: string,
+    end?: string
+  ) => {
+    if (!date) return false;
 
-  const d = new Date(date);
-  if (start) {
-    const s = new Date(start);
-    if (d < s) return false;
-  }
-  if (end) {
-    const e = new Date(end);
-    e.setHours(23, 59, 59, 999); // include full end day
-    if (d > e) return false;
-  }
-  return true;
-};
+    const d = new Date(date);
+    if (start) {
+      const s = new Date(start);
+      if (d < s) return false;
+    }
+    if (end) {
+      const e = new Date(end);
+      e.setHours(23, 59, 59, 999); // include full end day
+      if (d > e) return false;
+    }
+    return true;
+  };
 
 
 
@@ -735,133 +735,63 @@ const isWithinDateRange = (
     }
   };
 
-  // ====== Filtered data ======
-
-  // const filtered = useMemo(() => {
-  //   const q = searchQuery.trim().toLowerCase();
-  //   return timesheets.filter((t) => {
-  //     if (employeeFilter !== "All") {
-  //       const hasByEmpObj = (t.employees ?? []).some(
-  //         (e) => e.employeeId === employeeFilter
-  //       );
-  //       const hasByEmpId = t.employeeId === employeeFilter;
-  //       if (!hasByEmpObj && !hasByEmpId) return false;
-  //     }
-  //     if (!q) return true;
-  //     if (
-  //       String(t.projectShortCode ?? "")
-  //         .toLowerCase()
-  //         .includes(q)
-  //     )
-  //       return true;
-  //     if (
-  //       String(t.memo ?? "")
-  //         .toLowerCase()
-  //         .includes(q)
-  //     )
-  //       return true;
-  //     const empMatch = (t.employees ?? []).some(
-  //       (e) =>
-  //         (e.name ?? "").toLowerCase().includes(q) ||
-  //         (e.designation ?? "").toLowerCase().includes(q)
-  //     );
-  //     if (empMatch) return true;
-  //     return false;
-  //   });
-  // }, [timesheets, searchQuery, employeeFilter]);
-
-
-
-
-  // const filtered = useMemo(() => {
-  //   const q = searchQuery.trim().toLowerCase();
-
-  //   return timesheets.filter((t) => {
-
-  //     // 🔹 Project filter
-  //     if (filterProject !== "all") {
-  //       if (String(t.projectId) !== filterProject) return false;
-  //     }
-
-  //     // 🔹 Employee filter
-  //     if (employeeFilter !== "All") {
-  //       const hasEmp =
-  //         t.employeeId === employeeFilter ||
-  //         (t.employees ?? []).some(e => e.employeeId === employeeFilter);
-
-  //       if (!hasEmp) return false;
-  //     }
-
-  //     if (!q) return true;
-
-  //     if (String(t.projectShortCode ?? "").toLowerCase().includes(q)) return true;
-  //     if (String(t.memo ?? "").toLowerCase().includes(q)) return true;
-
-  //     return (t.employees ?? []).some(e =>
-  //       (e.name ?? "").toLowerCase().includes(q)
-  //     );
-  //   });
-  // }, [timesheets, searchQuery, employeeFilter, filterProject]);
-
-
-
   const filtered = useMemo(() => {
-  const q = searchQuery.trim().toLowerCase();
+    const q = searchQuery.trim().toLowerCase();
 
-  return timesheets.filter((t) => {
+    return timesheets.filter((t) => {
 
-    // 🔹 Project filter
-    if (filterProject !== "all") {
-      if (String(t.projectId) !== filterProject) return false;
-    }
-
-    // 🔹 Employee filter
-    if (employeeFilter !== "All") {
-      const hasEmp =
-        t.employeeId === employeeFilter ||
-        (t.employees ?? []).some(
-          (e) => e.employeeId === employeeFilter
-        );
-
-      if (!hasEmp) return false;
-    }
-
-    // 🔹 Duration (date range) filter  ✅ NEW
-    if (startDate || endDate) {
-      if (!isWithinDateRange(t.startDate, startDate, endDate)) {
-        return false;
+      // 🔹 Project filter
+      if (filterProject !== "all") {
+        if (String(t.projectId) !== filterProject) return false;
       }
-    }
 
-    // 🔹 Search
-    if (!q) return true;
+      // 🔹 Employee filter
+      if (employeeFilter !== "All") {
+        const hasEmp =
+          t.employeeId === employeeFilter ||
+          (t.employees ?? []).some(
+            (e) => e.employeeId === employeeFilter
+          );
 
-    if (
-      String(t.projectShortCode ?? "")
-        .toLowerCase()
-        .includes(q)
-    )
-      return true;
+        if (!hasEmp) return false;
+      }
 
-    if (
-      String(t.memo ?? "")
-        .toLowerCase()
-        .includes(q)
-    )
-      return true;
+      // 🔹 Duration (date range) filter  ✅ NEW
+      if (startDate || endDate) {
+        if (!isWithinDateRange(t.startDate, startDate, endDate)) {
+          return false;
+        }
+      }
 
-    return (t.employees ?? []).some((e) =>
-      (e.name ?? "").toLowerCase().includes(q)
-    );
-  });
-}, [
-  timesheets,
-  searchQuery,
-  employeeFilter,
-  filterProject,
-  startDate,
-  endDate,
-]);
+      // 🔹 Search
+      if (!q) return true;
+
+      if (
+        String(t.projectShortCode ?? "")
+          .toLowerCase()
+          .includes(q)
+      )
+        return true;
+
+      if (
+        String(t.memo ?? "")
+          .toLowerCase()
+          .includes(q)
+      )
+        return true;
+
+      return (t.employees ?? []).some((e) =>
+        (e.name ?? "").toLowerCase().includes(q)
+      );
+    });
+  }, [
+    timesheets,
+    searchQuery,
+    employeeFilter,
+    filterProject,
+    startDate,
+    endDate,
+  ]);
 
 
 
@@ -962,14 +892,6 @@ const isWithinDateRange = (
     <div className="min-h-screen bg-gray-50">
       <main className="w-full">
         <div className="max-w-[1180px] mx-auto ">
-          {/* PART 1: Filters */}
-          {/* <FiltersSection
-            employeeFilter={employeeFilter}
-            setEmployeeFilter={setEmployeeFilter}
-            employeeOptions={employeeOptions}
-            getEmployeeLabel={getEmployeeLabel}
-            onOpenFiltersDrawer={() => setShowFilters(true)}
-          /> */}
 
           <FiltersSection
             employeeFilter={employeeFilter}
@@ -1010,9 +932,6 @@ const isWithinDateRange = (
       <div
         aria-hidden={!showFilters}
         onClick={() => setShowFilters(false)}
-        // className={`fixed inset-0 transition-opacity duration-300 z-[9990] ${showFilters
-        //   ? "opacity-100 pointer-events-auto"
-        //   : "opacity-0 pointer-events-none"
 
 
         className={`fixed inset-0 bg-black/30 transition-opacity duration-300 z-[9980] ${showFilters ? "opacity-100" : "opacity-0 pointer-events-none"
@@ -1046,23 +965,6 @@ const isWithinDateRange = (
         <div className="p-4 space-y-4 overflow-auto h-[calc(100%-140px)]">
           <div>
             <label className="block text-sm text-gray-600 mb-2">Project </label>
-            {/* <Select
-              value={filterEmployee}
-              onValueChange={(v) => setFilterEmployee(v)}
-            >
-              <SelectTrigger className="w-full rounded border px-3 py-2">
-                <SelectValue placeholder="All" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All </SelectItem> */}
-            {/* SHOW THE FULL EMPLOYEE LIST */}
-            {/* {employeeOptions.slice(1).map((e) => (
-                  <SelectItem key={e} value={e}>
-                    {getEmployeeLabel(e)}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select> */}
 
             <Select
               value={filterProject}
@@ -1082,11 +984,6 @@ const isWithinDateRange = (
                 ))}
               </SelectContent>
             </Select>
-
-
-
-
-
           </div>
         </div>
 
@@ -1106,17 +1003,6 @@ const isWithinDateRange = (
             <Button variant="ghost" onClick={() => setShowFilters(false)}>
               Close
             </Button>
-            {/* <Button
-              className="bg-blue-600 text-white"
-              onClick={() => {
-                setShowFilters(false);
-                setCurrentPage(1);
-                loadTimesheets(token ?? null);
-              }}
-            >
-              Apply
-            </Button> */}
-
 
             <Button
               className="bg-blue-600 text-white"
@@ -1293,21 +1179,6 @@ const isWithinDateRange = (
                           );
                         }
 
-                        // if (form.projectId && projectEmployees.length > 0) {
-                        //   return (
-                        //     <>
-                        //       <option value="--">--</option>
-                        //       {projectEmployees.map((e) => (
-                        //         <option key={e.employeeId} value={e.employeeId}>
-                        //           {e.name
-                        //             ? `${e.name} (${e.employeeId})`
-                        //             : e.employeeId}
-                        //         </option>
-                        //       ))}
-                        //     </>
-                        //   );
-                        // }
-
 
 
                         if (form.taskId && selectedTaskEmployees.length === 0) {
@@ -1340,10 +1211,6 @@ const isWithinDateRange = (
                             </>
                           );
                         }
-
-
-
-
 
 
                         return employeeOptions.map((e) => (

@@ -254,69 +254,6 @@ const TasksPage: React.FC = () => {
 
   const priorityOptions = ["LOW", "MEDIUM", "HIGH"];
 
-
-
-
-  // --------- Derived Tasks based on Source + Filters ---------
-
-  // const sourceTasks: Task[] = useMemo(() => {
-  //   let base: Task[] = [];
-
-  //   switch (taskSource) {
-  //     case "all":
-  //       base = allTasks;
-  //       break;
-  //     case "me":
-  //       base = myTasks.length ? myTasks : allTasks; // agar meTasks na mile to fallback
-  //       break;
-  //     case "approval":
-  //       base = allTasks.filter((t) => t.taskStage?.name === "Waiting");
-  //       break;
-  //     case "pinned":
-  //       base = allTasks.filter((t) => t.pinned);
-  //       break;
-  //     default:
-  //       base = allTasks;
-  //   }
-
-  //   // status filter
-  //   if (statusFilter !== "All") {
-  //     base = base.filter((t) => t.taskStage?.name === statusFilter);
-  //   }
-
-  //   // date range filter (Duration: startDate to endDate)
-  //   if (dateRange.start || dateRange.end) {
-  //     base = base.filter((t) => {
-  //       const start = t.startDate ? new Date(t.startDate) : null;
-  //       const end = t.dueDate ? new Date(t.dueDate) : null;
-
-  //       if (!start && !end) return false;
-
-  //       const filterStart = dateRange.start ? new Date(dateRange.start) : null;
-  //       const filterEnd = dateRange.end ? new Date(dateRange.end) : null;
-
-  //       // basic overlap check
-  //       if (filterStart && end && end < filterStart) return false;
-  //       if (filterEnd && start && start > filterEnd) return false;
-
-  //       return true;
-  //     });
-  //   }
-
-
-
-
-
-
-
-
-
-  //   return base;
-  // }, [allTasks, myTasks, taskSource, statusFilter, dateRange]);
-
-
-
-
   const sourceTasks: Task[] = useMemo(() => {
     let base: Task[] = [];
 
@@ -490,13 +427,6 @@ const TasksPage: React.FC = () => {
           {/* -------- Section 1: Filters -------- */}
           <Card className="border-none bg-white shadow-sm">
             <div className="p-4">
-              {/* <FiltersBar
-                status={statusFilter}
-                onStatusChange={setStatusFilter}
-                dateRange={dateRange}
-                onDateRangeChange={setDateRange}
-              /> */}
-
 
               <FiltersBar
                 status={statusFilter}
@@ -553,10 +483,7 @@ const TasksPage: React.FC = () => {
                   <p>No tasks found for selected filters.</p>
                 </div>
               ) : viewMode === "list" ? (
-                // <TaskTable
-                //     tasks={sourceTasks}
-                //     onView={handleViewTask}
-                // />
+
                 <TaskTable
                   tasks={sourceTasks}
                   onView={handleViewTask}
@@ -621,25 +548,6 @@ const TasksPage: React.FC = () => {
             }}
           />
         )}
-
-        {/* 
-<TaskFiltersDrawer
-  open={openFilters}
-  onClose={() => setOpenFilters(false)}
-  filters={advancedFilters}
-  onChange={setAdvancedFilters}
-  onClear={() =>
-    setAdvancedFilters({
-      projectId: "All",
-      clientId: "All",
-      assignedTo: "All",
-      priority: "All",
-    })
-  }
-/> */}
-
-
-
 
         <TaskFiltersDrawer
           open={openFilters}
