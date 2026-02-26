@@ -1947,7 +1947,7 @@ export default function LeadDetailPage() {
 
   return (
     <main className="min-h-screen bg-gray-50">
-      <div className="container mx-auto max-w-6xl px-4 py-8">
+      <div className="container mx-auto max-w-6xl  px-4 py-8">
         {/* Header */}
         <div className="flex items-center gap-4 mb-4">
           <Button
@@ -1956,15 +1956,15 @@ export default function LeadDetailPage() {
             onClick={() => router.back()}
             aria-label="Back"
           >
-            <ArrowLeft className="h-5 w-5" />
+            {/* <ArrowLeft className="h-5 w-5" /> */}
           </Button>
           <div>
-            <h1 className="text-2xl md:text-3xl font-semibold">
+            {/* <h1 className="text-2xl md:text-3xl font-semibold">
               {data?.name ?? "—"}
-            </h1>
-            <p className="text-sm text-muted-foreground mt-1">
+            </h1> */}
+            {/* <p className="text-sm text-muted-foreground mt-1">
               Detailed information about the selected lead.
-            </p>
+            </p> */}
           </div>
         </div>
 

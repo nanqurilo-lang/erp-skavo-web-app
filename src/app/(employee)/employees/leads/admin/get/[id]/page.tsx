@@ -1504,12 +1504,12 @@ export default function LeadDetailPage() {
         {/* Header */}
         <div className="flex items-center gap-4 mb-4">
           <Button variant="ghost" size="icon" onClick={() => router.back()} aria-label="Back">
-            <ArrowLeft className="h-5 w-5" />
+            {/* <ArrowLeft className="h-5 w-5" /> */}
           </Button>
-          <div>
+          {/* <div>
             <h1 className="text-2xl md:text-3xl font-semibold">{data?.name ?? "—"}</h1>
             <p className="text-sm text-muted-foreground mt-1">Detailed information about the selected lead.</p>
-          </div>
+          </div> */}
         </div>
 
         {/* Tabs */}
