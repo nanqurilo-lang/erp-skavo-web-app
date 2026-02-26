@@ -123,11 +123,11 @@ export default function PinnedProjectsPage() {
   }
 
   const handleView = (projectId: number) => {
-  //  console.log("View project:", projectId)
+    //  console.log("View project:", projectId)
   }
 
   const handleEdit = (projectId: number) => {
-   // console.log("Edit project:", projectId)
+    // console.log("Edit project:", projectId)
   }
 
   const handlePin = async (projectId: number) => {
@@ -153,7 +153,6 @@ export default function PinnedProjectsPage() {
 
       // On success, refetch to update the list
       await getProjects(token!)
-   //   console.log("Unpinned project:", projectId)
     } catch (err) {
       // Rollback: Restore the project
       setProjects(projects)
@@ -162,12 +161,12 @@ export default function PinnedProjectsPage() {
   }
 
   const handleArchive = (projectId: number) => {
-//console.log("Archive project:", projectId)
+    //console.log("Archive project:", projectId)
     setProjects(projects.map((p) => (p.id === projectId ? { ...p, isArchived: !p.isArchived } : p)))
   }
 
   const handleDelete = (projectId: number) => {
-  //  console.log("Delete project:", projectId)
+    //  console.log("Delete project:", projectId)
     setProjects(projects.filter((p) => p.id !== projectId))
   }
 
@@ -244,8 +243,8 @@ export default function PinnedProjectsPage() {
         </TableCell>
         <TableCell>
           <span className="text-sm">{
-          // new Date(project.deadline).toLocaleDateString()
-          format(new Date(project.deadline),"dd-MM-yyyy")
+            // new Date(project.deadline).toLocaleDateString()
+            format(new Date(project.deadline), "dd-MM-yyyy")
           }</span>
         </TableCell>
         <TableCell>
@@ -275,17 +274,17 @@ export default function PinnedProjectsPage() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-48">
               <DropdownMenuItem onClick={() => handleView(project.id)} className="gap-2">
-                            <Eye className="h-4 w-4" />
-                            <Link href={`/work/project/${project.id}`} >
-                      View
-                      </Link>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem asChild className="gap-2">
-  <Link href={`/work/project/${project.id}/update`} className="flex items-center gap-2">
-    <Edit2 className="h-4 w-4" />
-    Edit
-  </Link>
-</DropdownMenuItem>
+                <Eye className="h-4 w-4" />
+                <Link href={`/work/project/${project.id}`} >
+                  View
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild className="gap-2">
+                <Link href={`/work/project/${project.id}/update`} className="flex items-center gap-2">
+                  <Edit2 className="h-4 w-4" />
+                  Edit
+                </Link>
+              </DropdownMenuItem>
               <DropdownMenuItem onClick={() => handlePin(project.id)} className="gap-2">
                 <Pin className="h-4 w-4" />
                 Unpin Project

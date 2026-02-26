@@ -214,12 +214,7 @@ export default function ProjectMembersTableFetch({
 
       {/* Top Controls */}
       <div className="flex justify-between mb-4">
-        {/* <button
-          onClick={() => setShowAddModal(true)}
-          className="bg-blue-600 text-white px-4 py-2 rounded"
-        >
-          + Add Project Members
-        </button> */}
+       
 
         <div className="flex gap-3">
           <input
@@ -279,23 +274,9 @@ export default function ProjectMembersTableFetch({
 
                 {/* Role */}
                 <td className="px-4 py-4">
-                  {/* <div className="flex items-center gap-2 text-sm"> */}
-                  {/* <input
-                    type="radio"
-                    checked={project?.projectAdminId === m.employeeId}
-                    onChange={() => handleMakeAdmin(m.employeeId)}
-                  /> */}
+                 
                   <span className="ml-1">Project Admin</span>
 
-                  {/* {project?.projectAdminId === m.employeeId && (
-                    <button
-                      onClick={() => handleRemoveAdmin()}
-                      disabled={actionLoadingId}
-                      className="ml-3 px-3 py-1 border rounded text-sm bg-white"
-                    >
-                      {actionLoadingId ? "Removing..." : "Remove Admin"}
-                    </button>
-                  )} */}
                 </td>
 
                 {/* Remove */}

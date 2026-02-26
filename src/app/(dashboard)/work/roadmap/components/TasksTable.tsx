@@ -346,17 +346,7 @@ export default function TasksTable({ projectId }: { projectId: number }) {
 
       {/* header */}
       <div className="flex items-center justify-between mb-4">
-        {/* <div className="flex items-center gap-4">
-          <button
-            onClick={() => {
-              setForm({ ...emptyForm, projectId });
-              setShowCreate(true);
-            }}
-            className="bg-blue-600 text-white px-4 py-2 rounded shadow-sm hover:bg-blue-700"
-          >
-            + Add Task
-          </button>
-        </div> */}
+        
 
         <div className="flex items-center gap-3">
           <input
@@ -451,11 +441,7 @@ export default function TasksTable({ projectId }: { projectId: number }) {
                         {/* Status pill with dropdown icon */}
                         <div className="relative inline-block">
                           <button
-                            // onClick={(ev) => {
-                            //   ev.stopPropagation();
-                            //   setActionOpenFor(null);
-                            //   setStatusOpenFor((cur) => (cur === t.id ? null : t.id));
-                            // }}
+                           
                             className="inline-flex items-center gap-2 px-3 py-1 rounded-full border text-xs bg-white hover:bg-gray-50"
                             title="Change status"
                           >
@@ -498,10 +484,7 @@ export default function TasksTable({ projectId }: { projectId: number }) {
                                 ["To Do", "Doing", "Completed", "Incomplete", "Waiting for Approval"].map((opt) => (
                                   <button
                                     key={opt}
-                                    // onClick={() => {
-                                    //   const fake: StatusItem = { id: 0, name: opt };
-                                    //   changeStatus(t, fake);
-                                    // }}
+                                   
                                     className="w-full text-left px-4 py-2 hover:bg-gray-50"
                                   >
                                     <span className={`w-2 h-2 rounded-full ${statusColorClass(opt)}`} /> <span>{opt}</span>

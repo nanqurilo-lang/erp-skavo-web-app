@@ -146,14 +146,14 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
 
 
 
-const fetchProjectTasks = async (pid: string) => {
-  const res = await fetch(`${MAIN}/projects/${pid}/tasks`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  const fetchProjectTasks = async (pid: string) => {
+    const res = await fetch(`${MAIN}/projects/${pid}/tasks`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
-  const data = await res.json();
-  setProjectTasks(data);
-};
+    const data = await res.json();
+    setProjectTasks(data);
+  };
 
 
 
@@ -172,7 +172,7 @@ const fetchProjectTasks = async (pid: string) => {
     if (projectId) {
       fetchMilestones(projectId);
       fetchLabels(projectId);
-    fetchProjectTasks(projectId); // 👈 add this
+      fetchProjectTasks(projectId); // 👈 add this
 
 
     }
@@ -180,21 +180,21 @@ const fetchProjectTasks = async (pid: string) => {
 
 
 
-const projectAssignedEmployees = React.useMemo(() => {
-  if (!projectTasks.length) return [];
+  const projectAssignedEmployees = React.useMemo(() => {
+    if (!projectTasks.length) return [];
 
-  const uniqueMap = new Map();
+    const uniqueMap = new Map();
 
-  projectTasks.forEach((task) => {
-    task.assignedEmployees?.forEach((emp: any) => {
-      if (!uniqueMap.has(emp.employeeId)) {
-        uniqueMap.set(emp.employeeId, emp);
-      }
+    projectTasks.forEach((task) => {
+      task.assignedEmployees?.forEach((emp: any) => {
+        if (!uniqueMap.has(emp.employeeId)) {
+          uniqueMap.set(emp.employeeId, emp);
+        }
+      });
     });
-  });
 
-  return Array.from(uniqueMap.values());
-}, [projectTasks]);
+    return Array.from(uniqueMap.values());
+  }, [projectTasks]);
 
 
   // Multi-select toggle
@@ -264,7 +264,7 @@ const projectAssignedEmployees = React.useMemo(() => {
       >
         <DialogHeader className="px-6 py-4 border-b bg-slate-50">
           <DialogTitle className="text-lg font-semibold">
-            Add New Task 
+            Add New Task
           </DialogTitle>
         </DialogHeader>
 
@@ -348,60 +348,28 @@ const projectAssignedEmployees = React.useMemo(() => {
           <div>
             <Label>Assign To *</Label>
             <div className="grid grid-cols-2 gap-2 pt-2">
-              {/* {employees.map((emp) => ( */}
-              {/* {projectAssignedEmployees.map((emp) => (
-                <div key={emp.employeeId} className="flex items-center gap-2">
-                  <Checkbox
-                    checked={assignedEmployeeIds.includes(emp.employeeId)}
-                    onCheckedChange={() =>
-                      setAssignedEmployeeIds(
-                        toggle(assignedEmployeeIds, emp.employeeId)
-                      )
-                    }
-                  />
-                  <span className="text-sm">{emp.name}</span>
-                </div>
-              ))} */}
 
-
-
-{projectAssignedEmployees.length > 0
-  ? projectAssignedEmployees.map((emp) => (
-      <div key={emp.employeeId} className="flex items-center gap-2">
-        <Checkbox
-          checked={assignedEmployeeIds.includes(emp.employeeId)}
-          onCheckedChange={() =>
-            setAssignedEmployeeIds(
-              toggle(assignedEmployeeIds, emp.employeeId)
-            )
-          }
-        />
-        <span className="text-sm">{emp.name}</span>
-      </div>
-    ))
-  : <p className="text-sm text-muted-foreground">No employees found</p>}
+              {projectAssignedEmployees.length > 0
+                ? projectAssignedEmployees.map((emp) => (
+                  <div key={emp.employeeId} className="flex items-center gap-2">
+                    <Checkbox
+                      checked={assignedEmployeeIds.includes(emp.employeeId)}
+                      onCheckedChange={() =>
+                        setAssignedEmployeeIds(
+                          toggle(assignedEmployeeIds, emp.employeeId)
+                        )
+                      }
+                    />
+                    <span className="text-sm">{emp.name}</span>
+                  </div>
+                ))
+                : <p className="text-sm text-muted-foreground">No employees found</p>}
 
 
             </div>
           </div>
 
-          {/* Labels */}
-          {/* <div>
-            <Label>Labels *</Label>
-            <div className="grid grid-cols-2 gap-2 pt-2">
-              {labels.map((l) => (
-                <div key={l.id} className="flex items-center gap-2">
-                  <Checkbox
-                    checked={labelIds.includes(String(l.id))}
-                    onCheckedChange={() =>
-                      setLabelIds(toggle(labelIds, String(l.id)))
-                    }
-                  />
-                  <span>{l.name}</span>
-                </div>
-              ))}
-            </div>
-          </div> */}
+
           {/* Labels */}
           <div>
             <div className="flex items-center justify-between">

@@ -1,16 +1,3 @@
-// "use client";
-
-// export default function PaymentsSection({ projectId }: { projectId: number }) {
-//     return (
-//         <div>
-//             <h3 className="text-lg font-medium mb-4">Payments</h3>
-//             <div className="border rounded-md p-4 text-gray-400 text-center">
-//                 No payments recorded
-//             </div>
-//         </div>
-//     );
-// }
-
 
 // src/components/ClientPaymentsTable.tsx
 "use client";
@@ -60,9 +47,9 @@ type Payment = {
   receiptFileUrl?: string | null;
 };
 
-const BASE_URL =  `${process.env.NEXT_PUBLIC_MAIN}`;
+const BASE_URL = `${process.env.NEXT_PUBLIC_MAIN}`;
 
-export default  function PaymentsSection({ 
+export default function PaymentsSection({
   projectId,
   onAdd,
   onSearch,
@@ -157,8 +144,8 @@ export default  function PaymentsSection({
             typeof p.amount === "number"
               ? p.amount
               : p.amount
-              ? Number(p.amount)
-              : undefined,
+                ? Number(p.amount)
+                : undefined,
           currency: p.currency ?? undefined,
           paidOn: p.paymentDate ?? undefined,
           paymentGateway: p.paymentGateway?.name ?? undefined,
@@ -232,7 +219,7 @@ export default  function PaymentsSection({
     if (onAdd) {
       try {
         onAdd();
-      } catch {}
+      } catch { }
     }
     // prefill client if we have clientId
     setClientField(projectId ? String(projectId) : clientField);
@@ -257,7 +244,7 @@ export default  function PaymentsSection({
       receiptFileName: receiptFile?.name ?? null,
     };
 
-  //  console.log("Save payment (client-side):", payload);
+    //  console.log("Save payment (client-side):", payload);
     // close modal
     setShowAddModal(false);
   };

@@ -43,9 +43,9 @@ export default function ProjectCalendarMonth() {
       setLoading(true);
 
       const res = await fetch(`${BASE_URL}/api/projects`, {
-         headers: {
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
         credentials: "include",
       });
 
@@ -161,57 +161,55 @@ export default function ProjectCalendarMonth() {
       </div>
 
       {/* ===== Calendar Grid ===== */}
-    <div className="mt-2 max-h-[70vh] overflow-y-auto overflow-x-hidden">
-      <div className="grid grid-cols-7 gap-px bg-gray-200 mt-2">
-        {calendarDays.map((day, index) => {
-          const dayProjects = getProjectsForDay(day);
-          const isCurrentMonth =
-            day.getMonth() === currentMonth.getMonth();
+      <div className="mt-2 max-h-[70vh] overflow-y-auto overflow-x-hidden">
+        <div className="grid grid-cols-7 gap-px bg-gray-200 mt-2">
+          {calendarDays.map((day, index) => {
+            const dayProjects = getProjectsForDay(day);
+            const isCurrentMonth =
+              day.getMonth() === currentMonth.getMonth();
 
-          return (
-            <div
-              key={index}
-              className={`min-h-[110px] bg-white p-1 text-xs ${
-                !isCurrentMonth ? "opacity-40" : ""
-              }`}
-            >
-              <div className="text-right font-semibold">
-                {day.getDate()}
-              </div>
+            return (
+              <div
+                key={index}
+                className={`min-h-[110px] bg-white p-1 text-xs ${!isCurrentMonth ? "opacity-40" : ""
+                  }`}
+              >
+                <div className="text-right font-semibold">
+                  {day.getDate()}
+                </div>
 
-              <div className="space-y-1 mt-1">
-                {dayProjects.map((project) => {
-                  const isStart = isSameDay(
-                    day,
-                    new Date(project.startDate)
-                  );
-                  const isEnd = isSameDay(
-                    day,
-                    new Date(project.deadline)
-                  );
+                <div className="space-y-1 mt-1">
+                  {dayProjects.map((project) => {
+                    const isStart = isSameDay(
+                      day,
+                      new Date(project.startDate)
+                    );
+                    const isEnd = isSameDay(
+                      day,
+                      new Date(project.deadline)
+                    );
 
-                  return (
-                    <div
-                      key={project.id}
-                      className={`px-2 py-1 rounded text-white text-[11px]
-                        ${
-                          isStart || isEnd
+                    return (
+                      <div
+                        key={project.id}
+                        className={`px-2 py-1 rounded text-white text-[11px]
+                        ${isStart || isEnd
                             ? "bg-blue-600"
                             : "bg-blue-400"
-                        }`}
-                    >
-                      {isStart && <span>▶ </span>}
-                      {project.name}
-                      {isEnd && <span> ◀</span>}
-                    </div>
-                  );
-                })}
+                          }`}
+                      >
+                        {isStart && <span>▶ </span>}
+                        {project.name}
+                        {isEnd && <span> ◀</span>}
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
-    </div>
     </div>
   );
 }

@@ -46,7 +46,7 @@ import {
 import ProjectCalendarMonth from "./ProjectCalendarMonth";
 import { format } from "date-fns";
 
-const MAIN = process.env.NEXT_PUBLIC_MAIN ;
+const MAIN = process.env.NEXT_PUBLIC_MAIN;
 const projectsFromApi = `${MAIN}/api/projects`;
 const STATUS_OPTIONS = [
   "IN_PROGRESS",
@@ -544,9 +544,9 @@ export default function AllProjectsPage() {
       const res = await fetch(`${MAIN}/api/projects/${projectId}/status`, {
         method: "PUT",
         body: fd,
-headers: {
+        headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },       
+        },
       });
       // if (!res.ok) throw new Error(`Status patch failed ${res.status}`);
 
@@ -579,9 +579,9 @@ headers: {
       const res = await fetch(`${MAIN}/api/projects/${projectId}/progress`, {
         method: "PUT",
         body: fd,
- headers: {
+        headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },        
+        },
       });
 
       if (res.status === 401) {
@@ -1338,11 +1338,11 @@ headers: {
   // Row component reused (same as your file) — uses clientOptions/departments/categories data loaded above
   const ProjectRow: React.FC<{ p: Project }> = ({ p }) => {
     const start = p.startDate ?
-    //  new Date(p.startDate).toLocaleDateString() 
-    format(new Date(p.startDate), "dd-MM-yyyy")
-     : "-";
+      //  new Date(p.startDate).toLocaleDateString() 
+      format(new Date(p.startDate), "dd-MM-yyyy")
+      : "-";
     const dl = p.noDeadline ? "No Deadline" : p.deadline ?
-    //  new Date(p.deadline).toLocaleDateString()
+      //  new Date(p.deadline).toLocaleDateString()
       format(new Date(p.deadline), "dd-MM-yyyy")
       : "-";
     const progress = Math.max(0, Math.min(100, p.progressPercent ?? 0));
@@ -1429,29 +1429,11 @@ headers: {
 
         <TableCell className="py-4 px-4 align-top text-right">
           <DropdownMenu>
-            {/* <DropdownMenuTrigger asChild> */}
-                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => window.location.assign(`/work/roadmap/${p.id}`)}><Eye className="h-4 w-4 mr-2" /> </Button>
-
-              {/* <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-              <MoreVertical className="h-4 w-4" /></Button> */}
-            {/* </DropdownMenuTrigger> */}
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => window.location.assign(`/work/roadmap/${p.id}`)}><Eye className="h-4 w-4 mr-2" /> </Button>
 
             <DropdownMenuContent align="end" className="w-48">
               <DropdownMenuItem onClick={() => window.location.assign(`/work/roadmap/${p.id}`)}><Eye className="h-4 w-4 mr-2" /> View</DropdownMenuItem>
 
-              {/* <DropdownMenuItem onClick={() => { setUpdateProjectId(p.id); setShowUpdateModal(true); }}>
-                <Edit2 className="h-4 w-4 mr-2" /> Edit
-              </DropdownMenuItem> */}
-
-              {/* <DropdownMenuItem onClick={() => handlePin(p.id)}><Pin className="h-4 w-4 mr-2" /> {p.pinned ? "Unpin" : "Pin"} Project</DropdownMenuItem> */}
-
-              {/* <DropdownMenuItem onClick={() => handleArchive(p.id)}>
-                <Archive className="h-4 w-4 mr-2" /> {p.archived ? "Unarchive" : "Archive"}
-              </DropdownMenuItem> */}
-
-              {/* <DropdownMenuSeparator /> */}
-
-              {/* <DropdownMenuItem onClick={() => handleDelete(p.id)} className="text-red-600"><Trash2 className="h-4 w-4 mr-2" /> Delete</DropdownMenuItem> */}
             </DropdownMenuContent>
           </DropdownMenu>
         </TableCell>
@@ -1545,13 +1527,11 @@ headers: {
               </Select>
             </div>
 
-            {/* <div className="ml-auto flex items-center gap-4">
-              <button onClick={openFilters} className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-800"><Filter className="w-5 h-5" /> Filters</button>
-            </div> */}
+
           </div>
 
           {/* ROW: Add Project + Search + Top-right icons */}
-         
+
 
           {/* MAIN content area */}
           <div className="bg-white rounded-lg border overflow-hidden">
@@ -1562,9 +1542,7 @@ headers: {
 
             <div className="overflow-auto p-4">
               {viewMode === "calendar" || calendarOpen ? (
-                // Using a simple calendar view component - you had a complex CalendarView earlier.
-                // If you want the rich CalendarView re-insert here (I kept it out of the pasted block for brevity).
-                // <div>
+
 
                 <ProjectCalendarMonth />
 
@@ -1936,11 +1914,11 @@ headers: {
   function groupByStartDate(items: Project[]) {
     const map: Record<string, Project[]> = {};
     items.forEach((p) => {
-      const d = p.startDate ? 
-      // new Date(p.startDate).toLocaleDateString()
-     format( new Date(p.startDate), "dd-MM-yyyy")
+      const d = p.startDate ?
+        // new Date(p.startDate).toLocaleDateString()
+        format(new Date(p.startDate), "dd-MM-yyyy")
 
-       : "No start date";
+        : "No start date";
       (map[d] ||= []).push(p);
     });
     return map;
