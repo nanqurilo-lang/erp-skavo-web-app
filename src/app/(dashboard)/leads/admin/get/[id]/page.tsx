@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { format, formatDate } from "date-fns";
+import { createPortal } from "react-dom";
 
 type EmployeeMeta = {
   employeeId?: string;
@@ -125,16 +126,16 @@ function fmt(v?: string | null) {
   return v && v !== "null" ? v : "--";
 }
 function fmtDate(d?: string | null) {
-  return d ? 
-  // new Date(d).toLocaleString()
-  format(new Date(d), "dd-MM-yyyy HH:mm")
-   : "--";
+  return d ?
+    // new Date(d).toLocaleString()
+    format(new Date(d), "dd-MM-yyyy HH:mm")
+    : "--";
 }
 function fmtShortDate(d?: string | null) {
-  return d ? 
-  // new Date(d).toLocaleDateString() 
-  format(new Date(d), "dd-MM-yyyy")
-  : "--";
+  return d ?
+    // new Date(d).toLocaleDateString() 
+    format(new Date(d), "dd-MM-yyyy")
+    : "--";
 }
 function fmtCurrency(n?: number | null) {
   if (n == null || isNaN(Number(n))) return "--";
@@ -233,301 +234,10 @@ function DealViewModal({
     <div className="fixed inset-0 z-50">
       <div className="absolute inset-0 bg-black/30" onClick={onClose} />
       <div className="fixed inset-0 flex items-start justify-center px-4 pt-8">
-        {/* <div
-          className="max-w-5xl w-full bg-white rounded-lg shadow-lg border overflow-auto"
-          style={{ maxHeight: "92vh" }}
-        > */}
-          {/* <div className="flex items-center justify-between p-4 border-b"> */}
-            {/* <h3 className="text-lg font-semibold">Deal {deal.id ?? ""}</h3> */}
-            {/* <button
-              onClick={onClose}
-              className="text-muted-foreground p-1 rounded hover:bg-slate-100"
-            >
-              <svg
-                className="w-6 h-6"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-              >
-                <path
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button> */}
-          </div>
 
-          {/* <div className="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2 rounded-lg border p-4">
-              <h4 className="font-medium mb-2">Deal Information</h4>
-              <div className="text-sm text-muted-foreground mb-4">
-                {deal.pipeline ?? "Default Pipeline"} → {deal.dealStage ?? "--"}
-              </div>
+      </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                <div>
-                  <div className="text-xs text-muted-foreground">Deal Name</div>
-                  <div className="font-medium">
-                    {deal.title ?? `Deal ${deal.id}`}
-                  </div>
-                </div>
 
-                <div>
-                  <div className="text-xs text-muted-foreground">
-                    Lead Contact
-                  </div>
-                  <div>{deal.leadName ?? "--"}</div>
-                </div>
-
-                <div>
-                  <div className="text-xs text-muted-foreground">Email</div>
-                  <div>
-                    {leadEmail ? (
-                      <a
-                        className="text-sky-600 underline"
-                        href={`mailto:${leadEmail}`}
-                      >
-                        {leadEmail}
-                      </a>
-                    ) : (
-                      "--"
-                    )}
-                  </div>
-                </div>
-
-                <div>
-                  <div className="text-xs text-muted-foreground">
-                    Company Name
-                  </div>
-                  <div>{leadCompanyName ?? "--"}</div>
-                </div>
-
-                <div>
-                  <div className="text-xs text-muted-foreground">
-                    Deal Category
-                  </div>
-                  <div>{deal.dealCategory ?? "--"}</div>
-                </div>
-
-                <div>
-                  <div className="text-xs text-muted-foreground">
-                    Deal Agent
-                  </div>
-                  <div>
-                    {deal.dealAgentMeta?.name ?? deal.dealAgent ?? "--"}
-                  </div>
-                </div>
-
-                <div>
-                  <div className="text-xs text-muted-foreground">
-                    Deal Watcher
-                  </div>
-                  <div>
-                    {deal.dealWatchersMeta && deal.dealWatchersMeta.length
-                      ? deal.dealWatchersMeta[0].name
-                      : "--"}
-                  </div>
-                </div>
-
-                <div>
-                  <div className="text-xs text-muted-foreground">
-                    Close Date
-                  </div>
-                  <div>
-                    {deal.expectedCloseDate
-                      ? fmtShortDate(deal.expectedCloseDate)
-                      : "--"}
-                  </div>
-                </div>
-
-                <div>
-                  <div className="text-xs text-muted-foreground">
-                    Deal Value
-                  </div>
-                  <div>{fmtCurrency(deal.value ?? 0)}</div>
-                </div>
-              </div>
-            </div>
-
-            <div className="rounded-lg border p-4">
-              <h4 className="font-medium mb-3">Lead Contact Details</h4>
-              <div className="text-sm grid gap-2">
-                <div className="flex justify-between">
-                  <div className="text-xs text-muted-foreground">Name</div>
-                  <div>{deal.leadName ?? "--"}</div>
-                </div>
-
-                <div className="flex justify-between">
-                  <div className="text-xs text-muted-foreground">Email</div>
-                  <div>
-                    {leadEmail ? (
-                      <a
-                        className="text-sky-600 underline"
-                        href={`mailto:${leadEmail}`}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        {leadEmail}
-                      </a>
-                    ) : (
-                      "--"
-                    )}
-                  </div>
-                </div>
-
-                <div className="flex justify-between">
-                  <div className="text-xs text-muted-foreground">Mobile</div>
-                  <div>
-                    {leadPhone ? (
-                      <a
-                        className="text-sky-600 underline"
-                        href={`tel:${leadPhone}`}
-                      >
-                        {leadPhone}
-                      </a>
-                    ) : (
-                      "--"
-                    )}
-                  </div>
-                </div>
-
-                <div className="flex justify-between">
-                  <div className="text-xs text-muted-foreground">
-                    Company Name
-                  </div>
-                  <div>{leadCompanyName ?? "--"}</div>
-                </div>
-
-                <div className="mt-3 flex gap-2">
-                  <a
-                    href={leadEmail ? `mailto:${leadEmail}` : "#"}
-                    className="px-3 py-2 border rounded text-sm inline-flex items-center gap-2"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <svg
-                      className="w-4 h-4"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M3 8l7.89 5.26a3 3 0 003.22 0L21 8"
-                      />
-                    </svg>
-                    Email
-                  </a>
-                  <a
-                    href={leadPhone ? `tel:${leadPhone}` : "#"}
-                    className="px-3 py-2 border rounded text-sm inline-flex items-center gap-2"
-                  >
-                    <svg
-                      className="w-4 h-4"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M22 16.92V21a1 1 0 01-1.11 1A19.86 19.86 0 013 5.11 1 1 0 014 4h4.09a1 1 0 01.95.68 12.05 12.05 0 00.7 2.28 1 1 0 01-.24 1.02L8.91 10.9"
-                      />
-                    </svg>
-                    Call
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <div className="lg:col-span-3 mt-4 rounded-lg border p-4">
-              <div className="flex gap-6 border-b pb-3 text-sm">
-                <button className="pb-2 border-b-2 border-sky-600 text-sky-600 font-medium">
-                  Files
-                </button>
-                <button className="pb-2 border-b-2 border-transparent text-slate-700">
-                  Follow Up
-                </button>
-                <button className="pb-2 border-b-2 border-transparent text-slate-700">
-                  People
-                </button>
-                <button className="pb-2 border-b-2 border-transparent text-slate-700">
-                  Notes
-                </button>
-                <button className="pb-2 border-b-2 border-transparent text-slate-700">
-                  Comments
-                </button>
-                <button className="pb-2 border-b-2 border-transparent text-slate-700">
-                  Tags
-                </button>
-              </div>
-
-              <div className="mt-4 text-sm">
-                <div className="mb-4">
-                  <label className="block text-xs text-muted-foreground mb-2">
-                    Upload File
-                  </label>
-                  <div className="flex items-center gap-3">
-                    <input
-                      id="deal-file-input"
-                      type="file"
-                      onChange={handleFileChange}
-                      className="text-sm"
-                    />
-                    <button
-                      onClick={handleUpload}
-                      disabled={uploading}
-                      className={`px-3 py-2 rounded bg-blue-600 text-white ${uploading ? "opacity-60" : "hover:bg-blue-700"}`}
-                    >
-                      {uploading ? "Uploading..." : "Upload"}
-                    </button>
-                    {fileError && (
-                      <div className="text-destructive text-xs">
-                        {fileError}
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                <div>
-                  <h5 className="text-sm font-medium mb-2">Files</h5>
-                  {files.length === 0 ? (
-                    <div className="text-muted-foreground">
-                      No files uploaded.
-                    </div>
-                  ) : (
-                    <ul className="list-disc pl-5 text-sm">
-                      {files.map((f, i) => (
-                        <li key={i}>
-                          {f.url ? (
-                            <a
-                              href={f.url}
-                              className="text-sky-600 underline"
-                              target="_blank"
-                              rel="noreferrer"
-                            >
-                              {f.name}
-                            </a>
-                          ) : (
-                            f.name
-                          )}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-
-                <div className="mt-4 p-6 border-1">Follow ups</div>
-              </div>
-            </div>
-          </div> */}
-        {/* </div> */}
-      {/* </div> */}
     </div>
   );
 }
@@ -740,8 +450,8 @@ function AddDealModal({
 }) {
 
 
-const [employees, setEmployees] = useState<EmployeeMeta[]>([]);
-const [employeesLoading, setEmployeesLoading] = useState(true);
+  const [employees, setEmployees] = useState<EmployeeMeta[]>([]);
+  const [employeesLoading, setEmployeesLoading] = useState(true);
 
 
   const [form, setForm] = useState({
@@ -764,30 +474,30 @@ const [employeesLoading, setEmployeesLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
 
-useEffect(() => {
-  const fetchEmployees = async () => {
-    try {
-      const token = localStorage.getItem("accessToken");
-      if (!token) return;
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        if (!token) return;
 
-      const res = await fetch("/api/hr/employee", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+        const res = await fetch("/api/hr/employee", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
-      if (!res.ok) throw new Error("Failed to fetch employees");
+        if (!res.ok) throw new Error("Failed to fetch employees");
 
-      const data = await res.json();
-      setEmployees(data.content || []);
-    } catch (err) {
-      console.error("Employee load failed", err);
-      setEmployees([]);
-    } finally {
-      setEmployeesLoading(false);
-    }
-  };
+        const data = await res.json();
+        setEmployees(data.content || []);
+      } catch (err) {
+        console.error("Employee load failed", err);
+        setEmployees([]);
+      } finally {
+        setEmployeesLoading(false);
+      }
+    };
 
-  fetchEmployees();
-}, []);
+    fetchEmployees();
+  }, []);
 
 
 
@@ -933,14 +643,14 @@ useEffect(() => {
   // };
 
 
-const selectedWatcherNames = () => {
-  if (form.dealWatchers.length === 0) return "--";
+  const selectedWatcherNames = () => {
+    if (form.dealWatchers.length === 0) return "--";
 
-  return employees
-    .filter((e) => form.dealWatchers.includes(e.employeeId))
-    .map((e) => e.name)
-    .join(", ");
-};
+    return employees
+      .filter((e) => form.dealWatchers.includes(e.employeeId))
+      .map((e) => e.name)
+      .join(", ");
+  };
 
 
 
@@ -1092,23 +802,23 @@ const selectedWatcherNames = () => {
 
 
 
-<select
-  className="w-full p-2 border rounded-md bg-white text-sm"
-  value={form.dealAgent}
-  onChange={(e) => update("dealAgent", e.target.value)}
->
-  <option value="">--</option>
+                  <select
+                    className="w-full p-2 border rounded-md bg-white text-sm"
+                    value={form.dealAgent}
+                    onChange={(e) => update("dealAgent", e.target.value)}
+                  >
+                    <option value="">--</option>
 
-  {employeesLoading ? (
-    <option disabled>Loading...</option>
-  ) : (
-    employees.map((emp) => (
-      <option key={emp.employeeId} value={emp.employeeId}>
-        {emp.name}
-      </option>
-    ))
-  )}
-</select>
+                    {employeesLoading ? (
+                      <option disabled>Loading...</option>
+                    ) : (
+                      employees.map((emp) => (
+                        <option key={emp.employeeId} value={emp.employeeId}>
+                          {emp.name}
+                        </option>
+                      ))
+                    )}
+                  </select>
 
 
 
@@ -1145,7 +855,7 @@ const selectedWatcherNames = () => {
 
                 <div className="relative">
                   <label className="block text-xs text-muted-foreground mb-2">
-                    Deal Watcher 
+                    Deal Watcher
                   </label>
 
                   {/* <button
@@ -1172,68 +882,68 @@ const selectedWatcherNames = () => {
 
 
 
-  {/* Dropdown button */}
-  <button
-    type="button"
-    onClick={() => setWatchersOpen((s) => !s)}
-    className="w-full p-2 border rounded-md bg-white text-sm text-left flex items-center justify-between"
-  >
-    <span className="truncate">{selectedWatcherNames()}</span>
-    <svg
-      className={`w-4 h-4 transition-transform ${watchersOpen ? "rotate-180" : ""}`}
-      viewBox="0 0 20 20"
-      fill="none"
-      stroke="currentColor"
-    >
-      <path
-        d="M6 8l4 4 4-4"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  </button>
+                  {/* Dropdown button */}
+                  <button
+                    type="button"
+                    onClick={() => setWatchersOpen((s) => !s)}
+                    className="w-full p-2 border rounded-md bg-white text-sm text-left flex items-center justify-between"
+                  >
+                    <span className="truncate">{selectedWatcherNames()}</span>
+                    <svg
+                      className={`w-4 h-4 transition-transform ${watchersOpen ? "rotate-180" : ""}`}
+                      viewBox="0 0 20 20"
+                      fill="none"
+                      stroke="currentColor"
+                    >
+                      <path
+                        d="M6 8l4 4 4-4"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </button>
 
 
-              
-  {/* Dropdown panel */}
-  {watchersOpen && (
-    <div className="absolute z-50 mt-2 w-full bg-white border rounded-md shadow-lg p-3 max-h-60 overflow-auto">
-      {employeesLoading ? (
-        <div className="text-sm text-muted-foreground">
-          Loading employees...
-        </div>
-      ) : employees.length === 0 ? (
-        <div className="text-sm text-muted-foreground">
-          No employees found
-        </div>
-      ) : (
-        <div className="grid gap-2">
-          {employees.map((emp) => (
-            <label
-              key={emp.employeeId}
-              className="flex items-start gap-2 text-sm cursor-pointer"
-            >
-              <input
-                type="checkbox"
-                className="mt-1"
-                checked={form.dealWatchers.includes(emp.employeeId)}
-                onChange={(e) =>
-                  toggleWatcher(emp.employeeId, e.target.checked)
-                }
-              />
-              <span>{emp.name}</span>
-            </label>
-          ))}
-        </div>
-      )}
-    </div>
-  )}
 
-  <div className="text-xs text-muted-foreground mt-1">
-    Select one or more watchers
-  </div>
-</div>
+                  {/* Dropdown panel */}
+                  {watchersOpen && (
+                    <div className="absolute z-50 mt-2 w-full bg-white border rounded-md shadow-lg p-3 max-h-60 overflow-auto">
+                      {employeesLoading ? (
+                        <div className="text-sm text-muted-foreground">
+                          Loading employees...
+                        </div>
+                      ) : employees.length === 0 ? (
+                        <div className="text-sm text-muted-foreground">
+                          No employees found
+                        </div>
+                      ) : (
+                        <div className="grid gap-2">
+                          {employees.map((emp) => (
+                            <label
+                              key={emp.employeeId}
+                              className="flex items-start gap-2 text-sm cursor-pointer"
+                            >
+                              <input
+                                type="checkbox"
+                                className="mt-1"
+                                checked={form.dealWatchers.includes(emp.employeeId)}
+                                onChange={(e) =>
+                                  toggleWatcher(emp.employeeId, e.target.checked)
+                                }
+                              />
+                              <span>{emp.name}</span>
+                            </label>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  <div className="text-xs text-muted-foreground mt-1">
+                    Select one or more watchers
+                  </div>
+                </div>
 
 
 
@@ -1871,6 +1581,90 @@ export default function LeadDetailPage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
 
+
+  // const [openDealMenuId, setOpenDealMenuId] = useState<number | null>(null);
+  // const dealMenuRef = useRef<HTMLDivElement | null>(null);
+
+  const [openDealMenuId, setOpenDealMenuId] = useState<number | null>(null);
+  const [dealMenuPos, setDealMenuPos] = useState<{ top: number; left: number } | null>(null);
+  const dealMenuRef = useRef<HTMLDivElement | null>(null);
+
+  const handleDealMenuOpen = (
+    e: React.MouseEvent,
+    dealId: number
+  ) => {
+    e.stopPropagation();
+
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+
+    setOpenDealMenuId(dealId);
+    setDealMenuPos({
+      top: rect.bottom + 6,
+      left: rect.right - 160,
+    });
+  };
+
+
+  // useEffect(() => {
+  //   if (openDealMenuId == null) return;
+
+  //   const handleClickOutside = (event: MouseEvent) => {
+  //     if (
+  //       dealMenuRef.current &&
+  //       !dealMenuRef.current.contains(event.target as Node)
+  //     ) {
+  //       setOpenDealMenuId(null);
+  //     }
+  //   };
+
+  //   const handleEscape = (event: KeyboardEvent) => {
+  //     if (event.key === "Escape") {
+  //       setOpenDealMenuId(null);
+  //     }
+  //   };
+
+  //   document.addEventListener("mousedown", handleClickOutside);
+  //   document.addEventListener("keydown", handleEscape);
+
+  //   return () => {
+  //     document.removeEventListener("mousedown", handleClickOutside);
+  //     document.removeEventListener("keydown", handleEscape);
+  //   };
+  // }, [openDealMenuId]);
+
+
+
+
+  useEffect(() => {
+    if (!openDealMenuId) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dealMenuRef.current &&
+        !dealMenuRef.current.contains(event.target as Node)
+      ) {
+        setOpenDealMenuId(null);
+        setDealMenuPos(null);
+      }
+    };
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setOpenDealMenuId(null);
+        setDealMenuPos(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleEscape);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [openDealMenuId]);
+
+
   const [editOpen, setEditOpen] = useState(false);
 
   const {
@@ -1888,12 +1682,12 @@ export default function LeadDetailPage() {
   const employees: EmployeeMeta[] =
     empResp && Array.isArray(empResp.content)
       ? empResp.content.map((e: any) => ({
-          employeeId: e.employeeId,
-          name: e.name,
-          designation: e.designationName ?? null,
-          department: e.departmentName ?? null,
-          profileUrl: e.profilePictureUrl ?? null,
-        }))
+        employeeId: e.employeeId,
+        name: e.name,
+        designation: e.designationName ?? null,
+        department: e.departmentName ?? null,
+        profileUrl: e.profilePictureUrl ?? null,
+      }))
       : [];
 
   const [addDealOpen, setAddDealOpen] = useState(false);
@@ -2054,46 +1848,102 @@ export default function LeadDetailPage() {
   };
 
   // open fixed menu popup near button
+  // const onOpenNoteMenu = (e: React.MouseEvent, noteId?: number) => {
+  //   e.stopPropagation();
+  //   if (!noteId) return;
+  //   const btn = e.currentTarget as HTMLElement;
+  //   const rect = btn.getBoundingClientRect();
+  //   // compute top/left for fixed positioned popup
+  //   const top = rect.bottom + 8 + window.scrollY; // include scrollY to position correctly
+  //   const left = rect.right - 160; // align right edge of popup near button (popup width ~ 160)
+  //   setOpenNoteMenuId((prev) => (prev === noteId ? null : noteId));
+  //   setNoteMenuPos({ top, left: Math.max(left, 8) });
+  // };
+
+
+
   const onOpenNoteMenu = (e: React.MouseEvent, noteId?: number) => {
     e.stopPropagation();
     if (!noteId) return;
+
     const btn = e.currentTarget as HTMLElement;
     const rect = btn.getBoundingClientRect();
-    // compute top/left for fixed positioned popup
-    const top = rect.bottom + 8 + window.scrollY; // include scrollY to position correctly
-    const left = rect.right - 160; // align right edge of popup near button (popup width ~ 160)
+
+    const top = rect.bottom + 6; // no scrollY
+    const left = rect.right - 160; // popup width
+
     setOpenNoteMenuId((prev) => (prev === noteId ? null : noteId));
-    setNoteMenuPos({ top, left: Math.max(left, 8) });
+    setNoteMenuPos({
+      top,
+      left: Math.max(left, 8),
+    });
   };
 
+
+
   // close popup on outside click / scroll / resize
+  // useEffect(() => {
+  //   if (openNoteMenuId == null) return;
+  //   const onDocClick = (ev: MouseEvent) => {
+  //     const t = ev.target as Node;
+  //     if (!menuContainerRef.current) return;
+  //     if (!menuContainerRef.current.contains(t)) {
+  //       setOpenNoteMenuId(null);
+  //       setNoteMenuPos(null);
+  //     }
+  //   };
+  //   const onScroll = () => {
+  //     setOpenNoteMenuId(null);
+  //     setNoteMenuPos(null);
+  //   };
+  //   const onResize = () => {
+  //     setOpenNoteMenuId(null);
+  //     setNoteMenuPos(null);
+  //   };
+  //   document.addEventListener("mousedown", onDocClick);
+  //   window.addEventListener("scroll", onScroll, true);
+  //   window.addEventListener("resize", onResize);
+  //   return () => {
+  //     document.removeEventListener("mousedown", onDocClick);
+  //     window.removeEventListener("scroll", onScroll, true);
+  //     window.removeEventListener("resize", onResize);
+  //   };
+  // }, [openNoteMenuId]);
+
+
+
+
+
   useEffect(() => {
     if (openNoteMenuId == null) return;
-    const onDocClick = (ev: MouseEvent) => {
-      const t = ev.target as Node;
-      if (!menuContainerRef.current) return;
-      if (!menuContainerRef.current.contains(t)) {
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        menuContainerRef.current &&
+        !menuContainerRef.current.contains(event.target as Node)
+      ) {
         setOpenNoteMenuId(null);
         setNoteMenuPos(null);
       }
     };
-    const onScroll = () => {
-      setOpenNoteMenuId(null);
-      setNoteMenuPos(null);
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setOpenNoteMenuId(null);
+        setNoteMenuPos(null);
+      }
     };
-    const onResize = () => {
-      setOpenNoteMenuId(null);
-      setNoteMenuPos(null);
-    };
-    document.addEventListener("mousedown", onDocClick);
-    window.addEventListener("scroll", onScroll, true);
-    window.addEventListener("resize", onResize);
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleEscape);
+
     return () => {
-      document.removeEventListener("mousedown", onDocClick);
-      window.removeEventListener("scroll", onScroll, true);
-      window.removeEventListener("resize", onResize);
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
     };
   }, [openNoteMenuId]);
+
+
 
   return (
     <main className="min-h-screen bg-gray-50">
@@ -2511,7 +2361,7 @@ export default function LeadDetailPage() {
 
                               <td className="px-4 py-3">
                                 {d.dealWatchersMeta &&
-                                d.dealWatchersMeta.length > 0 ? (
+                                  d.dealWatchersMeta.length > 0 ? (
                                   <div>
                                     <div className="text-sm">
                                       {d.dealWatchersMeta[0].name}
@@ -2541,70 +2391,116 @@ export default function LeadDetailPage() {
                                 </select>
                               </td>
 
+
+
+
+
+
+
+
+
+
                               <td className="px-4 py-3">
-                                <div className="flex items-center gap-2">
-                                  <button
-                                    onClick={() => {
-                                      setViewDeal(d);
-                                      setViewLead(data ?? null);
-                                    }}
-                                    className="text-sm px-2 py-1 border rounded hover:bg-slate-50"
+                                <button
+                                  onClick={(e) => handleDealMenuOpen(e, d.id)}
+                                  className="p-2 rounded hover:bg-slate-100"
+                                >
+                                  <svg
+                                    className="w-4 h-4 text-muted-foreground"
+                                    viewBox="0 0 24 24"
+                                    fill="currentColor"
                                   >
-                                    {/* View */}
-                                    <Link href={`/deals/get/${d.id}`}>
-                                      View
-                                    </Link>
-                                  </button>
-                                  {/* <Link href={`/deals/get/${deal.id}`}>View</Link> */}
-
-                                  {/* EDIT BUTTON - navigates to /deals/[id]/edit */}
-                                  <button
-                                    onClick={() => {
-                                      // navigate to edit page within the app
-                                      //router.push(`/deals/${d.id}/edit`);
-                                      router.push(
-                                        `/deals/create/DealEdit/${d.id}`,
-                                      );
-                                      //router.push(`/deals/create/[id]/DealEdit${d.id}`);
-                                    }}
-                                    className="text-sm px-2 py-1 border rounded hover:bg-slate-50"
-                                  >
-                                    Edit
-                                  </button>
-
-                                  <button
-                                    onClick={async () => {
-                                      if (!confirm("Delete this deal?")) return;
-                                      try {
-                                        const token =
-                                          localStorage.getItem("accessToken");
-                                        if (!token)
-                                          throw new Error("No access token.");
-                                        const res = await fetch(
-                                          `${BASE}/deals/${d.id}`,
-                                          {
-                                            method: "DELETE",
-                                            headers: {
-                                              Authorization: `Bearer ${token}`,
-                                            },
-                                          },
-                                        );
-                                        if (!res.ok)
-                                          throw new Error(await res.text());
-                                        alert("Deal deleted.");
-                                        await mutateDeals();
-                                      } catch (err: any) {
-                                        alert(
-                                          "Error: " + (err?.message ?? err),
-                                        );
-                                      }
-                                    }}
-                                    className="text-sm px-2 py-1 border rounded text-destructive hover:bg-slate-50"
-                                  >
-                                    Delete
-                                  </button>
-                                </div>
+                                    <circle cx="5" cy="12" r="1.5" />
+                                    <circle cx="12" cy="12" r="1.5" />
+                                    <circle cx="19" cy="12" r="1.5" />
+                                  </svg>
+                                </button>
                               </td>
+
+
+                              {openDealMenuId && dealMenuPos &&
+                                createPortal(
+                                  <div
+                                    ref={dealMenuRef}
+                                    style={{
+                                      position: "fixed",
+                                      top: dealMenuPos.top,
+                                      left: dealMenuPos.left,
+                                      zIndex: 9999,
+                                      minWidth: 160,
+                                    }}
+                                  >
+                                    <div className="bg-white border rounded shadow-xl">
+
+                                      {/* VIEW */}
+                                      <button
+                                        onClick={() => {
+                                          router.push(`/deals/get/${openDealMenuId}`);
+                                          setOpenDealMenuId(null);
+                                          setDealMenuPos(null);
+                                        }}
+                                        className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
+                                      >
+                                        View
+                                      </button>
+
+                                      {/* EDIT */}
+                                      <button
+                                        onClick={() => {
+                                          router.push(`/deals/create/DealEdit/${openDealMenuId}`);
+                                          setOpenDealMenuId(null);
+                                          setDealMenuPos(null);
+                                        }}
+                                        className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
+                                      >
+                                        Edit
+                                      </button>
+
+                                      <div className="border-t" />
+
+                                      {/* DELETE */}
+                                      <button
+                                        onClick={async () => {
+                                          if (!confirm("Delete this deal?")) return;
+
+                                          try {
+                                            const token = localStorage.getItem("accessToken");
+                                            if (!token) throw new Error("No access token.");
+
+                                            const res = await fetch(
+                                              `${BASE}/deals/${openDealMenuId}`,
+                                              {
+                                                method: "DELETE",
+                                                headers: {
+                                                  Authorization: `Bearer ${token}`,
+                                                },
+                                              }
+                                            );
+
+                                            if (!res.ok) throw new Error(await res.text());
+
+                                            await mutateDeals();
+                                          } catch (err: any) {
+                                            alert("Error: " + (err?.message ?? err));
+                                          }
+
+                                          setOpenDealMenuId(null);
+                                          setDealMenuPos(null);
+                                        }}
+                                        className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-50"
+                                      >
+                                        Delete
+                                      </button>
+                                    </div>
+                                  </div>,
+                                  document.body
+                                )
+                              }
+
+
+
+
+
                             </tr>
                           ))
                         )}
