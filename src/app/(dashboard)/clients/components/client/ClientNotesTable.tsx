@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { MoreVertical, Globe, Lock, Eye, Edit, Trash2, Plus, X } from "lucide-react";
 
 export type NoteItem = {
@@ -68,6 +68,60 @@ export default function ClientNotesTable({
   // View modal state
   const [showViewModal, setShowViewModal] = useState(false);
   const [viewNote, setViewNote] = useState<NoteItem | null>(null);
+
+
+const [menuPosition, setMenuPosition] = useState<{ top: number; left: number } | null>(null);
+const menuRef = useRef<HTMLDivElement | null>(null);
+
+
+const handleMenuOpen = (
+  e: React.MouseEvent,
+  noteId: number
+) => {
+  e.stopPropagation();
+
+  const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+
+  setMenuOpenFor(noteId);
+  setMenuPosition({
+    top: rect.bottom + 6,
+    left: rect.right - 180,
+  });
+};
+
+
+useEffect(() => {
+  if (menuOpenFor === null) return;
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      menuRef.current &&
+      !menuRef.current.contains(event.target as Node)
+    ) {
+      setMenuOpenFor(null);
+      setMenuPosition(null);
+    }
+  };
+
+  const handleEscape = (event: KeyboardEvent) => {
+    if (event.key === "Escape") {
+      setMenuOpenFor(null);
+      setMenuPosition(null);
+    }
+  };
+
+  document.addEventListener("mousedown", handleClickOutside);
+  document.addEventListener("keydown", handleEscape);
+
+  return () => {
+    document.removeEventListener("mousedown", handleClickOutside);
+    document.removeEventListener("keydown", handleEscape);
+  };
+}, [menuOpenFor]);
+
+
+
+
 
   // Edit modal state
   const [showEditModal, setShowEditModal] = useState(false);
@@ -373,14 +427,21 @@ export default function ClientNotesTable({
                       </td>
 
                       <td className="px-4 py-4 text-right relative">
-                        <button
+                        {/* <button
                           onClick={() => setMenuOpenFor(menuOpenFor === note.id ? null : note.id)}
                           className="p-1 rounded hover:bg-gray-100"
-                        >
+                        > */}
+
+
+<button
+  onClick={(e) => handleMenuOpen(e, note.id)}
+  className="p-1 rounded hover:bg-gray-100"
+>
+
                           <MoreVertical size={18} />
                         </button>
 
-                        {menuOpenFor === note.id && (
+                        {/* {menuOpenFor === note.id && (
                           <div className="absolute right-2 mt-2 w-44 bg-white border rounded shadow-lg z-30">
                             <button
                               className="w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-gray-50"
@@ -412,7 +473,62 @@ export default function ClientNotesTable({
                               <Trash2 size={14} /> Delete
                             </button>
                           </div>
-                        )}
+                        )} */}
+
+{menuOpenFor !== null && menuPosition && (
+  <div
+    ref={menuRef}
+    style={{
+      position: "fixed",
+      top: menuPosition.top,
+      left: menuPosition.left,
+      zIndex: 9999,
+      minWidth: 180,
+    }}
+    className="bg-white border rounded shadow-lg"
+  >
+    <button
+      className="w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-gray-50"
+      onClick={() => {
+        const note = notes.find(n => n.id === menuOpenFor);
+        if (!note) return;
+        setMenuOpenFor(null);
+        setMenuPosition(null);
+        openViewModal(note);
+      }}
+    >
+      <Eye size={14} /> View
+    </button>
+
+    <button
+      className="w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-gray-50"
+      onClick={() => {
+        const note = notes.find(n => n.id === menuOpenFor);
+        if (!note) return;
+        setMenuOpenFor(null);
+        setMenuPosition(null);
+        openEditModal(note);
+      }}
+    >
+      <Edit size={14} /> Edit
+    </button>
+
+    <button
+      className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-gray-50"
+      onClick={() => {
+        const note = notes.find(n => n.id === menuOpenFor);
+        if (!note) return;
+        setMenuOpenFor(null);
+        setMenuPosition(null);
+        handleDelete(note);
+      }}
+    >
+      <Trash2 size={14} /> Delete
+    </button>
+  </div>
+)}
+
+
                       </td>
                     </tr>
                   ))
