@@ -206,20 +206,6 @@ export default function HolidayPage() {
       {/* HEADER */}
       <div className="flex justify-between items-center mb-6">
 
- 
-
-
-        {/* <h1 className="text-xl font-semibold">Holiday Management</h1> */}
-        {/* <button
-          onClick={() => {
-            setAddingHoliday(true);
-            setNewHolidays([{ date: "", occasion: "" }]);
-          }}
-          className="bg-blue-600 text-white px-4 py-2 rounded-md"
-        >
-          + Add Holiday
-        </button> */}
-
         <div className="flex text-right gap-2">
           <Button
             size="icon"
@@ -342,30 +328,9 @@ export default function HolidayPage() {
                     </div>
                   ) : (
                     <>
-                     
 
-                      {/* {openActionId === h.id && (
-                        <div className="absolute right-0 mt-2 w-32 bg-white border rounded shadow z-20">
-                          <button
-                            onClick={() => {
-                              setEditingHoliday(h);
-                              setOpenActionId(null);
-                            }}
-                            className="block w-full text-left px-3 py-2 hover:bg-gray-100"
-                          >
-                            Edit
-                          </button>
-                          <button
-                            onClick={() => {
-                              handleDelete(h.id);
-                              setOpenActionId(null);
-                            }}
-                            className="block w-full text-left px-3 py-2 text-red-600 hover:bg-red-50"
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      )} */}
+
+
                     </>
                   )}
                 </td>
@@ -379,65 +344,6 @@ export default function HolidayPage() {
         <HolidayCalendar holidays={filteredHolidays} year={year} month={month || new Date().getMonth() + 1} />
       )}
 
-
-      {/* ADD MODAL */}
-      {/* {addingHoliday && (
-        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
-          <div className="bg-white w-full max-w-3xl rounded-lg shadow-lg">
-            <div className="flex justify-between items-center p-4 border-b">
-              <h2 className="font-semibold">Add Holidays</h2>
-              <button onClick={() => setAddingHoliday(false)}>✕</button>
-            </div>
-
-            <div className="p-6 space-y-4">
-              {newHolidays.map((h, i) => (
-                <div key={i} className="grid grid-cols-5 gap-3">
-                  <input
-                    type="date"
-                    value={h.date}
-                    onChange={(e) => updateRow(i, "date", e.target.value)}
-                    className="border px-2 py-1 rounded col-span-2"
-                  />
-                  <input
-                    value={h.occasion}
-                    onChange={(e) =>
-                      updateRow(i, "occasion", e.target.value)
-                    }
-                    className="border px-2 py-1 rounded col-span-2"
-                    placeholder="Occasion"
-                  />
-                  {newHolidays.length > 1 && (
-                    <button
-                      onClick={() => removeRow(i)}
-                      className="bg-red-500 text-white rounded"
-                    >
-                      ✕
-                    </button>
-                  )}
-                </div>
-              ))}
-              <button onClick={addRow} className="text-blue-600">
-                + Add Row
-              </button>
-            </div>
-
-            <div className="flex justify-end gap-3 p-4 border-t">
-              <button
-                onClick={() => setAddingHoliday(false)}
-                className="px-4 py-2 bg-gray-200 rounded"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleAdd}
-                className="px-4 py-2 bg-blue-600 text-white rounded"
-              >
-                Save
-              </button>
-            </div>
-          </div>
-        </div>
-      )} */}
     </div>
   );
 }

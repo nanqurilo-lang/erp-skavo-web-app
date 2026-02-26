@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const API_BASE =  `${process.env.NEXT_PUBLIC_MAIN}`;
+const API_BASE = `${process.env.NEXT_PUBLIC_MAIN}`;
 
 type CompanyPayload = {
   companyName: string;

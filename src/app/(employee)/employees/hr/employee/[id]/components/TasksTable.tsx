@@ -6,7 +6,6 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { UserIcon } from "@heroicons/react/24/outline";
 import { deleteAPI, postAPI, putAPI } from "@/app/api/apiHelper";
-// import { getStorage } from "../../../../../lib/storage/storege";
 import TaskViewModal, { TaskForView } from "@/app/(dashboard)/work/project/components/TaskViewModal"; // adjust path if needed
 import { format } from "date-fns";
 
@@ -58,7 +57,7 @@ type StatusItem = {
     createdBy?: string;
 };
 
-const MAIN = process.env.NEXT_PUBLIC_MAIN ;
+const MAIN = process.env.NEXT_PUBLIC_MAIN;
 
 export default function TasksTable({ employeeId, }: { employeeId: string }) {
     const [tasks, setTasks] = useState<Task[]>([]);
@@ -426,15 +425,15 @@ export default function TasksTable({ employeeId, }: { employeeId: string }) {
                                             <td className="px-4 py-4 align-top">--</td>
 
                                             <td className="px-4 py-4 align-top">{t.startDate ?
-                                            //  new Date(t.startDate).toLocaleDateString() 
-                                            format( new Date(t.startDate), "dd-MM-yyyy")
-                                             : "--"}</td>
+                                                //  new Date(t.startDate).toLocaleDateString() 
+                                                format(new Date(t.startDate), "dd-MM-yyyy")
+                                                : "--"}</td>
 
                                             <td className={`px-4 py-4 align-top ${isOverdue ? "text-red-600" : ""}`}>
                                                 {t.noDueDate ? "--" : t.dueDate ?
-                                                //  new Date(t.dueDate).toLocaleDateString()
-                                                    format( new Date(t.dueDate), "dd-MM-yyyy")
-                                                  : "--"}
+                                                    //  new Date(t.dueDate).toLocaleDateString()
+                                                    format(new Date(t.dueDate), "dd-MM-yyyy")
+                                                    : "--"}
                                             </td>
 
                                             <td className="px-4 py-4 align-top">{minsToHuman(t.hoursLoggedMinutes ?? null)}</td>

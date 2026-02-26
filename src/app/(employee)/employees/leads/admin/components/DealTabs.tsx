@@ -46,7 +46,7 @@ type TagItem = {
 
 type TabKey = "files" | "followups" | "people" | "notes" | "comments" | "tags";
 
-const BASE_URL =  `${process.env.NEXT_PUBLIC_MAIN}`;
+const BASE_URL = `${process.env.NEXT_PUBLIC_MAIN}`;
 const UPLOADED_LOCAL_PATH = "/mnt/data/Screenshot 2025-11-22 120859.png";
 
 type DealTabsProps = {
@@ -922,7 +922,7 @@ export default function DealTabs({ dealId, deal, onDealUpdated }: DealTabsProps)
     const formatDate = (d?: string) => (d ?
         //  new Date(d).toLocaleDateString()
         format(new Date(d), "dd-MM-yyyy")
-          : "—");
+        : "—");
     const formatTime = (t?: string) => (t ? t : "—");
 
     // People modal search filter
@@ -1688,10 +1688,10 @@ export default function DealTabs({ dealId, deal, onDealUpdated }: DealTabsProps)
                                             >
                                                 <div className="text-sm text-gray-700">
                                                     {
-                                                    // new Date(
-                                                    //     c.createdAt
-                                                    // ).toLocaleDateString()
-                                                    format(new Date(c.createdAt), "dd-MM-yyyy")
+                                                        // new Date(
+                                                        //     c.createdAt
+                                                        // ).toLocaleDateString()
+                                                        format(new Date(c.createdAt), "dd-MM-yyyy")
                                                     }
                                                 </div>
                                                 <div className="text-sm text-gray-700">

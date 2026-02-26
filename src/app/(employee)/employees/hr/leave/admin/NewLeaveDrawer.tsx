@@ -163,17 +163,7 @@ export default function NewLeaveDrawer({ open, onClose, onSuccess }: Props) {
                 </select>
               </div>
 
-              {/* STATUS */}
-              {/* <div>
-                <label className="text-sm font-medium">Status *</label>
-                <select
-                  className="w-full mt-1 border rounded px-3 py-2"
-                  onChange={(e) => setForm({ ...form, status: e.target.value })}
-                >
-                  <option value="PENDING">Pending</option>
-                  <option value="APPROVED">Approved</option>
-                </select>
-              </div> */}
+
             </div>
 
             {/* DURATION */}

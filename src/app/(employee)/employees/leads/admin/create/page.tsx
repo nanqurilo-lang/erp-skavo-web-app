@@ -1274,16 +1274,7 @@ export function AddLeadModal({
             {FormContent}
           </div>
 
-          {/* sticky footer */}
-          {/* <div className="p-4 border-t bg-white sticky bottom-0">
-            <div className="flex items-center justify-between">
-              <div className="text-sm text-muted-foreground">Fields marked * are required</div>
-              <div className="flex items-center gap-3">
-                <button onClick={onClose} className="px-4 py-2 rounded-md border text-sm" disabled={submitting}>Cancel</button>
-                <button onClick={submit} className="px-4 py-2 rounded-md bg-sky-600 text-white text-sm" disabled={submitting}>{submitting ? "Saving..." : "Save"}</button>
-              </div>
-            </div>
-          </div> */}
+         
         </aside>
       </div>
 

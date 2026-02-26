@@ -170,7 +170,7 @@ export function AddLeadModal({
     companyAddress: "",
   });
 
-const countries = [
+  const countries = [
     "United States",
     "United Kingdom",
     "Canada",
@@ -486,32 +486,28 @@ const countries = [
             <input className="w-full border rounded-md px-3 py-2 text-sm" value={payload.postalCode} onChange={(e) => update("postalCode", e.target.value)} />
           </div>
 
-          {/* <div>
-            <label className="block text-xs text-left text-muted-foreground mb-1">Country</label>
-            <input className="w-full border rounded-md px-3 py-2 text-sm" value={payload.country} onChange={(e) => update("country", e.target.value)} />
-          </div> */}
 
 
 
-<div>
-  <label className="block text-xs text-left text-muted-foreground mb-1">
-    Country
-  </label>
+          <div>
+            <label className="block text-xs text-left text-muted-foreground mb-1">
+              Country
+            </label>
 
-  <select
-    className="w-full border rounded-md px-3 py-2 text-sm bg-white"
-    value={payload.country}
-    onChange={(e) => update("country", e.target.value)}
-  >
-    <option value="">-- Select Country --</option>
+            <select
+              className="w-full border rounded-md px-3 py-2 text-sm bg-white"
+              value={payload.country}
+              onChange={(e) => update("country", e.target.value)}
+            >
+              <option value="">-- Select Country --</option>
 
-    {countries.map((country) => (
-      <option key={country} value={country}>
-        {country}
-      </option>
-    ))}
-  </select>
-</div>
+              {countries.map((country) => (
+                <option key={country} value={country}>
+                  {country}
+                </option>
+              ))}
+            </select>
+          </div>
 
 
 
@@ -697,9 +693,9 @@ function LeadRow({
       <TableCell>
         <span className="text-sm">
           {lead.createdAt ?
-          //  new Date(lead.createdAt).toLocaleDateString() 
-          format (new Date(lead.createdAt), "dd-MM-yyyy")
-           : "—"}
+            //  new Date(lead.createdAt).toLocaleDateString() 
+            format(new Date(lead.createdAt), "dd-MM-yyyy")
+            : "—"}
         </span>
       </TableCell>
 
@@ -910,9 +906,7 @@ export default function LeadsAdminPage() {
     setSelectedAddedBy("All");
   };
 
-  //   const handleChangeToClient = (id: number) => {
-  //   router.push(`/clients/add?leadId=${id}`);
-  // };
+
 
   return (
     <main className="container mx-auto max-w-6xl px-4 py-8">
@@ -931,25 +925,6 @@ export default function LeadsAdminPage() {
 
           <Popover>
             <PopoverTrigger asChild>
-              {/* <div className="flex items-center  gap-4 cursor-pointer
-               border border-gray-300 px-3 py-2 rounded-md hover:border-slate-400 transition
-
-              ">
-                <div className="text-sm text-muted-foreground
-
-
-
-
-
-                ">Duration </div>
-                <div className="text-sm text-muted-foreground font-medium">
-                  {startDate && endDate
-                    ? `${new Date(startDate).toLocaleDateString()} to ${new Date(endDate).toLocaleDateString()}`
-                    : "dd-mm-yyyy "}
-                </div>
-              </div> */}
-
-
 
 
               <div className="flex items-center   gap-4 cursor-pointer
@@ -958,56 +933,21 @@ export default function LeadsAdminPage() {
               ">
                 <div className="text-sm text-muted-foreground
 
-
-
-
-
                 ">Duration </div>
                 <div className="text-sm text-muted-foreground  font-medium">
                   {startDate && endDate
                     ? `${
-                      // new Date(startDate).toLocaleDateString()
-                      format(new Date(startDate), "dd-MM-yyyy")
+                    // new Date(startDate).toLocaleDateString()
+                    format(new Date(startDate), "dd-MM-yyyy")
                     } to ${
-                      // new Date(endDate).toLocaleDateString()
-                      format(new Date(endDate), "dd-MM-yyyy")
+                    // new Date(endDate).toLocaleDateString()
+                    format(new Date(endDate), "dd-MM-yyyy")
                     }`
                     : <div className="flex items-center gap-3">
                       StartDate to EndDate <CalendarIcon className="w-4 h-4 text-muted-foreground" />
                     </div>}
                 </div>
               </div>
-
-
-
-              {/* <div className="flex items-center gap-3">
-              <span className="text-sm text-gray-600">Duration</span>
-
-              <Input
-                type="date"
-                value={durationFrom ?? ""}
-                onChange={(e) => {
-                  setDurationFrom(e.target.value || null);
-                  setCurrentPage(1);
-                }}
-                className="w-40"
-              />
-
-              <span className="text-gray-400 text-sm">to</span>
-
-              <Input
-                type="date"
-                value={durationTo ?? ""}
-                onChange={(e) => {
-                  setDurationTo(e.target.value || null);
-                  setCurrentPage(1);
-                }}
-                className="w-40"
-              />
-            </div> */}
-
-
-
 
             </PopoverTrigger>
 
@@ -1062,9 +1002,6 @@ export default function LeadsAdminPage() {
             <button onClick={() => setDrawerOpen(true)} className="flex items-center gap-2 text-sm text-muted-foreground 
             border border-gray-300 px-3 py-2 rounded-md hover:border-slate-400 transition
 
-
-
-
  hover:text-slate-700">
               <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M6 12h12M10 18h4" /></svg>
               <span className="hidden sm:inline">Filters</span>
@@ -1073,9 +1010,6 @@ export default function LeadsAdminPage() {
           </div>
         </div>
       </div>
-
-
-
 
 
 
@@ -1226,20 +1160,7 @@ export default function LeadsAdminPage() {
         />
       )}
 
-      {/* Edit modal: fetch lead and render edit UI (reusing your EditModal from earlier file) */}
 
-
-
-      {/* {editModalLeadId !== null && (
-        <EditLeadModal
-          leadId={editModalLeadId}
-          onClose={() => setEditModalLeadId(null)}
-          onSaved={async () => {
-            setEditModalLeadId(null);
-            await mutate();
-          }}
-        />
-      )} */}
     </main>
   );
 }

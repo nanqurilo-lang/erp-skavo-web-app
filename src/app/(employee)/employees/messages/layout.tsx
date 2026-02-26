@@ -33,7 +33,7 @@ export default function MessagesLayout({
   children: React.ReactNode;
 }) {
   const router = useRouter();
-  const BASE_URL =  `${process.env.NEXT_PUBLIC_MAIN}`;
+  const BASE_URL = `${process.env.NEXT_PUBLIC_MAIN}`;
   const API_PATH = "/employee/all";
 
   const [employees, setEmployees] = useState<Employee[]>([]);
@@ -99,8 +99,7 @@ export default function MessagesLayout({
           const text = await res.text().catch(() => "");
           setEmployees([]);
           setError(
-            `Failed to load employees: ${res.status} ${res.statusText}${
-              text ? ` — ${text}` : ""
+            `Failed to load employees: ${res.status} ${res.statusText}${text ? ` — ${text}` : ""
             }`
           );
           setLoading(false);

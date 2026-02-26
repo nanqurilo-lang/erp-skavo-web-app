@@ -28,7 +28,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import EmergencyContactsSection from "./EmergencyContactsSection";
 
-const API_BASE =  `${process.env.NEXT_PUBLIC_MAIN}`;
+const API_BASE = `${process.env.NEXT_PUBLIC_MAIN}`;
 
 type ProfilePayload = {
   employeeId?: string;
@@ -713,13 +713,13 @@ export default function ProfileForm() {
 
         {/* Emergency Details Section */}
 
-<EmergencyContactsSection
-  employeeId={profile.employeeId}
-/>
+        <EmergencyContactsSection
+          employeeId={profile.employeeId}
+        />
 
 
         {/* Documents Section (ADDED) */}
-  
+
         <div className="mt-6 text-center text-sm text-slate-500">
           <Link href="/settings" className="underline">Back to settings</Link>
         </div>

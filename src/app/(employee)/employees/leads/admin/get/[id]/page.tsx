@@ -90,7 +90,7 @@ type Note = {
   updatedAt?: string;
 };
 
-const BASE =  `${process.env.NEXT_PUBLIC_MAIN}`; // change if needed
+const BASE = `${process.env.NEXT_PUBLIC_MAIN}`; // change if needed
 const CREATE_URL = `${BASE}/deals`; // adjust if your create endpoint differs
 const EMP_API = `${BASE}/employee/all?page=0&size=20`;
 const CAT_API = `${BASE}/deals/dealCategory`;
@@ -124,16 +124,16 @@ function fmt(v?: string | null) {
   return v && v !== "null" ? v : "--";
 }
 function fmtDate(d?: string | null) {
-  return d ? 
-  // new Date(d).toLocaleString()
-  format(new Date(d), "dd-MM-yyyy HH:mm")
-   : "--";
+  return d ?
+    // new Date(d).toLocaleString()
+    format(new Date(d), "dd-MM-yyyy HH:mm")
+    : "--";
 }
 function fmtShortDate(d?: string | null) {
-  return d ? 
-  // new Date(d).toLocaleDateString()
-  format(new Date(d), "dd-MM-yyyy")
-   : "--";
+  return d ?
+    // new Date(d).toLocaleDateString()
+    format(new Date(d), "dd-MM-yyyy")
+    : "--";
 }
 function fmtCurrency(n?: number | null) {
   if (n == null || isNaN(Number(n))) return "--";
@@ -1328,10 +1328,7 @@ export default function LeadDetailPage() {
     router.push(`/leads/admin/edit/${params.id}`);
   };
 
-  // const handleMove = () => {
-  // setMenuOpen(false);
-  //   router.push(`/clients/new`);
-  // };
+
 
 
   const convertToClient = async () => {
@@ -1506,35 +1503,10 @@ export default function LeadDetailPage() {
           <Button variant="ghost" size="icon" onClick={() => router.back()} aria-label="Back">
             {/* <ArrowLeft className="h-5 w-5" /> */}
           </Button>
-          {/* <div>
-            <h1 className="text-2xl md:text-3xl font-semibold">{data?.name ?? "—"}</h1>
-            <p className="text-sm text-muted-foreground mt-1">Detailed information about the selected lead.</p>
-          </div> */}
+
         </div>
 
-        {/* Tabs */}
-        {/* <div className="mb-4 border-b bg-white rounded-t">
-          <nav className="flex items-center gap-6 px-4">
-            <button
-              onClick={() => setActiveTab("profile")}
-              className={`py-3 text-sm ${activeTab === "profile" ? "border-b-2 border-sky-600 text-sky-600" : "text-muted-foreground"}`}
-            >
-              Profile
-            </button>
-            <button
-              onClick={() => setActiveTab("deals")}
-              className={`py-3 text-sm ${activeTab === "deals" ? "border-b-2 border-sky-600 text-sky-600" : "text-muted-foreground"}`}
-            >
-              Deals
-            </button>
-            <button
-              onClick={() => setActiveTab("notes")}
-              className={`py-3 text-sm ${activeTab === "notes" ? "border-b-2 border-sky-600 text-sky-600" : "text-muted-foreground"}`}
-            >
-              Notes
-            </button>
-          </nav>
-        </div> */}
+
 
         {/* Card */}
         <Card className="p-6">
@@ -1557,193 +1529,115 @@ export default function LeadDetailPage() {
               <div className="flex items-start justify-between mb-6">
                 <h3 className="text-lg font-semibold">{activeTab === "profile" ? "Profile Information" : activeTab === "deals" ? "Deals" : "Notes"}</h3>
 
-                {/* <div className="relative" ref={menuRef}>
-                  <button
-                    onClick={() => setMenuOpen((s) => !s)}
-                    className="p-2 rounded hover:bg-slate-100"
-                    aria-label="More actions"
-                  >
-                    <svg className="w-5 h-5 text-muted-foreground" viewBox="0 0 24 24" fill="currentColor">
-                      <circle cx="5" cy="12" r="1.5" />
-                      <circle cx="12" cy="12" r="1.5" />
-                      <circle cx="19" cy="12" r="1.5" />
-                    </svg>
-                  </button>
 
-                
-                </div> */}
               </div>
 
               {/* PROFILE TAB */}
               {/* {activeTab === "profile" && ( */}
-                <>
-                  <div className="rounded-lg border p-4">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <dl className="hidden md:block md:col-span-1 space-y-4 text-sm text-muted-foreground">
-                        <dt>Name</dt>
-                        <dt>Email</dt>
-                        <dt>Lead Owner</dt>
-                        <dt>Source</dt>
-                        <dt>Company Name</dt>
-                        <dt>Website</dt>
-                        <dt>Mobile</dt>
-                        <dt>Office Phone Number</dt>
-                        <dt>City</dt>
-                        <dt>State</dt>
-                        <dt>Country</dt>
-                        <dt>Postal Code</dt>
-                        <dt>Address</dt>
-                      </dl>
+              <>
+                <div className="rounded-lg border p-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <dl className="hidden md:block md:col-span-1 space-y-4 text-sm text-muted-foreground">
+                      <dt>Name</dt>
+                      <dt>Email</dt>
+                      <dt>Lead Owner</dt>
+                      <dt>Source</dt>
+                      <dt>Company Name</dt>
+                      <dt>Website</dt>
+                      <dt>Mobile</dt>
+                      <dt>Office Phone Number</dt>
+                      <dt>City</dt>
+                      <dt>State</dt>
+                      <dt>Country</dt>
+                      <dt>Postal Code</dt>
+                      <dt>Address</dt>
+                    </dl>
 
-                      <div className="md:col-span-2">
-                        <div className="grid gap-y-3">
-                          <div className="flex items-start gap-6">
-                            <div className="w-48 md:hidden text-sm text-muted-foreground">Name</div>
-                            <div className="text-sm">{fmt(data?.name)}</div>
-                          </div>
+                    <div className="md:col-span-2">
+                      <div className="grid gap-y-3">
+                        <div className="flex items-start gap-6">
+                          <div className="w-48 md:hidden text-sm text-muted-foreground">Name</div>
+                          <div className="text-sm">{fmt(data?.name)}</div>
+                        </div>
 
-                          <div className="flex items-start gap-6">
-                            <div className="w-48 md:hidden text-sm text-muted-foreground">Email</div>
-                            <div className="text-sm">{fmt(data?.email)}</div>
-                          </div>
+                        <div className="flex items-start gap-6">
+                          <div className="w-48 md:hidden text-sm text-muted-foreground">Email</div>
+                          <div className="text-sm">{fmt(data?.email)}</div>
+                        </div>
 
-                          <div className="flex items-start gap-6">
-                            <div className="w-48 md:hidden text-sm text-muted-foreground">Lead Owner</div>
-                            <div className="text-sm">{data?.leadOwnerMeta?.name ?? data?.leadOwner ?? "--"}</div>
-                          </div>
+                        <div className="flex items-start gap-6">
+                          <div className="w-48 md:hidden text-sm text-muted-foreground">Lead Owner</div>
+                          <div className="text-sm">{data?.leadOwnerMeta?.name ?? data?.leadOwner ?? "--"}</div>
+                        </div>
 
-                          <div className="flex items-start gap-6">
-                            <div className="w-48 md:hidden text-sm text-muted-foreground">Source</div>
-                            <div className="text-sm">{fmt(data?.leadSource)}</div>
-                          </div>
+                        <div className="flex items-start gap-6">
+                          <div className="w-48 md:hidden text-sm text-muted-foreground">Source</div>
+                          <div className="text-sm">{fmt(data?.leadSource)}</div>
+                        </div>
 
-                          <div className="flex items-start gap-6">
-                            <div className="w-48 md:hidden text-sm text-muted-foreground">Company Name</div>
-                            <div className="text-sm">{fmt(data?.companyName)}</div>
-                          </div>
+                        <div className="flex items-start gap-6">
+                          <div className="w-48 md:hidden text-sm text-muted-foreground">Company Name</div>
+                          <div className="text-sm">{fmt(data?.companyName)}</div>
+                        </div>
 
-                          <div className="flex items-start gap-6">
-                            <div className="w-48 md:hidden text-sm text-muted-foreground">Website</div>
-                            <div className="text-sm">{fmt((data as any)?.officialWebsite)}</div>
-                          </div>
+                        <div className="flex items-start gap-6">
+                          <div className="w-48 md:hidden text-sm text-muted-foreground">Website</div>
+                          <div className="text-sm">{fmt((data as any)?.officialWebsite)}</div>
+                        </div>
 
-                          <div className="flex items-start gap-6">
-                            <div className="w-48 md:hidden text-sm text-muted-foreground">Mobile</div>
-                            <div className="text-sm">{fmt(data?.mobileNumber)}</div>
-                          </div>
+                        <div className="flex items-start gap-6">
+                          <div className="w-48 md:hidden text-sm text-muted-foreground">Mobile</div>
+                          <div className="text-sm">{fmt(data?.mobileNumber)}</div>
+                        </div>
 
-                          <div className="flex items-start gap-6">
-                            <div className="w-48 md:hidden text-sm text-muted-foreground">Office Phone Number</div>
-                            <div className="text-sm">{fmt(data?.officePhone)}</div>
-                          </div>
+                        <div className="flex items-start gap-6">
+                          <div className="w-48 md:hidden text-sm text-muted-foreground">Office Phone Number</div>
+                          <div className="text-sm">{fmt(data?.officePhone)}</div>
+                        </div>
 
-                          <div className="flex items-start gap-6">
-                            <div className="w-48 md:hidden text-sm text-muted-foreground">City</div>
-                            <div className="text-sm">{fmt(data?.city)}</div>
-                          </div>
+                        <div className="flex items-start gap-6">
+                          <div className="w-48 md:hidden text-sm text-muted-foreground">City</div>
+                          <div className="text-sm">{fmt(data?.city)}</div>
+                        </div>
 
-                          <div className="flex items-start gap-6">
-                            <div className="w-48 md:hidden text-sm text-muted-foreground">State</div>
-                            <div className="text-sm">{fmt(data?.state)}</div>
-                          </div>
+                        <div className="flex items-start gap-6">
+                          <div className="w-48 md:hidden text-sm text-muted-foreground">State</div>
+                          <div className="text-sm">{fmt(data?.state)}</div>
+                        </div>
 
-                          <div className="flex items-start gap-6">
-                            <div className="w-48 md:hidden text-sm text-muted-foreground">Country</div>
-                            <div className="text-sm">{fmt(data?.country)}</div>
-                          </div>
+                        <div className="flex items-start gap-6">
+                          <div className="w-48 md:hidden text-sm text-muted-foreground">Country</div>
+                          <div className="text-sm">{fmt(data?.country)}</div>
+                        </div>
 
-                          <div className="flex items-start gap-6">
-                            <div className="w-48 md:hidden text-sm text-muted-foreground">Postal Code</div>
-                            <div className="text-sm">{fmt(data?.postalCode)}</div>
-                          </div>
+                        <div className="flex items-start gap-6">
+                          <div className="w-48 md:hidden text-sm text-muted-foreground">Postal Code</div>
+                          <div className="text-sm">{fmt(data?.postalCode)}</div>
+                        </div>
 
-                          <div className="flex items-start gap-6">
-                            <div className="w-48 md:hidden text-sm text-muted-foreground">Address</div>
-                            <div className="text-sm">{fmt(data?.companyAddress)}</div>
-                          </div>
+                        <div className="flex items-start gap-6">
+                          <div className="w-48 md:hidden text-sm text-muted-foreground">Address</div>
+                          <div className="text-sm">{fmt(data?.companyAddress)}</div>
                         </div>
                       </div>
                     </div>
                   </div>
+                </div>
 
-                  <div className="mt-6 text-sm text-muted-foreground grid md:grid-cols-2 gap-2">
-                    <div>Created: {fmtDate(data?.createdAt)}</div>
-                    <div className="text-right">
-                      Status: <Badge variant="secondary">{data?.status ?? "--"}</Badge>
-                    </div>
+                <div className="mt-6 text-sm text-muted-foreground grid md:grid-cols-2 gap-2">
+                  <div>Created: {fmtDate(data?.createdAt)}</div>
+                  <div className="text-right">
+                    Status: <Badge variant="secondary">{data?.status ?? "--"}</Badge>
                   </div>
-                </>
-              {/* )} */}
+                </div>
+              </>
 
-              {/* DEALS TAB (kept intact) */}
-             
 
-              {/* NOTES TAB (updated: popup fixed positioning with no scroll lag) */}
-           
+
             </div>
           )}
         </Card>
       </div>
-
-      {/* Edit Modal */}
-      {/* {editOpen && data && (
-        <EditModal
-          lead={data}
-          onClose={() => setEditOpen(false)}
-          onSaved={async () => {
-            setEditOpen(false);
-            await mutate();
-          }}
-        />
-      )} */}
-
-      {/* Add Deal Modal */}
-      {/* {addDealOpen && data && (
-        <AddDealModal
-          lead={data}
-          onClose={() => setAddDealOpen(false)}
-          onCreated={handleCreatedDeal}
-          possibleAgents={agents}
-          possibleWatchers={watchers}
-        />
-      )} */}
-
-      {/* Deal View Modal
-      {viewDeal && (
-        <DealViewModal
-          deal={viewDeal}
-          lead={viewLead}
-          onClose={() => {
-            setViewDeal(null);
-            setViewLead(null);
-          }}
-        />
-      )} */}
-
-      {/* Notes Add/Edit Modal */}
-      {/* {noteModalOpen && data && (
-        <AddEditNoteModal
-          leadId={data.id}
-          initial={editNote}
-          onClose={() => {
-            setNoteModalOpen(false);
-            setEditNote(null);
-          }}
-          onSaved={(saved?: Note) => {
-            handleNoteSaved(saved);
-          }}
-        />
-      )} */}
-
-      {/* Notes View Modal */}
-      {/* {viewNote && (
-        <ViewNoteModal
-          note={viewNote}
-          onClose={() => {
-            setViewNote(null);
-          }}
-        />
-      )} */}
     </main>
   );
 }

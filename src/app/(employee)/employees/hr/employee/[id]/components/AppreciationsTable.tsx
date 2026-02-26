@@ -90,35 +90,17 @@ export default function AppreciationsTable({
                                     </span>
                                 </td>
 
-                                {/* Summary */}
-                                {/* <td className="px-4 py-3 text-gray-600">
-                                    {item.summary || "--"}
-                                </td> */}
 
                                 {/* Date */}
                                 <td className="px-4 py-3">
                                     {item.date
-                                        ? 
+                                        ?
                                         // new Date(item.date).toLocaleDateString()
-                                        format( new Date(item.date),"dd-MM-yyyy")
+                                        format(new Date(item.date), "dd-MM-yyyy")
                                         : "--"}
                                 </td>
 
-                                {/* Photo */}
-                                {/* <td className="px-4 py-3">
-                                    {item.photoUrl ? (
-                                        <a
-                                            href={item.photoUrl}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="text-blue-600 underline"
-                                        >
-                                            View
-                                        </a>
-                                    ) : (
-                                        <span className="text-gray-400">--</span>
-                                    )}
-                                </td> */}
+
                             </tr>
                         ))}
                     </tbody>
