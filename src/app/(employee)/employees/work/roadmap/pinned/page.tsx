@@ -123,11 +123,11 @@ export default function PinnedProjectsPage() {
   }
 
   const handleView = (projectId: number) => {
-    
+
   }
 
   const handleEdit = (projectId: number) => {
- 
+
   }
 
   const handlePin = async (projectId: number) => {
@@ -162,11 +162,11 @@ export default function PinnedProjectsPage() {
   }
 
   const handleArchive = (projectId: number) => {
-  setProjects(projects.map((p) => (p.id === projectId ? { ...p, isArchived: !p.isArchived } : p)))
+    setProjects(projects.map((p) => (p.id === projectId ? { ...p, isArchived: !p.isArchived } : p)))
   }
 
   const handleDelete = (projectId: number) => {
-  setProjects(projects.filter((p) => p.id !== projectId))
+    setProjects(projects.filter((p) => p.id !== projectId))
   }
 
   const getStatusColor = (status?: string) => {
@@ -242,8 +242,8 @@ export default function PinnedProjectsPage() {
         </TableCell>
         <TableCell>
           <span className="text-sm">{
-          // new Date(project.deadline).toLocaleDateString()
-          format(new Date(project.deadline), "dd-MM-yyyy")
+            // new Date(project.deadline).toLocaleDateString()
+            format(new Date(project.deadline), "dd-MM-yyyy")
           }</span>
         </TableCell>
         <TableCell>
@@ -273,17 +273,17 @@ export default function PinnedProjectsPage() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-48">
               <DropdownMenuItem onClick={() => handleView(project.id)} className="gap-2">
-                            <Eye className="h-4 w-4" />
-                            <Link href={`/work/project/${project.id}`} >
-                      View
-                      </Link>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem asChild className="gap-2">
-  <Link href={`/work/project/${project.id}/update`} className="flex items-center gap-2">
-    <Edit2 className="h-4 w-4" />
-    Edit
-  </Link>
-</DropdownMenuItem>
+                <Eye className="h-4 w-4" />
+                <Link href={`/work/project/${project.id}`} >
+                  View
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild className="gap-2">
+                <Link href={`/work/project/${project.id}/update`} className="flex items-center gap-2">
+                  <Edit2 className="h-4 w-4" />
+                  Edit
+                </Link>
+              </DropdownMenuItem>
               <DropdownMenuItem onClick={() => handlePin(project.id)} className="gap-2">
                 <Pin className="h-4 w-4" />
                 Unpin Project

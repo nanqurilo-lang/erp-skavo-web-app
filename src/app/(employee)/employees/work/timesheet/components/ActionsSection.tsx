@@ -30,22 +30,13 @@ const ActionsSection: React.FC<ActionsSectionProps> = ({
 }) => {
     return (
         <div className="flex items-center justify-between mb-4">
-            {/* <div>
-                <Button className="bg-blue-600 text-white" onClick={openLogForm}>
-                    + Log Time
-                </Button>
-            </div> */}
 
-
-                    {viewMode === "weekly"  ?<h1 className="text-xl font-semibold">Weekly Timesheet</h1>:<div>
+            {viewMode === "weekly" ? <h1 className="text-xl font-semibold">Weekly Timesheet</h1> : <div>
                 <Button className="bg-blue-600 text-white" onClick={openLogForm}>
                     + Log Time
                 </Button>
             </div>
-}
-
-
-
+            }
             <div className="flex items-center gap-3">
                 <div className="flex items-center gap-2 border rounded px-2 py-1 bg-white">
                     <Search className="w-4 h-4 text-gray-400" />
@@ -117,16 +108,7 @@ const ActionsSection: React.FC<ActionsSectionProps> = ({
                         <Calendar className="w-4 h-4 text-gray-600" />
                     </button>
 
-                    {/* <button
-                        onClick={() => {
-                            // future: user menu
-                         //   console.log("User icon clicked");
-                        }}
-                        className="px-3 py-2 hover:bg-gray-50"
-                        title="User"
-                    >
-                        <User className="w-4 h-4 text-gray-600" />
-                    </button> */}
+
                     <button
                         onClick={() => setViewMode("TimesheetSummary")}
                         className={`px-3 py-2 hover:bg-gray-50 ${viewMode === "TimesheetSummary" ? "bg-violet-600 text-white" : ""

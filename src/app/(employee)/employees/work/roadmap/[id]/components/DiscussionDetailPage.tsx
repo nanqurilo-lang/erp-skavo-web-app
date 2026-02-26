@@ -154,7 +154,7 @@ export default function DiscussionDetailPage({
 
     const client = new Client({
       webSocketFactory: () => socket,
-      debug: () => {},
+      debug: () => { },
       connectHeaders: {
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       },
@@ -185,7 +185,7 @@ export default function DiscussionDetailPage({
 
 
 
-/* ================= SEND REPLY ================= */
+  /* ================= SEND REPLY ================= */
   const sendReply = async () => {
     if (!reply && !file) return;
 
@@ -460,7 +460,7 @@ export default function DiscussionDetailPage({
       {/* REPLY BOX */}
       <div className="border-t px-6 py-4">
 
-                  <h1>Reply *</h1>
+        <h1>Reply *</h1>
 
         <textarea
           value={reply}
@@ -468,7 +468,7 @@ export default function DiscussionDetailPage({
           className="border rounded px-3 py-2 w-full mb-3 min-h-[80px]"
         />
 
- <h1>Add File *</h1>
+        <h1>Add File *</h1>
         <label className="border border-dashed rounded flex flex-col items-center py-6 cursor-pointer text-gray-400 mb-4">
           <Upload />
           <span className="text-sm mt-2">

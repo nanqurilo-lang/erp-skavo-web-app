@@ -48,9 +48,9 @@ type Payment = {
   receiptFileUrl?: string | null;
 };
 
-const BASE_URL =  `${process.env.NEXT_PUBLIC_MAIN}`;
+const BASE_URL = `${process.env.NEXT_PUBLIC_MAIN}`;
 
-export default  function PaymentsSection({ 
+export default function PaymentsSection({
   projectId,
   onAdd,
   onSearch,
@@ -145,8 +145,8 @@ export default  function PaymentsSection({
             typeof p.amount === "number"
               ? p.amount
               : p.amount
-              ? Number(p.amount)
-              : undefined,
+                ? Number(p.amount)
+                : undefined,
           currency: p.currency ?? undefined,
           paidOn: p.paymentDate ?? undefined,
           paymentGateway: p.paymentGateway?.name ?? undefined,
@@ -220,7 +220,7 @@ export default  function PaymentsSection({
     if (onAdd) {
       try {
         onAdd();
-      } catch {}
+      } catch { }
     }
     // prefill client if we have clientId
     setClientField(projectId ? String(projectId) : clientField);

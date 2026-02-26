@@ -288,10 +288,10 @@ export default function TaskViewModal({
 
   if (!open || !task) return null;
 
-  const fmtDate = (d?: string | null) => (d ? 
+  const fmtDate = (d?: string | null) => (d ?
     // new Date(d).toLocaleDateString()
     format(new Date(d), "dd-MM-yyyy")
-     : "--");
+    : "--");
   const fmtDateTime = (d?: string | null) => (d ? new Date(d).toLocaleString() : "--");
   const fmtShortDate = (d?: string | null) => {
     if (!d) return "--";
@@ -335,8 +335,8 @@ export default function TaskViewModal({
     setEtStatus(task.taskStage?.name ?? "Doing");
     setEtAssignedTo(
       (task.assignedEmployees && task.assignedEmployees.length && task.assignedEmployees[0].name) ??
-        (task.assignedEmployeeIds && task.assignedEmployeeIds[0]) ??
-        ""
+      (task.assignedEmployeeIds && task.assignedEmployeeIds[0]) ??
+      ""
     );
     setEtDescription(task.description ?? "");
     setEtLabel((task.labels && task.labels[0]?.name) ?? "");
@@ -719,8 +719,8 @@ export default function TaskViewModal({
                   {task.assignedEmployees && task.assignedEmployees.length
                     ? task.assignedEmployees.map((a) => a.name).join(", ")
                     : task.assignedEmployeeIds && task.assignedEmployeeIds.length
-                    ? task.assignedEmployeeIds.join(", ")
-                    : "--"}
+                      ? task.assignedEmployeeIds.join(", ")
+                      : "--"}
                 </div>
 
                 <div className="text-gray-500">Project Code</div>
@@ -903,15 +903,15 @@ export default function TaskViewModal({
                             {subtaskMenuOpen && (
                               <div ref={subtaskMenuRef} className="absolute right-0 top-8 w-40 bg-white border rounded-lg shadow-md p-1 z-50">
                                 <button onClick={onSubtaskView} className="w-full text-left px-3 py-2 hover:bg-gray-100 text-sm flex items-center gap-2">
-                                  <svg className="w-4 h-4 text-gray-600" viewBox="0 0 24 24" fill="none"><path d="M12 5c-7 0-11 7-11 7s4 7 11 7 11-7 11-7-4-7-11-7z" stroke="currentColor" strokeWidth="1.2"/></svg>
+                                  <svg className="w-4 h-4 text-gray-600" viewBox="0 0 24 24" fill="none"><path d="M12 5c-7 0-11 7-11 7s4 7 11 7 11-7 11-7-4-7-11-7z" stroke="currentColor" strokeWidth="1.2" /></svg>
                                   View
                                 </button>
                                 <button onClick={onSubtaskEdit} className="w-full text-left px-3 py-2 hover:bg-gray-100 text-sm flex items-center gap-2">
-                                  <svg className="w-4 h-4 text-gray-600" viewBox="0 0 24 24" fill="none"><path d="M3 21l3-1 11-11 2 2-11 11-1 3H3z" stroke="currentColor" strokeWidth="1.2"/></svg>
+                                  <svg className="w-4 h-4 text-gray-600" viewBox="0 0 24 24" fill="none"><path d="M3 21l3-1 11-11 2 2-11 11-1 3H3z" stroke="currentColor" strokeWidth="1.2" /></svg>
                                   Edit
                                 </button>
                                 <button onClick={onSubtaskDelete} className="w-full text-left px-3 py-2 hover:bg-gray-100 text-sm flex items-center gap-2 text-red-600">
-                                  <svg className="w-4 h-4 text-red-600" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M8 6v12a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V6M10 6V4a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v2" stroke="currentColor" strokeWidth="1.2"/></svg>
+                                  <svg className="w-4 h-4 text-red-600" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M8 6v12a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V6M10 6V4a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v2" stroke="currentColor" strokeWidth="1.2" /></svg>
                                   Delete
                                 </button>
                               </div>
@@ -947,7 +947,7 @@ export default function TaskViewModal({
                                     // eslint-disable-next-line @next/next/no-img-element
                                     <img src={row.employee.profileUrl} alt={row.employee.name} className="w-full h-full object-cover" />
                                   ) : (
-                                    <span className="text-xs text-gray-600">{row.employee.name.split(" ").map(n=>n[0]).join("")}</span>
+                                    <span className="text-xs text-gray-600">{row.employee.name.split(" ").map(n => n[0]).join("")}</span>
                                   )}
                                 </div>
                                 <div>

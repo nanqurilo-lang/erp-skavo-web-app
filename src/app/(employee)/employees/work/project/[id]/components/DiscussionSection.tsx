@@ -290,14 +290,6 @@ export default function DiscussionSection({
                 {d.category.categoryName}
               </span>
 
-              {/* <Trash2
-                size={16}
-                className="text-red-500 cursor-pointer"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  deleteDiscussion(d.id);
-                }}
-              /> */}
             </div>
           </div>
         );
@@ -420,11 +412,7 @@ export default function DiscussionSection({
                   />
                   {c.categoryName}
                 </div>
-                {/* <Trash2
-                  size={14}
-                  className="text-red-500 cursor-pointer"
-                  onClick={() => deleteCategory(c.id)}
-                /> */}
+               
               </div>
             ))}
 

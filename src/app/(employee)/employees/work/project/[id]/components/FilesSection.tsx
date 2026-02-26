@@ -267,12 +267,7 @@ export default function ProjectDocuments({
                   >
                     View
                   </button>
-                  {/* <button
-                    className="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-gray-50"
-                    onClick={() => handleDelete(f.id)}
-                  >
-                    Delete
-                  </button> */}
+                 
                 </div>
               )}
             </div>

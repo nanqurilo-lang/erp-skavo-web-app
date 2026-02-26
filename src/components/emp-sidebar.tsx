@@ -72,23 +72,7 @@ export function EAppSidebar() {
             </SidebarMenu>
           </SidebarGroup>
 
-          {/* Leads (collapsible) */}
-          {/* <SidebarGroup>
-            <div
-              role="button"
-              className="flex items-center justify-between w-full cursor-pointer px-3"
-              onClick={() => toggleGroup("leads")}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") toggleGroup("leads");
-              }}
-              tabIndex={0}
-              aria-expanded={!!openGroups.leads}
-            >
-              <SidebarGroupLabel className=" text-white">Leads</SidebarGroupLabel>
-              <Chevron open={!!openGroups.leads} />
-            </div> */}
 
-          {/* {openGroups.leads ? ( */}
           {/* <SidebarMenu> */}
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
@@ -98,17 +82,7 @@ export function EAppSidebar() {
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
-          {/* <SidebarMenuItem>
-                  <SidebarMenuButton asChild>
-                    <Link href="/deals/get">
-                      <Briefcase className="size-5" />
-                      <span>Deals</span>
-                    </Link>
-                  </SidebarMenuButton> */}
-          {/* </SidebarMenuItem>
-              </SidebarMenu> */}
-          {/* //   ) : null} */}
-          {/* // </SidebarGroup> */}
+
 
           {/* Work (collapsible) */}
           <SidebarGroup>
@@ -246,9 +220,7 @@ export function EAppSidebar() {
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
-          {/* </SidebarMenu> */}
-          {/* ) : null} */}
-          {/* </SidebarGroup> */}
+
         </SidebarContent>
 
         <SidebarFooter className="bg-[#15173a] text-white">

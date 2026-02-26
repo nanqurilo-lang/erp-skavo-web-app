@@ -76,7 +76,7 @@ export default function ProjectMembersTableFetch({
 
       const url = `/projects/${projectId}`;
       const full = `${MAIN}/projects/${projectId}`;
-    
+
       const data = await api.get(full);
 
       setProject(data);
@@ -212,12 +212,7 @@ export default function ProjectMembersTableFetch({
 
       {/* Top Controls */}
       <div className="flex justify-between mb-4">
-        {/* <button
-          onClick={() => setShowAddModal(true)}
-          className="bg-blue-600 text-white px-4 py-2 rounded"
-        >
-          + Add Project Members
-        </button> */}
+
 
         <div className="flex gap-3">
           <input
@@ -277,12 +272,7 @@ export default function ProjectMembersTableFetch({
 
                 {/* Role */}
                 <td className="px-4 py-4">
-                  {/* <div className="flex items-center gap-2 text-sm"> */}
-                  {/* <input
-                    type="radio"
-                    checked={project?.projectAdminId === m.employeeId}
-                    onChange={() => handleMakeAdmin(m.employeeId)}
-                  /> */}
+
                   <span className="ml-1">Project Admin</span>
 
                   {project?.projectAdminId === m.employeeId && (
@@ -296,16 +286,7 @@ export default function ProjectMembersTableFetch({
                   )}
                 </td>
 
-                {/* Remove */}
-                {/* <td className="px-4 py-4">
-                  <button
-                    onClick={() => handleRemove(m.employeeId)}
-                    disabled={actionLoadingId === m.employeeId}
-                    className="text-red-600"
-                  >
-                    {actionLoadingId === m.employeeId ? "Removing…" : "Delete"}
-                  </button>
-                </td> */}
+
               </tr>
             ))}
 
@@ -319,42 +300,6 @@ export default function ProjectMembersTableFetch({
           </tbody>
         </table>
       )}
-
-      {/* ADD MODAL */}
-      {/* {showAddModal && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded w-full max-w-md">
-            <h3 className="text-lg font-semibold mb-4">Add Project Members</h3>
-
-            <input
-              className="border px-3 py-2 w-full rounded"
-              placeholder="EMP-015, EMP-010"
-              value={newMemberInput}
-              onChange={(e) => setNewMemberInput(e.target.value)}
-            />
-
-            <div className="text-xs text-gray-500 mt-1">
-              Example: EMP-015, EMP-010
-            </div>
-
-            <div className="flex justify-end gap-3 mt-4">
-              <button
-                className="px-4 py-2 border rounded"
-                onClick={() => setShowAddModal(false)}
-              >
-                Cancel
-              </button>
-
-              <button
-                className="px-4 py-2 bg-blue-600 text-white rounded"
-                onClick={handleAssign}
-              >
-                Add
-              </button>
-            </div>
-          </div>
-        </div>
-      )} */}
     </div>
   );
 }

@@ -346,17 +346,7 @@ export default function TasksTable({ projectId }: { projectId: number }) {
 
       {/* header */}
       <div className="flex items-center justify-between mb-4">
-        {/* <div className="flex items-center gap-4">
-          <button
-            onClick={() => {
-              setForm({ ...emptyForm, projectId });
-              setShowCreate(true);
-            }}
-            className="bg-blue-600 text-white px-4 py-2 rounded shadow-sm hover:bg-blue-700"
-          >
-            + Add Task
-          </button>
-        </div> */}
+
 
         <div className="flex items-center gap-3">
           <input
@@ -419,17 +409,17 @@ export default function TasksTable({ projectId }: { projectId: number }) {
 
                       <td className="px-4 py-4 align-top">--</td>
 
-                      <td className="px-4 py-4 align-top">{t.startDate ? 
-                      // new Date(t.startDate).toLocaleDateString()
+                      <td className="px-4 py-4 align-top">{t.startDate ?
+                        // new Date(t.startDate).toLocaleDateString()
                         format(new Date(t.startDate), "dd-MM-yyyy")
-                       : "--"}</td>
+                        : "--"}</td>
 
                       <td className={`px-4 py-4 align-top ${isOverdue ? "text-red-600" : ""}`}>
-                        {t.noDueDate ? "--" : t.dueDate ? 
-                        
-                        // new Date(t.dueDate).toLocaleDateString() 
-                        format(new Date(t.dueDate), "dd-MM-yyyy")
-                        : "--"}
+                        {t.noDueDate ? "--" : t.dueDate ?
+
+                          // new Date(t.dueDate).toLocaleDateString() 
+                          format(new Date(t.dueDate), "dd-MM-yyyy")
+                          : "--"}
                       </td>
 
                       <td className="px-4 py-4 align-top">{minsToHuman(t.hoursLoggedMinutes ?? null)}</td>
@@ -452,11 +442,7 @@ export default function TasksTable({ projectId }: { projectId: number }) {
                         {/* Status pill with dropdown icon */}
                         <div className="relative inline-block">
                           <button
-                            // onClick={(ev) => {
-                            //   ev.stopPropagation();
-                            //   setActionOpenFor(null);
-                            //   setStatusOpenFor((cur) => (cur === t.id ? null : t.id));
-                            // }}
+
                             className="inline-flex items-center gap-2 px-3 py-1 rounded-full border text-xs bg-white hover:bg-gray-50"
                             title="Change status"
                           >
@@ -479,12 +465,12 @@ export default function TasksTable({ projectId }: { projectId: number }) {
                           </button>
 
                           {statusOpenFor === t.id && (
-                            <div  className="absolute right-0 mt-2 z-30 w-44 bg-white border rounded-md shadow-lg text-sm">
+                            <div className="absolute right-0 mt-2 z-30 w-44 bg-white border rounded-md shadow-lg text-sm">
                               {statuses.length > 0 ? (
                                 statuses.map((st) => (
                                   <button
                                     key={st.id}
-                                    
+
                                     className={`w-full text-left px-4 py-2 hover:bg-gray-50 flex items-center gap-2 ${st.id === displayStatus?.id ? "font-medium" : ""}`}
                                   >
                                     {st.labelColor ? (
@@ -514,7 +500,7 @@ export default function TasksTable({ projectId }: { projectId: number }) {
                         </div>
                       </td>
 
-                    
+
                     </tr>
                   );
                 })

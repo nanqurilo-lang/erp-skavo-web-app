@@ -30,7 +30,7 @@ import FullCalendarView from "./components/FullCalendarView";
 import TimesheetSummaryList from "./components/TimesheetSummaryList";
 
 const MAIN =
-  process.env.NEXT_PUBLIC_MAIN 
+  process.env.NEXT_PUBLIC_MAIN
 
 export type EmployeeItem = {
   employeeId: string;
@@ -94,33 +94,33 @@ export default function TimesheetPage() {
 
 
   const [startDate, setStartDate] = useState("");
-const [endDate, setEndDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
 
-const [filterProject, setFilterProject] = useState<string>("all");
+  const [filterProject, setFilterProject] = useState<string>("all");
 
-const isWithinDateRange = (
-  date?: string,
-  start?: string,
-  end?: string
-) => {
-  if (!date) return false;
+  const isWithinDateRange = (
+    date?: string,
+    start?: string,
+    end?: string
+  ) => {
+    if (!date) return false;
 
-  const d = new Date(date);
+    const d = new Date(date);
 
-  if (start) {
-    const s = new Date(start);
-    if (d < s) return false;
-  }
+    if (start) {
+      const s = new Date(start);
+      if (d < s) return false;
+    }
 
-  if (end) {
-    const e = new Date(end);
-    e.setHours(23, 59, 59, 999); // full end day include
-    if (d > e) return false;
-  }
+    if (end) {
+      const e = new Date(end);
+      e.setHours(23, 59, 59, 999); // full end day include
+      if (d > e) return false;
+    }
 
-  return true;
-};
+    return true;
+  };
 
 
 
@@ -304,9 +304,9 @@ const isWithinDateRange = (
           method: "GET",
           headers: resolvedToken
             ? {
-                Authorization: `Bearer ${resolvedToken}`,
-                Accept: "application/json",
-              }
+              Authorization: `Bearer ${resolvedToken}`,
+              Accept: "application/json",
+            }
             : { Accept: "application/json" },
           cache: "no-store",
         });
@@ -314,7 +314,7 @@ const isWithinDateRange = (
         if (res.status === 401) {
           try {
             localStorage.removeItem("accessToken");
-          } catch {}
+          } catch { }
           setToken(null);
           setTimesheets([]);
           setTotalPages(1);
@@ -339,10 +339,10 @@ const isWithinDateRange = (
           items = Array.isArray(data.items) ? data.items : [];
           setTotalPages(
             data.totalPages ??
-              Math.max(
-                1,
-                Math.ceil((data.total ?? items.length) / itemsPerPage)
-              )
+            Math.max(
+              1,
+              Math.ceil((data.total ?? items.length) / itemsPerPage)
+            )
           );
         }
         setTimesheets(items);
@@ -375,9 +375,9 @@ const isWithinDateRange = (
           method: "GET",
           headers: resolvedToken
             ? {
-                Authorization: `Bearer ${resolvedToken}`,
-                Accept: "application/json",
-              }
+              Authorization: `Bearer ${resolvedToken}`,
+              Accept: "application/json",
+            }
             : { Accept: "application/json" },
           cache: "no-store",
         });
@@ -385,7 +385,7 @@ const isWithinDateRange = (
         if (res.status === 401) {
           try {
             localStorage.removeItem("accessToken");
-          } catch {}
+          } catch { }
           setToken(null);
           setProjectOptions([]);
           setProjectsLoading(false);
@@ -469,9 +469,9 @@ const isWithinDateRange = (
           method: "GET",
           headers: resolvedToken
             ? {
-                Authorization: `Bearer ${resolvedToken}`,
-                Accept: "application/json",
-              }
+              Authorization: `Bearer ${resolvedToken}`,
+              Accept: "application/json",
+            }
             : { Accept: "application/json" },
           cache: "no-store",
         });
@@ -758,60 +758,60 @@ const isWithinDateRange = (
   // }, [timesheets, searchQuery, employeeFilter]);
 
 
-const filtered = useMemo(() => {
-  const q = searchQuery.trim().toLowerCase();
+  const filtered = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
 
-  return timesheets.filter((t) => {
+    return timesheets.filter((t) => {
 
-    // 🔹 Project filter
-    if (filterProject !== "all") {
-      if (String(t.projectId) !== filterProject) return false;
-    }
-
-    // 🔹 Employee filter
-    if (employeeFilter !== "All") {
-      const hasEmp =
-        t.employeeId === employeeFilter ||
-        (t.employees ?? []).some(
-          (e) => e.employeeId === employeeFilter
-        );
-
-      if (!hasEmp) return false;
-    }
-
-
-     // 🔹 Duration (date range) filter  ✅ NEW
-    if (startDate || endDate) {
-      if (!isWithinDateRange(t.startDate, startDate, endDate)) {
-        return false;
+      // 🔹 Project filter
+      if (filterProject !== "all") {
+        if (String(t.projectId) !== filterProject) return false;
       }
-    }
+
+      // 🔹 Employee filter
+      if (employeeFilter !== "All") {
+        const hasEmp =
+          t.employeeId === employeeFilter ||
+          (t.employees ?? []).some(
+            (e) => e.employeeId === employeeFilter
+          );
+
+        if (!hasEmp) return false;
+      }
+
+
+      // 🔹 Duration (date range) filter  ✅ NEW
+      if (startDate || endDate) {
+        if (!isWithinDateRange(t.startDate, startDate, endDate)) {
+          return false;
+        }
+      }
 
 
 
-    // 🔹 Search
-    if (!q) return true;
+      // 🔹 Search
+      if (!q) return true;
 
-    if (
-      String(t.projectShortCode ?? "")
-        .toLowerCase()
-        .includes(q)
-    )
-      return true;
+      if (
+        String(t.projectShortCode ?? "")
+          .toLowerCase()
+          .includes(q)
+      )
+        return true;
 
-    if (
-      String(t.memo ?? "")
-        .toLowerCase()
-        .includes(q)
-    )
-      return true;
+      if (
+        String(t.memo ?? "")
+          .toLowerCase()
+          .includes(q)
+      )
+        return true;
 
-    return (t.employees ?? []).some((e) =>
-      (e.name ?? "").toLowerCase().includes(q)
-    );
-  });
-}, [timesheets, searchQuery, employeeFilter, filterProject ,  startDate,
-  endDate,]);
+      return (t.employees ?? []).some((e) =>
+        (e.name ?? "").toLowerCase().includes(q)
+      );
+    });
+  }, [timesheets, searchQuery, employeeFilter, filterProject, startDate,
+    endDate,]);
 
 
 
@@ -924,20 +924,20 @@ const filtered = useMemo(() => {
 
 
 
-<FiltersSection
-  employeeFilter={employeeFilter}
-  setEmployeeFilter={setEmployeeFilter}
+          <FiltersSection
+            employeeFilter={employeeFilter}
+            setEmployeeFilter={setEmployeeFilter}
 
-  startDate={startDate}
-  endDate={endDate}
-  setStartDate={setStartDate}
-  setEndDate={setEndDate}
+            startDate={startDate}
+            endDate={endDate}
+            setStartDate={setStartDate}
+            setEndDate={setEndDate}
 
-  employeeOptions={employeeOptions}
-  getEmployeeLabel={getEmployeeLabel}
+            employeeOptions={employeeOptions}
+            getEmployeeLabel={getEmployeeLabel}
 
-  onOpenFiltersDrawer={() => setShowFilters(true)}
-/>
+            onOpenFiltersDrawer={() => setShowFilters(true)}
+          />
 
 
 
@@ -992,26 +992,9 @@ const filtered = useMemo(() => {
         <div className="p-4 space-y-4 overflow-auto h-[calc(100%-140px)]">
           <div>
             <label className="block text-sm text-gray-600 mb-2">Project </label>
-            {/* <Select
-              value={filterEmployee}
-              onValueChange={(v) => setFilterEmployee(v)}
-            > */}
-              {/* <SelectTrigger className="w-full rounded border px-3 py-2">
-                <SelectValue placeholder="All" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All</SelectItem> */}
-                {/* SHOW THE FULL EMPLOYEE LIST */}
-                {/* {employeeOptions.slice(1).map((e) => (
-                  <SelectItem key={e} value={e}>
-                    {getEmployeeLabel(e)}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select> */}
 
 
-  <Select
+            <Select
               value={filterProject}
               onValueChange={(v) => setFilterProject(v)}
             >
@@ -1038,32 +1021,24 @@ const filtered = useMemo(() => {
         </div>
 
         <div className="p-4 border-t flex items-center justify-between gap-2">
-          {/* <Button
+
+
+
+          <Button
             variant="outline"
             onClick={() => {
-              setFilterEmployee("all");
+              setEmployeeFilter("All");
+              setFilterProject("all");
+              setStartDate("");
+              setEndDate("");
+              setSearchInput("");
+              setSearchQuery("");
+              setCurrentPage(1);
               setShowFilters(false);
             }}
           >
             Reset
-          </Button> */}
-
-
-<Button
-  variant="outline"
-  onClick={() => {
-    setEmployeeFilter("All");
-    setFilterProject("all");
-    setStartDate("");
-    setEndDate("");
-    setSearchInput("");
-    setSearchQuery("");
-    setCurrentPage(1);
-    setShowFilters(false);
-  }}
->
-  Reset
-</Button>
+          </Button>
 
 
 
@@ -1541,49 +1516,7 @@ const filtered = useMemo(() => {
         </div>
       )}
 
-      {/* Delete confirm modal */}
-      {/* {isDeleteConfirmOpen && selectedRow && (
-        <div className="fixed inset-0 z-[10040] flex items-start justify-center pt-12 px-4">
-          <div
-            className="absolute inset-0 bg-black/40"
-            onClick={() => setIsDeleteConfirmOpen(false)}
-          />
-          <div className="relative bg-white w-full max-w-md rounded-lg shadow-xl overflow-hidden">
-            <div className="p-6">
-              <h3 className="text-lg font-semibold mb-4">Delete TimeLog</h3>
-              <p className="text-sm text-gray-700">
-                Are you sure you want to delete timesheet{" "}
-                <strong>
-                  RTA-
-                  {String(selectedRow.id).padStart(2, "0")}
-                </strong>
-                ? This action cannot be undone.
-              </p>
 
-              {saveError && (
-                <div className="mt-4 text-sm text-red-600">{saveError}</div>
-              )}
-
-              <div className="flex items-center justify-end gap-4 mt-6">
-                <button
-                  className="px-4 py-2 rounded border"
-                  onClick={() => setIsDeleteConfirmOpen(false)}
-                  disabled={saving}
-                >
-                  Cancel
-                </button>
-                <button
-                  className="px-4 py-2 rounded bg-red-600 text-white"
-                  onClick={deleteTimesheet}
-                  disabled={saving}
-                >
-                  {saving ? "Deleting..." : "Delete"}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )} */}
 
       {/* Weekly full-screen view */}
       {viewMode === "weekly" && (

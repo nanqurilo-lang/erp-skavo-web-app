@@ -428,15 +428,7 @@ export default function DiscussionDetailPage({
                             </button>
                           )}
 
-                          {/* <button
-                            onClick={() => toggleBestReply(m)}
-                            className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-100 w-full"
-                          >
-                            <CheckCircle size={14} />
-                            {m.isBestReply
-                              ? "Unmark Best Reply"
-                              : "Mark as Best Reply"}
-                          </button> */}
+                        
 
                           <button
                             onClick={() => deleteMessage(m.id)}

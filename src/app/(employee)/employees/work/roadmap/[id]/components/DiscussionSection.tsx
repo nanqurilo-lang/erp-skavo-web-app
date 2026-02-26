@@ -131,15 +131,11 @@ export default function DiscussionSection({
       `${BASE_URL}/api/projects/discussion-categories`,
       {
         method: "POST",
-        // headers: {
-        //   Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        //   "Content-Type": "application/json",
-        // },
 
 
- headers: {
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
 
         body: JSON.stringify(categoryForm),
       }

@@ -60,9 +60,8 @@ export default function ProjectNotesTable({
   const [updating, setUpdating] = useState(false);
 
   const authHeader = {
-    Authorization: `Bearer ${
-      authToken || localStorage.getItem("accessToken") || ""
-    }`,
+    Authorization: `Bearer ${authToken || localStorage.getItem("accessToken") || ""
+      }`,
   };
 
   /* ================= LOAD NOTES ================= */
@@ -83,13 +82,13 @@ export default function ProjectNotesTable({
         setNotes(
           Array.isArray(data)
             ? data.map((n: any) => ({
-                id: n.id,
-                title: n.title ?? "Untitled",
-                content: n.content ?? "---",
-                isPublic: !!n.isPublic,
-                createdBy: n.createdBy,
-                createdAt: n.createdAt,
-              }))
+              id: n.id,
+              title: n.title ?? "Untitled",
+              content: n.content ?? "---",
+              isPublic: !!n.isPublic,
+              createdBy: n.createdBy,
+              createdAt: n.createdAt,
+            }))
             : []
         );
       } catch (e: any) {
@@ -182,11 +181,11 @@ export default function ProjectNotesTable({
         p.map((n) =>
           n.id === editId
             ? {
-                ...n,
-                title: updated.title,
-                content: updated.content,
-                isPublic: updated.isPublic,
-              }
+              ...n,
+              title: updated.title,
+              content: updated.content,
+              isPublic: updated.isPublic,
+            }
             : n
         )
       );
@@ -216,7 +215,7 @@ export default function ProjectNotesTable({
   return (
     <div className="bg-white rounded border">
       <div className="p-4 flex justify-end border-b">
-      
+
       </div>
 
       <div className="p-4">
@@ -242,41 +241,20 @@ export default function ProjectNotesTable({
                   </div>
                 </td>
                 <td className="px-4 py-3 text-center relative">
-                 <button
-                        className="w-full px-3 py-2 flex gap-2 "
-                        onClick={() => {
-                          setViewNote(note);
-                          setShowViewModal(true);
-                          setMenuOpenFor(null);
-                        }}
-                      >
-                        <Eye size={14} />
-                      </button>
+                  <button
+                    className="w-full px-3 py-2 flex gap-2 "
+                    onClick={() => {
+                      setViewNote(note);
+                      setShowViewModal(true);
+                      setMenuOpenFor(null);
+                    }}
+                  >
+                    <Eye size={14} />
+                  </button>
 
                   {menuOpenFor === note.id && (
                     <div className="absolute right-0 mt-2 bg-white border rounded shadow w-40 z-20">
-                     
 
-                      {/* <button
-                        className="w-full px-3 py-2 flex gap-2 hover:bg-gray-50"
-                        onClick={() => {
-                          setEditId(note.id);
-                          setEditTitle(note.title);
-                          setEditContent(note.content ?? "");
-                          setEditPublic(note.isPublic);
-                          setShowEditModal(true);
-                          setMenuOpenFor(null);
-                        }}
-                      >
-                        <Edit size={14} /> Edit
-                      </button> */}
-
-                      {/* <button
-                        className="w-full px-3 py-2 flex gap-2 text-red-600 hover:bg-gray-50"
-                        onClick={() => deleteNote(note)}
-                      >
-                        <Trash2 size={14} /> Delete
-                      </button> */}
                     </div>
                   )}
                 </td>
@@ -319,10 +297,10 @@ export default function ProjectNotesTable({
       )}
 
       {/* ================= ADD MODAL ================= */}
-     
+
 
       {/* ================= EDIT MODAL ================= */}
-    
+
     </div>
   );
 }

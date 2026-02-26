@@ -46,7 +46,7 @@ import {
 import ProjectCalendarMonth from "./ProjectCalendarMonth";
 import { format } from "date-fns";
 
-const MAIN = process.env.NEXT_PUBLIC_MAIN ;
+const MAIN = process.env.NEXT_PUBLIC_MAIN;
 const projectsFromApi = `${MAIN}/api/projects`;
 const STATUS_OPTIONS = [
   "IN_PROGRESS",
@@ -544,9 +544,9 @@ export default function AllProjectsPage() {
       const res = await fetch(`${MAIN}/api/projects/${projectId}/status`, {
         method: "PUT",
         body: fd,
-headers: {
+        headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },       
+        },
       });
       // if (!res.ok) throw new Error(`Status patch failed ${res.status}`);
 
@@ -579,9 +579,9 @@ headers: {
       const res = await fetch(`${MAIN}/api/projects/${projectId}/progress`, {
         method: "PUT",
         body: fd,
- headers: {
+        headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },        
+        },
       });
 
       if (res.status === 401) {
@@ -1338,13 +1338,13 @@ headers: {
   // Row component reused (same as your file) — uses clientOptions/departments/categories data loaded above
   const ProjectRow: React.FC<{ p: Project }> = ({ p }) => {
     const start = p.startDate ?
-    //  new Date(p.startDate).toLocaleDateString() 
-    format(new Date(p.startDate), "dd-MM-yyyy")
-     : "-";
-    const dl = p.noDeadline ? "No Deadline" : p.deadline ? 
-    // new Date(p.deadline).toLocaleDateString()
-    format(new Date(p.deadline), "dd-MM-yyyy")
-     : "-";
+      //  new Date(p.startDate).toLocaleDateString() 
+      format(new Date(p.startDate), "dd-MM-yyyy")
+      : "-";
+    const dl = p.noDeadline ? "No Deadline" : p.deadline ?
+      // new Date(p.deadline).toLocaleDateString()
+      format(new Date(p.deadline), "dd-MM-yyyy")
+      : "-";
     const progress = Math.max(0, Math.min(100, p.progressPercent ?? 0));
     const barColor = getProgressColor(progress);
 
@@ -1430,9 +1430,9 @@ headers: {
         <TableCell className="py-4 px-4 align-top text-right">
           <DropdownMenu>
             {/* <DropdownMenuTrigger asChild> */}
-                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => window.location.assign(`/employees/work/roadmap/${p.id}`)}><Eye className="h-4 w-4 mr-2" /> </Button>
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => window.location.assign(`/employees/work/roadmap/${p.id}`)}><Eye className="h-4 w-4 mr-2" /> </Button>
 
-              {/* <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+            {/* <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
               <MoreVertical className="h-4 w-4" /></Button> */}
             {/* </DropdownMenuTrigger> */}
 
@@ -1551,7 +1551,7 @@ headers: {
           </div>
 
           {/* ROW: Add Project + Search + Top-right icons */}
-         
+
 
           {/* MAIN content area */}
           <div className="bg-white rounded-lg border overflow-hidden">
@@ -1936,10 +1936,10 @@ headers: {
   function groupByStartDate(items: Project[]) {
     const map: Record<string, Project[]> = {};
     items.forEach((p) => {
-      const d = p.startDate ? 
-      // new Date(p.startDate).toLocaleDateString() 
-      format (new Date(p.startDate), "dd-MM-yyyy")
-      : "No start date";
+      const d = p.startDate ?
+        // new Date(p.startDate).toLocaleDateString() 
+        format(new Date(p.startDate), "dd-MM-yyyy")
+        : "No start date";
       (map[d] ||= []).push(p);
     });
     return map;

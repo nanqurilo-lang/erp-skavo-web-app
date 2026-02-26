@@ -414,8 +414,8 @@ export default function ProjectDetailsPage() {
     typeof metrics?.earning === "number"
       ? metrics.earning
       : typeof metrics?.earning === "string"
-      ? Number(metrics.earning)
-      : project.budget ?? 0;
+        ? Number(metrics.earning)
+        : project.budget ?? 0;
   const expenses = typeof metrics?.expenses === "number" ? metrics.expenses : 0;
   const profit =
     typeof metrics?.profit === "number" ? metrics.profit : earnings - expenses;
@@ -429,11 +429,11 @@ export default function ProjectDetailsPage() {
   const plannedBarWidth =
     hoursEstimate > 0
       ? Math.min(
-          100,
-          Math.round(
-            (hoursEstimate / Math.max(hoursEstimate, totalHours || 1)) * 100
-          )
+        100,
+        Math.round(
+          (hoursEstimate / Math.max(hoursEstimate, totalHours || 1)) * 100
         )
+      )
       : 50;
   const actualBarWidth = Math.min(
     100,
@@ -456,21 +456,15 @@ export default function ProjectDetailsPage() {
             <nav className="flex items-center gap-6 h-14">
               {[
                 { key: "overview", label: "Overview" },
-                // { key: 'invoices', label: 'Invoices' },
-                // { key: 'payments', label: 'Payments' },
-                // { key: 'files', label: 'Files' },
-                // { key: 'notes', label: 'Notes' },
-                // { key: 'activity', label: 'Activity' },
-                // { key: 'discussion', label: 'Discussion' },
+
               ].map((t) => {
                 const isActive = activeTab === (t.key as any);
                 return (
                   <button
                     key={t.key}
                     onClick={() => setActiveTab(t.key as any)}
-                    className={`py-3 text-sm font-medium ${
-                      isActive ? "text-blue-600" : "text-gray-600"
-                    }`}
+                    className={`py-3 text-sm font-medium ${isActive ? "text-blue-600" : "text-gray-600"
+                      }`}
                     aria-current={isActive ? "page" : undefined}
                   >
                     <span className="relative inline-block">
@@ -527,8 +521,8 @@ export default function ProjectDetailsPage() {
                     <p className="text-sm text-gray-500">Start Date</p>
                     <p className="font-medium">
                       {
-                      // new Date(project.startDate).toLocaleDateString()
-                      format(new Date(project.startDate), "dd-MM-yyyy")
+                        // new Date(project.startDate).toLocaleDateString()
+                        format(new Date(project.startDate), "dd-MM-yyyy")
                       }
                     </p>
                   </div>
@@ -539,10 +533,10 @@ export default function ProjectDetailsPage() {
                       {project.noDeadline
                         ? "No Deadline"
                         : project.deadline
-                        ?
-                        //  new Date(project.deadline).toLocaleDateString()
-                        format(new Date(project.deadline), "dd-MM-yyyy")
-                        : "TBD"}
+                          ?
+                          //  new Date(project.deadline).toLocaleDateString()
+                          format(new Date(project.deadline), "dd-MM-yyyy")
+                          : "TBD"}
                     </p>
                   </div>
                 </div>
@@ -666,32 +660,7 @@ export default function ProjectDetailsPage() {
               {/* end Hours Logged chart */}
             </div>
 
-            {/* <div className="space-y-4">
-             
 
-             
-
-              <div className="grid grid-cols-3 gap-3">
-                <div className="bg-white rounded-xl border border-gray-200 p-3 text-center">
-                  <p className="text-sm text-gray-500">Earnings</p>
-                  <div className="text-lg font-semibold text-blue-600 mt-1">
-                    {currency}{(earnings ?? 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                  </div>
-                </div>
-                <div className="bg-white rounded-xl border border-gray-200 p-3 text-center">
-                  <p className="text-sm text-gray-500">Expenses</p>
-                  <div className="text-lg font-semibold text-blue-600 mt-1">
-                    {currency}{(expenses ?? 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                  </div>
-                </div>
-                <div className="bg-white rounded-xl border border-gray-200 p-3 text-center">
-                  <p className="text-sm text-gray-500">Profit</p>
-                  <div className="text-lg font-semibold text-blue-600 mt-1">
-                    {currency}{(profit ?? 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                  </div>
-                </div>
-              </div>
-            </div> */}
           </div>
 
           {/* Bottom row */}
@@ -702,7 +671,7 @@ export default function ProjectDetailsPage() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {project.assignedEmployees &&
-                project.assignedEmployees.length ? (
+                  project.assignedEmployees.length ? (
                   project.assignedEmployees.map((emp) => (
                     <div
                       key={emp.employeeId}
@@ -744,16 +713,16 @@ export default function ProjectDetailsPage() {
                 <div>
                   Created on:{" "}
                   {
-                  // new Date(project.createdAt || "").toLocaleDateString()
-                  format(new Date(project.createdAt || ""), "dd-MM-yyyy")
+                    // new Date(project.createdAt || "").toLocaleDateString()
+                    format(new Date(project.createdAt || ""), "dd-MM-yyyy")
                   }
                 </div>
                 {project.pinned && (
                   <div>
                     Pinned on:{" "}
                     {
-                    // new Date(project.pinnedAt || "").toLocaleDateString()
-                    format(new Date(project.pinnedAt || ""), "dd-MM-yyyy")
+                      // new Date(project.pinnedAt || "").toLocaleDateString()
+                      format(new Date(project.pinnedAt || ""), "dd-MM-yyyy")
                     }
                   </div>
                 )}
@@ -761,8 +730,8 @@ export default function ProjectDetailsPage() {
                   <div>
                     Archived on:{" "}
                     {
-                    // new Date(project.archivedAt || "").toLocaleDateString()
-                    format(new Date(project.archivedAt || ""), "dd-MM-yyyy")
+                      // new Date(project.archivedAt || "").toLocaleDateString()
+                      format(new Date(project.archivedAt || ""), "dd-MM-yyyy")
                     }
                   </div>
                 )}
@@ -789,142 +758,3 @@ export default function ProjectDetailsPage() {
   );
 }
 
-// "use client";
-
-// import { useEffect, useState } from "react";
-// import { useParams } from "next/navigation";
-// import axios from "axios";
-
-// import OverviewSection from "./components/OverviewSection";
-// import InvoicesSection from "./components/InvoicesSection";
-// import PaymentsSection from "./components/PaymentsSection";
-// import FilesSection from "./components/FilesSection";
-// import NotesSection from "./components/NotesSection";
-// import ActivitySection from "./components/ActivitySection";
-// import DiscussionSection from "./components/DiscussionSection";
-
-// const MAIN = process.env.NEXT_PUBLIC_MAIN || "";
-
-// type TabKey =
-//   | "overview"
-//   | "invoices"
-//   | "payments"
-//   | "files"
-//   | "notes"
-//   | "activity"
-//   | "discussion";
-
-// export default function ProjectDetailsPage() {
-//   const params = useParams() as { id: string };
-//   const projectId = params?.id;
-
-//   const [project, setProject] = useState<any>(null);
-//   const [metrics, setMetrics] = useState<any>(null);
-//   const [loading, setLoading] = useState(true);
-//   const [activeTab, setActiveTab] = useState<TabKey>("overview");
-
-//   // ---------------- FETCH PROJECT ----------------
-//   useEffect(() => {
-//     if (!projectId) return;
-
-//     const token = localStorage.getItem("accessToken") || "";
-
-//     const fetchAll = async () => {
-//       try {
-//         const [pRes, mRes] = await Promise.all([
-//           axios.get(`/api/work/project/${projectId}`, {
-//             headers: { Authorization: `Bearer ${token}` },
-//           }),
-//           axios.get(`${MAIN}/projects/${projectId}/metrics`, {
-//             headers: { Authorization: `Bearer ${token}` },
-//           }),
-//         ]);
-
-//         setProject(Array.isArray(pRes.data) ? pRes.data[0] : pRes.data);
-//         setMetrics(mRes.data);
-//       } catch (err) {
-//         console.error(err);
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-
-//     fetchAll();
-//   }, [projectId]);
-
-//   if (loading) {
-//     return <div className="p-8 text-center">Loading project...</div>;
-//   }
-
-//   if (!project) {
-//     return <div className="p-8 text-center text-red-500">Project not found</div>;
-//   }
-
-//   // ---------------- UI ----------------
-//   return (
-//     <div className="min-h-screen bg-gray-50">
-//       <div className="max-w-7xl mx-auto px-6 py-6">
-
-//         {/* HEADER */}
-//         <h1 className="text-3xl font-semibold text-gray-800 mb-4">
-//           {project.name}
-//         </h1>
-
-//         {/* TABS */}
-//         <div className="bg-white rounded-t-xl border">
-//           <nav className="flex gap-6 px-6 h-14 items-center">
-//             {[
-//               { key: "overview", label: "Overview" },
-//               { key: "invoices", label: "Invoices" },
-//               { key: "payments", label: "Payments" },
-//               { key: "files", label: "Files" },
-//               { key: "notes", label: "Notes" },
-//               { key: "activity", label: "Activity" },
-//               { key: "discussion", label: "Discussion" },
-//             ].map((tab) => {
-//               const isActive = activeTab === tab.key;
-//               return (
-//                 <button
-//                   key={tab.key}
-//                   onClick={() => setActiveTab(tab.key as TabKey)}
-//                   className={`relative text-sm font-medium py-3 ${isActive ? "text-blue-600" : "text-gray-600"
-//                     }`}
-//                 >
-//                   {tab.label}
-//                   {isActive && (
-//                     <span className="absolute -bottom-3 left-0 w-full h-0.5 bg-blue-500 rounded" />
-//                   )}
-//                 </button>
-//               );
-//             })}
-//           </nav>
-//         </div>
-
-//         {/* TAB CONTENT */}
-//         <div className="bg-white rounded-b-xl border border-t-0 p-6">
-//           {activeTab === "overview" && (
-//             <OverviewSection project={project} metrics={metrics} />
-//           )}
-//           {activeTab === "invoices" && (
-//             <InvoicesSection projectId={project.id} />
-//           )}
-//           {activeTab === "payments" && (
-//             <PaymentsSection projectId={project.id} />
-//           )}
-//           {activeTab === "files" && (
-//             <FilesSection projectId={project.id} />
-//           )}
-//           {activeTab === "notes" && (
-//             <NotesSection projectId={project.id} />
-//           )}
-//           {activeTab === "activity" && (
-//             <ActivitySection projectId={project.id} />
-//           )}
-//           {activeTab === "discussion" && (
-//             <DiscussionSection projectId={project.id} />
-//           )}
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }

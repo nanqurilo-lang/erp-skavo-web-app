@@ -1,7 +1,4 @@
 
-
-
-
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -61,9 +58,8 @@ export default function ProjectNotesTable({
   const [updating, setUpdating] = useState(false);
 
   const authHeader = {
-    Authorization: `Bearer ${
-      authToken || localStorage.getItem("accessToken") || ""
-    }`,
+    Authorization: `Bearer ${authToken || localStorage.getItem("accessToken") || ""
+      }`,
   };
 
   /* ================= LOAD NOTES ================= */
@@ -84,13 +80,13 @@ export default function ProjectNotesTable({
         setNotes(
           Array.isArray(data)
             ? data.map((n: any) => ({
-                id: n.id,
-                title: n.title ?? "Untitled",
-                content: n.content ?? "---",
-                isPublic: !!n.isPublic,
-                createdBy: n.createdBy,
-                createdAt: n.createdAt,
-              }))
+              id: n.id,
+              title: n.title ?? "Untitled",
+              content: n.content ?? "---",
+              isPublic: !!n.isPublic,
+              createdBy: n.createdBy,
+              createdAt: n.createdAt,
+            }))
             : []
         );
       } catch (e: any) {
@@ -183,11 +179,11 @@ export default function ProjectNotesTable({
         p.map((n) =>
           n.id === editId
             ? {
-                ...n,
-                title: updated.title,
-                content: updated.content,
-                isPublic: updated.isPublic,
-              }
+              ...n,
+              title: updated.title,
+              content: updated.content,
+              isPublic: updated.isPublic,
+            }
             : n
         )
       );

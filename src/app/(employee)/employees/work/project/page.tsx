@@ -201,10 +201,10 @@ export default function AllProjectsPage() {
   useEffect(() => {
     document.body.style.overflow =
       showFilters ||
-      showAddModal ||
-      showCategoryModal ||
-      showUpdateModal ||
-      calendarOpen
+        showAddModal ||
+        showCategoryModal ||
+        showUpdateModal ||
+        calendarOpen
         ? "hidden"
         : "auto";
   }, [
@@ -256,7 +256,7 @@ export default function AllProjectsPage() {
   const writeProgressOverrides = (map: Record<string, number>) => {
     try {
       localStorage.setItem(OVERRIDES_KEY, JSON.stringify(map));
-    } catch {}
+    } catch { }
   };
   const setProgressOverrideFor = (
     projectId: number,
@@ -308,7 +308,7 @@ export default function AllProjectsPage() {
         if (res.status === 401) {
           try {
             localStorage.removeItem("accessToken");
-          } catch {}
+          } catch { }
           setToken(null);
           setProjects([]);
           setTotalPages(1);
@@ -329,10 +329,10 @@ export default function AllProjectsPage() {
           fetched = data.projects || data.items || [];
           setTotalPages(
             data.totalPages ||
-              Math.max(
-                1,
-                Math.ceil((data.total || itemsPerPage) / itemsPerPage),
-              ),
+            Math.max(
+              1,
+              Math.ceil((data.total || itemsPerPage) / itemsPerPage),
+            ),
           );
         }
 
@@ -462,9 +462,9 @@ export default function AllProjectsPage() {
           cur.map((c) =>
             c.id === temp.id
               ? {
-                  id: created.id ?? created.name ?? Math.random(),
-                  name: created.name ?? name,
-                }
+                id: created.id ?? created.name ?? Math.random(),
+                name: created.name ?? name,
+              }
               : c,
           ),
         );
@@ -936,9 +936,9 @@ export default function AllProjectsPage() {
       const assignedArray = Array.isArray(members)
         ? members
         : String(members || "")
-            .split(",")
-            .map((s) => s.trim())
-            .filter(Boolean);
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean);
 
       // backend expects a Set<String> — send JSON array under 'assignedEmployeeIds'
       fd.append("assignedEmployeeIds", JSON.stringify(assignedArray));
@@ -977,7 +977,7 @@ export default function AllProjectsPage() {
         try {
           const json = JSON.parse(text || "{}");
           if (json && json.message) message = json.message;
-        } catch {}
+        } catch { }
         alert(message);
         setSubmitting(false);
         return;
@@ -985,7 +985,7 @@ export default function AllProjectsPage() {
 
       try {
         await res.json();
-      } catch {}
+      } catch { }
       await getProjects(resolvedToken);
       setShowAddModal(false);
       resetAddForm();
@@ -1162,9 +1162,9 @@ export default function AllProjectsPage() {
         const assignedArray = Array.isArray(ucMembers)
           ? ucMembers
           : String(ucMembers || "")
-              .split(",")
-              .map((s) => s.trim())
-              .filter(Boolean);
+            .split(",")
+            .map((s) => s.trim())
+            .filter(Boolean);
         fd.append("assignedEmployeeIds", JSON.stringify(assignedArray));
 
         if (ucFile) fd.append("companyFile", ucFile);
@@ -1803,14 +1803,14 @@ export default function AllProjectsPage() {
   // Row component reused (same as your file) — uses clientOptions/departments/categories data loaded above
   const ProjectRow: React.FC<{ p: Project }> = ({ p }) => {
     const start = p.startDate
-      ? 
+      ?
       // new Date(p.startDate).toLocaleDateString()
       format(new Date(p.startDate), "dd-MM-yyyy")
       : "-";
     const dl = p.noDeadline
       ? "No Deadline"
       : p.deadline
-        ? 
+        ?
         // new Date(p.deadline).toLocaleDateString()
         format(new Date(p.deadline), "dd-MM-yyyy")
         : "-";
@@ -2239,90 +2239,90 @@ export default function AllProjectsPage() {
 
                 <ProjectCalendarMonth />
               ) : // {/* </div> */}
-              viewMode === "list" ? (
-                // Compact list
-                <div>
-                  {filteredProjects.length === 0 ? (
-                    <div className="p-6 text-center text-gray-500">
-                      No projects found
-                    </div>
-                  ) : (
-                    <div className="space-y-3">
-                      {filteredProjects.map((p) => (
-                        <div
-                          key={p.id}
-                          className="flex items-center justify-between border rounded p-3 bg-white"
-                        >
-                          <div className="flex items-center gap-4">
-                            <div className="text-sm font-medium w-28">
-                              {projectCodeFor(p)}
-                            </div>
-                            <div className="font-medium">{p.name}</div>
-                            <div className="text-xs text-gray-500">
-                              {p.client?.name ?? "Client"}
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <div className="text-sm">
-                              {p.progressPercent ?? 0}%
-                            </div>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() =>
-                                window.location.assign(
-                                  `/employees/work/project/${p.id}`,
-                                )
-                              }
-                            >
-                              View
-                            </Button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ) : (
-                // grid / table (default)
-                <div>
-                  <Table>
-                    <TableHeader>
-                      <TableRow className="bg-blue-50">
-                        <TableHead className="px-4 py-3">Code </TableHead>
-                        <TableHead className="px-4 py-3">
-                          Project Name
-                        </TableHead>
-                        <TableHead className="px-4 py-3">Members</TableHead>
-                        <TableHead className="px-4 py-3">Start Date</TableHead>
-                        <TableHead className="px-4 py-3">Deadline</TableHead>
-                        <TableHead className="px-4 py-3">Client</TableHead>
-                        <TableHead className="px-4 py-3">Status</TableHead>
-                        <TableHead className="px-4 py-3 text-right">
-                          Action
-                        </TableHead>
-                      </TableRow>
-                    </TableHeader>
-
-                    <TableBody>
-                      {filteredProjects.length === 0 ? (
-                        <TableRow>
-                          <TableCell
-                            colSpan={8}
-                            className="py-8 text-center text-gray-500"
+                viewMode === "list" ? (
+                  // Compact list
+                  <div>
+                    {filteredProjects.length === 0 ? (
+                      <div className="p-6 text-center text-gray-500">
+                        No projects found
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        {filteredProjects.map((p) => (
+                          <div
+                            key={p.id}
+                            className="flex items-center justify-between border rounded p-3 bg-white"
                           >
-                            No projects found
-                          </TableCell>
+                            <div className="flex items-center gap-4">
+                              <div className="text-sm font-medium w-28">
+                                {projectCodeFor(p)}
+                              </div>
+                              <div className="font-medium">{p.name}</div>
+                              <div className="text-xs text-gray-500">
+                                {p.client?.name ?? "Client"}
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-3">
+                              <div className="text-sm">
+                                {p.progressPercent ?? 0}%
+                              </div>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() =>
+                                  window.location.assign(
+                                    `/employees/work/project/${p.id}`,
+                                  )
+                                }
+                              >
+                                View
+                              </Button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  // grid / table (default)
+                  <div>
+                    <Table>
+                      <TableHeader>
+                        <TableRow className="bg-blue-50">
+                          <TableHead className="px-4 py-3">Code </TableHead>
+                          <TableHead className="px-4 py-3">
+                            Project Name
+                          </TableHead>
+                          <TableHead className="px-4 py-3">Members</TableHead>
+                          <TableHead className="px-4 py-3">Start Date</TableHead>
+                          <TableHead className="px-4 py-3">Deadline</TableHead>
+                          <TableHead className="px-4 py-3">Client</TableHead>
+                          <TableHead className="px-4 py-3">Status</TableHead>
+                          <TableHead className="px-4 py-3 text-right">
+                            Action
+                          </TableHead>
                         </TableRow>
-                      ) : (
-                        filteredProjects.map((p) => (
-                          <ProjectRow key={p.id} p={p} />
-                        ))
-                      )}
-                    </TableBody>
-                  </Table>
-                </div>
-              )}
+                      </TableHeader>
+
+                      <TableBody>
+                        {filteredProjects.length === 0 ? (
+                          <TableRow>
+                            <TableCell
+                              colSpan={8}
+                              className="py-8 text-center text-gray-500"
+                            >
+                              No projects found
+                            </TableCell>
+                          </TableRow>
+                        ) : (
+                          filteredProjects.map((p) => (
+                            <ProjectRow key={p.id} p={p} />
+                          ))
+                        )}
+                      </TableBody>
+                    </Table>
+                  </div>
+                )}
             </div>
           </div>
 
@@ -2481,7 +2481,7 @@ export default function AllProjectsPage() {
     const map: Record<string, Project[]> = {};
     items.forEach((p) => {
       const d = p.startDate
-        ? 
+        ?
         // new Date(p.startDate).toLocaleDateString()
         format(new Date(p.startDate), "dd-MM-yyyy")
         : "No start date";

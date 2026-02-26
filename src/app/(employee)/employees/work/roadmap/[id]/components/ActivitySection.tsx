@@ -94,14 +94,9 @@ export default function ActivitySection({
           `${BASE_URL}/projects/${projectId}/activity`,
           {
             cache: "no-store",
-            // headers: {
-            //   "Content-Type": "application/json",
-            //   Authorization: token ? `Bearer ${token}` : "",
-            // },
-
-             headers: {
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
           }
         );
 

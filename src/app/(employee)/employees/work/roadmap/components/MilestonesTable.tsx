@@ -16,7 +16,7 @@ type Milestone = {
   [k: string]: any;
 };
 
-const DEFAULT_MAIN =  `${process.env.NEXT_PUBLIC_MAIN}`;
+const DEFAULT_MAIN = `${process.env.NEXT_PUBLIC_MAIN}`;
 
 // Temporary provided token (for local testing only). DON'T commit real tokens.
 const PROVIDED_TOKEN = typeof window !== "undefined" ? localStorage.getItem("accessToken") : null;
@@ -97,7 +97,7 @@ export default function MilestonesTable({
           try {
             const json = JSON.parse(text || "{}");
             throw new Error(`HTTP ${res.status} ${res.statusText} — ${JSON.stringify(json)}`);
-          } catch {}
+          } catch { }
         }
         throw new Error(`HTTP ${res.status} ${res.statusText} ${text ? "- " + text.slice(0, 300) : ""}`);
       }
@@ -458,7 +458,7 @@ export default function MilestonesTable({
                 <div className="col-span-3 text-sm">
                   <div className="relative inline-block">
                     <button
-                     // onClick={() => setStatusMenuOpenFor(statusMenuOpenFor === m.id ? null : (m.id ?? null))}
+                      // onClick={() => setStatusMenuOpenFor(statusMenuOpenFor === m.id ? null : (m.id ?? null))}
                       className={`inline-flex items-center justify-between w-full gap-2 px-3 py-1 rounded-md  text-sm bg-white ${statusIsCompleted(m.status) ? "border-green-200" : "border-gray-200"}`}
                       title="Change status"
                       aria-haspopup="true"
@@ -470,57 +470,14 @@ export default function MilestonesTable({
                       </div>
 
                       {/* small down chevron */}
-                     
+
                     </button>
 
-                  
+
                   </div>
                 </div>
 
-                {/* ACTIONS as three-dot dropdown */}
-                {/* <div className="col-span-2 text-right relative">
-                  <button
-                    onClick={() => setActionOpenFor(actionOpenFor === m.id ? null : (m.id ?? null))}
-                    className="px-3 py-1 rounded text-sm border hover:bg-gray-50"
-                    aria-haspopup="true"
-                    aria-expanded={actionOpenFor === m.id}
-                    title="Actions"
-                  >
-                    ⋮
-                  </button>
 
-                  {actionOpenFor === m.id && (
-                    <div className="absolute right-0 mt-2 z-30 w-44 bg-white border rounded-md shadow-lg text-sm">
-                      <button
-                        onClick={() => {
-                          openView(m);
-                          setActionOpenFor(null);
-                        }}
-                        className="w-full text-left px-4 py-2 hover:bg-gray-50"
-                      >
-                        View
-                      </button>
-
-                      <button
-                        onClick={() => {
-                          openEdit(m);
-                        }}
-                        className="w-full text-left px-4 py-2 hover:bg-gray-50"
-                      >
-                        Edit
-                      </button>
-
-                      <button
-                        onClick={() => {
-                          openDelete(m);
-                        }}
-                        className="w-full text-left px-4 py-2 hover:bg-gray-50 text-red-600"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  )}
-                </div> */}
               </div>
             ))}
           </div>
@@ -662,22 +619,22 @@ export default function MilestonesTable({
                   <div className="mt-1 p-2 bg-gray-50 rounded text-sm">{selected.summary ?? "-"}</div>
                 </div>
                 <div>
-                  <strong>Start Date:</strong> {selected.startDate ? 
-                  // new Date(selected.startDate).toLocaleDateString() 
-                  format (new Date(selected.startDate), "dd-MM-yyyy")
-                  : "-"}
+                  <strong>Start Date:</strong> {selected.startDate ?
+                    // new Date(selected.startDate).toLocaleDateString() 
+                    format(new Date(selected.startDate), "dd-MM-yyyy")
+                    : "-"}
                 </div>
                 <div>
-                  <strong>End Date:</strong> {selected.endDate ? 
-                  // new Date(selected.endDate).toLocaleDateString()
-                  format (new Date(selected.endDate), "dd-MM-yyyy")
-                   : "-"}
+                  <strong>End Date:</strong> {selected.endDate ?
+                    // new Date(selected.endDate).toLocaleDateString()
+                    format(new Date(selected.endDate), "dd-MM-yyyy")
+                    : "-"}
                 </div>
                 <div>
-                  <strong>Created At:</strong> {selected.createdAt ? 
-                  // new Date(selected.createdAt).toLocaleString() 
-                  format (new Date(selected.createdAt), "dd-MM-yyyy HH:mm:ss")
-                  : "-"}
+                  <strong>Created At:</strong> {selected.createdAt ?
+                    // new Date(selected.createdAt).toLocaleString() 
+                    format(new Date(selected.createdAt), "dd-MM-yyyy HH:mm:ss")
+                    : "-"}
                 </div>
                 <div>
                   <strong>Raw:</strong>{" "}

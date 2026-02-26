@@ -54,7 +54,7 @@ type StatusItem = {
   createdBy?: string;
 };
 
-const MAIN = process.env.NEXT_PUBLIC_MAIN ;
+const MAIN = process.env.NEXT_PUBLIC_MAIN;
 
 export default function TasksTable({ projectId }: { projectId: number }) {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -347,15 +347,7 @@ export default function TasksTable({ projectId }: { projectId: number }) {
       {/* header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-4">
-          {/* <button
-            onClick={() => {
-              setForm({ ...emptyForm, projectId });
-              setShowCreate(true);
-            }}
-            className="bg-blue-600 text-white px-4 py-2 rounded shadow-sm hover:bg-blue-700"
-          >
-            + Add Task
-          </button> */}
+
         </div>
 
         <div className="flex items-center gap-3">
@@ -419,14 +411,14 @@ export default function TasksTable({ projectId }: { projectId: number }) {
 
                       <td className="px-4 py-4 align-top">--</td>
 
-                      <td className="px-4 py-4 align-top">{t.startDate ? 
-                      // new Date(t.startDate).toLocaleDateString()
-                      format(new Date(t.startDate), "dd-MM-yyyy")
-                       : "--"}</td>
+                      <td className="px-4 py-4 align-top">{t.startDate ?
+                        // new Date(t.startDate).toLocaleDateString()
+                        format(new Date(t.startDate), "dd-MM-yyyy")
+                        : "--"}</td>
 
                       <td className={`px-4 py-4 align-top ${isOverdue ? "text-red-600" : ""}`}>
                         {t.noDueDate ? "--" : t.dueDate ?
-                        //  new Date(t.dueDate).toLocaleDateString()
+                          //  new Date(t.dueDate).toLocaleDateString()
                           format(new Date(t.dueDate), "dd-MM-yyyy")
                           : "--"}
                       </td>
@@ -514,23 +506,23 @@ export default function TasksTable({ projectId }: { projectId: number }) {
                       </td>
 
                       <td className="px-4 py-4 align-top relative">
-                            <button
-                              onClick={() => {
-                                // OPEN external TaskViewModal
-                                openView(t);
-                                setActionOpenFor(null);
-                              }}
-                              className="w-full text-left px-4 py-2 hover:bg-gray-50"
-                            >
-                              View
-                            </button>
+                        <button
+                          onClick={() => {
+                            // OPEN external TaskViewModal
+                            openView(t);
+                            setActionOpenFor(null);
+                          }}
+                          className="w-full text-left px-4 py-2 hover:bg-gray-50"
+                        >
+                          View
+                        </button>
 
                         {/* ACTION menu - anchored to row */}
                         {actionOpenFor === t.id && (
                           <div onClick={(e) => e.stopPropagation()} className="absolute right-2 top-10 z-20 w-48 bg-white border rounded-md shadow-md">
-                        
 
-                          
+
+
                           </div>
                         )}
                       </td>
@@ -549,178 +541,6 @@ export default function TasksTable({ projectId }: { projectId: number }) {
         </div>
       )}
 
-      {/* Create modal (unchanged) */}
-      {/* {showCreate && (
-        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/40 p-4">
-          <form onSubmit={handleCreate} className="bg-white w-full max-w-3xl rounded-lg p-6 shadow-lg overflow-auto max-h-[90vh]">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold">Add Task</h3>
-              <button type="button" onClick={() => setShowCreate(false)} className="text-gray-500">Close</button>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <label className="flex flex-col">
-                <span className="text-xs text-gray-600">Title</span>
-                <input required value={form.title} onChange={(e) => updateForm({ title: e.target.value })} className="border px-3 py-2 rounded" />
-              </label>
-
-              <label className="flex flex-col">
-                <span className="text-xs text-gray-600">Category (id)</span>
-                <input value={form.category} onChange={(e) => updateForm({ category: e.target.value })} className="border px-3 py-2 rounded" />
-              </label>
-
-              <label className="flex flex-col">
-                <span className="text-xs text-gray-600">Start Date</span>
-                <input type="date" value={form.startDate} onChange={(e) => updateForm({ startDate: e.target.value })} className="border px-3 py-2 rounded" />
-              </label>
-
-              <label className="flex flex-col">
-                <span className="text-xs text-gray-600">Due Date</span>
-                <input type="date" value={form.dueDate} onChange={(e) => updateForm({ dueDate: e.target.value })} className="border px-3 py-2 rounded" />
-              </label>
-
-              <label className="flex items-center gap-2">
-                <input type="checkbox" checked={form.noDueDate} onChange={(e) => updateForm({ noDueDate: e.target.checked })} />
-                <span className="text-sm text-gray-600">No Due Date</span>
-              </label>
-
-              <label className="flex flex-col">
-                <span className="text-xs text-gray-600">Task Stage ID</span>
-                <input value={form.taskStageId} onChange={(e) => updateForm({ taskStageId: e.target.value })} className="border px-3 py-2 rounded" />
-              </label>
-
-              <label className="flex flex-col md:col-span-2">
-                <span className="text-xs text-gray-600">Description</span>
-                <textarea value={form.description} onChange={(e) => updateForm({ description: e.target.value })} className="border px-3 py-2 rounded" />
-              </label>
-
-              <label className="flex flex-col">
-                <span className="text-xs text-gray-600">Assigned Employee IDs (comma separated)</span>
-                <input value={form.assignedEmployeeIds.join(",")} onChange={(e) => updateForm({ assignedEmployeeIds: e.target.value.split(",").map(s => s.trim()).filter(Boolean) })} className="border px-3 py-2 rounded" />
-              </label>
-
-              <label className="flex flex-col">
-                <span className="text-xs text-gray-600">Label IDs (comma separated)</span>
-                <input value={form.labelIds.join(",")} onChange={(e) => updateForm({ labelIds: e.target.value.split(",").map(s => s.trim()).filter(Boolean) })} className="border px-3 py-2 rounded" />
-              </label>
-
-              <label className="flex flex-col">
-                <span className="text-xs text-gray-600">Milestone ID</span>
-                <input value={form.milestoneId} onChange={(e) => updateForm({ milestoneId: e.target.value })} className="border px-3 py-2 rounded" />
-              </label>
-
-              <label className="flex flex-col">
-                <span className="text-xs text-gray-600">Priority</span>
-                <select value={form.priority} onChange={(e) => updateForm({ priority: e.target.value })} className="border px-3 py-2 rounded">
-                  <option value="LOW">LOW</option>
-                  <option value="MEDIUM">MEDIUM</option>
-                  <option value="HIGH">HIGH</option>
-                  <option value="URGENT">URGENT</option>
-                </select>
-              </label>
-
-              <label className="flex flex-col">
-                <span className="text-xs text-gray-600">Time Estimate (minutes)</span>
-                <input type="number" value={form.timeEstimateMinutes} onChange={(e) => updateForm({ timeEstimateMinutes: e.target.value })} className="border px-3 py-2 rounded" />
-              </label>
-
-              <label className="flex items-center gap-2">
-                <input type="checkbox" checked={form.isPrivate} onChange={(e) => updateForm({ isPrivate: e.target.checked })} />
-                <span className="text-sm text-gray-600">Private</span>
-              </label>
-
-              <label className="flex items-center gap-2">
-                <input type="checkbox" checked={form.isDependent} onChange={(e) => updateForm({ isDependent: e.target.checked })} />
-                <span className="text-sm text-gray-600">Is Dependent</span>
-              </label>
-
-              <label className="flex flex-col md:col-span-2">
-                <span className="text-xs text-gray-600">Attach file (optional)</span>
-                <input type="file" onChange={(e) => updateForm({ taskFile: e.target.files?.[0] || null })} />
-              </label>
-            </div>
-
-            <div className="mt-4 flex items-center justify-end gap-3">
-              <button type="button" onClick={() => setShowCreate(false)} className="px-4 py-2 rounded border">Cancel</button>
-              <button type="submit" className="px-4 py-2 rounded bg-blue-600 text-white">Save</button>
-            </div>
-          </form>
-        </div>
-      )} */}
-
-      {/* Edit modal (unchanged) */}
-      {/* {showEdit && editTask && (
-        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/40 p-4">
-          <form onSubmit={handleEdit} className="bg-white w-full max-w-3xl rounded-lg p-6 shadow-lg overflow-auto max-h-[90vh]">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold">Edit Task</h3>
-              <button type="button" onClick={() => { setShowEdit(false); setEditTask(null); }} className="text-gray-500">Close</button>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <label className="flex flex-col">
-                <span className="text-xs text-gray-600">Title</span>
-                <input required value={form.title} onChange={(e) => updateForm({ title: e.target.value })} className="border px-3 py-2 rounded" />
-              </label>
-
-              <label className="flex flex-col">
-                <span className="text-xs text-gray-600">Category (id)</span>
-                <input value={form.category} onChange={(e) => updateForm({ category: e.target.value })} className="border px-3 py-2 rounded" />
-              </label>
-
-              <label className="flex flex-col md:col-span-2">
-                <span className="text-xs text-gray-600">Description</span>
-                <textarea value={form.description} onChange={(e) => updateForm({ description: e.target.value })} className="border px-3 py-2 rounded" />
-              </label>
-
-              <label className="flex flex-col">
-                <span className="text-xs text-gray-600">Assigned Employee IDs (comma separated)</span>
-                <input value={form.assignedEmployeeIds.join(",")} onChange={(e) => updateForm({ assignedEmployeeIds: e.target.value.split(",").map(s => s.trim()).filter(Boolean) })} className="border px-3 py-2 rounded" />
-              </label>
-
-              <label className="flex flex-col">
-                <span className="text-xs text-gray-600">Label IDs (comma separated)</span>
-                <input value={form.labelIds.join(",")} onChange={(e) => updateForm({ labelIds: e.target.value.split(",").map(s => s.trim()).filter(Boolean) })} className="border px-3 py-2 rounded" />
-              </label>
-
-              <label className="flex flex-col">
-                <span className="text-xs text-gray-600">Priority</span>
-                <select value={form.priority} onChange={(e) => updateForm({ priority: e.target.value })} className="border px-3 py-2 rounded">
-                  <option value="LOW">LOW</option>
-                  <option value="MEDIUM">MEDIUM</option>
-                  <option value="HIGH">HIGH</option>
-                  <option value="URGENT">URGENT</option>
-                </select>
-              </label>
-
-              <label className="flex flex-col">
-                <span className="text-xs text-gray-600">Time Estimate (minutes)</span>
-                <input type="number" value={form.timeEstimateMinutes} onChange={(e) => updateForm({ timeEstimateMinutes: e.target.value })} className="border px-3 py-2 rounded" />
-              </label>
-
-              <label className="flex items-center gap-2">
-                <input type="checkbox" checked={form.isPrivate} onChange={(e) => updateForm({ isPrivate: e.target.checked })} />
-                <span className="text-sm text-gray-600">Private</span>
-              </label>
-
-              <label className="flex items-center gap-2">
-                <input type="checkbox" checked={form.isDependent} onChange={(e) => updateForm({ isDependent: e.target.checked })} />
-                <span className="text-sm text-gray-600">Is Dependent</span>
-              </label>
-
-              <label className="flex flex-col md:col-span-2">
-                <span className="text-xs text-gray-600">Attach file (optional)</span>
-                <input type="file" onChange={(e) => updateForm({ taskFile: e.target.files?.[0] || null })} />
-              </label>
-            </div>
-
-            <div className="mt-4 flex items-center justify-end gap-3">
-              <button type="button" onClick={() => { setShowEdit(false); setEditTask(null); }} className="px-4 py-2 rounded border">Cancel</button>
-              <button type="submit" className="px-4 py-2 rounded bg-blue-600 text-white">Update</button>
-            </div>
-          </form>
-        </div>
-      )} */}
 
       {/* Task view modal (external component) */}
       <TaskViewModal

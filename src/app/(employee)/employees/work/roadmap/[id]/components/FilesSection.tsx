@@ -44,9 +44,9 @@ export default function ProjectDocuments({
     setError(null);
 
     fetch(`${BASE_URL}/files/projects/${projectId}`, {
-     headers: {
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
     })
       .then((res) => res.json())
       .then((data) => {
@@ -111,7 +111,7 @@ export default function ProjectDocuments({
         {
           method: "POST",
           body: formData,
-         headers: {
+          headers: {
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           },
         }
@@ -126,14 +126,14 @@ export default function ProjectDocuments({
         prev.map((f) =>
           f.id === localId
             ? {
-                id: data.id,
-                filename: data.filename,
-                url: data.url,
-                mimeType: data.mimeType,
-                size: data.size,
-                uploadedBy: data.uploadedBy,
-                createdAt: data.createdAt,
-              }
+              id: data.id,
+              filename: data.filename,
+              url: data.url,
+              mimeType: data.mimeType,
+              size: data.size,
+              uploadedBy: data.uploadedBy,
+              createdAt: data.createdAt,
+            }
             : f
         )
       );
@@ -160,8 +160,8 @@ export default function ProjectDocuments({
       await fetch(`${BASE_URL}/files/projects/${projectId}/${id}`, {
         method: "DELETE",
         headers: {
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
       });
     } catch {
       setError("Delete failed");

@@ -446,10 +446,10 @@ export default function TimesheetsTableNew({
                         <td className="px-4 py-4 align-top">
                           <div className="relative inline-block text-left">
                             {/* Three-dot button */}
-                          
+
 
                             {/* Dropdown */}
-                           
+
                           </div>
                         </td>
                       </tr>
@@ -463,13 +463,13 @@ export default function TimesheetsTableNew({
       )}
 
       {/* Log Time Modal (create/edit) */}
-     
+
 
       {/* View Modal - redesigned to match provided screenshot */}
-     
+
 
       {/* Delete confirm modal */}
-     
+
     </div>
   );
 }

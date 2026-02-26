@@ -115,12 +115,7 @@ export default function ProjectDetailsPage() {
           {activeTab === "overview" && (
             <OverviewSection project={project} metrics={metrics} />
           )}
-          {/* {activeTab === "invoices" && (
-            <InvoicesSection projectId={project.id} />
-          )} */}
-          {/* {activeTab === "payments" && (
-            <PaymentsSection projectId={project.id} />
-          )} */}
+
           {activeTab === "files" && (
             <FilesSection projectId={project.id} />
           )}

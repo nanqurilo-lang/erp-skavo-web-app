@@ -13,7 +13,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 
-const DEFAULT_API_BASE =  `${process.env.NEXT_PUBLIC_MAIN}`
+const DEFAULT_API_BASE = `${process.env.NEXT_PUBLIC_MAIN}`
 const ENDPOINT = "/timesheets/weekly";
 const API_TIMEOUT_MS = 15000;
 
@@ -84,7 +84,7 @@ const WeeklyTimesheetModal: React.FC<WeeklyTimesheetModalProps> = ({
     try {
       const t = localStorage.getItem("accessToken");
       if (t && t.trim() !== "") return t.trim();
-    } catch {}
+    } catch { }
     return authToken ?? null;
   }
 
@@ -113,7 +113,7 @@ const WeeklyTimesheetModal: React.FC<WeeklyTimesheetModalProps> = ({
         }))
       );
     } catch (err) {
-     // console.log("Task fetch failed:", err);
+      // console.log("Task fetch failed:", err);
     } finally {
       setLoadingTasks(false);
     }
@@ -139,11 +139,11 @@ const WeeklyTimesheetModal: React.FC<WeeklyTimesheetModalProps> = ({
       prev.map((r, i) =>
         i === rowIndex
           ? {
-              ...r,
-              hours: r.hours.map((h, j) =>
-                j === dayIndex ? clampNumberFromString(value) : h
-              ),
-            }
+            ...r,
+            hours: r.hours.map((h, j) =>
+              j === dayIndex ? clampNumberFromString(value) : h
+            ),
+          }
           : r
       )
     );
@@ -232,36 +232,7 @@ const WeeklyTimesheetModal: React.FC<WeeklyTimesheetModalProps> = ({
         onChange={handleDateSelected}
       />
 
-      {/* HEADER (Kept same UI) */}
-      {/* <header className="flex items-center justify-between mb-6">
-        <h1 className="text-xl font-semibold">Weekly Timesheet</h1>
 
-        <div className="flex items-center gap-4">
-          <button className="w-9 h-9 rounded-full border flex items-center justify-center">
-            <Search className="w-4 h-4" />
-          </button>
-
-          <div className="flex items-center rounded-md border bg-white overflow-hidden">
-            <button className="px-3 h-9 border-r">
-              <List className="w-4 h-4" />
-            </button>
-            <button className="px-3 h-9 bg-indigo-500 text-white">
-              <CalendarDays className="w-4 h-4" />
-            </button>
-            <button className="px-3 h-9 border-l">
-              <Calendar className="w-4 h-4" />
-            </button>
-          </div>
-
-          <button className="w-9 h-9 rounded-full border flex items-center justify-center">
-            <Bell className="w-4 h-4" />
-          </button>
-
-          <div className="w-9 h-9 rounded-full border bg-gray-100 flex items-center justify-center">
-            <User className="w-4 h-4" />
-          </div>
-        </div>
-      </header> */}
 
       {/* WEEK SELECTOR */}
       <div className="flex items-center gap-4 mb-4">

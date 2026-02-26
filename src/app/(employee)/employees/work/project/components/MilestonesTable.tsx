@@ -504,50 +504,7 @@ export default function MilestonesTable({
                   </div>
                 </div>
 
-                {/* ACTIONS as three-dot dropdown */}
-                {/* <div className="col-span-2 text-right relative">
-                  <button
-                    onClick={() => setActionOpenFor(actionOpenFor === m.id ? null : (m.id ?? null))}
-                    className="px-3 py-1 rounded text-sm border hover:bg-gray-50"
-                    aria-haspopup="true"
-                    aria-expanded={actionOpenFor === m.id}
-                    title="Actions"
-                  >
-                    ⋮
-                  </button>
-
-                  {actionOpenFor === m.id && (
-                    <div className="absolute right-0 mt-2 z-30 w-44 bg-white border rounded-md shadow-lg text-sm">
-                      <button
-                        onClick={() => {
-                          openView(m);
-                          setActionOpenFor(null);
-                        }}
-                        className="w-full text-left px-4 py-2 hover:bg-gray-50"
-                      >
-                        View
-                      </button>
-
-                      <button
-                        onClick={() => {
-                          openEdit(m);
-                        }}
-                        className="w-full text-left px-4 py-2 hover:bg-gray-50"
-                      >
-                        Edit
-                      </button>
-
-                      <button
-                        onClick={() => {
-                          openDelete(m);
-                        }}
-                        className="w-full text-left px-4 py-2 hover:bg-gray-50 text-red-600"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  )}
-                </div> */}
+                
               </div>
             ))}
           </div>

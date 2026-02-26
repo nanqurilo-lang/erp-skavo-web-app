@@ -37,7 +37,7 @@ type ProjectData = {
   addedBy?: string | null
 }
 
-const GATEWAY =  `${process.env.NEXT_PUBLIC_MAIN}`
+const GATEWAY = `${process.env.NEXT_PUBLIC_MAIN}`
 
 /* -------------------------
    ProjectCategoryModal (unchanged)
@@ -76,7 +76,7 @@ function ProjectCategoryModal({
       if (typeof data === "string") {
         try {
           data = JSON.parse(data)
-        } catch {}
+        } catch { }
       }
       if (!res.ok) {
         setMessage({ type: "error", text: `Failed to load categories (${res.status})` })
@@ -137,7 +137,7 @@ function ProjectCategoryModal({
         try {
           const newId = typeof data === "object" && data?.id ? String(data.id) : String((categories.find((c) => c.name === name) || {}).id || "")
           if (newId) onAdded?.(newId)
-        } catch {}
+        } catch { }
       }
     } catch (err) {
       console.error(err)
@@ -478,7 +478,7 @@ export default function EditProjectPage() {
         if (typeof data === "string") {
           try {
             data = JSON.parse(data)
-          } catch {}
+          } catch { }
         }
         const list = Array.isArray(data) ? data.map((d: any) => ({ id: Number(d.id), name: String(d.name) })) : []
         setCategories(list)
@@ -494,7 +494,7 @@ export default function EditProjectPage() {
         if (typeof data === "string") {
           try {
             data = JSON.parse(data)
-          } catch {}
+          } catch { }
         }
         const list = Array.isArray(data) ? data.map((d: any) => ({ id: Number(d.id), departmentName: d.departmentName })) : []
         setDepartments(list)
@@ -510,7 +510,7 @@ export default function EditProjectPage() {
         if (typeof data === "string") {
           try {
             data = JSON.parse(data)
-          } catch {}
+          } catch { }
         }
         const list = Array.isArray(data) ? data.map((c: any) => ({ id: Number(c.id), name: c.name || c.company?.companyName || `Client ${c.id}` })) : []
         setClients(list)
@@ -527,15 +527,15 @@ export default function EditProjectPage() {
         if (typeof data === "string") {
           try {
             data = JSON.parse(data)
-          } catch {}
+          } catch { }
         }
         const content = data?.content ?? data
         const list = Array.isArray(content)
           ? content.map((e: any) => ({
-              employeeId: e.employeeId,
-              name: e.name || e.employeeId,
-              profilePictureUrl: e.profilePictureUrl || "",
-            }))
+            employeeId: e.employeeId,
+            name: e.name || e.employeeId,
+            profilePictureUrl: e.profilePictureUrl || "",
+          }))
           : []
         setEmployees(list)
       } catch (err) {
@@ -831,7 +831,7 @@ export default function EditProjectPage() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
                   <div>
                     <label className="block text-sm text-gray-700 mb-2">Currency</label>
-                    <Select value={projectData.currency ?? "USD"} onValueChange={() => {}}>
+                    <Select value={projectData.currency ?? "USD"} onValueChange={() => { }}>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="USD $" />
                       </SelectTrigger>
@@ -899,7 +899,7 @@ export default function EditProjectPage() {
           open={showCategoryModal}
           onClose={() => setShowCategoryModal(false)}
           onAdded={(newId) => {
-            ;(async () => {
+            ; (async () => {
               if (!token) return
               try {
                 const res = await fetch(`${GATEWAY}/api/projects/category`, { headers: { Authorization: `Bearer ${token}` } })
@@ -907,7 +907,7 @@ export default function EditProjectPage() {
                 if (typeof data === "string") {
                   try {
                     data = JSON.parse(data)
-                  } catch {}
+                  } catch { }
                 }
                 const list = Array.isArray(data) ? data.map((d: any) => ({ id: Number(d.id), name: String(d.name) })) : []
                 setCategories(list)
