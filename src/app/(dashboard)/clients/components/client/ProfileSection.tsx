@@ -3,14 +3,6 @@ import React, { useMemo } from "react"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
 import Row from "./Row"
 
-/**
- * Order + colors chosen to match the screenshot:
- *  Finished  -> green
- *  To Do     -> yellow  (mapped from ON_HOLD)
- *  In Progress -> blue
- *  Cancelled -> red
- *  Not Started -> gray
- */
 const STATUS_ORDER = [
   { key: "FINISHED", label: "Finished", color: "#16A34A" },      // green
   { key: "ON_HOLD", label: "To Do", color: "#F59E0B" },          // yellow (used as "To Do")
@@ -21,13 +13,6 @@ const STATUS_ORDER = [
 
 type StatusKey = (typeof STATUS_ORDER)[number]["key"]
 
-/**
- * ProfileSection shows client info (unchanged) and a Projects card which contains:
- *  - donut chart (pie) built with CSS conic-gradient
- *  - legend to the right matching the screenshot
- *
- * Pass projects prop from parent: <ProfileSection client={client} projects={projects} />
- */
 export const ProfileSection: React.FC<{ client: any; projects?: any[] }> = ({ client, projects = [] }) => {
   // normalize and compute counts/pcts in the SAME order as STATUS_ORDER
   const statusStats = useMemo(() => {

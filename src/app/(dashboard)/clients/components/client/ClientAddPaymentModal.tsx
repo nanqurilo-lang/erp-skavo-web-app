@@ -79,17 +79,6 @@ export default function ClientAddPaymentModal({
   };
 
   const savePayment = () => {
-    // 🔥 Client-level payment payload (future API)
-    // {
-    //   client,
-    //   project,
-    //   amount,
-    //   currency,
-    //   transactionId,
-    //   paymentGateway,
-    //   remark,
-    //   receiptFile
-    // }
 
     onSaved?.();
     onClose();

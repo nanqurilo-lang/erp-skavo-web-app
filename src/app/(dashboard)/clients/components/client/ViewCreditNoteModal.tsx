@@ -42,13 +42,11 @@ export default function ViewCreditNoteModal({
             <div>
               <div className="text-gray-500">Credit Date</div>
               <div className="font-medium">
-                {/* {credit.creditDate
-                  ? new Date(credit.creditDate).toLocaleDateString()
-                  : "—"} */}
 
-{credit?.creditDate
-  ? format(new Date(credit.creditDate), "dd-MM-yyyy")
-  : "—"}
+
+                {credit?.creditDate
+                  ? format(new Date(credit.creditDate), "dd-MM-yyyy")
+                  : "—"}
 
 
               </div>

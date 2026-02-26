@@ -81,18 +81,16 @@ export const ProjectsTable: React.FC<{
                       </div>
                     </td>
                     <td className="px-4 py-3">
-                      {/* {p.startDate ? new Date(p.startDate).toLocaleDateString() : "—"} */}
-                        {p.startDate
-    ? format(new Date(p.startDate), "dd-MM-yyyy")
-    : "—"}
-                      </td>
+                      {p.startDate
+                        ? format(new Date(p.startDate), "dd-MM-yyyy")
+                        : "—"}
+                    </td>
                     <td className="px-4 py-3">
-                      {/* {p.deadline ? new Date(p.deadline).toLocaleDateString() : "—"} */}
-                       {p.deadline
-    ? format(new Date(p.deadline), "dd-MM-yyyy")
-    : "—"}
-                      
-                      </td>
+                      {p.deadline
+                        ? format(new Date(p.deadline), "dd-MM-yyyy")
+                        : "—"}
+
+                    </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
                         <div className="w-8 h-8 rounded-full overflow-hidden">

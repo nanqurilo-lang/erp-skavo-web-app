@@ -1008,20 +1008,6 @@ export default function DealsPage() {
     return Array.from(s.values()).sort();
   }, [deals]);
 
-  // const getNextFollowupDate = (followups?: Followup[]) => {
-  //   if (!followups || followups.length === 0) return null;
-  //   const valid = followups.filter((f) => f && f.nextDate).slice();
-  //   if (valid.length === 0) return null;
-  //   valid.sort(
-  //     (a, b) =>
-  //       new Date(a.nextDate as string).getTime() -
-  //       new Date(b.nextDate as string).getTime(),
-  //   );
-  //   return valid[0].nextDate || null;
-  // };
-
-
-
   const getNextFollowup = (followups?: Followup[]) => {
     if (!followups?.length) return null;
 
@@ -1033,70 +1019,6 @@ export default function DealsPage() {
           new Date(b.nextDate!).getTime()
       )[0];
   };
-
-
-
-  // const filteredDeals = useMemo(() => {
-  //   const q = query.trim().toLowerCase();
-
-  //   return (deals as Deal[]).filter((d) => {
-  //     const matchesStage =
-  //       stageFilter === "all" ||
-  //       String(d.dealStage || "").toLowerCase() === stageFilter.toLowerCase();
-
-  //     const hay = [
-  //       d.title,
-  //       d.dealAgentMeta?.name,
-  //       d.dealAgent,
-  //       d.dealCategory,
-  //       d.pipeline,
-  //       String(d.id),
-  //       d.leadName,
-  //       d.leadEmail,
-  //       d.leadMobile,
-  //     ]
-  //       .filter(Boolean)
-  //       .join(" ")
-  //       .toLowerCase();
-
-  //     const matchesQuery = q.length === 0 || hay.includes(q);
-
-  //     // 🗓️ DATE RANGE FILTER (SAFE VERSION)
-  //     const matchesDate =
-  //       (!dateFrom || (d.createdAt && new Date(d.createdAt) >= dateFrom)) &&
-  //       (!dateTo || (d.createdAt && new Date(d.createdAt) <= dateTo));
-
-
-
-
-  //     // value filter
-  //     const dealValue = Number(d.value || 0);
-  //     if (minValue && dealValue < Number(minValue)) return false;
-  //     if (maxValue && dealValue > Number(maxValue)) return false;
-
-  //     // agent filter
-  //     if (
-  //       agentFilter !== "all" &&
-  //       d.dealAgentMeta?.name !== agentFilter
-  //     ) {
-  //       return false;
-  //     }
-
-  //     // priority filter
-  //     if (
-  //       priorityFilter !== "all" &&
-  //       String(d.priority).toLowerCase() !== priorityFilter.toLowerCase()
-  //     ) {
-  //       return false;
-  //     }
-
-
-
-
-  //     return matchesStage && matchesQuery && matchesDate;
-  //   });
-  // }, [deals, query, stageFilter, dateFrom, dateTo]);
-
 
 
   const normalizePriorityString = (p?: unknown) => {
@@ -1116,21 +1038,11 @@ export default function DealsPage() {
     }
   };
 
-
-
-
-
   const filteredDeals = useMemo(() => {
     const q = query.trim().toLowerCase();
 
     return (deals as Deal[]).filter((d) => {
-      /* ---------------- STAGE ---------------- */
-      // const matchesStage =
-      //   stageFilter === "all" ||
-      //   String(d.dealStage || "").toLowerCase() === stageFilter.toLowerCase();
-
-
-
+    
 const matchesStage =
   dealStageFilter === "all" ||
   String(d.dealStage || "").toLowerCase() ===
@@ -1266,23 +1178,6 @@ const matchesStage =
     );
   }
 
-  // Normalize priority input to status string
-  // const normalizePriorityString = (p?: unknown) => {
-  //   if (p === null || p === undefined) return "low";
-  //   if (typeof p === "string") return p.toLowerCase();
-  //   if (typeof p === "number") {
-  //     const byId = priorityById.get(p);
-  //     if (byId?.status) return String(byId.status).toLowerCase();
-  //     return "low";
-  //   }
-  //   try {
-  //     const o = p as PriorityObject;
-  //     if (o && o.status) return String(o.status).toLowerCase();
-  //     return String(p).toLowerCase();
-  //   } catch {
-  //     return "low";
-  //   }
-  // };
 
 
 
@@ -1311,57 +1206,6 @@ const matchesStage =
         return "#10b981";
     }
   };
-
-  // POST assign priority: per your latest API: POST ${baseUrl}/deals/{{dealId}}/priority/assign with body { priorityId: <number> }
-  // const handlePriorityAssign = async (
-  //   dealId: number | string,
-  //   newPriorityIdOrVal: string | number,
-  // ) => {
-  //   if (!token) return;
-  //   try {
-  //     // prefer numeric id
-  //     const asNum = Number(newPriorityIdOrVal);
-  //     let priorityIdToSend: number | null = !Number.isNaN(asNum) ? asNum : null;
-
-  //     if (priorityIdToSend === null) {
-  //       // resolve status -> id
-  //       const found = priorityByStatus.get(
-  //         String(newPriorityIdOrVal).toLowerCase(),
-  //       );
-  //       if (found) priorityIdToSend = found.id;
-  //     }
-
-  //     if (priorityIdToSend === null) {
-  //       console.error("Could not resolve priorityId for:", newPriorityIdOrVal);
-  //       return;
-  //     }
-
-  //     const url = `${BASE_URL}/deals/${dealId}/priority/assign`;
-  //     const res = await fetch(url, {
-  //       method: "POST",
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ priorityId: priorityIdToSend }),
-  //     });
-
-  //     if (!res.ok) {
-  //       const txt = await res.text().catch(() => "");
-  //       console.error("Failed to assign priority:", res.status, txt);
-  //       return;
-  //     }
-
-  //     await mutateDeals();
-  //   } catch (err) {
-  //     console.error("Error assigning priority:", err);
-  //   }
-  // };
-
-
-
-
-
 
 
   const handlePriorityAssign = async (
@@ -1441,12 +1285,7 @@ const matchesStage =
 
   // DELETE deal
   const handleDeleteDeal = async (dealId: number | string) => {
-    // if (!token) return;
-
-    // const confirmed = window.confirm(
-    //   "Are you sure you want to delete this deal? This action cannot be undone.",
-    // );
-    // if (!confirmed) return;
+   
 
     try {
       console.log("delete devesh", dealId);
@@ -1479,16 +1318,7 @@ const matchesStage =
         <div className="mb-4 rounded-md border bg-white py-2 px-4 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3 text-sm">
             <div className="text-xs text-muted-foreground">Duration</div>
-            {/* simple text input representing start to end (UI only) */}
-            {/* <Input
-              value={dateRange}
-              onChange={(e) => setDateRange(e.target.value)}
-              placeholder="Start Date to End Date"
-              className="w-[300px] text-sm"
-            /> */}
-
-
-
+           
             <Popover>
               <PopoverTrigger asChild>
                 <Button

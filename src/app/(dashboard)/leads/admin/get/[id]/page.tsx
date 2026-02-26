@@ -634,14 +634,6 @@ function AddDealModal({
     setWatchersOpen((s) => !s);
   };
 
-  // const selectedWatcherNames = () => {
-  //   const selected = possibleWatchers.filter((w) =>
-  //     form.dealWatchers.includes(w.employeeId || ""),
-  //   );
-  //   if (selected.length === 0) return "--";
-  //   return selected.map((s) => s.name).join(", ");
-  // };
-
 
   const selectedWatcherNames = () => {
     if (form.dealWatchers.length === 0) return "--";
@@ -787,21 +779,7 @@ function AddDealModal({
                   <label className="block text-xs text-muted-foreground mb-2">
                     Deal Agent
                   </label>
-                  {/* <select
-                    className="w-full p-2 border rounded-md bg-white text-sm"
-                    value={form.dealAgent}
-                    onChange={(e) => update("dealAgent", e.target.value)}
-                  >
-                    <option value="">--</option>
-                    {possibleAgents.map((a) => (
-                      <option key={a.employeeId} value={a.employeeId}>
-                        {a.name}
-                      </option>
-                    ))}
-                  </select> */}
-
-
-
+                 
                   <select
                     className="w-full p-2 border rounded-md bg-white text-sm"
                     value={form.dealAgent}
@@ -858,31 +836,8 @@ function AddDealModal({
                     Deal Watcher
                   </label>
 
-                  {/* <button
-                    type="button"
-                    ref={watchersButtonRef}
-                    onClick={openWatchers}
-                    className="w-full p-2 border rounded-md text-left bg-white text-sm flex items-center justify-between"
-                  >
-                    <span className="truncate">{selectedWatcherNames()}</span>
-                    <svg
-                      className={`w-4 h-4 transform ${watchersOpen ? "rotate-180" : ""}`}
-                      viewBox="0 0 20 20"
-                      fill="none"
-                      stroke="currentColor"
-                    >
-                      <path
-                        d="M6 8l4 4 4-4"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </button> */}
-
-
-
-                  {/* Dropdown button */}
+                
+             {/* Dropdown button */}
                   <button
                     type="button"
                     onClick={() => setWatchersOpen((s) => !s)}
@@ -1582,9 +1537,6 @@ export default function LeadDetailPage() {
   const menuRef = useRef<HTMLDivElement | null>(null);
 
 
-  // const [openDealMenuId, setOpenDealMenuId] = useState<number | null>(null);
-  // const dealMenuRef = useRef<HTMLDivElement | null>(null);
-
   const [openDealMenuId, setOpenDealMenuId] = useState<number | null>(null);
   const [dealMenuPos, setDealMenuPos] = useState<{ top: number; left: number } | null>(null);
   const dealMenuRef = useRef<HTMLDivElement | null>(null);
@@ -1605,7 +1557,6 @@ export default function LeadDetailPage() {
   };
 
 
-  // useEffect(() => {
   //   if (openDealMenuId == null) return;
 
   //   const handleClickOutside = (event: MouseEvent) => {
@@ -1711,10 +1662,7 @@ export default function LeadDetailPage() {
     router.push(`/leads/admin/edit/${params.id}`);
   };
 
-  // const handleMove = () => {
-  // setMenuOpen(false);
-  //   router.push(`/clients/new`);
-  // };
+ 
 
   const convertToClient = async () => {
     setMenuOpen(false);
@@ -1847,20 +1795,6 @@ export default function LeadDetailPage() {
     }
   };
 
-  // open fixed menu popup near button
-  // const onOpenNoteMenu = (e: React.MouseEvent, noteId?: number) => {
-  //   e.stopPropagation();
-  //   if (!noteId) return;
-  //   const btn = e.currentTarget as HTMLElement;
-  //   const rect = btn.getBoundingClientRect();
-  //   // compute top/left for fixed positioned popup
-  //   const top = rect.bottom + 8 + window.scrollY; // include scrollY to position correctly
-  //   const left = rect.right - 160; // align right edge of popup near button (popup width ~ 160)
-  //   setOpenNoteMenuId((prev) => (prev === noteId ? null : noteId));
-  //   setNoteMenuPos({ top, left: Math.max(left, 8) });
-  // };
-
-
 
   const onOpenNoteMenu = (e: React.MouseEvent, noteId?: number) => {
     e.stopPropagation();
@@ -1878,40 +1812,6 @@ export default function LeadDetailPage() {
       left: Math.max(left, 8),
     });
   };
-
-
-
-  // close popup on outside click / scroll / resize
-  // useEffect(() => {
-  //   if (openNoteMenuId == null) return;
-  //   const onDocClick = (ev: MouseEvent) => {
-  //     const t = ev.target as Node;
-  //     if (!menuContainerRef.current) return;
-  //     if (!menuContainerRef.current.contains(t)) {
-  //       setOpenNoteMenuId(null);
-  //       setNoteMenuPos(null);
-  //     }
-  //   };
-  //   const onScroll = () => {
-  //     setOpenNoteMenuId(null);
-  //     setNoteMenuPos(null);
-  //   };
-  //   const onResize = () => {
-  //     setOpenNoteMenuId(null);
-  //     setNoteMenuPos(null);
-  //   };
-  //   document.addEventListener("mousedown", onDocClick);
-  //   window.addEventListener("scroll", onScroll, true);
-  //   window.addEventListener("resize", onResize);
-  //   return () => {
-  //     document.removeEventListener("mousedown", onDocClick);
-  //     window.removeEventListener("scroll", onScroll, true);
-  //     window.removeEventListener("resize", onResize);
-  //   };
-  // }, [openNoteMenuId]);
-
-
-
 
 
   useEffect(() => {
@@ -1956,15 +1856,9 @@ export default function LeadDetailPage() {
             onClick={() => router.back()}
             aria-label="Back"
           >
-            {/* <ArrowLeft className="h-5 w-5" /> */}
           </Button>
           <div>
-            {/* <h1 className="text-2xl md:text-3xl font-semibold">
-              {data?.name ?? "—"}
-            </h1> */}
-            {/* <p className="text-sm text-muted-foreground mt-1">
-              Detailed information about the selected lead.
-            </p> */}
+           
           </div>
         </div>
 

@@ -1000,12 +1000,7 @@ export default function Dashboard() {
               <div className="rounded border p-4">
                 <div className="text-sm mb-2">
                   Date -{" "}
-                  {/* {new Date(selectedDay).toLocaleDateString(undefined, {
-                    weekday: "long",
-                    day: "2-digit",
-                    month: "short",
-                    year: "numeric",
-                  })} */}
+                
 
                   {format(new Date(selectedDay), "EEEE, dd-MM-yyyy")}
 

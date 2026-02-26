@@ -1,9 +1,3 @@
-
-
-
-
-
-
 // src/components/ClientPaymentsTable.tsx
 "use client";
 

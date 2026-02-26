@@ -1,151 +1,3 @@
-// "use client";
-
-// import { useState } from "react";
-
-// type NoteItem = {
-//   id?: number;
-//   noteTitle: string;
-//   noteType: "PUBLIC" | "PRIVATE" | string;
-//   noteDetails?: string;
-// };
-
-// const BASE_URL = `${process.env.NEXT_PUBLIC_MAIN}`;
-
-// export default function NoteActionModal({
-//   dealId,
-//   note,
-//   mode,
-//   onClose,
-//   onUpdated,
-// }: {
-//   dealId: string;
-//   note: NoteItem;
-//   mode: "view" | "edit";
-//   onClose: () => void;
-//   onUpdated: () => void;
-// }) {
-//   const [form, setForm] = useState(note);
-//   const [saving, setSaving] = useState(false);
-
-//   const handleSave = async () => {
-//     if (!form.noteTitle.trim()) {
-//       alert("Note title required");
-//       return;
-//     }
-
-//     setSaving(true);
-
-//     try {
-//       const token = localStorage.getItem("accessToken");
-//       if (!token) return;
-
-//       const res = await fetch(
-//         `${BASE_URL}/deals/${dealId}/notes/${form.id}`,
-//         {
-//           method: "PUT",
-//           headers: {
-//             Authorization: `Bearer ${token}`,
-//             "Content-Type": "application/json",
-//           },
-//           body: JSON.stringify({
-//             noteTitle: form.noteTitle,
-//             noteType: form.noteType,
-//             noteDetails: form.noteDetails || "",
-//           }),
-//         }
-//       );
-
-//       if (!res.ok) throw new Error("Failed to update note");
-
-//       onUpdated();
-//       onClose();
-//     } catch (err: any) {
-//       alert(err.message || "Failed to update note");
-//     } finally {
-//       setSaving(false);
-//     }
-//   };
-
-//   return (
-//     <div className="fixed inset-0 z-50 flex items-start justify-center pt-20">
-//       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
-//       <div className="relative bg-white w-full max-w-3xl rounded-2xl shadow-xl border p-6 mx-4">
-
-//         <div className="flex justify-between items-center mb-4">
-//           <h3 className="text-xl font-semibold">
-//             {mode === "view" ? "View Note" : "Edit Note"}
-//           </h3>
-//           <button onClick={onClose}>✕</button>
-//         </div>
-
-//         {mode === "view" ? (
-//           <div className="space-y-4 text-sm">
-//             <div><strong>Title:</strong> {note.noteTitle}</div>
-//             <div><strong>Type:</strong> {note.noteType}</div>
-//             <div><strong>Details:</strong> {note.noteDetails || "---"}</div>
-//           </div>
-//         ) : (
-//           <>
-//             <div className="space-y-4">
-//               <div>
-//                 <label>Title *</label>
-//                 <input
-//                   value={form.noteTitle}
-//                   onChange={(e) =>
-//                     setForm({ ...form, noteTitle: e.target.value })
-//                   }
-//                   className="mt-2 w-full border rounded-md px-3 py-2"
-//                 />
-//               </div>
-
-//               <div>
-//                 <label>Type</label>
-//                 <select
-//                   value={form.noteType}
-//                   onChange={(e) =>
-//                     setForm({ ...form, noteType: e.target.value })
-//                   }
-//                   className="mt-2 w-full border rounded-md px-3 py-2"
-//                 >
-//                   <option value="PUBLIC">Public</option>
-//                   <option value="PRIVATE">Private</option>
-//                 </select>
-//               </div>
-
-//               <div>
-//                 <label>Details</label>
-//                 <textarea
-//                   value={form.noteDetails}
-//                   onChange={(e) =>
-//                     setForm({ ...form, noteDetails: e.target.value })
-//                   }
-//                   className="mt-2 w-full border rounded-md px-3 py-2 min-h-[120px]"
-//                 />
-//               </div>
-//             </div>
-
-//             <div className="mt-6 flex justify-center gap-6">
-//               <button onClick={onClose} className="px-6 py-2 border rounded-md">
-//                 Cancel
-//               </button>
-//               <button
-//                 onClick={handleSave}
-//                 disabled={saving}
-//                 className="px-6 py-2 bg-blue-600 text-white rounded-md"
-//               >
-//                 {saving ? "Saving..." : "Update"}
-//               </button>
-//             </div>
-//           </>
-//         )}
-//       </div>
-//     </div>
-//   );
-// }
-
-
-
-
 
 "use client";
 
@@ -245,32 +97,18 @@ export default function NoteActionModal({
         <div className="p-10">
 
           {/* Header */}
-          {/* <div className="flex justify-between  items-center mb-8">
-            <h3 className="text-2xl font-semibold">
-              {mode === "view" ? "View Note " : "Edit Note"}
+          <div className="flex justify-between items-center pb-6 mb-8 border-b border-gray-200 bg-white sticky top-0 z-10">
+            <h3 className="text-xl font-semibold text-gray-900">
+              {mode === "view" ? "View Note" : "Edit Note"}
             </h3>
+
             <button
               onClick={handleClose}
-              className="text-gray-400 hover:text-gray-600 text-2xl"
+              className="w-9 h-9 flex items-center justify-center rounded-md hover:bg-gray-100 text-gray-500 hover:text-gray-700 transition"
             >
               ✕
             </button>
-          </div> */}
-
-
-{/* Header */}
-<div className="flex justify-between items-center pb-6 mb-8 border-b border-gray-200 bg-white sticky top-0 z-10">
-  <h3 className="text-xl font-semibold text-gray-900">
-    {mode === "view" ? "View Note" : "Edit Note"}
-  </h3>
-
-  <button
-    onClick={handleClose}
-    className="w-9 h-9 flex items-center justify-center rounded-md hover:bg-gray-100 text-gray-500 hover:text-gray-700 transition"
-  >
-    ✕
-  </button>
-</div>
+          </div>
 
 
 

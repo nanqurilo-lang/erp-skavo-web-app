@@ -5835,25 +5835,6 @@ const [paymentsInvoiceNo, setPaymentsInvoiceNo] = useState<string | null>(null);
     };
   }, []);
 
-  // const openMenuFor = (inv: any, buttonEl: HTMLElement | null) => {
-  //   if (!buttonEl) return;
-  //   const rect = buttonEl.getBoundingClientRect();
-  //   const menuWidth = 260;
-  //   const margin = 8;
-  //   let left = rect.right - menuWidth;
-  //   if (left < margin) left = rect.left;
-  //   const top = rect.bottom + window.scrollY + 6;
-  //   const maxLeft = window.scrollX + window.innerWidth - menuWidth - margin;
-  //   if (left + window.scrollX > maxLeft)
-  //     left = Math.max(window.scrollX + margin, maxLeft);
-  //   setMenuPos({ left: Math.max(left, window.scrollX + margin), top });
-  //   setMenuOpenFor(inv);
-  // };
-
-  // open receipt menu (new)
-
-
-
 const openMenuFor = (inv: any, buttonEl: HTMLElement | null) => {
   if (!buttonEl) return;
 
@@ -6009,19 +5990,6 @@ const openMenuFor = (inv: any, buttonEl: HTMLElement | null) => {
         }
       }
 
-      // Optionally, if you want to immediately add returned URL to local invoice object for UI (non-breaking):
-      // if (returnedUrl) {
-      //   setInvoices((prev) => prev.map((iv) => {
-      //     const idA = iv.id ?? iv.invoiceNumber ?? null;
-      //     const idB = inv.id ?? inv.invoiceNumber ?? null;
-      //     if (idA != null && idB != null && String(idA) === String(idB)) {
-      //       const files = Array.isArray(iv.files) ? [...iv.files] : [];
-      //       files.unshift({ url: returnedUrl, name: uploadSelectedFile.name });
-      //       return { ...iv, files };
-      //     }
-      //     return iv;
-      //   }));
-      // }
 
       if (returnedUrl) {
         setInvoices((prev) =>
@@ -6065,11 +6033,6 @@ const openMenuFor = (inv: any, buttonEl: HTMLElement | null) => {
     if (!inv) return "UNKNOWN";
 
     const status = String(inv.status ?? "").toUpperCase();
-
-    // credit note invoices
-    // if (inv.isCreditNote || inv.creditNotes?.length) {
-    //   return "CREDIT";
-    // }
 
 
 if (
@@ -6381,51 +6344,7 @@ if (
     setMenuPos(null);
   };
 
-  // const openAddPayment = (inv: any) => {
-  //   const amt = prompt("Payment amount:");
-  //   if (!amt) return;
-  //   const amount = Number(amt);
-  //   if (isNaN(amount) || amount <= 0) return alert("Invalid amount");
-  //   (async () => {
-  //     try {
-  //       const p = invoicePaths(inv)[0];
-  //       if (!p)
-  //         throw new Error("Cannot determine invoice endpoint for payment");
-  //       const res = await fetch(`${p}`, {
-  //         method: "POST",
-  //         headers: getAuthHeaders({ "Content-Type": "application/json" }),
-  //         body: JSON.stringify({ amount, note: "Manual payment added via UI" }),
-  //       });
-  //       if (!res.ok) {
-  //         const res2 = await fetch(`${p}`, {
-  //           method: "POST",
-  //           headers: getAuthHeaders({ "Content-Type": "application/json" }),
-  //           body: JSON.stringify({
-  //             invoiceId: inv.id ?? null,
-  //             invoiceNumber: inv.invoiceNumber ?? null,
-  //             amount,
-  //           }),
-  //         });
-  //         if (!res2.ok) throw new Error("Payment creation failed");
-  //       }
-  //       if (invoicesProp && typeof onInvoiceCreated === "function")
-  //         onInvoiceCreated(null as any);
-  //       else await fetchInvoices(clientId);
-  //       alert("Payment added");
-  //     } catch (err: any) {
-  //       alert(err?.message ?? "Add payment failed");
-  //     } finally {
-  //       setMenuOpenFor(null);
-  //       setMenuPos(null);
-  //     }
-  //   })();
-  // };
-
-
   // 🔥 REPLACED: prompt-based payment → modal-based payment
-
-
-
   const openAddPayment = (inv: any) => {
   setPaymentInvoice(inv);
   setShowClientPaymentModal(true);
@@ -6434,30 +6353,6 @@ if (
   setMenuOpenFor(null);
   setMenuPos(null);
 };
-
-
-  // const openViewPayments = async (inv: any) => {
-  //   try {
-  //     const p = invoicePaths(inv)[0];
-  //     if (!p) throw new Error("Cannot determine invoice endpoint for payments");
-  //     const res = await fetch(`${p}`, {
-  //       headers: getAuthHeaders(),
-  //     });
-  //     if (!res.ok) {
-  //       alert("Payments not available");
-  //       return;
-  //     }
-  //     const parsed = await tryParseResponse(res);
-  //     const payments = parsed.parsed ?? [];
-  //     alert("Payments:\n" + JSON.stringify(payments, null, 2));
-  //   } catch (err: any) {
-  //     alert(err?.message ?? "View payments failed");
-  //   } finally {
-  //     setMenuOpenFor(null);
-  //     setMenuPos(null);
-  //   }
-  // };
-
 
 const openViewPaymentsDrawer = (inv: any) => {
   const invoiceNo = inv?.invoiceNumber ?? inv?.id ?? null;
@@ -6556,18 +6451,6 @@ const openViewPaymentsDrawer = (inv: any) => {
     }
   };
 
-  // const viewCredits = async (inv: any) => {
-  //   try {
-  //     const p = invoicePaths(inv)[0];
-  //     if (!p) throw new Error("Cannot determine invoice endpoint for credits");
-  //     const res = await fetch(`${p}/credit-notes`, { headers: getAuthHeaders() });
-  //     if (!res.ok) { alert("Credits not available"); return; }
-  //     const parsed = await tryParseResponse(res);
-  //     const credits = parsed.parsed ?? [];
-  //     alert("Credit notes :\n" + JSON.stringify(credits, null, 2));
-  //   } catch (err: any) { alert(err?.message ?? "View credits failed"); }
-  //   finally { setMenuOpenFor(null); setMenuPos(null); }
-  // };
 
   const openViewCreditModal = async (inv: any) => {
     try {
@@ -6849,14 +6732,7 @@ onClick={() => openViewPaymentsDrawer(inv)}
               <Bell className="inline mr-2 -mt-1" /> Payment Reminder
             </button>
           </li>
-          {/* <li>
-            <button
-              className="w-full text-left px-3 py-2 hover:bg-gray-100"
-              onClick={() => openCreditModal(inv)}
-            >
-              <FileText className="inline mr-2 -mt-1" /> Credit
-            </button>
-          </li> */}
+         
           <li>
             <button
               className="w-full text-left px-3 py-2 hover:bg-gray-100"
@@ -6922,13 +6798,6 @@ onClick={() => openViewPaymentsDrawer(inv)}
     (subtotal - discountAmount) * (Number(createForm.taxPercent || 0) / 100);
   const total = Math.max(0, subtotal - discountAmount + taxAmount);
 
-  // const firstFileUrl = (inv: any) => {
-  //   if (!inv) return null;
-  //   if (inv.files && Array.isArray(inv.files) && inv.files.length > 0) return inv.files[0].url ?? inv.files[0].fileUrl ?? inv.files[0].path ?? null;
-  //   if (inv.attachments && Array.isArray(inv.attachments) && inv.attachments.length > 0) return inv.attachments[0].url ?? null;
-  //   if (Array.isArray(inv.filesList) && inv.filesList.length > 0) return inv.filesList[0].url ?? null;
-  //   return null;
-  // };
 
   const firstFileUrl = (inv: any) => {
     if (!inv) return null;
@@ -7262,49 +7131,7 @@ onClick={() => openViewPaymentsDrawer(inv)}
         </div>
       </CardContent>
 
-      {/* Floating action menu */}
-      {/* {menuOpenFor && menuPos && (
-        <div
-          ref={menuRef}
-          style={{
-            position: "fixed",
-            left: `${menuPos.left}px`,
-            top: `${menuPos.top}px`,
-            width: 260,
-            zIndex: 10050,
-            boxShadow: "0 8px 24px rgba(0,0,0,0.12)",
-          }}
-          className="bg-white border rounded overflow-hidden"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <ul>{renderMenuFor(menuOpenFor)}</ul>
-        </div>
-      )} */}
-
-
-
-
-{/* {menuOpenFor && menuPos &&
-  createPortal(
-    <div
-      ref={menuRef}
-      style={{
-        position: "fixed",
-        left: `${menuPos.left}px`,
-        top: `${menuPos.top}px`,
-        width: 260,
-        zIndex: 99999, // 🔥 important
-        boxShadow: "0 8px 24px rgba(0,0,0,0.12)",
-      }}
-      className="bg-white border rounded overflow-hidden"
-      onClick={(e) => e.stopPropagation()}
-    >
-      <ul>{renderMenuFor(menuOpenFor)}</ul>
-    </div>,
-    document.body
-  )
-} */}
-
+    
 
 
 {menuOpenFor && menuPos &&
@@ -8852,15 +8679,7 @@ onClick={() => openViewPaymentsDrawer(inv)}
       )}
 
       {showCreditModal && activeInvoice && (
-        // <CreditNoteModal
-        //   open={showCreditModal}
-        //   invoice={activeInvoice}
-        //   onClose={() => {
-        //     setShowCreditModal(false);
-        //     setActiveInvoice(null);
-        //   }}
-
-        // />
+        
         <CreditNoteModal
           open={showCreditModal}
           invoice={activeInvoice}
