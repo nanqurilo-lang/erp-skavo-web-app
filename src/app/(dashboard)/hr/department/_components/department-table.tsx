@@ -100,7 +100,7 @@ export function DepartmentTable({ data, onDeleted }: Props) {
                   </DropdownMenuTrigger>
 
                   <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                    {/* <DropdownMenuLabel>Actions</DropdownMenuLabel> */}
 
                     <DropdownMenuSeparator />
 
