@@ -6,8 +6,7 @@ import Image from "next/image";
 import useSWR from "swr";
 import ChatInput from "./ChatInput";
 
-// STOMP + SockJS imports (if you used STOMP version)
-// If you are using plain WebSocket version, omit these imports and related logic
+
 import SockJS from "sockjs-client";
 import { Client, Frame, IMessage } from "@stomp/stompjs";
 
@@ -106,8 +105,8 @@ export default function ChatWindow({
 
   const historyUrl = receiverId
     ? `${process.env.NEXT_PUBLIC_MAIN}/api/chat/history/${encodeURIComponent(
-        receiverId
-      )}`
+      receiverId
+    )}`
     : null;
 
   const { data, error, isLoading, mutate } = useSWR<Message[]>(
@@ -122,9 +121,9 @@ export default function ChatWindow({
   const receiverDetails =
     messages.length > 0
       ? messages.find((m) => m.receiverDetails?.employeeId === receiverId)
-          ?.receiverDetails ||
-        messages[0]?.senderDetails ||
-        null
+        ?.receiverDetails ||
+      messages[0]?.senderDetails ||
+      null
       : null;
 
   // Auto-scroll on new messages (including when STOMP pushes new items)
@@ -176,8 +175,8 @@ export default function ChatWindow({
                   return already
                     ? prev
                     : prev
-                    ? [...prev, incoming]
-                    : [incoming];
+                      ? [...prev, incoming]
+                      : [incoming];
                 }, false);
               } else if (payload && payload.id) {
                 const incoming: Message = payload;
@@ -186,8 +185,8 @@ export default function ChatWindow({
                     prev && prev.some((m) => m.id === incoming.id)
                       ? prev
                       : prev
-                      ? [...prev, incoming]
-                      : [incoming],
+                        ? [...prev, incoming]
+                        : [incoming],
                   false
                 );
               }
@@ -195,7 +194,7 @@ export default function ChatWindow({
               console.error("Error parsing topic message", e);
             }
           });
-        } catch (e) {}
+        } catch (e) { }
 
         try {
           client.subscribe(`/user/queue/messages`, (msg: IMessage) => {
@@ -210,8 +209,8 @@ export default function ChatWindow({
                   return already
                     ? prev
                     : prev
-                    ? [...prev, incoming]
-                    : [incoming];
+                      ? [...prev, incoming]
+                      : [incoming];
                 }, false);
               } else if (payload.id) {
                 const incoming: Message = payload;
@@ -220,8 +219,8 @@ export default function ChatWindow({
                     prev && prev.some((m) => m.id === incoming.id)
                       ? prev
                       : prev
-                      ? [...prev, incoming]
-                      : [incoming],
+                        ? [...prev, incoming]
+                        : [incoming],
                   false
                 );
               }
@@ -229,7 +228,7 @@ export default function ChatWindow({
               console.error("Error parsing user queue message", e);
             }
           });
-        } catch (e) {}
+        } catch (e) { }
 
         try {
           client.subscribe(
@@ -243,10 +242,10 @@ export default function ChatWindow({
                     (prev) =>
                       prev
                         ? prev.map((m) =>
-                            m.id === messageId
-                              ? { ...m, deletedForCurrentUser: true }
-                              : m
-                          )
+                          m.id === messageId
+                            ? { ...m, deletedForCurrentUser: true }
+                            : m
+                        )
                         : prev,
                     false
                   );
@@ -256,7 +255,7 @@ export default function ChatWindow({
               }
             }
           );
-        } catch (e) {}
+        } catch (e) { }
       },
       onStompError: (frame) => {
         console.error("Broker reported error: " + frame.headers["message"]);
@@ -273,7 +272,7 @@ export default function ChatWindow({
           stompClientRef.current.deactivate();
           stompClientRef.current = null;
         }
-      } catch (e) {}
+      } catch (e) { }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [receiverId, chatRoomId, mutate]);
@@ -291,8 +290,8 @@ export default function ChatWindow({
       (prev) =>
         prev
           ? prev.map((m) =>
-              m.id === messageId ? { ...m, deletedForCurrentUser: true } : m
-            )
+            m.id === messageId ? { ...m, deletedForCurrentUser: true } : m
+          )
           : prev,
       false
     );
@@ -373,9 +372,8 @@ export default function ChatWindow({
     // non-image file card
     return (
       <div
-        className={`mt-2 flex items-center gap-3 p-3 rounded-md border ${
-          isMine ? "bg-primary/5 border-primary/40" : "bg-white border-border"
-        }`}
+        className={`mt-2 flex items-center gap-3 p-3 rounded-md border ${isMine ? "bg-primary/5 border-primary/40" : "bg-white border-border"
+          }`}
       >
         <div className="flex-none w-10 h-10 rounded-md flex items-center justify-center bg-muted">
           {/* simple paperclip/file icon */}
@@ -466,9 +464,8 @@ export default function ChatWindow({
             return (
               <div
                 key={msg.id}
-                className={`flex items-start gap-3 ${
-                  isMine ? "justify-end" : "justify-start"
-                }`}
+                className={`flex items-start gap-3 ${isMine ? "justify-end" : "justify-start"
+                  }`}
               >
                 {!isMine && (
                   <Image
@@ -497,9 +494,8 @@ export default function ChatWindow({
           return (
             <div
               key={msg.id}
-              className={`relative flex items-start gap-3 ${
-                isMine ? "justify-end" : "justify-start"
-              }`}
+              className={`relative flex items-start gap-3 ${isMine ? "justify-end" : "justify-start"
+                }`}
             >
               {!isMine && (
                 <Image
@@ -530,11 +526,10 @@ export default function ChatWindow({
                 )}
 
                 <div
-                  className={`text-[11px] mt-1 ${
-                    isMine
+                  className={`text-[11px] mt-1 ${isMine
                       ? "text-primary-foreground/80"
                       : "text-muted-foreground"
-                  }`}
+                    }`}
                 >
                   <span>{formatTime(msg.createdAt)}</span>
                 </div>

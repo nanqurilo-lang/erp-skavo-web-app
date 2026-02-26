@@ -1,21 +1,3 @@
-// "use client";
-
-// export default function InvoicesSection({ projectId }: { projectId: number }) {
-//     return (
-//         <div>
-//             <h3 className="text-lg font-medium mb-4">Invoices</h3>
-//             <div className="border rounded-md p-4 text-gray-400 text-center">
-//                 {/* No invoices linked to this project */}
-
-
-
-
-                
-//             </div>
-//         </div>
-//     );
-// }
-
 
 "use client";
 
@@ -78,7 +60,7 @@ export default function InvoicesSection({
   const fetchInvoices = async () => {
     try {
       setLoading(true);
-     // console.log("nbg",projectId)
+      // console.log("nbg",projectId)
       const res = await fetch(
         `${BASE_URL}/api/invoices/project/${projectId}`,
         {
@@ -90,7 +72,7 @@ export default function InvoicesSection({
 
       const data = await res.json();
 
-     //  console.log("nbg",res)
+      //  console.log("nbg",res)
       setInvoices(Array.isArray(data) ? data : data.invoices ?? []);
     } catch (err) {
       console.error("Failed to load invoices", err);

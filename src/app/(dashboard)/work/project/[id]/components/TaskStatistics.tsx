@@ -5,7 +5,7 @@ import axios from "axios";
 
 
 const MAIN =
-    process.env.NEXT_PUBLIC_MAIN ;
+    process.env.NEXT_PUBLIC_MAIN;
 
 type StatusItem = {
     id: number;

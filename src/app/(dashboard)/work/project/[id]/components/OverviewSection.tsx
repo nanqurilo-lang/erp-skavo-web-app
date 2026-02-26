@@ -398,7 +398,7 @@ export default function ProjectDetailsPage() {
           </h1>
         </div>
 
-      
+
 
         {/* Content */}
         <div className="mt-6 space-y-6">

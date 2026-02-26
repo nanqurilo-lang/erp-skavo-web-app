@@ -1,8 +1,3 @@
-
-
-
-
-
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -140,9 +135,9 @@ export default function DiscussionSection({
         // },
 
 
- headers: {
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
 
         body: JSON.stringify(categoryForm),
       }
