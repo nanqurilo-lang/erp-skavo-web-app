@@ -1,10 +1,7 @@
 
-
-
-
 // components/TasksTable.tsx
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { UserIcon } from "@heroicons/react/24/outline";
 import { deleteAPI, postAPI, putAPI } from "@/app/api/apiHelper";
@@ -83,6 +80,52 @@ export default function TasksTable({ projectId }: { projectId: number }) {
   const [actionOpenFor, setActionOpenFor] = useState<number | null>(null);
   const [statusOpenFor, setStatusOpenFor] = useState<number | null>(null);
   const [menuPosition, setMenuPosition] = useState<{ top: number; left: number } | null>(null);
+
+
+  const actionMenuRef = useRef<HTMLDivElement | null>(null);
+  const statusMenuRef = useRef<HTMLDivElement | null>(null);
+
+
+
+
+
+
+
+
+  useEffect(() => {
+    if (actionOpenFor === null && statusOpenFor === null) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node;
+
+      const clickedInsideAction =
+        actionMenuRef.current?.contains(target);
+
+      const clickedInsideStatus =
+        statusMenuRef.current?.contains(target);
+
+      if (!clickedInsideAction && !clickedInsideStatus) {
+        setActionOpenFor(null);
+        setStatusOpenFor(null);
+      }
+    };
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setActionOpenFor(null);
+        setStatusOpenFor(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleEscape);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [actionOpenFor, statusOpenFor]);
+
 
   // form helpers
   const emptyForm = {
@@ -284,8 +327,7 @@ export default function TasksTable({ projectId }: { projectId: number }) {
     }
   };
 
-  // Update status (optimistic + backend) using the URL you specified:
-  // PUT {{base_url}}/api/projects/tasks/{{taskId}}/status?statusId={{stageId}}
+
   const changeStatus = async (task: Task, statusItem: StatusItem) => {
     // optimistic update locally
     setTasks((prev) =>
@@ -354,16 +396,6 @@ export default function TasksTable({ projectId }: { projectId: number }) {
       {/* header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-4">
-          {/* <button
-            onClick={() => {
-              setForm({ ...emptyForm, projectId });
-              setShowCreate(true);
-            }}
-            className="bg-blue-600 text-white px-4 py-2 rounded shadow-sm hover:bg-blue-700"
-          >
-            + Add Task
-          </button> */}
-
 
           <button
             onClick={() => setShowCreate(true)}
@@ -428,17 +460,14 @@ export default function TasksTable({ projectId }: { projectId: number }) {
                   const displayStatus = getDisplayStatus(t);
                   const statusName = displayStatus?.name ?? "Doing";
                   return (
-                    // <tr key={t.id} className="border-b last:border-b-0 bg-white hover:bg-gray-50">
-                    // <tr key={t.id} className="border-b last:border-b-0 bg-white hover:bg-gray-50 h-20">
+
                     <tr key={t.id} className="relative border-b last:border-b-0 bg-white hover:bg-gray-50 h-20">
 
-                      {/* <td className="px-4 py-4 align-top"> */}
 
                       <td className="px-4 py-4 align-top whitespace-nowrap">
 
                         RTA-{String(t.id).padStart(2, "0")}</td>
 
-                      {/* <td className="px-4 py-4 align-top"> */}
                       <td className="px-4 py-4 align-top whitespace-nowrap">
 
 
@@ -449,15 +478,12 @@ export default function TasksTable({ projectId }: { projectId: number }) {
                       <td className="px-4 py-4 align-top">--</td>
 
                       <td className="px-4 py-4 align-top whitespace-nowrap">{t.startDate ?
-                        //  new Date(t.startDate).toLocaleDateString() 
                         format(new Date(t.startDate), "dd-MM-yyyy")
                         : "--"}</td>
 
-                      {/* <td className={`px-4 py-4 align-top ${isOverdue ? "text-red-600" : ""}`}> */}
                       <td className={`px-4 py-4 align-top whitespace-nowrap ${isOverdue ? "text-red-600" : ""}`}>
 
                         {t.noDueDate ? "--" : t.dueDate ?
-                          // new Date(t.dueDate).toLocaleDateString()
                           format(new Date(t.dueDate), "dd-MM-yyyy")
                           : "--"}
                       </td>
@@ -509,8 +535,8 @@ export default function TasksTable({ projectId }: { projectId: number }) {
                           </button>
 
                           {statusOpenFor === t.id && (
-                            // <div onClick={(e) => e.stopPropagation()} className="absolute right-0 mt-2 z-30 w-44 bg-white border rounded-md shadow-lg text-sm">
                             <div
+                              ref={statusMenuRef}
                               onClick={(e) => e.stopPropagation()}
                               className="absolute right-0 top-full mt-2 z-[9999] w-44 bg-white border rounded-md shadow-lg text-sm"
                             >
@@ -549,22 +575,6 @@ export default function TasksTable({ projectId }: { projectId: number }) {
                       </td>
 
                       <td className="px-4 py-4 align-top relative">
-                        {/* <button
-                          onClick={(ev) => {
-                            ev.stopPropagation();
-                            setStatusOpenFor(null);
-                            setActionOpenFor((cur) => (cur === t.id ? null : t.id));
-                          }}
-                          className="p-1 rounded hover:bg-gray-100"
-                          aria-haspopup="true"
-                          aria-expanded={actionOpenFor === t.id}
-                          title="More"
-                        >
-                          ⋮
-                        </button> */}
-
-
-
 
                         <button
                           onClick={(ev) => {
@@ -584,51 +594,9 @@ export default function TasksTable({ projectId }: { projectId: number }) {
                           ⋮
                         </button>
 
-
-
-                        {/* ACTION menu - anchored to row */}
-                        {/* {actionOpenFor === t.id && (
-                          // <div onClick={(e) => e.stopPropagation()} className="absolute right-2 top-10 z-20 w-48 bg-white border rounded-md shadow-md">
-                          <div
-  onClick={(e) => e.stopPropagation()}
-  className="absolute right-4 top-full mt-2 z-[9999] w-48 bg-white border rounded-md shadow-lg"
->
-                            <button
-                              onClick={() => {
-                                // OPEN external TaskViewModal
-                                openView(t);
-                                setActionOpenFor(null);
-                              }}
-                              className="w-full text-left px-4 py-2 hover:bg-gray-50"
-                            >
-                              View
-                            </button>
-
-                            <button
-                              onClick={() => {
-                                openEdit(t);
-                                setActionOpenFor(null);
-                              }}
-                              className="w-full text-left px-4 py-2 hover:bg-gray-50"
-                            >
-                              Edit
-                            </button>
-
-                            <button
-                              onClick={() => {
-                                setActionOpenFor(null);
-                                handleDelete(t.id);
-                              }}
-                              className="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-50"
-                            >
-                              Delete
-                            </button>
-                          </div>
-                        )} */}
-
-
                         {actionOpenFor === t.id && menuPosition && (
                           <div
+                            ref={actionMenuRef}
                             style={{
                               position: "fixed",
                               top: menuPosition.top,
@@ -686,104 +654,7 @@ export default function TasksTable({ projectId }: { projectId: number }) {
         </div>
       )}
 
-      {/* Create modal (unchanged) */}
-      {/* {showCreate && (
-        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/40 p-4">
-          <form onSubmit={handleCreate} className="bg-white w-full max-w-3xl rounded-lg p-6 shadow-lg overflow-auto max-h-[90vh]">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold">Add Task</h3>
-              <button type="button" onClick={() => setShowCreate(false)} className="text-gray-500">Close</button>
-            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <label className="flex flex-col">
-                <span className="text-xs text-gray-600">Title</span>
-                <input required value={form.title} onChange={(e) => updateForm({ title: e.target.value })} className="border px-3 py-2 rounded" />
-              </label>
-
-              <label className="flex flex-col">
-                <span className="text-xs text-gray-600">Category (id)</span>
-                <input value={form.category} onChange={(e) => updateForm({ category: e.target.value })} className="border px-3 py-2 rounded" />
-              </label>
-
-              <label className="flex flex-col">
-                <span className="text-xs text-gray-600">Start Date</span>
-                <input type="date" value={form.startDate} onChange={(e) => updateForm({ startDate: e.target.value })} className="border px-3 py-2 rounded" />
-              </label>
-
-              <label className="flex flex-col">
-                <span className="text-xs text-gray-600">Due Date</span>
-                <input type="date" value={form.dueDate} onChange={(e) => updateForm({ dueDate: e.target.value })} className="border px-3 py-2 rounded" />
-              </label>
-
-              <label className="flex items-center gap-2">
-                <input type="checkbox" checked={form.noDueDate} onChange={(e) => updateForm({ noDueDate: e.target.checked })} />
-                <span className="text-sm text-gray-600">No Due Date</span>
-              </label>
-
-              <label className="flex flex-col">
-                <span className="text-xs text-gray-600">Task Stage ID</span>
-                <input value={form.taskStageId} onChange={(e) => updateForm({ taskStageId: e.target.value })} className="border px-3 py-2 rounded" />
-              </label>
-
-              <label className="flex flex-col md:col-span-2">
-                <span className="text-xs text-gray-600">Description</span>
-                <textarea value={form.description} onChange={(e) => updateForm({ description: e.target.value })} className="border px-3 py-2 rounded" />
-              </label>
-
-              <label className="flex flex-col">
-                <span className="text-xs text-gray-600">Assigned Employee IDs (comma separated)</span>
-                <input value={form.assignedEmployeeIds.join(",")} onChange={(e) => updateForm({ assignedEmployeeIds: e.target.value.split(",").map(s => s.trim()).filter(Boolean) })} className="border px-3 py-2 rounded" />
-              </label>
-
-              <label className="flex flex-col">
-                <span className="text-xs text-gray-600">Label IDs (comma separated)</span>
-                <input value={form.labelIds.join(",")} onChange={(e) => updateForm({ labelIds: e.target.value.split(",").map(s => s.trim()).filter(Boolean) })} className="border px-3 py-2 rounded" />
-              </label>
-
-              <label className="flex flex-col">
-                <span className="text-xs text-gray-600">Milestone ID</span>
-                <input value={form.milestoneId} onChange={(e) => updateForm({ milestoneId: e.target.value })} className="border px-3 py-2 rounded" />
-              </label>
-
-              <label className="flex flex-col">
-                <span className="text-xs text-gray-600">Priority</span>
-                <select value={form.priority} onChange={(e) => updateForm({ priority: e.target.value })} className="border px-3 py-2 rounded">
-                  <option value="LOW">LOW</option>
-                  <option value="MEDIUM">MEDIUM</option>
-                  <option value="HIGH">HIGH</option>
-                  <option value="URGENT">URGENT</option>
-                </select>
-              </label>
-
-              <label className="flex flex-col">
-                <span className="text-xs text-gray-600">Time Estimate (minutes)</span>
-                <input type="number" value={form.timeEstimateMinutes} onChange={(e) => updateForm({ timeEstimateMinutes: e.target.value })} className="border px-3 py-2 rounded" />
-              </label>
-
-              <label className="flex items-center gap-2">
-                <input type="checkbox" checked={form.isPrivate} onChange={(e) => updateForm({ isPrivate: e.target.checked })} />
-                <span className="text-sm text-gray-600">Private</span>
-              </label>
-
-              <label className="flex items-center gap-2">
-                <input type="checkbox" checked={form.isDependent} onChange={(e) => updateForm({ isDependent: e.target.checked })} />
-                <span className="text-sm text-gray-600">Is Dependent</span>
-              </label>
-
-              <label className="flex flex-col md:col-span-2">
-                <span className="text-xs text-gray-600">Attach file (optional)</span>
-                <input type="file" onChange={(e) => updateForm({ taskFile: e.target.files?.[0] || null })} />
-              </label>
-            </div>
-
-            <div className="mt-4 flex items-center justify-end gap-3">
-              <button type="button" onClick={() => setShowCreate(false)} className="px-4 py-2 rounded border">Cancel</button>
-              <button type="submit" className="px-4 py-2 rounded bg-blue-600 text-white">Save</button>
-            </div>
-          </form>
-        </div>
-      )} */}
 
       {/* Edit modal (unchanged) */}
       {showEdit && editTask && (

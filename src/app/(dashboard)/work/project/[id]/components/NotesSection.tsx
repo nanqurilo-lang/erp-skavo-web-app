@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   MoreVertical,
   Globe,
@@ -37,6 +37,7 @@ export default function ProjectNotesTable({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [menuOpenFor, setMenuOpenFor] = useState<number | null>(null);
+  const menuRef = useRef<HTMLDivElement | null>(null);
 
   /* ===== ADD ===== */
   const [showAddModal, setShowAddModal] = useState(false);
@@ -58,9 +59,8 @@ export default function ProjectNotesTable({
   const [updating, setUpdating] = useState(false);
 
   const authHeader = {
-    Authorization: `Bearer ${
-      authToken || localStorage.getItem("accessToken") || ""
-    }`,
+    Authorization: `Bearer ${authToken || localStorage.getItem("accessToken") || ""
+      }`,
   };
 
   /* ================= LOAD NOTES ================= */
@@ -81,13 +81,13 @@ export default function ProjectNotesTable({
         setNotes(
           Array.isArray(data)
             ? data.map((n: any) => ({
-                id: n.id,
-                title: n.title ?? "Untitled",
-                content: n.content ?? "---",
-                isPublic: !!n.isPublic,
-                createdBy: n.createdBy,
-                createdAt: n.createdAt,
-              }))
+              id: n.id,
+              title: n.title ?? "Untitled",
+              content: n.content ?? "---",
+              isPublic: !!n.isPublic,
+              createdBy: n.createdBy,
+              createdAt: n.createdAt,
+            }))
             : []
         );
       } catch (e: any) {
@@ -99,6 +99,37 @@ export default function ProjectNotesTable({
 
     loadNotes();
   }, [projectId]);
+
+
+  useEffect(() => {
+    if (menuOpenFor === null) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(event.target as Node)
+      ) {
+        setMenuOpenFor(null);
+      }
+    };
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setMenuOpenFor(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleEscape);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [menuOpenFor]);
+
+
+
 
   /* ================= ADD ================= */
   const saveNote = async () => {
@@ -180,11 +211,11 @@ export default function ProjectNotesTable({
         p.map((n) =>
           n.id === editId
             ? {
-                ...n,
-                title: updated.title,
-                content: updated.content,
-                isPublic: updated.isPublic,
-              }
+              ...n,
+              title: updated.title,
+              content: updated.content,
+              isPublic: updated.isPublic,
+            }
             : n
         )
       );
@@ -254,7 +285,10 @@ export default function ProjectNotesTable({
                   </button>
 
                   {menuOpenFor === note.id && (
-                    <div className="absolute right-0 mt-2 bg-white border rounded shadow w-40 z-20">
+                    <div
+                      ref={menuRef}
+                      className="absolute right-0 mt-2 bg-white border rounded shadow w-40 z-20"
+                    >
                       <button
                         className="w-full px-3 py-2 flex gap-2 hover:bg-gray-50"
                         onClick={() => {
@@ -379,19 +413,6 @@ export default function ProjectNotesTable({
     </div>
   );
 }
-
-/* ================= REUSABLE UI ================= */
-
-// function ModalWrapper({ children, onClose }: any) {
-//   return (
-//     <div className="fixed inset-0 z-50 flex justify-center pt-12">
-//       <div className="absolute inset-0 bg-black/30" onClick={onClose} />
-//       <div className="relative bg-white w-[900px] max-w-[95%] rounded border shadow">
-//         {children}
-//       </div>
-//     </div>
-//   );
-// }
 
 
 

@@ -14,11 +14,11 @@ export type NoteItem = {
 };
 
 // primary fallback base (kept for backward compatibility)
-const FALLBACK_BASE =  `${process.env.NEXT_PUBLIC_MAIN}`;
+const FALLBACK_BASE = `${process.env.NEXT_PUBLIC_MAIN}`;
 // POST should use Gateway (if provided)
-const POST_BASE =  `${process.env.NEXT_PUBLIC_MAIN}`;
+const POST_BASE = `${process.env.NEXT_PUBLIC_MAIN}`;
 // DELETE should use main (if provided)
-const DELETE_BASE =  `${process.env.NEXT_PUBLIC_MAIN}`;
+const DELETE_BASE = `${process.env.NEXT_PUBLIC_MAIN}`;
 
 // helper: try convert various clientId shapes -> numeric
 function resolveClientIdToNumber(clientId: any): number | null {
@@ -70,54 +70,54 @@ export default function ClientNotesTable({
   const [viewNote, setViewNote] = useState<NoteItem | null>(null);
 
 
-const [menuPosition, setMenuPosition] = useState<{ top: number; left: number } | null>(null);
-const menuRef = useRef<HTMLDivElement | null>(null);
+  const [menuPosition, setMenuPosition] = useState<{ top: number; left: number } | null>(null);
+  const menuRef = useRef<HTMLDivElement | null>(null);
 
 
-const handleMenuOpen = (
-  e: React.MouseEvent,
-  noteId: number
-) => {
-  e.stopPropagation();
+  const handleMenuOpen = (
+    e: React.MouseEvent,
+    noteId: number
+  ) => {
+    e.stopPropagation();
 
-  const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
 
-  setMenuOpenFor(noteId);
-  setMenuPosition({
-    top: rect.bottom + 6,
-    left: rect.right - 180,
-  });
-};
-
-
-useEffect(() => {
-  if (menuOpenFor === null) return;
-
-  const handleClickOutside = (event: MouseEvent) => {
-    if (
-      menuRef.current &&
-      !menuRef.current.contains(event.target as Node)
-    ) {
-      setMenuOpenFor(null);
-      setMenuPosition(null);
-    }
+    setMenuOpenFor(noteId);
+    setMenuPosition({
+      top: rect.bottom + 6,
+      left: rect.right - 180,
+    });
   };
 
-  const handleEscape = (event: KeyboardEvent) => {
-    if (event.key === "Escape") {
-      setMenuOpenFor(null);
-      setMenuPosition(null);
-    }
-  };
 
-  document.addEventListener("mousedown", handleClickOutside);
-  document.addEventListener("keydown", handleEscape);
+  useEffect(() => {
+    if (menuOpenFor === null) return;
 
-  return () => {
-    document.removeEventListener("mousedown", handleClickOutside);
-    document.removeEventListener("keydown", handleEscape);
-  };
-}, [menuOpenFor]);
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(event.target as Node)
+      ) {
+        setMenuOpenFor(null);
+        setMenuPosition(null);
+      }
+    };
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setMenuOpenFor(null);
+        setMenuPosition(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleEscape);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [menuOpenFor]);
 
 
 
@@ -176,14 +176,14 @@ useEffect(() => {
 
         const mapped: NoteItem[] = Array.isArray(data)
           ? data.map((n: any) => ({
-              id: n.id,
-              clientId: n.clientId,
-              title: n.title ?? "Untitled",
-              content: n.detail ?? null,
-              type: n.type ?? "PRIVATE",
-              createdBy: n.createdBy,
-              createdAt: n.createdAt,
-            }))
+            id: n.id,
+            clientId: n.clientId,
+            title: n.title ?? "Untitled",
+            content: n.detail ?? null,
+            type: n.type ?? "PRIVATE",
+            createdBy: n.createdBy,
+            createdAt: n.createdAt,
+          }))
           : [];
 
         if (mounted) setNotes(mapped);
@@ -384,7 +384,7 @@ useEffect(() => {
             className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm px-3 py-2 rounded"
             onClick={openAddModal}
           >
-            <Plus size={16} /> Add Note 
+            <Plus size={16} /> Add Note
           </button>
         </div>
 
@@ -427,26 +427,38 @@ useEffect(() => {
                       </td>
 
                       <td className="px-4 py-4 text-right relative">
-                        {/* <button
-                          onClick={() => setMenuOpenFor(menuOpenFor === note.id ? null : note.id)}
+
+
+
+                        <button
+                          onClick={(e) => handleMenuOpen(e, note.id)}
                           className="p-1 rounded hover:bg-gray-100"
-                        > */}
-
-
-<button
-  onClick={(e) => handleMenuOpen(e, note.id)}
-  className="p-1 rounded hover:bg-gray-100"
->
+                        >
 
                           <MoreVertical size={18} />
                         </button>
 
-                        {/* {menuOpenFor === note.id && (
-                          <div className="absolute right-2 mt-2 w-44 bg-white border rounded shadow-lg z-30">
+
+
+                        {menuOpenFor !== null && menuPosition && (
+                          <div
+                            ref={menuRef}
+                            style={{
+                              position: "fixed",
+                              top: menuPosition.top,
+                              left: menuPosition.left,
+                              zIndex: 9999,
+                              minWidth: 180,
+                            }}
+                            className="bg-white border rounded shadow-lg"
+                          >
                             <button
                               className="w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-gray-50"
                               onClick={() => {
+                                const note = notes.find(n => n.id === menuOpenFor);
+                                if (!note) return;
                                 setMenuOpenFor(null);
+                                setMenuPosition(null);
                                 openViewModal(note);
                               }}
                             >
@@ -456,7 +468,10 @@ useEffect(() => {
                             <button
                               className="w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-gray-50"
                               onClick={() => {
+                                const note = notes.find(n => n.id === menuOpenFor);
+                                if (!note) return;
                                 setMenuOpenFor(null);
+                                setMenuPosition(null);
                                 openEditModal(note);
                               }}
                             >
@@ -466,67 +481,17 @@ useEffect(() => {
                             <button
                               className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-gray-50"
                               onClick={() => {
+                                const note = notes.find(n => n.id === menuOpenFor);
+                                if (!note) return;
                                 setMenuOpenFor(null);
+                                setMenuPosition(null);
                                 handleDelete(note);
                               }}
                             >
                               <Trash2 size={14} /> Delete
                             </button>
                           </div>
-                        )} */}
-
-{menuOpenFor !== null && menuPosition && (
-  <div
-    ref={menuRef}
-    style={{
-      position: "fixed",
-      top: menuPosition.top,
-      left: menuPosition.left,
-      zIndex: 9999,
-      minWidth: 180,
-    }}
-    className="bg-white border rounded shadow-lg"
-  >
-    <button
-      className="w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-gray-50"
-      onClick={() => {
-        const note = notes.find(n => n.id === menuOpenFor);
-        if (!note) return;
-        setMenuOpenFor(null);
-        setMenuPosition(null);
-        openViewModal(note);
-      }}
-    >
-      <Eye size={14} /> View
-    </button>
-
-    <button
-      className="w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-gray-50"
-      onClick={() => {
-        const note = notes.find(n => n.id === menuOpenFor);
-        if (!note) return;
-        setMenuOpenFor(null);
-        setMenuPosition(null);
-        openEditModal(note);
-      }}
-    >
-      <Edit size={14} /> Edit
-    </button>
-
-    <button
-      className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-gray-50"
-      onClick={() => {
-        const note = notes.find(n => n.id === menuOpenFor);
-        if (!note) return;
-        setMenuOpenFor(null);
-        setMenuPosition(null);
-        handleDelete(note);
-      }}
-    >
-      <Trash2 size={14} /> Delete
-    </button>
-  </div>
-)}
+                        )}
 
 
                       </td>
