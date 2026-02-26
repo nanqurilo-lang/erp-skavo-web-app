@@ -1,33 +1,4 @@
-// "use client";
 
-// import TaskStatistics from "./TaskStatistics";
-// import TasksTable from "../../components/TasksTable";
-
-// export default function OverviewSection({ project, metrics }: any) {
-//     return (
-//         <div className="space-y-6">
-
-//             {/* SUMMARY */}
-//             <div className="border rounded-xl p-6">
-//                 <h3 className="text-lg font-medium mb-2">Project Summary</h3>
-//                 <p className="text-sm text-gray-600">
-//                     {project.summary || "No summary available"}
-//                 </p>
-//             </div>
-
-//             {/* STATS */}
-//             <div className="border rounded-xl p-6">
-//                 <h3 className="text-lg font-medium mb-4">Task Statistics</h3>
-//                 <TaskStatistics projectId={project.id} />
-//             </div>
-
-//             {/* TASK TABLE */}
-//             <div className="border rounded-xl p-4">
-//                 <TasksTable projectId={project.id} />
-//             </div>
-//         </div>
-//     );
-// }
 
 // app/(your-route)/page.tsx
 "use client";
@@ -427,38 +398,7 @@ export default function ProjectDetailsPage() {
           </h1>
         </div>
 
-        {/* Tabs container */}
-        {/* <div className="bg-white rounded-t-lg shadow-sm border border-b-0">
-          <div className="px-4">
-            <nav className="flex items-center gap-6 h-14">
-              {[
-                { key: 'overview', label: 'Overview' },
-                { key: 'invoices', label: 'Invoices' },
-                { key: 'payments', label: 'Payments' },
-                { key: 'files', label: 'Files' },
-                { key: 'notes', label: 'Notes' },
-                { key: 'activity', label: 'Activity' },
-                { key: 'discussion', label: 'Discussion' },
-              ].map(t => {
-                const isActive = activeTab === (t.key as any);
-                return (
-                  <button
-                    key={t.key}
-                    onClick={() => setActiveTab(t.key as any)}
-                    className={`py-3 text-sm font-medium ${isActive ? 'text-blue-600' : 'text-gray-600'}`}
-                    aria-current={isActive ? 'page' : undefined}
-                  >
-                    <span className="relative inline-block">
-                      {t.label}
-                      {isActive && <span className="absolute -bottom-5 left-0 w-full h-0.5 bg-blue-400 rounded" />}
-                    </span>
-                  </button>
-                );
-              })}
-            </nav>
-          </div>
-          <div className="h-1"><div className="border-t-2 border-blue-300" /></div>
-        </div> */}
+      
 
         {/* Content */}
         <div className="mt-6 space-y-6">

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { format } from "date-fns";
 
@@ -16,7 +16,7 @@ type Milestone = {
   [k: string]: any;
 };
 
-const DEFAULT_MAIN = process.env.NEXT_PUBLIC_MAIN 
+const DEFAULT_MAIN = process.env.NEXT_PUBLIC_MAIN
 
 // Temporary provided token (for local testing only). DON'T commit real tokens.
 const PROVIDED_TOKEN = typeof window !== "undefined" ? localStorage.getItem("accessToken") : null;
@@ -62,6 +62,50 @@ export default function MilestonesTable({
   const [actionOpenFor, setActionOpenFor] = useState<number | null>(null);
   const [statusMenuOpenFor, setStatusMenuOpenFor] = useState<number | null>(null);
 
+
+
+  const actionMenuRef = useRef<HTMLDivElement | null>(null);
+  const statusMenuRef = useRef<HTMLDivElement | null>(null);
+
+
+
+  useEffect(() => {
+    if (actionOpenFor === null && statusMenuOpenFor === null) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node;
+
+      const clickedInsideAction =
+        actionMenuRef.current?.contains(target);
+
+      const clickedInsideStatus =
+        statusMenuRef.current?.contains(target);
+
+      if (!clickedInsideAction && !clickedInsideStatus) {
+        setActionOpenFor(null);
+        setStatusMenuOpenFor(null);
+      }
+    };
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setActionOpenFor(null);
+        setStatusMenuOpenFor(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleEscape);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [actionOpenFor, statusMenuOpenFor]);
+
+
+
+
   // build URL helper
   const buildUrl = (path: string) => {
     const p = String(path || "");
@@ -97,7 +141,7 @@ export default function MilestonesTable({
           try {
             const json = JSON.parse(text || "{}");
             throw new Error(`HTTP ${res.status} ${res.statusText} — ${JSON.stringify(json)}`);
-          } catch {}
+          } catch { }
         }
         throw new Error(`HTTP ${res.status} ${res.statusText} ${text ? "- " + text.slice(0, 300) : ""}`);
       }
@@ -461,7 +505,11 @@ export default function MilestonesTable({
                 <div className="col-span-2 text-sm">
                   <div className="relative inline-block">
                     <button
-                      onClick={() => setStatusMenuOpenFor(statusMenuOpenFor === m.id ? null : (m.id ?? null))}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setActionOpenFor(null);
+                        setStatusMenuOpenFor(statusMenuOpenFor === m.id ? null : (m.id ?? null));
+                      }}
                       className={`inline-flex items-center justify-between w-full gap-2 px-3 py-1 rounded-md border text-sm bg-white ${statusIsCompleted(m.status) ? "border-green-200" : "border-gray-200"}`}
                       title="Change status"
                       aria-haspopup="true"
@@ -479,7 +527,10 @@ export default function MilestonesTable({
                     </button>
 
                     {statusMenuOpenFor === m.id && (
-                      <div className="absolute mt-2 right-0 z-20 w-44 bg-white border rounded-md shadow-lg">
+                      <div
+                        ref={statusMenuRef}
+                        className="absolute mt-2 right-0 z-20 w-44 bg-white border rounded-md shadow-lg"
+                      >
                         <button
                           onClick={() => changeStatus(m, "COMPLETED")}
                           className={`w-full text-left px-4 py-2 hover:bg-gray-50 text-sm flex items-center justify-between ${statusIsCompleted(m.status) ? "font-semibold" : ""}`}
@@ -511,7 +562,14 @@ export default function MilestonesTable({
                 {/* ACTIONS as three-dot dropdown */}
                 <div className="col-span-2 text-right relative">
                   <button
-                    onClick={() => setActionOpenFor(actionOpenFor === m.id ? null : (m.id ?? null))}
+                    onClick={(e) => {
+                      e.stopPropagation();              // important
+                      setStatusMenuOpenFor(null);       // close status dropdown if open
+                      setActionOpenFor(
+                        actionOpenFor === m.id ? null : (m.id ?? null)
+                      );
+                    }}
+
                     className="px-3 py-1 rounded text-sm border hover:bg-gray-50"
                     aria-haspopup="true"
                     aria-expanded={actionOpenFor === m.id}
@@ -521,8 +579,10 @@ export default function MilestonesTable({
                   </button>
 
                   {actionOpenFor === m.id && (
-                    // <div className="absolute right-0 mt-2 z-30 w-44 bg-white border rounded-md shadow-lg text-sm">
-                    <div className="absolute right-0 top-full mt-2 z-[999] w-44 bg-white border rounded-md shadow-lg text-sm">
+                    <div
+                      ref={actionMenuRef}
+                      className="absolute right-0 top-full mt-2 z-[999] w-44 bg-white border rounded-md shadow-lg text-sm"
+                    >
                       <button
                         onClick={() => {
                           openView(m);
@@ -694,27 +754,24 @@ export default function MilestonesTable({
                   <div className="mt-1 p-2 bg-gray-50 rounded text-sm">{selected.summary ?? "-"}</div>
                 </div>
                 <div>
-                  <strong>Start Date:</strong> {selected.startDate ? 
-                  // new Date(selected.startDate).toLocaleDateString() 
-                  format(new Date(selected.startDate), "dd-MM-yyyy")
-                  : "-"}
+                  <strong>Start Date:</strong> {selected.startDate ?
+                    // new Date(selected.startDate).toLocaleDateString() 
+                    format(new Date(selected.startDate), "dd-MM-yyyy")
+                    : "-"}
                 </div>
                 <div>
                   <strong>End Date:</strong> {selected.endDate ?
-                  //  new Date(selected.endDate).toLocaleDateString() 
-                  format(new Date(selected.endDate), "dd-MM-yyyy")
-                   : "-"}
+                    //  new Date(selected.endDate).toLocaleDateString() 
+                    format(new Date(selected.endDate), "dd-MM-yyyy")
+                    : "-"}
                 </div>
                 <div>
                   <strong>Created At: </strong> {selected.createdAt ?
-                  //  new Date(selected.createdAt).toLocaleString()
-                    format(new Date(selected.createdAt), "dd-MM-yyyy HH:mm:ss") 
-                   : "-"}
+                    //  new Date(selected.createdAt).toLocaleString()
+                    format(new Date(selected.createdAt), "dd-MM-yyyy HH:mm:ss")
+                    : "-"}
                 </div>
-                {/* <div>
-                  <strong>Raw:</strong>{" "}
-                  <pre className="text-xs bg-gray-50 p-2 rounded">{JSON.stringify(selected, null, 2)}</pre>
-                </div> */}
+
               </div>
 
               <div className="flex items-center justify-center gap-6 mt-6 pb-6">
