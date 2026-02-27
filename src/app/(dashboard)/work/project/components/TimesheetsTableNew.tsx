@@ -1,7 +1,7 @@
 
 // components/TimesheetsTableNew.tsx
 "use client";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useRef } from "react";
 import { UserIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
 type EmployeeItem = {
@@ -47,6 +47,7 @@ export default function TimesheetsTableNew({
   const [error, setError] = useState<string | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
 
+
   // search / filters
   const [search, setSearch] = useState("");
   const [employeeFilter, setEmployeeFilter] = useState<string>("All");
@@ -56,6 +57,11 @@ export default function TimesheetsTableNew({
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<number | null>(null);
+
+
+  const actionMenuRef = useRef<HTMLDivElement | null>(null);
+
+
 
   const [form, setForm] = useState({
     projectId: "",
@@ -82,6 +88,10 @@ export default function TimesheetsTableNew({
   const [isViewOpen, setIsViewOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState<Timesheet | null>(null);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+
+
+
+
 
   // helpers
   const buildUrl = (path: string) => {
@@ -229,6 +239,33 @@ export default function TimesheetsTableNew({
     fetchTimesheets();
     fetchProjects();
   }, [refreshKey]);
+
+  useEffect(() => {
+    if (actionOpenFor === null) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        actionMenuRef.current &&
+        !actionMenuRef.current.contains(event.target as Node)
+      ) {
+        setActionOpenFor(null);
+      }
+    };
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setActionOpenFor(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleEscape);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [actionOpenFor]);
 
 
   // derive employees for filter/select
@@ -527,23 +564,23 @@ export default function TimesheetsTableNew({
                         <td className="px-4 py-4 align-top">{fmtDateTime(row.startDate, row.startTime)}</td>
                         <td className="px-4 py-4 align-top">{fmtDateTime(row.endDate, row.endTime)}</td>
                         <td className="px-4 py-4 align-top">{typeof row.durationHours === "number" ? `${row.durationHours}h` : "-"}</td>
-
                         <td className="px-4 py-4 align-top">
                           <div className="relative inline-block text-left">
-                            {/* Three-dot button */}
                             <button
-                              onClick={() => setActionOpenFor(actionOpenFor === row.id ? null : row.id)}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setActionOpenFor(actionOpenFor === row.id ? null : row.id);
+                              }}
                               className="px-2 py-1 border rounded text-sm"
-                              aria-haspopup="true"
-                              aria-expanded={actionOpenFor === row.id}
-                              title="More"
                             >
                               ⋮
                             </button>
 
-                            {/* Dropdown */}
                             {actionOpenFor === row.id && (
-                              <div className="absolute right-0 mt-2 z-30 w-40 bg-white border rounded-md shadow-lg text-sm">
+                              <div
+                                ref={actionMenuRef}
+                                className="absolute right-0 bottom-full mb-2 z-[9999] w-40 bg-white border rounded-md shadow-lg text-sm"
+                              >
                                 <button
                                   onClick={() => openView(row)}
                                   className="w-full text-left px-4 py-2 hover:bg-gray-50"
@@ -552,7 +589,10 @@ export default function TimesheetsTableNew({
                                 </button>
 
                                 <button
-                                  onClick={() => { openModal(row); setActionOpenFor(null); }}
+                                  onClick={() => {
+                                    openModal(row);
+                                    setActionOpenFor(null);
+                                  }}
                                   className="w-full text-left px-4 py-2 hover:bg-gray-50"
                                 >
                                   Edit
@@ -568,6 +608,8 @@ export default function TimesheetsTableNew({
                             )}
                           </div>
                         </td>
+
+
                       </tr>
                     );
                   })
