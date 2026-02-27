@@ -160,6 +160,7 @@ function DealViewModal({
   const [uploading, setUploading] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [fileError, setFileError] = useState<string | null>(null);
+  const [selectedPipeline, setSelectedPipeline] = useState<string>("All");
 
   useEffect(() => {
     const loadFiles = async () => {
@@ -1629,6 +1630,16 @@ export default function LeadDetailPage() {
     { refreshInterval: 30000, revalidateOnFocus: true },
   );
 
+
+
+const [selectedPipeline, setSelectedPipeline] = useState<string>("All");
+
+const filteredDeals = dealsData?.filter((deal) => {
+  if (selectedPipeline === "All") return true;
+  return deal.pipeline === selectedPipeline;
+});
+
+
   const { data: empResp } = useSWR(EMP_API, fetcher, { refreshInterval: 0 });
   const employees: EmployeeMeta[] =
     empResp && Array.isArray(empResp.content)
@@ -2132,7 +2143,7 @@ export default function LeadDetailPage() {
                         <label className="text-sm text-muted-foreground mr-2">
                           Pipeline
                         </label>
-                        <select className="border rounded p-2 text-sm">
+                        {/* <select className="border rounded p-2 text-sm">
                           <option>
                             {data?.deals && (data as any).deals?.length
                               ? data?.deals
@@ -2140,13 +2151,26 @@ export default function LeadDetailPage() {
                           </option>
                           <option>Sales</option>
                           <option>Default Pipeline </option>
-                        </select>
+                        </select> */}
+
+
+
+<select
+  value={selectedPipeline}
+  onChange={(e) => setSelectedPipeline(e.target.value)}
+  className="border rounded p-2 text-sm"
+>
+  <option value="All">All</option>
+  <option value="Default Pipeline">Default Pipeline</option>
+  <option value="Sales">Sales</option>
+</select>
+
                       </div>
                     </div>
 
-                    <div className="text-sm text-muted-foreground">
+                    {/* <div className="text-sm text-muted-foreground">
                       Result per page - 8
-                    </div>
+                    </div> */}
                   </div>
 
                   <div className="rounded-lg border overflow-auto">
@@ -2196,7 +2220,8 @@ export default function LeadDetailPage() {
                             </td>
                           </tr>
                         ) : (
-                          dealsData.map((d) => (
+                          // dealsData.map((d) => (
+                          filteredDeals?.map((d) => (
                             <tr key={d.id} className="border-t">
                               <td className="px-4 py-3">
                                 <div className="font-medium">
@@ -2271,7 +2296,7 @@ export default function LeadDetailPage() {
                                 )}
                               </td>
 
-                              <td className="px-4 py-3">
+                              {/* <td className="px-4 py-3">
                                 <select
                                   defaultValue={d.dealStage}
                                   className="border rounded p-1 text-sm"
@@ -2283,9 +2308,47 @@ export default function LeadDetailPage() {
                                   <option>Won</option>
                                   <option>Lost</option>
                                 </select>
-                              </td>
+                              </td> */}
 
 
+
+<td className="px-4 py-3">
+  <select
+    value={d.dealStage ?? "Generated"}
+    onChange={async (e) => {
+      const newStage = e.target.value;
+
+      try {
+        const token = localStorage.getItem("accessToken");
+        if (!token) throw new Error("No access token.");
+
+        const res = await fetch(`${BASE}/deals/${d.id}`, {
+          method: "PUT", // or PATCH if your API supports it
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            dealStage: newStage,
+          }),
+        });
+
+        if (!res.ok) throw new Error(await res.text());
+
+        await mutateDeals(); // refresh deals list
+      } catch (err: any) {
+        alert("Failed to update stage: " + (err?.message ?? err));
+      }
+    }}
+    className="border rounded p-1 text-sm"
+  >
+    <option value="Generated">Generated</option>
+    <option value="Qualified">Qualified</option>
+    <option value="Proposal">Proposal</option>
+    <option value="Won">Won</option>
+    <option value="Lost">Lost</option>
+  </select>
+</td>
 
 
 
@@ -2403,6 +2466,7 @@ export default function LeadDetailPage() {
                   </div>
 
                   <div className="mt-4 flex items-center justify-between text-sm text-muted-foreground">
+                   <div>Result per page-8</div>
                     <div>Page 1 of 1 </div>
                     <div className="flex items-center gap-2">
                       <button className="px-2 py-1" disabled>
@@ -2430,7 +2494,7 @@ export default function LeadDetailPage() {
                     </div>
 
                     <div className="text-sm text-muted-foreground">
-                      Result per page - 8
+                      {/* Result per page - 8 */}
                     </div>
                   </div>
 
