@@ -163,7 +163,16 @@ export default function EditDealPage() {
       if (!res.ok) throw new Error("Failed to update deal");
 
       setSuccess("Deal updated successfully!");
-      setTimeout(() => router.push(`/leads/admin/get/${dealId}`), 2000);
+      // setTimeout(() => router.push(`/leads/admin/get/${dealId}`), 2000);
+
+setTimeout(() => {
+  if (formData.leadId) {
+    router.push(`/leads/admin/get/${formData.leadId}`);
+  } else {
+    router.push(`/deals/get/${dealId}`);
+  }
+}, 2000);
+
     } catch (err) {
       console.error(err);
       setError("Failed to update deal. Please try again.");

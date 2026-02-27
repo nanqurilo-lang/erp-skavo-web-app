@@ -597,7 +597,7 @@ export default function ProjectDetailsPage() {
         <div className="mt-6 grid grid-cols-1 lg:grid-rows-2 gap-2">
           <ProjectMembersTable projectId={project.id} />
           <TimesheetsTableNew
-            gatewayPath="https://erp.skavosystem.com/timesheets"
+            gatewayPath="https://6jnqmj85-80.inc1.devtunnels.ms/timesheets"
             projectId={project.id}
           />
           {/* <MilestonesTable projectId={project.id} /> */}
