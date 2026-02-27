@@ -116,6 +116,345 @@ const BASE_URL = `${process.env.NEXT_PUBLIC_MAIN}`;
 const sampleDesktopImage = "/mnt/data/Screenshot 2025-11-21 122016.png";
 const sampleMobileImage = "/mnt/data/Screenshot 2025-11-21 122307.png";
 
+
+
+// export const FiltersDrawer = ({ open, onClose }: { open: boolean; onClose: () => void }) => {
+// export const FiltersDrawer = ({
+//   open,
+//   onClose,
+//   stages,
+// }: {
+//   open: boolean;
+//   onClose: () => void;
+//   stages: string[];
+// }) => {
+export const FiltersDrawer = ({
+  open,
+  onClose,
+  stages,
+  deals,
+  priorities,
+
+  dateFilterOn,
+  setDateFilterOn,
+  dateFrom,
+  setDateFrom,
+  dateTo,
+  setDateTo,
+  dealStageFilter,
+  setDealStageFilter,
+  minValue,
+  setMinValue,
+  maxValue,
+  setMaxValue,
+  agentFilter,
+  setAgentFilter,
+  watcherFilter,
+  setWatcherFilter,
+  leadFilter,
+  setLeadFilter,
+  tagFilter,
+  setTagFilter,
+  priorityFilter,
+  setPriorityFilter,
+}: {
+  open: boolean;
+  onClose: () => void;
+  stages: string[];
+  deals: Deal[];
+  priorities: PriorityItem[];
+
+  dateFilterOn: "created" | "close";
+  setDateFilterOn: any;
+  dateFrom: Date | undefined;
+  setDateFrom: any;
+  dateTo: Date | undefined;
+  setDateTo: any;
+  dealStageFilter: string;
+  setDealStageFilter: any;
+  minValue: string;
+  setMinValue: any;
+  maxValue: string;
+  setMaxValue: any;
+  agentFilter: string;
+  setAgentFilter: any;
+  watcherFilter: string;
+  setWatcherFilter: any;
+  leadFilter: string;
+  setLeadFilter: any;
+  tagFilter: string;
+  setTagFilter: any;
+  priorityFilter: string;
+  setPriorityFilter: any;
+}) => {
+
+    // const [dateFilterOn, setDateFilterOn] = useState<"created" | "close">("created");
+    // const [dateFrom, setDateFrom] = useState<Date | undefined>();
+    // const [dateTo, setDateTo] = useState<Date | undefined>();
+    // const [dealStageFilter, setDealStageFilter] = useState("all");
+    // const [minValue, setMinValue] = useState("");
+    // const [maxValue, setMaxValue] = useState("");
+    // const [agentFilter, setAgentFilter] = useState("all");
+    // const [watcherFilter, setWatcherFilter] = useState("all");
+    // const [leadFilter, setLeadFilter] = useState("all");
+    // const [tagFilter, setTagFilter] = useState("all");
+    // const [priorityFilter, setPriorityFilter] = useState("all");
+
+  return (
+  <div className="fixed inset-0 z-50 flex">
+    {/* overlay */}
+    {/* <div
+      className="fixed inset-0 bg-black/30"
+      onClick={() => setOpenFilters(false)}
+    /> */}
+
+    <div
+  className="fixed inset-0 bg-black/30"
+  onClick={onClose}
+/>
+
+    {/* drawer */}
+    <div className="relative ml-auto h-full w-[340px] bg-white shadow-xl p-6 overflow-y-auto">
+
+      {/* HEADER */}
+      <div className="flex items-center justify-between mb-6 border-b pb-4">
+        <div className="flex items-center gap-2 font-medium text-lg">
+          <SlidersHorizontal className="h-4 w-4" />
+          Filters
+        </div>
+        {/* <button
+          onClick={() => setOpenFilters(false)}
+          className="text-gray-500 text-lg"
+        >
+          ×
+        </button> */}
+        <button
+  onClick={onClose}
+  className="text-gray-500 text-lg"
+>
+  ×
+</button>
+      </div>
+
+      {/* Date Filter On */}
+      <div className="mb-6">
+        <div className="text-sm mb-2">Date Filter On</div>
+        <Select value={dateFilterOn} onValueChange={(v) => setDateFilterOn(v as any)}>
+          <SelectTrigger className="bg-white">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="created">Created</SelectItem>
+            <SelectItem value="close">Expected Close</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Deal Stage */}
+      <div className="mb-6">
+        <div className="text-sm mb-2">Deal Stage</div>
+        <Select value={dealStageFilter} onValueChange={setDealStageFilter}>
+          <SelectTrigger className="bg-white">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All</SelectItem>
+            {/* {stages.map((stage) => (
+              <SelectItem key={stage} value={stage}>
+                {stage}
+              </SelectItem>
+            ))} */}
+
+
+{stages?.length ? (
+  stages.map((stage) => (
+    <SelectItem key={stage} value={stage}>
+      {stage}
+    </SelectItem>
+  ))
+) : (
+  <SelectItem value="Qualified">Qualified</SelectItem>
+)}
+
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Deals Value */}
+      <div className="mb-6">
+        <div className="text-sm mb-2">Deals Value</div>
+        <div className="flex items-center gap-2">
+          <Input
+            className="bg-white"
+            placeholder="Min"
+            type="number"
+            value={minValue}
+            onChange={(e) => setMinValue(e.target.value)}
+          />
+          <span className="text-sm text-muted-foreground">to</span>
+          <Input
+            className="bg-white"
+            placeholder="Max"
+            type="number"
+            value={maxValue}
+            onChange={(e) => setMaxValue(e.target.value)}
+          />
+        </div>
+      </div>
+
+      {/* Agent */}
+      <div className="mb-6">
+        <div className="text-sm mb-2">Agent</div>
+        <Select value={agentFilter} onValueChange={setAgentFilter}>
+          <SelectTrigger className="bg-white">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All</SelectItem>
+            {[...new Set(
+              (deals as Deal[])
+                .map((d) => d.dealAgentMeta?.name)
+                .filter(Boolean)
+            )].map((name) => (
+              <SelectItem key={name} value={name!}>
+                {name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Deal Watcher */}
+      <div className="mb-6">
+        <div className="text-sm mb-2">Deal Watcher</div>
+        <Select value={watcherFilter} onValueChange={setWatcherFilter}>
+          <SelectTrigger className="bg-white">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All</SelectItem>
+            {[...new Map(
+              (deals as Deal[])
+                .flatMap((d) => d.dealWatchersMeta || [])
+                .map((w) => [w.employeeId, w])
+            ).values()].map((w) => (
+              <SelectItem key={w.employeeId} value={w.employeeId!}>
+                {w.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Lead */}
+      <div className="mb-6">
+        <div className="text-sm mb-2">Lead</div>
+        <Select value={leadFilter} onValueChange={setLeadFilter}>
+          <SelectTrigger className="bg-white">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All</SelectItem>
+            {[...new Map(
+              (deals as Deal[])
+                .filter((d) => d.leadId)
+                .map((d) => [d.leadId, d])
+            ).values()].map((d) => (
+              <SelectItem key={d.leadId} value={String(d.leadId)}>
+                {d.leadName}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Tags */}
+      <div className="mb-6">
+        <div className="text-sm mb-2">Tags</div>
+        <Select value={tagFilter} onValueChange={setTagFilter}>
+          <SelectTrigger className="bg-white">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All</SelectItem>
+            {[...new Set(
+              (deals as Deal[]).flatMap((d) => d.tags || [])
+            )].map((tag) => (
+              <SelectItem key={tag} value={tag}>
+                {tag}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Priority */}
+      <div className="mb-8">
+        <div className="text-sm mb-2">Priority Status</div>
+        <Select value={priorityFilter} onValueChange={setPriorityFilter}>
+          <SelectTrigger className="bg-white">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All</SelectItem>
+            {/* {priorities.map((p) => (
+              <SelectItem
+                key={p.id}
+                value={String(p.status).toLowerCase()}
+              >
+                {p.status}
+              </SelectItem>
+            ))} */}
+
+
+
+
+{[
+  ...new Map(
+    priorities.map((p) => [
+      String(p.status).toLowerCase(),
+      p,
+    ])
+  ).values(),
+].map((p) => (
+  <SelectItem
+    key={p.status}
+    value={String(p.status).toLowerCase()}
+  >
+    {p.status}
+  </SelectItem>
+))}
+
+
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Clear */}
+      <div className="flex justify-end">
+        <Button
+          className="px-6"
+          variant="outline"
+          onClick={() => {
+            setDateFilterOn("created");
+            setDealStageFilter("all");
+            setMinValue("");
+            setMaxValue("");
+            setAgentFilter("all");
+            setWatcherFilter("all");
+            setLeadFilter("all");
+            setTagFilter("all");
+            setPriorityFilter("all");
+          }}
+        >
+          Clear
+        </Button>
+      </div>
+    </div>
+  </div>
+)}
+
+
 export default function DealsPage() {
   const [token, setToken] = useState<string | null>(null);
   const [query, setQuery] = useState("");
@@ -1116,238 +1455,51 @@ const matchesStage =
 
 
 
+
 {openFilters && (
-  <div className="fixed inset-0 z-50 flex">
-    {/* overlay */}
-    <div
-      className="fixed inset-0 bg-black/30"
-      onClick={() => setOpenFilters(false)}
-    />
-
-    {/* drawer */}
-    <div className="relative ml-auto h-full w-[340px] bg-white shadow-xl p-6 overflow-y-auto">
-
-      {/* HEADER */}
-      <div className="flex items-center justify-between mb-6 border-b pb-4">
-        <div className="flex items-center gap-2 font-medium text-lg">
-          <SlidersHorizontal className="h-4 w-4" />
-          Filters
-        </div>
-        <button
-          onClick={() => setOpenFilters(false)}
-          className="text-gray-500 text-lg"
-        >
-          ×
-        </button>
-      </div>
-
-      {/* Date Filter On */}
-      <div className="mb-6">
-        <div className="text-sm mb-2">Date Filter On</div>
-        <Select value={dateFilterOn} onValueChange={(v) => setDateFilterOn(v as any)}>
-          <SelectTrigger className="bg-white">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="created">Created</SelectItem>
-            <SelectItem value="close">Expected Close</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* Deal Stage */}
-      <div className="mb-6">
-        <div className="text-sm mb-2">Deal Stage</div>
-        <Select value={dealStageFilter} onValueChange={setDealStageFilter}>
-          <SelectTrigger className="bg-white">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All</SelectItem>
-            {stages.map((stage) => (
-              <SelectItem key={stage} value={stage}>
-                {stage}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* Deals Value */}
-      <div className="mb-6">
-        <div className="text-sm mb-2">Deals Value</div>
-        <div className="flex items-center gap-2">
-          <Input
-            className="bg-white"
-            placeholder="Min"
-            type="number"
-            value={minValue}
-            onChange={(e) => setMinValue(e.target.value)}
-          />
-          <span className="text-sm text-muted-foreground">to</span>
-          <Input
-            className="bg-white"
-            placeholder="Max"
-            type="number"
-            value={maxValue}
-            onChange={(e) => setMaxValue(e.target.value)}
-          />
-        </div>
-      </div>
-
-      {/* Agent */}
-      <div className="mb-6">
-        <div className="text-sm mb-2">Agent</div>
-        <Select value={agentFilter} onValueChange={setAgentFilter}>
-          <SelectTrigger className="bg-white">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All</SelectItem>
-            {[...new Set(
-              (deals as Deal[])
-                .map((d) => d.dealAgentMeta?.name)
-                .filter(Boolean)
-            )].map((name) => (
-              <SelectItem key={name} value={name!}>
-                {name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* Deal Watcher */}
-      <div className="mb-6">
-        <div className="text-sm mb-2">Deal Watcher</div>
-        <Select value={watcherFilter} onValueChange={setWatcherFilter}>
-          <SelectTrigger className="bg-white">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All</SelectItem>
-            {[...new Map(
-              (deals as Deal[])
-                .flatMap((d) => d.dealWatchersMeta || [])
-                .map((w) => [w.employeeId, w])
-            ).values()].map((w) => (
-              <SelectItem key={w.employeeId} value={w.employeeId!}>
-                {w.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* Lead */}
-      <div className="mb-6">
-        <div className="text-sm mb-2">Lead</div>
-        <Select value={leadFilter} onValueChange={setLeadFilter}>
-          <SelectTrigger className="bg-white">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All</SelectItem>
-            {[...new Map(
-              (deals as Deal[])
-                .filter((d) => d.leadId)
-                .map((d) => [d.leadId, d])
-            ).values()].map((d) => (
-              <SelectItem key={d.leadId} value={String(d.leadId)}>
-                {d.leadName}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* Tags */}
-      <div className="mb-6">
-        <div className="text-sm mb-2">Tags</div>
-        <Select value={tagFilter} onValueChange={setTagFilter}>
-          <SelectTrigger className="bg-white">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All</SelectItem>
-            {[...new Set(
-              (deals as Deal[]).flatMap((d) => d.tags || [])
-            )].map((tag) => (
-              <SelectItem key={tag} value={tag}>
-                {tag}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* Priority */}
-      <div className="mb-8">
-        <div className="text-sm mb-2">Priority Status</div>
-        <Select value={priorityFilter} onValueChange={setPriorityFilter}>
-          <SelectTrigger className="bg-white">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All</SelectItem>
-            {/* {priorities.map((p) => (
-              <SelectItem
-                key={p.id}
-                value={String(p.status).toLowerCase()}
-              >
-                {p.status}
-              </SelectItem>
-            ))} */}
+  // <FiltersDrawer
+  //   open={openFilters}
+  //   onClose={() => setOpenFilters(false)}
+  //   stages={stages}
+  //   deals={deals}
+  //   priorities={priorities}
+  // />
 
 
 
+<FiltersDrawer
+  open={openFilters}
+  onClose={() => setOpenFilters(false)}
+  stages={stages}
+  deals={deals}
+  priorities={priorities}
 
-{[
-  ...new Map(
-    priorities.map((p) => [
-      String(p.status).toLowerCase(),
-      p,
-    ])
-  ).values(),
-].map((p) => (
-  <SelectItem
-    key={p.status}
-    value={String(p.status).toLowerCase()}
-  >
-    {p.status}
-  </SelectItem>
-))}
+  dateFilterOn={dateFilterOn}
+  setDateFilterOn={setDateFilterOn}
+  dateFrom={dateFrom}
+  setDateFrom={setDateFrom}
+  dateTo={dateTo}
+  setDateTo={setDateTo}
+  dealStageFilter={dealStageFilter}
+  setDealStageFilter={setDealStageFilter}
+  minValue={minValue}
+  setMinValue={setMinValue}
+  maxValue={maxValue}
+  setMaxValue={setMaxValue}
+  agentFilter={agentFilter}
+  setAgentFilter={setAgentFilter}
+  watcherFilter={watcherFilter}
+  setWatcherFilter={setWatcherFilter}
+  leadFilter={leadFilter}
+  setLeadFilter={setLeadFilter}
+  tagFilter={tagFilter}
+  setTagFilter={setTagFilter}
+  priorityFilter={priorityFilter}
+  setPriorityFilter={setPriorityFilter}
+/>
 
 
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* Clear */}
-      <div className="flex justify-end">
-        <Button
-          className="px-6"
-          variant="outline"
-          onClick={() => {
-            setDateFilterOn("created");
-            setDealStageFilter("all");
-            setMinValue("");
-            setMaxValue("");
-            setAgentFilter("all");
-            setWatcherFilter("all");
-            setLeadFilter("all");
-            setTagFilter("all");
-            setPriorityFilter("all");
-          }}
-        >
-          Clear
-        </Button>
-      </div>
-    </div>
-  </div>
 )}
-
-
 
 
       <AddFollowupModal

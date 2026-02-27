@@ -69,7 +69,7 @@ export default function AddDealPanel({
       {!open ? (
         <button
           onClick={() => setOpen(true)}
-          className="rounded-md bg-blue-500 px-3 py-2 text-primary-foreground hover:opacity-90"
+          className="rounded-md bg-blue-500 px-3 py-3 text-primary-foreground hover:opacity-90"
         >
          
           {"Add Deal"}
