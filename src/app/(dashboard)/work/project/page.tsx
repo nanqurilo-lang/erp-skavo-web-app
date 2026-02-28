@@ -2147,6 +2147,7 @@ const filteredProjects = useMemo(() => {
 
   // Row component reused (same as your file) — uses clientOptions/departments/categories data loaded above
   const ProjectRow: React.FC<{ p: Project }> = ({ p }) => {
+  const progressTimeout = useRef<NodeJS.Timeout | null>(null);
     const start = p.startDate
       ? 
       // new Date(p.startDate).toLocaleDateString()
@@ -2299,16 +2300,39 @@ const filteredProjects = useMemo(() => {
                         min={0}
                         max={100}
                         value={p.progressPercent ?? 0}
-                        onChange={(e) => {
-                          const v = Number(e.target.value);
-                          setProjects((prev) =>
-                            prev.map((pr) =>
-                              pr.id === p.id
-                                ? { ...pr, progressPercent: v }
-                                : pr
-                            )
-                          );
-                        }}
+                        // onChange={(e) => {
+                        //   const v = Number(e.target.value);
+                        //   setProjects((prev) =>
+                        //     prev.map((pr) =>
+                        //       pr.id === p.id
+                        //         ? { ...pr, progressPercent: v }
+                        //         : pr
+                        //     )
+                        //   );
+                        // }}
+
+
+
+onChange={(e) => {
+  const v = Number(e.target.value);
+
+  setProjects((prev) =>
+    prev.map((pr) =>
+      pr.id === p.id
+        ? { ...pr, progressPercent: v }
+        : pr
+    )
+  );
+
+  if (progressTimeout.current) {
+    clearTimeout(progressTimeout.current);
+  }
+
+  progressTimeout.current = setTimeout(() => {
+    patchProgress(p.id, v);
+  }, 400);
+}}
+
                         onMouseUp={async (e) => {
                           const v = Number(
                             (e.target as HTMLInputElement).value
@@ -2323,6 +2347,32 @@ const filteredProjects = useMemo(() => {
                         }}
                         className="w-full"
                       />
+
+
+{/* <input
+  type="range"
+  min={0}
+  max={100}
+  value={p.progressPercent ?? 0}
+  onChange={(e) => {
+    const v = Number(e.target.value);
+
+    // update UI immediately
+    setProjects((prev) =>
+      prev.map((pr) =>
+        pr.id === p.id
+          ? { ...pr, progressPercent: v }
+          : pr
+      )
+    );
+
+    // call API immediately
+    patchProgress(p.id, v);
+  }}
+  className="w-full"
+/> */}
+
+
                       <div className="flex justify-between text-xs text-gray-500 mt-1">
                         <span>0%</span>
                         <span>{p.progressPercent ?? 0}%</span>
