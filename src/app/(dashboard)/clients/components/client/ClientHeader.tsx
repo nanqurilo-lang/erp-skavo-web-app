@@ -37,22 +37,10 @@ return (
 
 <div className="flex items-center gap-3">
 <Button variant="ghost" className="hidden sm:inline-flex items-center gap-2" onClick={onBack}>
-<ArrowLeft className="mr-1 h-4 w-4" /> Back to Clients 
+<ArrowLeft className="mr-1 h-4 w-4" /> Back to Clients
 </Button>
 
 
-<Link href={`/clients/${clientId}/documents`}>
-<Button variant="outline" className="flex items-center gap-2">
-<FileText className="h-4 w-4" /> Documents
-</Button>
-</Link>
-
-
-<Link href={`/clients/${clientId}/notes`}>
-<Button variant="outline" className="flex items-center gap-2">
-<StickyNote className="h-4 w-4" /> Notes
-</Button>
-</Link>
 </div>
 </div>
 
