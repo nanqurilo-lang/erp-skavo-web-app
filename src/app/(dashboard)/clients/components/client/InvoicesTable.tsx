@@ -1670,7 +1670,7 @@ onClick={() => openViewPaymentsDrawer(inv)}
     <Card>
       <CardHeader className="flex items-center justify-between">
         <CardTitle>Client Invoices </CardTitle>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <Button
             onClick={() => {
               setShowCreateModal(true);
@@ -1681,9 +1681,10 @@ onClick={() => openViewPaymentsDrawer(inv)}
             }}
             className="flex items-center"
           >
-            <Plus className="mr-2 h-4 w-4" /> Create Invoice
+            <Plus className=" h-3 w-3" /> Create Invoice
           </Button>
-          <Button
+          <Button 
+          className="px-2 py-2 border rounded"
             variant="ghost"
             onClick={async () => {
               if (invoicesProp && typeof onInvoiceCreated === "function")
@@ -1700,11 +1701,11 @@ onClick={() => openViewPaymentsDrawer(inv)}
       </CardHeader>
 
       <CardContent>
-        <div className="mb-4 flex items-center justify-between overflow-hidden">
+        <div className="mb-1 flex items-center justify-between overflow-hidden">
           <div>
             <input
               placeholder="Search invoice number / project / client"
-              className="w-64 px-3 py-2 border rounded"
+              className="w-60  px-2 py-2 border rounded"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
