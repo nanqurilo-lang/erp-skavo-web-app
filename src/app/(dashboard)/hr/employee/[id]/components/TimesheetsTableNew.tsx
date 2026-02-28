@@ -788,7 +788,7 @@ const fetchProjectTasks = async (projectId: string, preselectTaskId?: string) =>
                 <div className="fixed inset-0 z-50 flex items-start justify-center pt-8 px-6">
                     <div className="absolute inset-0 bg-black/40" onClick={() => setIsViewOpen(false)} />
 
-                    <div className="relative bg-white w-full max-w-6xl rounded-xl shadow-xl overflow-hidden">
+                    <div className="relative bg-white w-full max-w-4xl rounded-xl shadow-xl overflow-hidden">
                         <div className="flex items-center justify-between px-6 py-4 border-b">
                             <h3 className="text-xl font-semibold">Timesheet</h3>
                             <button className="p-2 rounded hover:bg-gray-100" onClick={() => setIsViewOpen(false)} aria-label="Close">
