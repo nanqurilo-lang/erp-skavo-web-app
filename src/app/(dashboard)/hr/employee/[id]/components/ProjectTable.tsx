@@ -111,10 +111,10 @@ interface DepartmentItem {
     createAt?: string;
 }
 
-    type EmployeeItem = {
-  employeeId: string
-  name: string
-  profilePictureUrl?: string | null
+type EmployeeItem = {
+    employeeId: string
+    name: string
+    profilePictureUrl?: string | null
 };
 
 const OVERRIDES_KEY = "projectProgressOverrides";
@@ -127,8 +127,8 @@ export default function AllProjectsPage({ employeeId, }: { employeeId: string })
 
 
 
-const [employees, setEmployees] = useState<EmployeeItem[]>([]);
-const [employeeLoading, setEmployeeLoading] = useState(false);
+    const [employees, setEmployees] = useState<EmployeeItem[]>([]);
+    const [employeeLoading, setEmployeeLoading] = useState(false);
 
     // Filters & UI
     const [searchInput, setSearchInput] = useState("");
@@ -413,19 +413,19 @@ const [employeeLoading, setEmployeeLoading] = useState(false);
 
     const EMP_BASE = `${process.env.NEXT_PUBLIC_MAIN}`;
 
-// const loadEmployees = useCallback(async () => {
-//   setEmployeeLoading(true);
-//   try {
-//     const token =
-//       typeof window !== "undefined"
-//         ? localStorage.getItem("accessToken")
-//         : null;
+    // const loadEmployees = useCallback(async () => {
+    //   setEmployeeLoading(true);
+    //   try {
+    //     const token =
+    //       typeof window !== "undefined"
+    //         ? localStorage.getItem("accessToken")
+    //         : null;
 
-//     const res = await fetch(`${EMP_BASE}/employee/all`, {
-//       headers: token ? { Authorization: `Bearer ${token}` } : undefined,
-//       cache: "no-store",
-//     });
-    
+    //     const res = await fetch(`${EMP_BASE}/employee/all`, {
+    //       headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+    //       cache: "no-store",
+    //     });
+
 
     // if (!res.ok) {
     //   console.error("Failed to load employees", res.status);
@@ -435,141 +435,141 @@ const [employeeLoading, setEmployeeLoading] = useState(false);
 
 
 
-//     const data = await res.json();
-//     if (Array.isArray(data)) {
-//       setEmployees(
-//         data.map((e: any) => ({
-//           employeeId: e.employeeId,
-//           name: e.name,
-//           profilePictureUrl: e.profilePictureUrl ?? null,
-//         }))
-//       );
-//     } else {
-//       setEmployees([]);
-//     }
-//   } catch (err) {
-//     console.error("Employee load error", err);
-//     setEmployees([]);
-//   } finally {
-//     setEmployeeLoading(false);
-//   }
-// }, []);
+    //     const data = await res.json();
+    //     if (Array.isArray(data)) {
+    //       setEmployees(
+    //         data.map((e: any) => ({
+    //           employeeId: e.employeeId,
+    //           name: e.name,
+    //           profilePictureUrl: e.profilePictureUrl ?? null,
+    //         }))
+    //       );
+    //     } else {
+    //       setEmployees([]);
+    //     }
+    //   } catch (err) {
+    //     console.error("Employee load error", err);
+    //     setEmployees([]);
+    //   } finally {
+    //     setEmployeeLoading(false);
+    //   }
+    // }, []);
 
 
 
-//new added
-// const loadEmployees = useCallback(async () => {
-//   // 🔐 already loading → skip
-//   if (employeeLoading) return;
+    //new added
+    // const loadEmployees = useCallback(async () => {
+    //   // 🔐 already loading → skip
+    //   if (employeeLoading) return;
 
-//   setEmployeeLoading(true);
+    //   setEmployeeLoading(true);
 
-//   try {
-//     const token =
-//       typeof window !== "undefined"
-//         ? localStorage.getItem("accessToken")
-//         : null;
+    //   try {
+    //     const token =
+    //       typeof window !== "undefined"
+    //         ? localStorage.getItem("accessToken")
+    //         : null;
 
-//     if (!token) {
-//       setEmployees([]);
-//       return;
-//     }
+    //     if (!token) {
+    //       setEmployees([]);
+    //       return;
+    //     }
 
-//     const res = await fetch(`${EMP_BASE}/employee/all`, {
-//       headers: { Authorization: `Bearer ${token}` },
-//       cache: "no-store",
-//     });
+    //     const res = await fetch(`${EMP_BASE}/employee/all`, {
+    //       headers: { Authorization: `Bearer ${token}` },
+    //       cache: "no-store",
+    //     });
 
-//     // 🔴 HANDLE 503 GRACEFULLY
-//     if (res.status === 503) {
-//       console.warn("Employees service unavailable (503)");
-//       setEmployees([]); // silent fail
-//       return;
-//     }
+    //     // 🔴 HANDLE 503 GRACEFULLY
+    //     if (res.status === 503) {
+    //       console.warn("Employees service unavailable (503)");
+    //       setEmployees([]); // silent fail
+    //       return;
+    //     }
 
-//     if (!res.ok) {
-//       console.warn("Employees API failed:", res.status);
-//       setEmployees([]);
-//       return;
-//     }
+    //     if (!res.ok) {
+    //       console.warn("Employees API failed:", res.status);
+    //       setEmployees([]);
+    //       return;
+    //     }
 
-//     const data = await res.json();
+    //     const data = await res.json();
 
-//     if (Array.isArray(data)) {
-//       setEmployees(
-//         data.map((e: any) => ({
-//           employeeId: e.employeeId,
-//           name: e.name,
-//           profilePictureUrl: e.profilePictureUrl ?? null,
-//         }))
-//       );
-//     } else {
-//       setEmployees([]);
-//     }
-//   } catch (err) {
-//     console.warn("Employees fetch error (ignored)", err);
-//     setEmployees([]);
-//   } finally {
-//     setEmployeeLoading(false);
-//   }
-// }, [employeeLoading]);
-
-
+    //     if (Array.isArray(data)) {
+    //       setEmployees(
+    //         data.map((e: any) => ({
+    //           employeeId: e.employeeId,
+    //           name: e.name,
+    //           profilePictureUrl: e.profilePictureUrl ?? null,
+    //         }))
+    //       );
+    //     } else {
+    //       setEmployees([]);
+    //     }
+    //   } catch (err) {
+    //     console.warn("Employees fetch error (ignored)", err);
+    //     setEmployees([]);
+    //   } finally {
+    //     setEmployeeLoading(false);
+    //   }
+    // }, [employeeLoading]);
 
 
-const loadEmployees = useCallback(async () => {
-  if (employeeLoading) return;
 
-  setEmployeeLoading(true);
 
-  try {
-    const token =
-      typeof window !== "undefined"
-        ? localStorage.getItem("accessToken")
-        : null;
+    const loadEmployees = useCallback(async () => {
+        if (employeeLoading) return;
 
-    if (!token) {
-      setEmployees([]);
-      return;
-    }
+        setEmployeeLoading(true);
 
-    const res = await fetch(`${EMP_BASE}/employee/all`, {
-      headers: { Authorization: `Bearer ${token}` },
-      cache: "no-store",
-    });
+        try {
+            const token =
+                typeof window !== "undefined"
+                    ? localStorage.getItem("accessToken")
+                    : null;
 
-    if (res.status === 503) {
-      console.warn("Employees service unavailable (503)");
-      setEmployees([]);
-      return;
-    }
+            if (!token) {
+                setEmployees([]);
+                return;
+            }
 
-    if (!res.ok) {
-      console.warn("Employees API failed:", res.status);
-      setEmployees([]);
-      return;
-    }
+            const res = await fetch(`${EMP_BASE}/employee/all`, {
+                headers: { Authorization: `Bearer ${token}` },
+                cache: "no-store",
+            });
 
-    const data = await res.json();
+            if (res.status === 503) {
+                console.warn("Employees service unavailable (503)");
+                setEmployees([]);
+                return;
+            }
 
-    if (Array.isArray(data)) {
-      setEmployees(
-        data.map((e: any) => ({
-          employeeId: e.employeeId,
-          name: e.name,
-          profilePictureUrl: e.profilePictureUrl ?? null,
-        }))
-      );
-    } else {
-      setEmployees([]);
-    }
-  } catch (err) {
-    console.warn("Employees fetch error (ignored)", err);
-    setEmployees([]);
-  } finally {
-    setEmployeeLoading(false);
-  }
-}, [employeeLoading]);
+            if (!res.ok) {
+                console.warn("Employees API failed:", res.status);
+                setEmployees([]);
+                return;
+            }
+
+            const data = await res.json();
+
+            if (Array.isArray(data)) {
+                setEmployees(
+                    data.map((e: any) => ({
+                        employeeId: e.employeeId,
+                        name: e.name,
+                        profilePictureUrl: e.profilePictureUrl ?? null,
+                    }))
+                );
+            } else {
+                setEmployees([]);
+            }
+        } catch (err) {
+            console.warn("Employees fetch error (ignored)", err);
+            setEmployees([]);
+        } finally {
+            setEmployeeLoading(false);
+        }
+    }, [employeeLoading]);
 
 
 
@@ -696,30 +696,30 @@ const loadEmployees = useCallback(async () => {
 
 
 
-useEffect(() => {
-  if (typeof window === "undefined") return;
+    useEffect(() => {
+        if (typeof window === "undefined") return;
 
-  const savedToken = localStorage.getItem("accessToken");
-  setToken(savedToken);
+        const savedToken = localStorage.getItem("accessToken");
+        setToken(savedToken);
 
-  // safe loaders
-  loadCategories(savedToken || null);
-  loadClients(savedToken || null);
-  loadDepartments(savedToken || null);
+        // safe loaders
+        loadCategories(savedToken || null);
+        loadClients(savedToken || null);
+        loadDepartments(savedToken || null);
 
-  // ✅ employees sirf ek baar + safe condition
-  if (!employees.length) {
-    loadEmployees();
-  }
+        // ✅ employees sirf ek baar + safe condition
+        if (!employees.length) {
+            loadEmployees();
+        }
 
-  if (savedToken) {
-    getProjects(savedToken);
-  } else {
-    setLoading(false);
-  }
+        if (savedToken) {
+            getProjects(savedToken);
+        } else {
+            setLoading(false);
+        }
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-}, []);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
 
 
@@ -1538,99 +1538,99 @@ useEffect(() => {
 
                                         <div>
                                             <label className="text-sm text-gray-600">Assigned to *</label>
-<div>
+                                            <div>
 
-<Select
-  modal={false}
-  value=""
-  onValueChange={(val) => {
-    setUcMembers((prev) => {
-      const arr = Array.isArray(prev)
-        ? prev
-        : String(prev || "").split(",").filter(Boolean);
+                                                <Select
+                                                    modal={false}
+                                                    value=""
+                                                    onValueChange={(val) => {
+                                                        setUcMembers((prev) => {
+                                                            const arr = Array.isArray(prev)
+                                                                ? prev
+                                                                : String(prev || "").split(",").filter(Boolean);
 
-      if (arr.includes(val)) return arr;
-      return [...arr, val];
-    });
-  }}
->
+                                                            if (arr.includes(val)) return arr;
+                                                            return [...arr, val];
+                                                        });
+                                                    }}
+                                                >
 
 
-    <SelectTrigger className="w-full">
-      <SelectValue
-        placeholder={
-          Array.isArray(members) && members.length > 0
-            ? `${members.length} members selected`
-            : "Select members"
-        }
-      />
-    </SelectTrigger>
+                                                    <SelectTrigger className="w-full">
+                                                        <SelectValue
+                                                            placeholder={
+                                                                Array.isArray(members) && members.length > 0
+                                                                    ? `${members.length} members selected`
+                                                                    : "Select members"
+                                                            }
+                                                        />
+                                                    </SelectTrigger>
 
-    <SelectContent className="z-[99999] pointer-events-auto max-h-72 overflow-auto">
-      {employeeLoading ? (
-        <div className="px-3 py-2 text-sm text-gray-500">
-          Loading...
-        </div>
-      ) : employees.length === 0 ? (
-        <div className="px-3 py-2 text-sm text-gray-500">
-          No employees found
-        </div>
-      ) : (
-        employees.map((emp) => (
-          <SelectItem
-            key={emp.employeeId}
-            value={emp.employeeId}
-          >
-            <div className="flex items-center gap-2">
-              {emp.profilePictureUrl ? (
-                <img
-                  src={emp.profilePictureUrl}
-                  className="w-6 h-6 rounded-full"
-                  alt={emp.name}
-                />
-              ) : (
-                <div className="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center text-xs text-white">
-                  {emp.name.charAt(0)}
-                </div>
-              )}
-              <span className="text-sm">
-                {emp.name} ({emp.employeeId})
-              </span>
-            </div>
-          </SelectItem>
-        ))
-      )}
-    </SelectContent>
-  </Select>
+                                                    <SelectContent className="z-[99999] pointer-events-auto max-h-72 overflow-auto">
+                                                        {employeeLoading ? (
+                                                            <div className="px-3 py-2 text-sm text-gray-500">
+                                                                Loading...
+                                                            </div>
+                                                        ) : employees.length === 0 ? (
+                                                            <div className="px-3 py-2 text-sm text-gray-500">
+                                                                No employees found
+                                                            </div>
+                                                        ) : (
+                                                            employees.map((emp) => (
+                                                                <SelectItem
+                                                                    key={emp.employeeId}
+                                                                    value={emp.employeeId}
+                                                                >
+                                                                    <div className="flex items-center gap-2">
+                                                                        {emp.profilePictureUrl ? (
+                                                                            <img
+                                                                                src={emp.profilePictureUrl}
+                                                                                className="w-6 h-6 rounded-full"
+                                                                                alt={emp.name}
+                                                                            />
+                                                                        ) : (
+                                                                            <div className="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center text-xs text-white">
+                                                                                {emp.name.charAt(0)}
+                                                                            </div>
+                                                                        )}
+                                                                        <span className="text-sm">
+                                                                            {emp.name} ({emp.employeeId})
+                                                                        </span>
+                                                                    </div>
+                                                                </SelectItem>
+                                                            ))
+                                                        )}
+                                                    </SelectContent>
+                                                </Select>
 
-  {/* Selected members chips */}
- {Array.isArray(ucMembers) && ucMembers.length > 0 && (
+                                                {/* Selected members chips */}
+                                                {Array.isArray(ucMembers) && ucMembers.length > 0 && (
 
-    <div className="mt-2 flex flex-wrap gap-2">
-      {ucMembers.map((id) => {
-  const emp = employees.find((e) => e.employeeId === id);
-  return (
-    <span key={id} className="flex items-center gap-1 bg-blue-100 px-2 py-1 rounded text-xs">
-      {emp?.name ?? id}
-      <button
-        className="ml-1 text-red-500"
-        onClick={() =>
-          setUcMembers((prev) =>
-            Array.isArray(prev)
-              ? prev.filter((x) => x !== id)
-              : prev
-          )
-        }
-      >
-        ×
-      </button>
-    </span>
-  );
-})}
+                                                    <div className="mt-2 flex flex-wrap gap-2">
+                                                        {ucMembers.map((id) => {
+                                                            const emp = employees.find((e) => e.employeeId === id);
+                                                            return (
+                                                                <span key={id} className="flex items-center gap-1 bg-blue-100 px-2 py-1 rounded text-xs">
+                                                                    {emp?.name ?? id}
+                                                                    <button
+                                                                        className="ml-1 text-red-500"
+                                                                        onClick={() =>
+                                                                            setUcMembers((prev) =>
+                                                                                Array.isArray(prev)
+                                                                                    ? prev.filter((x) => x !== id)
+                                                                                    : prev
+                                                                            )
+                                                                        }
+                                                                    >
+                                                                        ×
+                                                                    </button>
+                                                                </span>
+                                                            );
+                                                        })}
 
-    </div>
-  )}
-</div>
+                                                    </div>
+                                                )}
+                                            </div>
                                         </div>
 
                                         {/* NEW: Project Status + Project Progress Status row (spans two columns) */}
@@ -1886,15 +1886,16 @@ useEffect(() => {
 
     // Row component reused (same as your file) — uses clientOptions/departments/categories data loaded above
     const ProjectRow: React.FC<{ p: Project }> = ({ p }) => {
+        const progressTimeout = useRef<NodeJS.Timeout | null>(null);
         const start = p.startDate ?
-        //  new Date(p.startDate).toLocaleDateString()
-                format( new Date(p.startDate), "dd-MM-yyyy")
+            //  new Date(p.startDate).toLocaleDateString()
+            format(new Date(p.startDate), "dd-MM-yyyy")
 
-          : "-";
-        const dl = p.noDeadline ? "No Deadline" : p.deadline ? 
-        // new Date(p.deadline).toLocaleDateString() 
-          format(  new Date(p.deadline), "dd-MM-yyyy")
-        : "-";
+            : "-";
+        const dl = p.noDeadline ? "No Deadline" : p.deadline ?
+            // new Date(p.deadline).toLocaleDateString() 
+            format(new Date(p.deadline), "dd-MM-yyyy")
+            : "-";
         const progress = Math.max(0, Math.min(100, p.progressPercent ?? 0));
         const barColor = getProgressColor(progress);
 
@@ -1961,11 +1962,42 @@ useEffect(() => {
                                         <DropdownMenuSeparator />
                                         <div className="text-xs text-gray-500 mt-2 mb-1">Adjust progress</div>
                                         <div>
-                                            <input type="range" min={0} max={100} value={p.progressPercent ?? 0}
+                                            {/* <input type="range" min={0} max={100} value={p.progressPercent ?? 0}
                                                 onChange={(e) => { const v = Number(e.target.value); setProjects((prev) => prev.map((pr) => (pr.id === p.id ? { ...pr, progressPercent: v } : pr))); }}
                                                 onMouseUp={async (e) => { const v = Number((e.target as HTMLInputElement).value); await patchProgress(p.id, v); }}
                                                 onTouchEnd={async (e) => { const v = Number((e.target as HTMLInputElement).value); await patchProgress(p.id, v); }}
-                                                className="w-full" />
+                                                className="w-full" /> */}
+
+
+                                            <input
+                                                type="range"
+                                                min={0}
+                                                max={100}
+                                                value={p.progressPercent ?? 0}
+                                                onChange={(e) => {
+                                                    const v = Number(e.target.value);
+
+                                                    // instant UI update
+                                                    setProjects((prev) =>
+                                                        prev.map((pr) =>
+                                                            pr.id === p.id
+                                                                ? { ...pr, progressPercent: v }
+                                                                : pr
+                                                        )
+                                                    );
+
+                                                    // debounce API call
+                                                    if (progressTimeout.current) {
+                                                        clearTimeout(progressTimeout.current);
+                                                    }
+
+                                                    progressTimeout.current = setTimeout(() => {
+                                                        patchProgress(p.id, v);
+                                                    }, 400);
+                                                }}
+                                                className="w-full"
+                                            />
+
                                             <div className="flex justify-between text-xs text-gray-500 mt-1"><span>0%</span><span>{p.progressPercent ?? 0}%</span><span>100%</span></div>
                                         </div>
 
@@ -2351,96 +2383,96 @@ useEffect(() => {
 
                                     <div>
                                         <label className="text-sm text-gray-600">Add Project Members *</label>
-<div>
-  
+                                        <div>
 
-  <Select
-    modal={false}
-    value=""
-    onValueChange={(val) => {
-      setMembers((prev) => {
-        const arr = Array.isArray(prev) ? prev : [];
-        if (arr.includes(val)) return arr;
-        return [...arr, val];
-      });
-    }}
-  >
-    <SelectTrigger className="w-full">
-      <SelectValue
-        placeholder={
-          Array.isArray(members) && members.length > 0
-            ? `${members.length} members selected`
-            : "Select members"
-        }
-      />
-    </SelectTrigger>
 
-    <SelectContent className="z-[99999] pointer-events-auto max-h-72 overflow-auto">
-      {employeeLoading ? (
-        <div className="px-3 py-2 text-sm text-gray-500">
-          Loading...
-        </div>
-      ) : employees.length === 0 ? (
-        <div className="px-3 py-2 text-sm text-gray-500">
-          No employees found
-        </div>
-      ) : (
-        employees.map((emp) => (
-          <SelectItem
-            key={emp.employeeId}
-            value={emp.employeeId}
-          >
-            <div className="flex items-center gap-2">
-              {emp.profilePictureUrl ? (
-                <img
-                  src={emp.profilePictureUrl}
-                  className="w-6 h-6 rounded-full"
-                  alt={emp.name}
-                />
-              ) : (
-                <div className="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center text-xs text-white">
-                  {emp.name.charAt(0)}
-                </div>
-              )}
-              <span className="text-sm">
-                {emp.name} ({emp.employeeId})
-              </span>
-            </div>
-          </SelectItem>
-        ))
-      )}
-    </SelectContent>
-  </Select>
+                                            <Select
+                                                modal={false}
+                                                value=""
+                                                onValueChange={(val) => {
+                                                    setMembers((prev) => {
+                                                        const arr = Array.isArray(prev) ? prev : [];
+                                                        if (arr.includes(val)) return arr;
+                                                        return [...arr, val];
+                                                    });
+                                                }}
+                                            >
+                                                <SelectTrigger className="w-full">
+                                                    <SelectValue
+                                                        placeholder={
+                                                            Array.isArray(members) && members.length > 0
+                                                                ? `${members.length} members selected`
+                                                                : "Select members"
+                                                        }
+                                                    />
+                                                </SelectTrigger>
 
-  {/* Selected members chips */}
-  {Array.isArray(members) && members.length > 0 && (
-    <div className="mt-2 flex flex-wrap gap-2">
-      {members.map((id) => {
-        const emp = employees.find((e) => e.employeeId === id);
-        return (
-          <span
-            key={id}
-            className="flex items-center gap-1 bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs"
-          >
-            {emp?.name ?? id}
-            <button
-              className="ml-1 text-red-500"
-              onClick={() =>
-                setMembers((prev) =>
-                  Array.isArray(prev)
-                    ? prev.filter((x) => x !== id)
-                    : prev
-                )
-              }
-            >
-              ×
-            </button>
-          </span>
-        );
-      })}
-    </div>
-  )}
-</div>
+                                                <SelectContent className="z-[99999] pointer-events-auto max-h-72 overflow-auto">
+                                                    {employeeLoading ? (
+                                                        <div className="px-3 py-2 text-sm text-gray-500">
+                                                            Loading...
+                                                        </div>
+                                                    ) : employees.length === 0 ? (
+                                                        <div className="px-3 py-2 text-sm text-gray-500">
+                                                            No employees found
+                                                        </div>
+                                                    ) : (
+                                                        employees.map((emp) => (
+                                                            <SelectItem
+                                                                key={emp.employeeId}
+                                                                value={emp.employeeId}
+                                                            >
+                                                                <div className="flex items-center gap-2">
+                                                                    {emp.profilePictureUrl ? (
+                                                                        <img
+                                                                            src={emp.profilePictureUrl}
+                                                                            className="w-6 h-6 rounded-full"
+                                                                            alt={emp.name}
+                                                                        />
+                                                                    ) : (
+                                                                        <div className="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center text-xs text-white">
+                                                                            {emp.name.charAt(0)}
+                                                                        </div>
+                                                                    )}
+                                                                    <span className="text-sm">
+                                                                        {emp.name} ({emp.employeeId})
+                                                                    </span>
+                                                                </div>
+                                                            </SelectItem>
+                                                        ))
+                                                    )}
+                                                </SelectContent>
+                                            </Select>
+
+                                            {/* Selected members chips */}
+                                            {Array.isArray(members) && members.length > 0 && (
+                                                <div className="mt-2 flex flex-wrap gap-2">
+                                                    {members.map((id) => {
+                                                        const emp = employees.find((e) => e.employeeId === id);
+                                                        return (
+                                                            <span
+                                                                key={id}
+                                                                className="flex items-center gap-1 bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs"
+                                                            >
+                                                                {emp?.name ?? id}
+                                                                <button
+                                                                    className="ml-1 text-red-500"
+                                                                    onClick={() =>
+                                                                        setMembers((prev) =>
+                                                                            Array.isArray(prev)
+                                                                                ? prev.filter((x) => x !== id)
+                                                                                : prev
+                                                                        )
+                                                                    }
+                                                                >
+                                                                    ×
+                                                                </button>
+                                                            </span>
+                                                        );
+                                                    })}
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -2609,12 +2641,12 @@ useEffect(() => {
         const map: Record<string, Project[]> = {};
         items.forEach((p) => {
             const d = p.startDate ?
-            //  new Date(p.startDate).toLocaleDateString()
+                //  new Date(p.startDate).toLocaleDateString()
                 format(new Date(p.startDate), "dd-MM-yyyy")
-              : "No start date";
+                : "No start date";
             (map[d] ||= []).push(p);
         });
         return map;
-  }
+    }
 }
 
