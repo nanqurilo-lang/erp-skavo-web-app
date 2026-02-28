@@ -557,7 +557,7 @@ const loadEmployees = useCallback(async () => {
       const res = await fetch(
         `${API_BASE}/api/projects/${projectId}/progress`,
         {
-          method: "PATCH",
+          method: "PUT",
           body: fd,
           headers: { Authorization: `Bearer ${getToken()}` },
         }
@@ -909,6 +909,7 @@ useEffect(() => {
 
   // Project Row helper for consistent rendering (matching AllProjectsPage look/feel)
   function ProjectRow({ p }: { p: any }) {
+    const progressTimeout = useRef<NodeJS.Timeout | null>(null);
     const start = p.startDate
       ? 
       // new Date(p.startDate).toLocaleDateString()
@@ -1049,7 +1050,7 @@ useEffect(() => {
 
                 <DropdownMenuContent align="start" className="w-64 p-2">
                   <div className="text-xs text-gray-500 mb-1">
-                    Change status
+                    Change status 
                   </div>
                   <div className="space-y-1">
                     {STATUS_OPTIONS.map((s) => (
@@ -1070,7 +1071,7 @@ useEffect(() => {
                     Adjust progress
                   </div>
                   <div>
-                    <input
+                    {/* <input
                       type="range"
                       min={0}
                       max={100}
@@ -1092,7 +1093,52 @@ useEffect(() => {
                         await patchProgress(p.id, v);
                       }}
                       className="w-full"
-                    />
+                    /> */}
+
+
+
+<input
+  type="range"
+  min={0}
+  max={100}
+  value={p.progressPercent ?? 0}
+  onChange={(e) => {
+    const v = Number(e.target.value);
+
+    // instant UI update
+    setProjects((prev) =>
+      prev.map((pr) =>
+        pr.id === p.id ? { ...pr, progressPercent: v } : pr
+      )
+    );
+
+    // debounce API call
+    if (progressTimeout.current) {
+      clearTimeout(progressTimeout.current);
+    }
+
+    // progressTimeout.current = setTimeout(() => {
+    //   patchProgress(p.id, v);
+    // }, 400);
+
+progressTimeout.current = setTimeout(() => {
+
+  if (v === 100) {
+    patchStatus(p.id, "FINISHED");
+  } else if (v > 0 && p.projectStatus === "NOT_STARTED") {
+    patchStatus(p.id, "IN_PROGRESS");
+  }
+
+  patchProgress(p.id, v);
+
+}, 400);
+
+
+  }}
+  className="w-full"
+/>
+
+
                     <div className="flex justify-between text-xs text-gray-500 mt-1">
                       <span>0%</span>
                       <span>{p.progressPercent ?? 0}%</span>
