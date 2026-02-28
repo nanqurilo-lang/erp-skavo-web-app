@@ -10,9 +10,14 @@ import KanbanBoard from "./_components/kanban-board";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 // import { Calendar, CalendarIcon, LayoutGrid, SlidersHorizontal, TableIcon } from "lucide-react";
-import { Popover, PopoverContent, PopoverTrigger } from "@radix-ui/react-popover";
-// import { Select } from "react-day-picker";
-// import { SelectContent, SelectItem, SelectTrigger, SelectValue } from "@radix-ui/react-select";
+// import { Popover, PopoverContent, PopoverTrigger } from "@radix-ui/react-popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+
+
 
 
 import {
@@ -208,9 +213,9 @@ const pipelines = useMemo(() => {
                 </Button>
               </PopoverTrigger>
 
-              <PopoverContent className="w-[320px] p-4" align="start">
+              <PopoverContent className="w-[320px] p-4 z-50" align="start">
                 <div className="space-y-4">
-                  <div className="text-sm font-medium">Select Duration</div>
+                  <div className="text-sm  font-medium">Select Duration</div>
 
                   {/* START DATE */}
                   <div className="space-y-1">
@@ -227,7 +232,7 @@ const pipelines = useMemo(() => {
                           <CalendarIcon className="h-4 w-4" />
                         </Button>
                       </PopoverTrigger>
-                      <PopoverContent className="p-0" align="start">
+                      <PopoverContent className="p-0 z-50" align="start">
                         <Calendar
                           mode="single"
                           selected={dateFrom}
