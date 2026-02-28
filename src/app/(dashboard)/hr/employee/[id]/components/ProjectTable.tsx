@@ -413,110 +413,6 @@ export default function AllProjectsPage({ employeeId, }: { employeeId: string })
 
     const EMP_BASE = `${process.env.NEXT_PUBLIC_MAIN}`;
 
-    // const loadEmployees = useCallback(async () => {
-    //   setEmployeeLoading(true);
-    //   try {
-    //     const token =
-    //       typeof window !== "undefined"
-    //         ? localStorage.getItem("accessToken")
-    //         : null;
-
-    //     const res = await fetch(`${EMP_BASE}/employee/all`, {
-    //       headers: token ? { Authorization: `Bearer ${token}` } : undefined,
-    //       cache: "no-store",
-    //     });
-
-
-    // if (!res.ok) {
-    //   console.error("Failed to load employees", res.status);
-    //   setEmployees([]);
-    //   return;
-    // }
-
-
-
-    //     const data = await res.json();
-    //     if (Array.isArray(data)) {
-    //       setEmployees(
-    //         data.map((e: any) => ({
-    //           employeeId: e.employeeId,
-    //           name: e.name,
-    //           profilePictureUrl: e.profilePictureUrl ?? null,
-    //         }))
-    //       );
-    //     } else {
-    //       setEmployees([]);
-    //     }
-    //   } catch (err) {
-    //     console.error("Employee load error", err);
-    //     setEmployees([]);
-    //   } finally {
-    //     setEmployeeLoading(false);
-    //   }
-    // }, []);
-
-
-
-    //new added
-    // const loadEmployees = useCallback(async () => {
-    //   // 🔐 already loading → skip
-    //   if (employeeLoading) return;
-
-    //   setEmployeeLoading(true);
-
-    //   try {
-    //     const token =
-    //       typeof window !== "undefined"
-    //         ? localStorage.getItem("accessToken")
-    //         : null;
-
-    //     if (!token) {
-    //       setEmployees([]);
-    //       return;
-    //     }
-
-    //     const res = await fetch(`${EMP_BASE}/employee/all`, {
-    //       headers: { Authorization: `Bearer ${token}` },
-    //       cache: "no-store",
-    //     });
-
-    //     // 🔴 HANDLE 503 GRACEFULLY
-    //     if (res.status === 503) {
-    //       console.warn("Employees service unavailable (503)");
-    //       setEmployees([]); // silent fail
-    //       return;
-    //     }
-
-    //     if (!res.ok) {
-    //       console.warn("Employees API failed:", res.status);
-    //       setEmployees([]);
-    //       return;
-    //     }
-
-    //     const data = await res.json();
-
-    //     if (Array.isArray(data)) {
-    //       setEmployees(
-    //         data.map((e: any) => ({
-    //           employeeId: e.employeeId,
-    //           name: e.name,
-    //           profilePictureUrl: e.profilePictureUrl ?? null,
-    //         }))
-    //       );
-    //     } else {
-    //       setEmployees([]);
-    //     }
-    //   } catch (err) {
-    //     console.warn("Employees fetch error (ignored)", err);
-    //     setEmployees([]);
-    //   } finally {
-    //     setEmployeeLoading(false);
-    //   }
-    // }, [employeeLoading]);
-
-
-
-
     const loadEmployees = useCallback(async () => {
         if (employeeLoading) return;
 
@@ -570,12 +466,6 @@ export default function AllProjectsPage({ employeeId, }: { employeeId: string })
             setEmployeeLoading(false);
         }
     }, [employeeLoading]);
-
-
-
-
-
-
 
 
     const deleteCategory = async (catId: string | number) => {
@@ -678,21 +568,6 @@ export default function AllProjectsPage({ employeeId, }: { employeeId: string })
         return () => clearTimeout(t);
     }, [searchInput]);
 
-    // initial token & load
-    // useEffect(() => {
-    //     if (typeof window !== "undefined") {
-    //         const savedToken = localStorage.getItem("accessToken");
-    //         setToken(savedToken);
-    //         // load selects regardless of projects auth (but use token if present)
-    //         loadCategories(savedToken || null);
-    //         loadClients(savedToken || null);
-    //         loadDepartments(savedToken || null);
-    //         loadEmployees();
-    //         if (savedToken) getProjects(savedToken);
-    //         else setLoading(false);
-    //     }
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, []);
 
 
 
@@ -973,15 +848,6 @@ export default function AllProjectsPage({ employeeId, }: { employeeId: string })
             }
             fd.append("noDeadline", String(Boolean(noDeadline)));
 
-            // basic fields
-            // fd.append("category", category === "none" ? "" : String(category));
-            // fd.append("department", department === "none" ? "" : String(department));
-            // fd.append("clientId", client === "none" ? "" : String(client));
-
-            // fd.append("summary", summary || "");
-
-
-
 
             fd.append(
                 "projectCategory",
@@ -1010,9 +876,6 @@ export default function AllProjectsPage({ employeeId, }: { employeeId: string })
 
             fd.append("tasksNeedAdminApproval", String(Boolean(needsApproval)));
 
-            // const assignedArray = Array.isArray(members)
-            //     ? members
-            //     : String(members || "").split(",").map((s) => s.trim()).filter(Boolean);
 
 
             const assignedArray = [
@@ -1194,77 +1057,6 @@ export default function AllProjectsPage({ employeeId, }: { employeeId: string })
         const pickFile = () => ucFileRef.current?.click();
         const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => setUcFile(e.target.files?.[0] ?? null);
 
-        // const saveUpdate = async () => {
-        //     if (!projectId) return;
-        //     if (!ucProjectName.trim()) return alert("Project name required");
-        //     setSaving(true);
-        //     try {
-        //         const fd = new FormData();
-        //         if (ucShortCode) fd.append("shortCode", ucShortCode);
-        //         fd.append("name", ucProjectName);
-        //         if (ucStartDate) fd.append("startDate", ucStartDate);
-        //         // always append deadline key
-        //         if (ucNoDeadline) fd.append("deadline", "");
-        //         else fd.append("deadline", ucDeadline || "");
-        //         fd.append("noDeadline", String(Boolean(ucNoDeadline)));
-        //         fd.append("category", ucCategory === "none" ? "" : ucCategory);
-        //         fd.append("department", ucDepartment === "none" ? "" : ucDepartment);
-        //         fd.append("clientId", ucClient === "none" ? "" : ucClient);
-        //         fd.append("summary", ucSummary || "");
-        //         fd.append("tasksNeedAdminApproval", String(Boolean(ucNeedsApproval)));
-        //         const assignedArray = Array.isArray(ucMembers) ? ucMembers : String(ucMembers || "").split(",").map((s) => s.trim()).filter(Boolean);
-        //         fd.append("assignedEmployeeIds", JSON.stringify(assignedArray));
-
-        //         if (ucFile) fd.append("companyFile", ucFile);
-        //         fd.append("currency", ucCurrency || "");
-        //         fd.append("budget", ucBudget || "0");
-        //         fd.append("hoursEstimate", ucHours || "0");
-        //         fd.append("allowManualTimeLogs", String(Boolean(ucAllowManualTime)));
-
-        //         if (ucProjectStatus && ucProjectStatus !== "none") fd.append("projectStatus", String(ucProjectStatus));
-        //         if (typeof ucProgress !== "undefined" && ucProgress !== null && !Number.isNaN(Number(ucProgress))) {
-        //             fd.append("progressPercent", String(Math.max(0, Math.min(100, Math.round(ucProgress || 0)))));
-        //         }
-        //         fd.append("calculateProgressThroughTasks", String(Boolean(ucCalculateThroughTasks)));
-
-        //         fd.append("addedBy", String(ucAddedBy || ""));
-
-        //         const resolvedToken = token || (typeof window !== "undefined" ? localStorage.getItem("accessToken") : null);
-
-        //         const res = await fetch(`${MAIN}/api/projects/${projectId}`, {
-        //             method: "PUT",
-        //             body: fd,
-        //             headers: resolvedToken ? { Authorization: `Bearer ${resolvedToken}` } : undefined,
-        //         });
-
-        //         if (!res.ok) {
-        //             const text = await res.text().catch(() => "");
-        //             console.error("Update failed", res.status, text);
-        //             alert("Failed to update project");
-        //             return;
-        //         }
-
-        //         let json: any = null;
-        //         try { json = await res.json(); } catch { json = null; }
-
-        //         if (json && json.id) {
-        //             setProjects((ps) => ps.map((p) => (p.id === json.id ? { ...p, ...json } : p)));
-        //         } else {
-        //             await getProjects(resolvedToken);
-        //         }
-
-        //         onSaved();
-        //         onClose();
-        //         resetLocal();
-        //     } catch (err) {
-        //         console.error("Update error:", err);
-        //         alert("Failed to update project");
-        //     } finally {
-        //         setSaving(false);
-        //     }
-        // };
-
-
         const saveUpdate = async () => {
             if (!projectId) return;
             if (!ucProjectName.trim()) return alert("Project name required");
@@ -1422,14 +1214,6 @@ export default function AllProjectsPage({ employeeId, }: { employeeId: string })
                                         <div>
                                             <label className="text-sm text-gray-600">Project Category *</label>
                                             <div className="flex gap-2">
-                                                {/* <Select value={ucCategory} onValueChange={(v) => setUcCategory(v)}>
-                                                    <SelectTrigger className="w-full"><SelectValue placeholder="--" /></SelectTrigger>
-                                                    <SelectContent>
-                                                        <SelectItem value="none">--</SelectItem>
-                                                        {categoryOptions.map((c) => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
-                                                    </SelectContent>
-                                                </Select> */}
-
 
                                                 <Select
                                                     modal={false}
@@ -1456,13 +1240,6 @@ export default function AllProjectsPage({ employeeId, }: { employeeId: string })
 
                                         <div>
                                             <label className="text-sm text-gray-600">Department *</label>
-                                            {/* <Select value={ucDepartment} onValueChange={(v) => setUcDepartment(v)}>
-                                                <SelectTrigger className="w-full"><SelectValue placeholder="--" /></SelectTrigger>
-                                                <SelectContent>
-                                                    <SelectItem value="none">--</SelectItem>
-                                                    {departmentOptions.map((d) => <SelectItem key={d.id} value={d.id}>{d.name}</SelectItem>)}
-                                                </SelectContent>
-                                            </Select> */}
 
 
                                             <Select
@@ -1488,13 +1265,7 @@ export default function AllProjectsPage({ employeeId, }: { employeeId: string })
 
                                         <div>
                                             <label className="text-sm text-gray-600">Client *</label>
-                                            {/* <Select value={ucClient} onValueChange={(v) => setUcClient(v)}>
-                                                <SelectTrigger className="w-full"><SelectValue placeholder="--" /></SelectTrigger>
-                                                <SelectContent>
-                                                    <SelectItem value="none">--</SelectItem>
-                                                    {clientOptions.map((c) => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
-                                                </SelectContent>
-                                            </Select> */}
+
 
                                             <Select
                                                 modal={false}
@@ -1690,14 +1461,7 @@ export default function AllProjectsPage({ employeeId, }: { employeeId: string })
                                     <div className="grid grid-cols-3 gap-4">
                                         <div>
                                             <label className="text-sm text-gray-600">Currency</label>
-                                            {/* <Select value={ucCurrency} onValueChange={(v) => setUcCurrency(v)}>
-                                                <SelectTrigger className="w-full"><SelectValue placeholder="USD" /></SelectTrigger>
-                                                <SelectContent>
-                                                    <SelectItem value="USD">USD $</SelectItem>
-                                                    <SelectItem value="USD">USD ₹</SelectItem>
-                                                    <SelectItem value="EUR">EUR €</SelectItem>
-                                                </SelectContent>
-                                            </Select> */}
+
 
                                             <Select
                                                 modal={false}
@@ -1960,7 +1724,7 @@ export default function AllProjectsPage({ employeeId, }: { employeeId: string })
                                         <DropdownMenuSeparator />
                                         <div className="text-xs text-gray-500 mt-2 mb-1">Adjust progress</div>
                                         <div>
-                                        
+
                                             <input
                                                 type="range"
                                                 min={0}
@@ -2013,12 +1777,6 @@ export default function AllProjectsPage({ employeeId, }: { employeeId: string })
                             <DropdownMenuItem onClick={() => { setUpdateProjectId(p.id); setShowUpdateModal(true); }}>
                                 <Edit2 className="h-4 w-4 mr-2" /> Edit
                             </DropdownMenuItem>
-
-                            {/* <DropdownMenuItem onClick={() => handlePin(p.id)}><Pin className="h-4 w-4 mr-2" /> {p.pinned ? "Unpin" : "Pin"} Project</DropdownMenuItem> */}
-
-                            {/* <DropdownMenuItem onClick={() => handleArchive(p.id)}>
-                                <Archive className="h-4 w-4 mr-2" /> {p.archived ? "Unarchive" : "Archive"}
-                            </DropdownMenuItem> */}
 
                             <DropdownMenuSeparator />
 
@@ -2254,18 +2012,6 @@ export default function AllProjectsPage({ employeeId, }: { employeeId: string })
                                     <div>
                                         <label className="text-sm text-gray-600">Project Category *</label>
                                         <div className="flex gap-2">
-                                            {/* <Select value={category} onValueChange={(v) => setCategory(v)}>
-
-
-
-
-                                                <SelectTrigger className="w-full"><SelectValue placeholder="--" /></SelectTrigger>
-                                                <SelectContent>
-                                                    <SelectItem value="none">--</SelectItem>
-                                                    {categoryOptions.map((c) => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
-                                                </SelectContent>
-                                            </Select> */}
-
 
 
                                             <Select modal={false} value={category} onValueChange={(v) => setCategory(v)}>

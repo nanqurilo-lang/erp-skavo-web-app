@@ -28,7 +28,7 @@ type Timesheet = {
     createdAt?: string; // ISO
 };
 
-const DEFAULT_MAIN = process.env.NEXT_PUBLIC_MAIN ;
+const DEFAULT_MAIN = process.env.NEXT_PUBLIC_MAIN;
 
 // *** default token (from your message). For prod DO NOT hardcode.
 const PROVIDED_TOKEN = typeof window !== "undefined" ? localStorage.getItem("accessToken") : null;
@@ -51,21 +51,21 @@ export default function TimesheetsTableNew({
     const [refreshKey, setRefreshKey] = useState(0);
 
 
-type ProjectOption = {
-  id: number;
-  name?: string;
-  assignedEmployees?: EmployeeItem[];
-};
+    type ProjectOption = {
+        id: number;
+        name?: string;
+        assignedEmployees?: EmployeeItem[];
+    };
 
-type ProjectTask = {
-  id: number;
-  title?: string;
-  assignedEmployees?: EmployeeItem[];
-};
+    type ProjectTask = {
+        id: number;
+        title?: string;
+        assignedEmployees?: EmployeeItem[];
+    };
 
-const [projects, setProjects] = useState<ProjectOption[]>([]);
-const [projectTasks, setProjectTasks] = useState<ProjectTask[]>([]);
-const [selectedTaskEmployees, setSelectedTaskEmployees] = useState<EmployeeItem[]>([]);
+    const [projects, setProjects] = useState<ProjectOption[]>([]);
+    const [projectTasks, setProjectTasks] = useState<ProjectTask[]>([]);
+    const [selectedTaskEmployees, setSelectedTaskEmployees] = useState<EmployeeItem[]>([]);
 
 
 
@@ -180,60 +180,60 @@ const [selectedTaskEmployees, setSelectedTaskEmployees] = useState<EmployeeItem[
     };
 
 
-//new fetch projects
+    //new fetch projects
     const fetchProjects = async () => {
-  try {
-    const res = await doFetch(`${MAIN}/projects/AllProject`, {
-      method: "GET",
-      headers: headersWithAuth(),
-    });
+        try {
+            const res = await doFetch(`${MAIN}/projects/AllProject`, {
+                method: "GET",
+                headers: headersWithAuth(),
+            });
 
-    if (Array.isArray(res)) {
-      setProjects(
-        res.map((p: any) => ({
-          id: p.id,
-          name: p.name,
-          assignedEmployees: p.assignedEmployees || [],
-        }))
-      );
-    }
-  } catch (e) {
-    console.error("fetchProjects error", e);
-    setProjects([]);
-  }
-};
-
-
+            if (Array.isArray(res)) {
+                setProjects(
+                    res.map((p: any) => ({
+                        id: p.id,
+                        name: p.name,
+                        assignedEmployees: p.assignedEmployees || [],
+                    }))
+                );
+            }
+        } catch (e) {
+            console.error("fetchProjects error", e);
+            setProjects([]);
+        }
+    };
 
 
 
-const fetchProjectTasks = async (projectId: string, preselectTaskId?: string) => {
-  if (!projectId) {
-    setProjectTasks([]);
-    setSelectedTaskEmployees([]);
-    return;
-  }
 
-  try {
-    const res = await doFetch(`${MAIN}/projects/${projectId}/tasks`, {
-      method: "GET",
-      headers: headersWithAuth(),
-    });
 
-    if (Array.isArray(res)) {
-      setProjectTasks(res);
+    const fetchProjectTasks = async (projectId: string, preselectTaskId?: string) => {
+        if (!projectId) {
+            setProjectTasks([]);
+            setSelectedTaskEmployees([]);
+            return;
+        }
 
-      if (preselectTaskId) {
-        const t = res.find((x: any) => String(x.id) === preselectTaskId);
-        setSelectedTaskEmployees(t?.assignedEmployees || []);
-      }
-    }
-  } catch (e) {
-    console.error("fetchProjectTasks error", e);
-    setProjectTasks([]);
-    setSelectedTaskEmployees([]);
-  }
-};
+        try {
+            const res = await doFetch(`${MAIN}/projects/${projectId}/tasks`, {
+                method: "GET",
+                headers: headersWithAuth(),
+            });
+
+            if (Array.isArray(res)) {
+                setProjectTasks(res);
+
+                if (preselectTaskId) {
+                    const t = res.find((x: any) => String(x.id) === preselectTaskId);
+                    setSelectedTaskEmployees(t?.assignedEmployees || []);
+                }
+            }
+        } catch (e) {
+            console.error("fetchProjectTasks error", e);
+            setProjectTasks([]);
+            setSelectedTaskEmployees([]);
+        }
+    };
 
 
 
@@ -245,8 +245,8 @@ const fetchProjectTasks = async (projectId: string, preselectTaskId?: string) =>
 
 
     useEffect(() => {
-  fetchProjects();
-}, []);
+        fetchProjects();
+    }, []);
 
 
     // derive employees for filter/select
@@ -413,15 +413,15 @@ const fetchProjectTasks = async (projectId: string, preselectTaskId?: string) =>
 
 
 
-    if (
-      form.taskId &&
-      selectedTaskEmployees.length > 0 &&
-      !selectedTaskEmployees.some(e => e.employeeId === form.employeeId)
-    ) {
-      setSaveError("Selected employee is not assigned to this task.");
-      setSaving(false);
-      return;
-    }
+            if (
+                form.taskId &&
+                selectedTaskEmployees.length > 0 &&
+                !selectedTaskEmployees.some(e => e.employeeId === form.employeeId)
+            ) {
+                setSaveError("Selected employee is not assigned to this task.");
+                setSaving(false);
+                return;
+            }
 
 
 
@@ -439,8 +439,8 @@ const fetchProjectTasks = async (projectId: string, preselectTaskId?: string) =>
 
             // const url = buildUrl(gatewayPath) + (editingId ? `/${editingId}` : "");
             const url = editingId
-  ? buildUrl(`/timesheets/${editingId}`)
-  : buildUrl(`/timesheets`);
+                ? buildUrl(`/timesheets/${editingId}`)
+                : buildUrl(`/timesheets`);
 
             const method = editingId ? "PUT" : "POST";
 
@@ -621,113 +621,106 @@ const fetchProjectTasks = async (projectId: string, preselectTaskId?: string) =>
                                     <div>
                                         <label className="block text-sm text-gray-700 mb-2">Project *</label>
                                         {/* <input value={form.projectId} onChange={(e) => setForm((s) => ({ ...s, projectId: e.target.value }))} className="w-full border rounded px-3 py-2" placeholder="Project ID" type="text" /> */}
-                                   
-                                   <select
-  value={form.projectId}
-  onChange={(e) => {
-    const value = e.target.value;
-    setForm(s => ({
-      ...s,
-      projectId: value,
-      taskId: "",
-      employeeId: "",
-    }));
-    fetchProjectTasks(value);
-  }}
-  className="w-full border rounded px-3 py-2"
->
-  <option value="">--</option>
-  {projects.map(p => (
-    <option key={p.id} value={String(p.id)}>
-      #{p.id} {p.name}
-    </option>
-  ))}
-</select>
 
-                                   
-                                   
+                                        <select
+                                            value={form.projectId}
+                                            onChange={(e) => {
+                                                const value = e.target.value;
+                                                setForm(s => ({
+                                                    ...s,
+                                                    projectId: value,
+                                                    taskId: "",
+                                                    employeeId: "",
+                                                }));
+                                                fetchProjectTasks(value);
+                                            }}
+                                            className="w-full border rounded px-3 py-2"
+                                        >
+                                            <option value="">--</option>
+                                            {projects.map(p => (
+                                                <option key={p.id} value={String(p.id)}>
+                                                    #{p.id} {p.name}
+                                                </option>
+                                            ))}
+                                        </select>
+
+
+
                                     </div>
 
                                     <div>
                                         <label className="block text-sm text-gray-700 mb-2">Task *</label>
                                         {/* <input value={form.taskId} onChange={(e) => setForm((s) => ({ ...s, taskId: e.target.value }))} className="w-full border rounded px-3 py-2" placeholder="Task ID" type="text" /> */}
-                                 
 
 
-                                 <select
-  value={form.taskId || "--"}
-  onChange={(e) => {
-    const val = e.target.value;
-    if (val === "--") {
-      setForm(s => ({ ...s, taskId: "", employeeId: "" }));
-      setSelectedTaskEmployees([]);
-      return;
-    }
 
-    const task = projectTasks.find(t => String(t.id) === val);
-    setForm(s => ({ ...s, taskId: val, employeeId: "" }));
-    setSelectedTaskEmployees(task?.assignedEmployees || []);
-  }}
-  className="w-full border rounded px-3 py-2"
->
-  <option value="--">--</option>
-  {projectTasks.map(t => (
-    <option key={t.id} value={String(t.id)}>
-      Task {t.id} {t.title ? `- ${t.title}` : ""}
-    </option>
-  ))}
-</select>
+                                        <select
+                                            value={form.taskId || "--"}
+                                            onChange={(e) => {
+                                                const val = e.target.value;
+                                                if (val === "--") {
+                                                    setForm(s => ({ ...s, taskId: "", employeeId: "" }));
+                                                    setSelectedTaskEmployees([]);
+                                                    return;
+                                                }
 
-                                 
+                                                const task = projectTasks.find(t => String(t.id) === val);
+                                                setForm(s => ({ ...s, taskId: val, employeeId: "" }));
+                                                setSelectedTaskEmployees(task?.assignedEmployees || []);
+                                            }}
+                                            className="w-full border rounded px-3 py-2"
+                                        >
+                                            <option value="--">--</option>
+                                            {projectTasks.map(t => (
+                                                <option key={t.id} value={String(t.id)}>
+                                                    Task {t.id} {t.title ? `- ${t.title}` : ""}
+                                                </option>
+                                            ))}
+                                        </select>
+
+
                                     </div>
 
                                     <div>
                                         <label className="block text-sm text-gray-700 mb-2">Employee *</label>
-                                        {/* <select value={form.employeeId} onChange={(e) => setForm((s) => ({ ...s, employeeId: e.target.value }))} className="w-full border rounded px-3 py-2">
-                                            <option value="">--</option>
-                                            {employeeList.map((e) => (
-                                                <option key={e.employeeId} value={e.employeeId}>
-                                                    {e.name ? `${e.name} (${e.employeeId})` : e.employeeId}
-                                                </option>
-                                            ))}
-                                        </select> */}
 
 
 
-<select
-  value={form.employeeId || "--"}
-  onChange={(e) =>
-    setForm(s => ({
-      ...s,
-      employeeId: e.target.value === "--" ? "" : e.target.value,
-    }))
-  }
-  className="w-full border rounded px-3 py-2"
->
-  {form.taskId && selectedTaskEmployees.length === 0 && (
-    <option value="--">No employees assigned to this task</option>
-  )}
 
-  {selectedTaskEmployees.length > 0 && (
-    <>
-      <option value="--">--</option>
-      {selectedTaskEmployees.map(e => (
-        <option key={e.employeeId} value={e.employeeId}>
-          {e.name ? `${e.name} (${e.employeeId})` : e.employeeId}
-        </option>
-      ))}
-    </>
-  )}
+                                        <select
+                                            value={form.employeeId || "--"}
+                                            onChange={(e) =>
+                                                setForm(s => ({
+                                                    ...s,
+                                                    employeeId: e.target.value === "--" ? "" : e.target.value,
+                                                }))
+                                            }
+                                            className="w-full border rounded px-3 py-2"
+                                        >
+                                            {form.taskId && selectedTaskEmployees.length === 0 && (
+                                                <option value="--">No employees assigned to this task</option>
+                                            )}
 
-  {!form.taskId &&
-    projects
-      .find(p => String(p.id) === form.projectId)
-      ?.assignedEmployees?.map(e => (
-        <option key={e.employeeId} value={e.employeeId}>
-          {e.name ? `${e.name} (${e.employeeId})` : e.employeeId}
-        </option>
-      ))}
-</select>
+                                            {selectedTaskEmployees.length > 0 && (
+                                                <>
+                                                    <option value="--">--</option>
+                                                    {selectedTaskEmployees.map(e => (
+                                                        <option key={e.employeeId} value={e.employeeId}>
+                                                            {e.name ? `${e.name} (${e.employeeId})` : e.employeeId}
+                                                        </option>
+                                                    ))}
+                                                </>
+                                            )}
+
+                                            {!form.taskId &&
+                                                projects
+                                                    .find(p => String(p.id) === form.projectId)
+                                                    ?.assignedEmployees?.map(e => (
+                                                        <option key={e.employeeId} value={e.employeeId}>
+                                                            {e.name ? `${e.name} (${e.employeeId})` : e.employeeId}
+                                                        </option>
+                                                    ))}
+                                        </select>
 
 
                                     </div>
