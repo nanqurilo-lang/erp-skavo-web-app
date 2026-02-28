@@ -1832,8 +1832,6 @@ export default function AllProjectsPage({ employeeId, }: { employeeId: string })
         setCurrentPage(1);
     };
 
-
-
     const filteredProjects = useMemo(() => {
         return projects.filter((p) => {
             /* -------- STATUS -------- */
@@ -1962,13 +1960,7 @@ export default function AllProjectsPage({ employeeId, }: { employeeId: string })
                                         <DropdownMenuSeparator />
                                         <div className="text-xs text-gray-500 mt-2 mb-1">Adjust progress</div>
                                         <div>
-                                            {/* <input type="range" min={0} max={100} value={p.progressPercent ?? 0}
-                                                onChange={(e) => { const v = Number(e.target.value); setProjects((prev) => prev.map((pr) => (pr.id === p.id ? { ...pr, progressPercent: v } : pr))); }}
-                                                onMouseUp={async (e) => { const v = Number((e.target as HTMLInputElement).value); await patchProgress(p.id, v); }}
-                                                onTouchEnd={async (e) => { const v = Number((e.target as HTMLInputElement).value); await patchProgress(p.id, v); }}
-                                                className="w-full" /> */}
-
-
+                                        
                                             <input
                                                 type="range"
                                                 min={0}
