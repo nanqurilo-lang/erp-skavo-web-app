@@ -339,7 +339,7 @@ export default function CreateDealPage() {
                 {/* REPLACED: alert -> modal opener */}
                 <button
                   type="button"
-                  className="px-3 py-2 bg-gray-200 rounded-md text-sm"
+                  className="px-3 mt-6 py-2 bg-gray-200 rounded-md text-sm"
                   onClick={openCategoryModal}
                 >
                   Add
