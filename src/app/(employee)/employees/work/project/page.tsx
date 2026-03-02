@@ -1766,6 +1766,11 @@ export default function AllProjectsPage() {
         if (p.projectStatus !== statusFilter) return false;
       }
 
+ /* -------- PINNED ONLY -------- */
+    if (showPinnedOnly && !p.pinned) {
+      return false;
+    }
+
       /* -------- PROGRESS -------- */
       if (progressFilter !== "all") {
         if (typeof p.progressPercent !== "number") return false;
@@ -1796,7 +1801,8 @@ export default function AllProjectsPage() {
 
       return true;
     });
-  }, [projects, statusFilter, progressFilter, durationFrom, durationTo]);
+  }, [projects, statusFilter, progressFilter, durationFrom, durationTo ,showPinnedOnly,
+  showArchivedOnly,]);
 
   if (loading) return <p className="p-8 text-center">Loading projects...</p>;
 
