@@ -17,9 +17,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-
-
-
 import {
   Select,
   SelectContent,
@@ -50,31 +47,21 @@ export default function StagesPage() {
   const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
 
   const [dateFrom, setDateFrom] = useState<Date | undefined>(undefined);
-const [dateTo, setDateTo] = useState<Date | undefined>(undefined);
-const [openFilters, setOpenFilters] = useState(false);
+  const [dateTo, setDateTo] = useState<Date | undefined>(undefined);
+  const [openFilters, setOpenFilters] = useState(false);
+
+
+  const resolvedFilters = useMemo(
+    () => ({
+      pipeline: pipelineFilter === "all" ? null : pipelineFilter,
+      category: categoryFilter,
+    }),
+    [pipelineFilter, categoryFilter],
+  );
 
 
 
-// const resolvedFilters = useMemo(
-//   () => ({
-//     pipeline: pipelineFilter === "all" ? null : pipelineFilter,
-//     category: categoryFilter,
-//   }),
-//   [pipelineFilter, categoryFilter],
-// );
-
-
-const resolvedFilters = useMemo(
-  () => ({
-    pipeline: pipelineFilter === "all" ? null : pipelineFilter,
-    category: categoryFilter,
-  }),
-  [pipelineFilter, categoryFilter],
-);
-
-
-
-// 🔥 PASTE HERE
+  // 🔥 PASTE HERE
 
   // Fetch token once on mount
   useEffect(() => {
@@ -110,36 +97,33 @@ const resolvedFilters = useMemo(
 
 
 
-const filteredDeals = useMemo(() => {
-  return dealsData.filter((deal) => {
-    const matchesPipeline =
-      !pipelineFilter ||
-      pipelineFilter === "all" ||
-      deal.pipeline === pipelineFilter;
+  const filteredDeals = useMemo(() => {
+    return dealsData.filter((deal) => {
+      const matchesPipeline =
+        !pipelineFilter ||
+        pipelineFilter === "all" ||
+        deal.pipeline === pipelineFilter;
 
-    const matchesSearch =
-      !search ||
-      deal.title?.toLowerCase().includes(search.toLowerCase());
+      const matchesSearch =
+        !search ||
+        deal.title?.toLowerCase().includes(search.toLowerCase());
 
-    let matchesDate = true;
+      let matchesDate = true;
 
-    if (dateFrom || dateTo) {
-      const dealDate = deal.createdAt
-        ? new Date(deal.createdAt)
-        : null;
+      if (dateFrom || dateTo) {
+        const dealDate = deal.createdAt
+          ? new Date(deal.createdAt)
+          : null;
 
-      if (dealDate) {
-        if (dateFrom && dealDate < dateFrom) matchesDate = false;
-        if (dateTo && dealDate > dateTo) matchesDate = false;
+        if (dealDate) {
+          if (dateFrom && dealDate < dateFrom) matchesDate = false;
+          if (dateTo && dealDate > dateTo) matchesDate = false;
+        }
       }
-    }
 
-    return matchesPipeline && matchesSearch && matchesDate;
-  });
-}, [dealsData, pipelineFilter, search, dateFrom, dateTo]);
-
-
-
+      return matchesPipeline && matchesSearch && matchesDate;
+    });
+  }, [dealsData, pipelineFilter, search, dateFrom, dateTo]);
 
 
   // Combine loading and error states
@@ -155,26 +139,14 @@ const filteredDeals = useMemo(() => {
   }, [stagesData, dealsData]);
 
 
-// ✅ ADD HERE
-const pipelines = useMemo(() => {
-  const unique = new Set<string>();
-  dealsData.forEach((deal) => {
-    if (deal.pipeline) unique.add(deal.pipeline);
-  });
-  return Array.from(unique);
-}, [dealsData]);
-
-
-  // Compute filters using memoization
-  // const resolvedFilters = useMemo(
-  //   () => ({
-  //     pipeline: pipelineFilter,
-  //     category: categoryFilter,
-  //   }),
-  //   [pipelineFilter, categoryFilter],
-  // );
-
-
+  // ✅ ADD HERE
+  const pipelines = useMemo(() => {
+    const unique = new Set<string>();
+    dealsData.forEach((deal) => {
+      if (deal.pipeline) unique.add(deal.pipeline);
+    });
+    return Array.from(unique);
+  }, [dealsData]);
 
 
   if (loading) {
@@ -198,235 +170,179 @@ const pipelines = useMemo(() => {
 
 
 
- <div className="mb-4 rounded-md border bg-white py-2 px-4 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3 text-sm">
-            <div className="text-xs text-muted-foreground">Duration</div>
-           
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="w-[200px] justify-start text-sm"
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  Start Date to End Date
-                </Button>
-              </PopoverTrigger>
+      <div className="mb-4 rounded-md  bg-white py-2 px-4 flex items-center justify-between gap-4">
+        <div className="flex items-center gap-3 text-sm">
+          <div className="text-xs text-muted-foreground">Duration</div>
 
-              <PopoverContent className="w-[320px] p-4 z-50" align="start">
-                <div className="space-y-4">
-                  <div className="text-sm  font-medium">Select Duration</div>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                className="w-[200px] justify-start text-sm"
+              >
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                Start Date to End Date
+              </Button>
+            </PopoverTrigger>
 
-                  {/* START DATE */}
-                  <div className="space-y-1">
-                    <div className="text-xs text-muted-foreground">Start Date</div>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          className="w-full justify-between font-normal"
-                        >
-                          {dateFrom
-                            ? format(dateFrom, "dd-MM-yyyy")
-                            : "dd-mm-yyyy"}
-                          <CalendarIcon className="h-4 w-4" />
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="p-0 z-50" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={dateFrom}
-                          onSelect={(date) => {
-                            setDateFrom(date);
-                            // auto-fix: end date chhoti ho to clear
-                            if (dateTo && date && dateTo < date) {
-                              setDateTo(undefined);
-                            }
-                          }}
-                        />
-                      </PopoverContent>
-                    </Popover>
-                  </div>
+            <PopoverContent className="w-[320px] p-4 z-50" align="start">
+              <div className="space-y-4">
+                <div className="text-sm  font-medium">Select Duration</div>
 
-                  {/* END DATE */}
-                  <div className="space-y-1">
-                    <div className="text-xs text-muted-foreground">End Date</div>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          className="w-full justify-between font-normal"
-                          disabled={!dateFrom}
-                        >
-                          {dateTo
-                            ? format(dateTo, "dd-MM-yyyy")
-                            : "dd-mm-yyyy"}
-                          <CalendarIcon className="h-4 w-4" />
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={dateTo}
-                          fromDate={dateFrom}
-                          onSelect={(date) => setDateTo(date)}
-                        />
-                      </PopoverContent>
-                    </Popover>
-                  </div>
-
-                  {/* RESET */}
-                  <div className="flex justify-end">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => {
-                        setDateFrom(undefined);
-                        setDateTo(undefined);
-                      }}
-                    >
-                      Reset
-                    </Button>
-                  </div>
+                {/* START DATE */}
+                <div className="space-y-1">
+                  <div className="text-xs text-muted-foreground">Start Date</div>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="w-full justify-between font-normal"
+                      >
+                        {dateFrom
+                          ? format(dateFrom, "dd-MM-yyyy")
+                          : "dd-mm-yyyy"}
+                        <CalendarIcon className="h-4 w-4" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="p-0 z-50" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={dateFrom}
+                        onSelect={(date) => {
+                          setDateFrom(date);
+                          // auto-fix: end date chhoti ho to clear
+                          if (dateTo && date && dateTo < date) {
+                            setDateTo(undefined);
+                          }
+                        }}
+                      />
+                    </PopoverContent>
+                  </Popover>
                 </div>
-              </PopoverContent>
-            </Popover>
 
+                {/* END DATE */}
+                <div className="space-y-1">
+                  <div className="text-xs text-muted-foreground">End Date</div>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="w-full justify-between font-normal"
+                        disabled={!dateFrom}
+                      >
+                        {dateTo
+                          ? format(dateTo, "dd-MM-yyyy")
+                          : "dd-mm-yyyy"}
+                        <CalendarIcon className="h-4 w-4" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={dateTo}
+                        fromDate={dateFrom}
+                        onSelect={(date) => setDateTo(date)}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
 
-
-
-
-            <div className="text-xs text-muted-foreground">Pipeline </div>
-            <Select value={pipelineFilter} onValueChange={setPipelineFilter}>
-              <SelectTrigger className="w-36 text-sm py-1">
-                <SelectValue placeholder="All pipelines" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All</SelectItem>
-                {pipelines.length ? (
-                  pipelines.map((p) => (
-                    <SelectItem key={p} value={p}>
-                      {p}
-                    </SelectItem>
-                  ))
-                ) : (
-                  <>
-                    <SelectItem value="Sales">Sales</SelectItem>
-                    <SelectItem value="Marketing">Marketing</SelectItem>
-                    <SelectItem value="Partnerships">Partnerships</SelectItem>
-                  </>
-                )}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="flex items-center gap-2">
-            {/* <Button variant="ghost" size="sm" className="px-2"> */}
-
-
-            <Button
-              variant="ghost"
-              size="sm"
-              className="px-2"
-              onClick={() => setOpenFilters(true)}
-            >
-
-
-              <div className="flex items-center gap-2">
-                <SlidersHorizontal className="h-4 w-4" />
-                <span className="text-sm">Filters </span>
+                {/* RESET */}
+                <div className="flex justify-end">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      setDateFrom(undefined);
+                      setDateTo(undefined);
+                    }}
+                  >
+                    Reset
+                  </Button>
+                </div>
               </div>
-            </Button>
-          </div>
+            </PopoverContent>
+          </Popover>
+
+
+          <div className="text-xs text-muted-foreground">Pipeline </div>
+          <Select value={pipelineFilter} onValueChange={setPipelineFilter}>
+            <SelectTrigger className="w-36 text-sm py-1">
+              <SelectValue placeholder="All pipelines" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All</SelectItem>
+              {pipelines.length ? (
+                pipelines.map((p) => (
+                  <SelectItem key={p} value={p}>
+                    {p}
+                  </SelectItem>
+                ))
+              ) : (
+                <>
+                  <SelectItem value="Sales">Sales</SelectItem>
+                  <SelectItem value="Marketing">Marketing</SelectItem>
+                  <SelectItem value="Partnerships">Partnerships</SelectItem>
+                </>
+              )}
+            </SelectContent>
+          </Select>
         </div>
 
+        <div className="flex items-center gap-2">
+
+        </div>
+      </div>
+
+
+      {openFilters && (
+
+        <FiltersDrawer
+          open={openFilters}
+          onClose={() => setOpenFilters(false)}
+
+          stages={stagesData.map((s) => s.name)}   // ✅ correct
+          deals={filteredDeals}
+          priorities={[]}                          // ✅ since not fetched here
+
+          dateFilterOn="created"
+          setDateFilterOn={() => { }}
+          dateFrom={dateFrom}
+          setDateFrom={setDateFrom}
+          dateTo={dateTo}
+          setDateTo={setDateTo}
+          dealStageFilter="all"
+          setDealStageFilter={() => { }}
+          minValue=""
+          setMinValue={() => { }}
+          maxValue=""
+          setMaxValue={() => { }}
+          agentFilter="all"
+          setAgentFilter={() => { }}
+          watcherFilter="all"
+          setWatcherFilter={() => { }}
+          leadFilter="all"
+          setLeadFilter={() => { }}
+          tagFilter="all"
+          setTagFilter={() => { }}
+          priorityFilter="all"
+          setPriorityFilter={() => { }}
+        />
 
 
 
-{/* 
-{openFilters && (
-  <FiltersDrawer
-    open={openFilters}
-    onClose={() => setOpenFilters(false)}
-  />
-)} */}
-
-
-{openFilters && (
-  // <FiltersDrawer
-  //   open={openFilters}
-  //   onClose={() => setOpenFilters(false)}
-  //   stages={stagesData.map((s) => s.name)}  // 👈 pass stages
-  //   deals={dealsData}                       // 👈 pass deals
-  //   priorities={[]}                         // 👈 temporary empty (since not loaded here)
-  // />
-
-<FiltersDrawer
-  open={openFilters}
-  onClose={() => setOpenFilters(false)}
-
-  stages={stagesData.map((s) => s.name)}   // ✅ correct
-deals={filteredDeals} 
- priorities={[]}                          // ✅ since not fetched here
-
-  dateFilterOn="created"
-  setDateFilterOn={() => {}}
-  dateFrom={dateFrom}
-  setDateFrom={setDateFrom}
-  dateTo={dateTo}
-  setDateTo={setDateTo}
-  dealStageFilter="all"
-  setDealStageFilter={() => {}}
-  minValue=""
-  setMinValue={() => {}}
-  maxValue=""
-  setMaxValue={() => {}}
-  agentFilter="all"
-  setAgentFilter={() => {}}
-  watcherFilter="all"
-  setWatcherFilter={() => {}}
-  leadFilter="all"
-  setLeadFilter={() => {}}
-  tagFilter="all"
-  setTagFilter={() => {}}
-  priorityFilter="all"
-  setPriorityFilter={() => {}}
-/>
-
-
-
-)}
-
-
-
-
-
+      )}
 
 
       <div className="flex flex-col min-h-screen  overflow-x-hidden">
 
 
-
-
- 
-
-
-
-
-        
         {/* //   <div className="flex flex-col flex-1 overflow-hidden"> */}
         <div className="flex flex-col flex-1 p-4 w-full">
           <header className="shrink-0 mb-4 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             {/* <h1 className="text-3xl font-bold text-foreground text-balance">Deals – Kanban </h1> */}
             <div className="flex items-center gap-2 flex-wrap">
-              {/* <footer className="mt-6">
-                <Link
-                  href="/dashboard"
-                  className="text-blue-600 hover:underline"
-                >
-                  Back to Home
-                </Link>
-              </footer> */}
+
               <AddStagePanel
                 onCreated={async () => {
                   await mutateStages();
@@ -463,7 +379,7 @@ deals={filteredDeals}
           <main className="flex-1 min-h-0 overflow-auto">
             <KanbanBoard
               stages={stagesData}
-deals={filteredDeals}
+              deals={filteredDeals}
               search={search}
               filters={resolvedFilters}
             />
@@ -474,7 +390,7 @@ deals={filteredDeals}
 
 
 
-        
+
       </div>
     </main>
   );
