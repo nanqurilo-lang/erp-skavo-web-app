@@ -81,7 +81,7 @@ export default function SubTasksTab({ taskId }) {
             const res = await fetch(
                 `${MAIN_API}/tasks/${taskId}/subtasks/${subtaskId}`,
                 {
-                    method: "PATCH",
+                    method: "PUT",
                     headers: {
                         Authorization: `Bearer ${token}`,
                         "Content-Type": "application/json",
