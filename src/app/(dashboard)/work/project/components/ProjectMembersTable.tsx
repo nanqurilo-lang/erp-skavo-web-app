@@ -209,7 +209,10 @@ export default function ProjectMembersTableFetch({
   // ------------------------------------------
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-6">
+    
+    // <div className="bg-white rounded-xl border border-gray-200 p-6">
+
+      <div className="bg-white rounded-xl border border-gray-200 p-6 h-fit  self-start">
       <h2 className="text-xl font-semibold mb-4">Member</h2>
 
       {/* Top Controls */}

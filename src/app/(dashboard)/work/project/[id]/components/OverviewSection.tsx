@@ -625,7 +625,8 @@ export default function ProjectDetailsPage() {
         )}
 
         {/* other components shown for reference */}
-        <div className="mt-6 grid grid-cols-1 lg:grid-rows-2 gap-2">
+        {/* <div className="mt-6 grid grid-cols-1 lg:grid-rows-2 gap-2"> */}
+          <div className="mt-6 space-y-6">
           <ProjectMembersTable projectId={project.id} />
           <TimesheetsTableNew gatewayPath="https://6jnqmj85-80.inc1.devtunnels.ms/timesheets" />
           <MilestonesTable projectId={project.id} />
