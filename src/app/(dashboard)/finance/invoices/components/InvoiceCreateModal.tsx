@@ -12,6 +12,8 @@ export default function InvoiceCreateModal({
   onClose,
   invoices = [],
   refresh,
+    activeInvoice   // add this
+
 }) {
   const [saving, setSaving] = useState(false);
   const [projects, setProjects] = useState<any[]>([]);
@@ -45,6 +47,31 @@ export default function InvoiceCreateModal({
       .then((d) => setProjects(Array.isArray(d) ? d : []))
       .catch(() => setProjects([]));
   }, [open]);
+
+
+
+/* =========================
+    PREFILL DUPLICATE INVOICE
+========================= */
+useEffect(() => {
+  if (!activeInvoice) return;
+
+  setForm({
+    invoiceNumber: "", // clear number for duplicate
+    invoiceDate: activeInvoice.invoiceDate || "",
+    currency: activeInvoice.currency || "USD",
+    projectName: activeInvoice.project?.projectName || "",
+    projectId: activeInvoice.project?.projectId || "",
+    clientId: activeInvoice.client?.clientId || "",
+    amount: activeInvoice.total || 0,
+    tax: activeInvoice.tax || 0,
+    discount: activeInvoice.discount || 0,
+    amountInWords: activeInvoice.amountInWords || "",
+    notes: activeInvoice.notes || "",
+  });
+}, [activeInvoice]);
+
+
 
   /* =========================
       PROJECT LIST (UI SAME)
@@ -224,7 +251,7 @@ const totalAmount = subtotal - discountAmount + taxAmount;
               <label className="text-sm text-gray-600 block mb-1">
                 Project *
               </label>
-              <select
+              {/* <select
                 className="border rounded w-full h-10 px-2"
                 value={form.projectName}
                 onChange={(e) => {
@@ -243,7 +270,34 @@ const totalAmount = subtotal - discountAmount + taxAmount;
                   <option key={p}>{p}</option>
                   
                 ))}
-              </select>
+              </select> */}
+
+
+<select
+  className="border rounded w-full h-10 px-2"
+  value={form.projectId}
+  onChange={(e) => {
+    const id = e.target.value;
+    const project = projects.find((p) => String(p.id) === id);
+
+    setForm((f) => ({
+      ...f,
+      projectId: id,
+      projectName: project?.name || "",
+      clientId: project?.clientId || "",
+    }));
+  }}
+>
+  <option value="">Select Project</option>
+
+  {projects.map((p) => (
+    <option key={p.id} value={p.id}>
+      {p.name}
+    </option>
+  ))}
+</select>
+
+
             </div>
 
             {/* CLIENT */}
