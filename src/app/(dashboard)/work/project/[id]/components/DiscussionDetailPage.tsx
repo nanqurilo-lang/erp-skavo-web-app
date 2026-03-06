@@ -283,7 +283,12 @@ export default function DiscussionDetailPage({
   /* ================= UI (UNCHANGED BELOW) ================= */
 
   return (
-    <div className="fixed inset-0 bg-white z-50 flex flex-col">
+    // <div className="fixed inset-0 bg-white z-50 flex flex-col">
+
+<div className="fixed inset-0 z-50 flex justify-end bg-black/30">
+  <div className="w-[83%] h-full bg-white flex flex-col shadow-xl">
+
+
       {/* HEADER */}
       <div className="flex justify-between items-center px-6 py-4 border-b">
         <h3 className="text-lg font-medium">Discussion</h3>
@@ -528,6 +533,8 @@ export default function DiscussionDetailPage({
         </div>
       )}
     </div>
+    </div>
+    
   );
 }
 
