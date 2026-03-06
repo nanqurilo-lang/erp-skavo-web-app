@@ -167,7 +167,7 @@ export default function SubTasksTab({ taskId }) {
                             className="bg-indigo-500 text-white"
                             onClick={handleCreate}
                         >
-                            Add Sub Task
+                            Add Sub Task 
                         </Button>
                     )}
                 </div>
