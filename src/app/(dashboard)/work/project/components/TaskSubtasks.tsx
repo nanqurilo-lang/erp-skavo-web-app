@@ -63,33 +63,80 @@ export default function TaskSubtasks({ taskId }: { taskId: number }) {
     }
   }
 
-  async function handleUpdate(id: number) {
-    try {
-      const token = localStorage.getItem("accessToken");
+//   async function handleUpdate(id: number) {
+//     try {
+//       const token = localStorage.getItem("accessToken");
 
-      const res = await fetch(
-        `${MAIN_API}/tasks/${taskId}/subtasks/${id}`,
-        {
-          method: "PATCH",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ title, description }),
-        }
-      );
+//       const res = await fetch(
+//         `${MAIN_API}/tasks/${taskId}/subtasks/${id}`,
+//         {
+//           method: "PATCH",
+//           headers: {
+//             Authorization: `Bearer ${token}`,
+//             "Content-Type": "application/json",
+//           },
+//           body: JSON.stringify({ title, description }),
+//         }
+//       );
 
-      if (!res.ok) throw new Error("Update failed");
+//       if (!res.ok) throw new Error("Update failed");
 
-      setEditId(null);
-      setTitle("");
-      setDescription("");
+//       setEditId(null);
+//       setTitle("");
+//       setDescription("");
 
-      fetchSubtasks();
-    } catch (err) {
-      console.error(err);
+//       fetchSubtasks();
+//     } catch (err) {
+//       console.error(err);
+//     }
+//   }
+
+
+
+async function handleUpdate(id: number) {
+  if (!title.trim()) return alert("Title required");
+
+  try {
+    const token = localStorage.getItem("accessToken");
+
+    const res = await fetch(
+      `${MAIN_API}/tasks/${taskId}/subtasks/${id}`,
+      {
+        method: "PUT", // 🔴 change PATCH → PUT
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: title.trim(),
+          description: description || "",
+        }),
+      }
+    );
+
+    if (!res.ok) {
+      const err = await res.text();
+      console.error("Update error:", err);
+      alert("Update failed");
+      return;
     }
+
+    const updated = await res.json();
+
+    // update UI immediately
+    setSubtasks((prev) =>
+      prev.map((s) => (s.id === id ? updated : s))
+    );
+
+    setEditId(null);
+    setTitle("");
+    setDescription("");
+
+  } catch (err) {
+    console.error("Update failed:", err);
   }
+}
+
 
   async function handleDelete(id: number) {
     if (!confirm("Delete this subtask?")) return;
@@ -132,7 +179,8 @@ export default function TaskSubtasks({ taskId }: { taskId: number }) {
         {editId ? (
           <div className="flex gap-2">
             <button
-              onClick={() => handleUpdate(editId)}
+            //   onClick={() => handleUpdate(editId)}
+            onClick={() => editId && handleUpdate(editId)}
               className="px-3 py-1 bg-blue-600 text-white rounded text-sm"
             >
               Update
