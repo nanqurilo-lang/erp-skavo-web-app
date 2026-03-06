@@ -106,7 +106,7 @@ export default function InvoiceViewModal({
                     </div>
 
                     {/* ACTION BUTTONS */}
-                    <div className="mt-6 flex justify-end gap-3">
+                    {/* <div className="mt-6 flex justify-end gap-3">
 
                         {invoice.status?.toLowerCase() === "unpaid" && (
                             <>
@@ -135,7 +135,7 @@ export default function InvoiceViewModal({
                         >
                             <FileText className="h-4 w-4 mr-2" /> View Payments
                         </Button>
-                    </div>
+                    </div> */}
                 </Card>
             </div>
         </Modal>

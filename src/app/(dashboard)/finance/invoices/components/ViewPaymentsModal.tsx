@@ -216,7 +216,7 @@ export default function ViewPaymentsDrawer({
                                                 </DropdownMenuItem>
 
                                                 <DropdownMenuItem
-                                                    className="text-red-600"
+                                                    className=""
                                                     onClick={() => {
                                                         if (!confirm("Delete this payment?")) return;
                                                         fetch(
@@ -234,7 +234,8 @@ export default function ViewPaymentsDrawer({
                                                         );
                                                     }}
                                                 >
-                                                    <Trash2 className="mr-2 h-4 w-4" /> Delete
+                                                    Delete
+                                                    {/* <Trash2 className="mr-2 h-4 w-4" /> Delete */}
                                                 </DropdownMenuItem>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
