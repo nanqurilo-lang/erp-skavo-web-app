@@ -80,16 +80,35 @@ export default function InvoiceCreateModal({
   /* =========================
       CALCULATIONS (SAME AS ORIGINAL)
   ========================= */
-  const subtotal = Number(form.amount || 0);
+  // const subtotal = Number(form.amount || 0);
 
-  const discountAmount =
-    form.discount > 1
-      ? form.discount
-      : (subtotal * Number(form.discount || 0)) / 100;
+  // const discountAmount =
+    
+  //   (subtotal * Number(form.discount || 0)) / 100;
 
-  const taxAmount = ((subtotal - discountAmount) * Number(form.tax || 0)) / 100;
+  // const taxAmount = ((subtotal - discountAmount) * Number(form.tax || 0)) / 100;
 
-  const totalAmount = subtotal - discountAmount + taxAmount;
+  // const totalAmount = subtotal - discountAmount + taxAmount;
+
+
+
+/* =========================
+    CALCULATIONS (FIXED)
+========================= */
+
+const subtotal = Number(form.amount || 0);
+
+// ✅ normalize values
+const discountPercent = Number(form.discount || 0) < 1 ? 0 : Number(form.discount);
+const taxPercent = Number(form.tax || 0) < 1 ? 0 : Number(form.tax);
+
+const discountAmount = (subtotal * discountPercent) / 100;
+
+const taxAmount = ((subtotal - discountAmount) * taxPercent) / 100;
+
+const totalAmount = subtotal - discountAmount + taxAmount;
+
+
 
   /* =========================
       SAVE INVOICE
@@ -283,14 +302,30 @@ export default function InvoiceCreateModal({
               <label className="text-sm text-gray-600 block mb-1">
                 Tax (%)
               </label>
-              <input
+              {/* <input
                 type="number"
                 className="border rounded h-10 w-full px-2"
                 value={form.tax}
                 onChange={(e) =>
                   setForm((f) => ({ ...f, tax: Number(e.target.value) }))
                 }
-              />
+              /> */}
+
+
+<input
+  type="number"
+  className="border rounded h-10 w-full px-2"
+  value={form.tax}
+  onChange={(e) => {
+    let value = Number(e.target.value);
+
+    if (value < 1) value = 0; // ✅ enforce rule
+
+    setForm((f) => ({ ...f, tax: value }));
+  }}
+/>
+
+
             </div>
 
             <div className="w-40 bg-gray-100 p-3 flex flex-col items-center justify-center">
@@ -312,7 +347,7 @@ export default function InvoiceCreateModal({
 
               <div className="grid grid-cols-3 p-2 border-b">
                 <div>Discount</div>
-                <input
+                {/* <input
                   type="number"
                   className="border rounded px-2 h-8"
                   value={form.discount}
@@ -322,7 +357,26 @@ export default function InvoiceCreateModal({
                       discount: Number(e.target.value),
                     }))
                   }
-                />
+                /> */}
+
+
+<input
+  type="number"
+  className="border rounded px-2 h-8"
+  value={form.discount}
+  onChange={(e) => {
+    let value = Number(e.target.value);
+
+    if (value < 1) value = 0; // ✅ enforce rule
+
+    setForm((f) => ({
+      ...f,
+      discount: value,
+    }));
+  }}
+/>
+
+
                 <div className="text-right">{discountAmount.toFixed(2)}</div>
               </div>
 

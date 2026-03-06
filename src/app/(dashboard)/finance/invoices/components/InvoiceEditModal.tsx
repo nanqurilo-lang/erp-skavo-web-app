@@ -81,9 +81,11 @@ export default function InvoiceEditModal({
     const subtotal = Number(form.amount || 0);
 
     const discountAmount =
-        form.discount > 1
-            ? form.discount
-            : (subtotal * Number(form.discount || 0)) / 100;
+        // form.discount > 1
+        //     ? form.discount
+        //     : (subtotal * Number(form.discount || 0)) / 100;
+
+(subtotal * Number(form.discount || 0)) / 100;
 
     const taxAmount =
         ((subtotal - discountAmount) * Number(form.tax || 0)) / 100;
@@ -251,6 +253,7 @@ export default function InvoiceEditModal({
                             <label className="text-sm text-gray-600 block mb-1">Tax (%)</label>
                             <input
                                 type="number"
+                                min="0"
                                 className="border rounded h-10 w-full px-2"
                                 value={form.tax}
                                 onChange={(e) =>
