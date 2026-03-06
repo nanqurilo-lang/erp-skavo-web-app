@@ -241,6 +241,7 @@ const totalAmount = subtotal - discountAmount + taxAmount;
               >
                 {projectList.map((p) => (
                   <option key={p}>{p}</option>
+                  
                 ))}
               </select>
             </div>
