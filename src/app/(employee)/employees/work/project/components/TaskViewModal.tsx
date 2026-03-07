@@ -3,6 +3,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { format } from "date-fns";
+import TaskSubtasks from "./TaskSubtasks";
 
 type Employee = { employeeId: string; name: string; profileUrl?: string | null; role?: string };
 type Label = { id: number; name: string };
@@ -856,7 +857,7 @@ export default function TaskViewModal({
                 )}
 
                 {/* ----- SUBTASK TAB ----- */}
-                {tab === "subtask" && (
+                {/* {tab === "subtask" && (
                   <div className="h-full flex flex-col">
                     <div className="flex items-center gap-3">
                       <button
@@ -883,12 +884,11 @@ export default function TaskViewModal({
                                 aria-label="toggle subtask done"
                               />
                               <span className={`text-sm ${subtaskDone ? "line-through text-gray-400" : "text-gray-700"}`}>
-                                Title of the sub task
+                                Title of the sub task 
                               </span>
                             </label>
                           </div>
 
-                          {/* three-dot for subtask actions */}
                           <div className="relative">
                             <button
                               ref={subtaskMenuBtnRef}
@@ -924,7 +924,16 @@ export default function TaskViewModal({
                       </ul>
                     </div>
                   </div>
-                )}
+                )} */}
+
+
+
+{tab === "subtask" && (
+  <div className="h-full overflow-auto">
+    <TaskSubtasks taskId={task.id} />
+  </div>
+)}
+
 
                 {/* ----- TIMESHEET TAB: new table matching screenshot ----- */}
                 {tab === "timesheet" && (
