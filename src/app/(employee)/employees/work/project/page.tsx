@@ -231,11 +231,29 @@ export default function AllProjectsPage() {
     name: c.name,
   }));
 
-  // clientOptions from clients state
-  const clientOptions = clients.map((c) => ({
-    id: String(c.id),
-    name: c.name,
-  }));
+ 
+
+
+// const clientOptions = clients.map((c) => ({
+//   id: String(c.clientId),
+//   name: c.name,
+// }));
+
+
+const clientOptions = Array.from(
+  new Map(
+    projects
+      .filter((p) => p.client?.clientId)
+      .map((p) => [
+        p.client!.clientId,
+        {
+          id: String(p.client!.clientId),
+          name: p.client!.name || "Client",
+        },
+      ])
+  ).values()
+);
+
 
   // departmentOptions from departments state
   const departmentOptions = departments.map((d) => ({
@@ -515,47 +533,98 @@ export default function AllProjectsPage() {
   };
 
   // CLIENTS loader
-  const loadClients = useCallback(
-    async (accessToken?: string | null) => {
-      setClientLoading(true);
-      try {
-        const resolvedToken =
-          accessToken ||
-          token ||
-          (typeof window !== "undefined"
-            ? localStorage.getItem("accessToken")
-            : null);
-        // endpoint as provided: {{main}}/clients
-        const res = await fetch(`${MAIN}/clients`, {
-          headers: resolvedToken
-            ? { Authorization: `Bearer ${resolvedToken}` }
-            : undefined,
-          cache: "no-store",
-        });
-        if (!res.ok) {
-          console.warn("Failed to load clients, status:", res.status);
-          setClients([]);
-          setClientLoading(false);
-          return;
-        }
-        const data = await res.json();
-        if (Array.isArray(data)) {
-          // expecting array of client objects
-          setClients(data as ClientItem[]);
-        } else if (Array.isArray(data.items)) {
-          setClients(data.items as ClientItem[]);
-        } else {
-          setClients([]);
-        }
-      } catch (err) {
-        console.error("Error loading clients:", err);
-        setClients([]);
-      } finally {
-        setClientLoading(false);
-      }
-    },
-    [token],
-  );
+  // const loadClients = useCallback(
+  //   async (accessToken?: string | null) => {
+  //     setClientLoading(true);
+  //     try {
+  //       const resolvedToken =
+  //         accessToken ||
+  //         token ||
+  //         (typeof window !== "undefined"
+  //           ? localStorage.getItem("accessToken")
+  //           : null);
+  //       // endpoint as provided: {{main}}/clients
+  //       const res = await fetch(`${MAIN}/clients`, {
+  //         headers: resolvedToken
+  //           ? { Authorization: `Bearer ${resolvedToken}` }
+  //           : undefined,
+  //         cache: "no-store",
+  //       });
+  //       if (!res.ok) {
+  //         console.warn("Failed to load clients, status:", res.status);
+  //         setClients([]);
+  //         setClientLoading(false);
+  //         return;
+  //       }
+  //       const data = await res.json();
+  //       if (Array.isArray(data)) {
+  //         // expecting array of client objects
+  //         setClients(data as ClientItem[]);
+  //       } else if (Array.isArray(data.items)) {
+  //         setClients(data.items as ClientItem[]);
+  //       } else {
+  //         setClients([]);
+  //       }
+  //     } catch (err) {
+  //       console.error("Error loading clients:", err);
+  //       setClients([]);
+  //     } finally {
+  //       setClientLoading(false);
+  //     }
+  //   },
+  //   [token],
+  // );
+
+
+const loadClients = useCallback(async (accessToken?: string | null) => {
+  setClientLoading(true);
+
+  try {
+    const resolvedToken =
+      accessToken ||
+      token ||
+      (typeof window !== "undefined"
+        ? localStorage.getItem("accessToken")
+        : null);
+
+    const res = await fetch(`${MAIN}/api/clients`, {
+      headers: resolvedToken
+        ? { Authorization: `Bearer ${resolvedToken}` }
+        : undefined,
+      cache: "no-store",
+    });
+
+    if (!res.ok) {
+      console.warn("Failed to load clients:", res.status);
+      setClients([]);
+      return;
+    }
+
+   const data = await res.json();
+
+console.log("CLIENT API RESPONSE:", data);
+
+let clientList: ClientItem[] = [];
+
+if (Array.isArray(data)) {
+  clientList = data;
+} else if (Array.isArray(data.data)) {
+  clientList = data.data;
+} else if (Array.isArray(data.clients)) {
+  clientList = data.clients;
+} else if (Array.isArray(data.content)) {
+  clientList = data.content;
+}
+
+setClients(clientList);
+  } catch (err) {
+    console.error("Error loading clients:", err);
+    setClients([]);
+  } finally {
+    setClientLoading(false);
+  }
+}, [token]);
+
 
   // DEPARTMENTS loader
   const loadDepartments = useCallback(
