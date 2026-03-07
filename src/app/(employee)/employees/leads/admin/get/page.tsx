@@ -1346,10 +1346,6 @@ function UpdateLeadForm({ lead, onClose, onSaved }: { lead: Lead; onClose: () =>
                   <input className="w-full border rounded-md p-2" value={form.leadOwner} onChange={(e) => update("leadOwner", e.target.value)} />
                 </div>
 
-                {/* <div className="flex items-center gap-2 md:col-span-2">
-                  <input type="checkbox" id="autoConvert" checked={!!form.autoConvertToClient} onChange={(e) => update("autoConvertToClient", e.target.checked)} />
-                  <label htmlFor="autoConvert" className="text-sm">Auto Convert lead to client when the deal stage is set to "WIN".</label>
-                </div> */}
 
 
 
