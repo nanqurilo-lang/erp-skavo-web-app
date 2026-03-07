@@ -1758,51 +1758,131 @@ export default function AllProjectsPage() {
     setCurrentPage(1);
   };
 
-  const filteredProjects = useMemo(() => {
-    return projects.filter((p) => {
-      /* -------- STATUS -------- */
-      if (statusFilter !== "all") {
-        if (!p.projectStatus) return false;
-        if (p.projectStatus !== statusFilter) return false;
-      }
+//   const filteredProjects = useMemo(() => {
+//     return projects.filter((p) => {
+//       /* -------- STATUS -------- */
+//       if (statusFilter !== "all") {
+//         if (!p.projectStatus) return false;
+//         if (p.projectStatus !== statusFilter) return false;
+//       }
 
- /* -------- PINNED ONLY -------- */
+//  /* -------- PINNED ONLY -------- */
+//     if (showPinnedOnly && !p.pinned) {
+//       return false;
+//     }
+
+//       /* -------- PROGRESS -------- */
+//       if (progressFilter !== "all") {
+//         if (typeof p.progressPercent !== "number") return false;
+
+//         const v = p.progressPercent;
+//         if (progressFilter === "0-33" && !(v >= 0 && v <= 33)) return false;
+//         if (progressFilter === "34-66" && !(v >= 34 && v <= 66)) return false;
+//         if (progressFilter === "67-100" && !(v >= 67 && v <= 100)) return false;
+//       }
+
+//       /* -------- DURATION (CALENDAR) -------- */
+//       if (durationFrom || durationTo) {
+//         const start = p.startDate ? new Date(p.startDate) : null;
+//         const end = p.deadline ? new Date(p.deadline) : null;
+
+//         if (!start || !end) return false;
+
+//         if (durationFrom) {
+//           const from = new Date(durationFrom);
+//           if (start < from) return false;
+//         }
+
+//         if (durationTo) {
+//           const to = new Date(durationTo);
+//           if (end > to) return false;
+//         }
+//       }
+
+//       return true;
+//     });
+//   }, [projects, statusFilter, progressFilter, durationFrom, durationTo ,showPinnedOnly,
+//   showArchivedOnly,]);
+
+
+
+const filteredProjects = useMemo(() => {
+  return projects.filter((p) => {
+
+    /* -------- PROJECT FILTER -------- */
+    if (filterProject !== "all") {
+      if (p.name !== filterProject) return false;
+    }
+
+    /* -------- MEMBER FILTER -------- */
+    if (filterMember !== "all") {
+      const hasMember = (p.assignedEmployees || []).some(
+        (emp) => emp.name === filterMember
+      );
+      if (!hasMember) return false;
+    }
+
+    /* -------- CLIENT FILTER -------- */
+    if (filterClient !== "all") {
+      if (!p.client?.clientId) return false;
+      if (String(p.client.clientId) !== String(filterClient)) return false;
+    }
+
+    /* -------- STATUS -------- */
+    if (statusFilter !== "all") {
+      if (!p.projectStatus) return false;
+      if (p.projectStatus !== statusFilter) return false;
+    }
+
+    /* -------- PINNED -------- */
     if (showPinnedOnly && !p.pinned) {
       return false;
     }
 
-      /* -------- PROGRESS -------- */
-      if (progressFilter !== "all") {
-        if (typeof p.progressPercent !== "number") return false;
+    /* -------- PROGRESS -------- */
+    if (progressFilter !== "all") {
+      if (typeof p.progressPercent !== "number") return false;
 
-        const v = p.progressPercent;
-        if (progressFilter === "0-33" && !(v >= 0 && v <= 33)) return false;
-        if (progressFilter === "34-66" && !(v >= 34 && v <= 66)) return false;
-        if (progressFilter === "67-100" && !(v >= 67 && v <= 100)) return false;
+      const v = p.progressPercent;
+
+      if (progressFilter === "0-33" && !(v >= 0 && v <= 33)) return false;
+      if (progressFilter === "34-66" && !(v >= 34 && v <= 66)) return false;
+      if (progressFilter === "67-100" && !(v >= 67 && v <= 100)) return false;
+    }
+
+    /* -------- DURATION -------- */
+    if (durationFrom || durationTo) {
+      const start = p.startDate ? new Date(p.startDate) : null;
+      const end = p.deadline ? new Date(p.deadline) : null;
+
+      if (!start || !end) return false;
+
+      if (durationFrom) {
+        const from = new Date(durationFrom);
+        if (start < from) return false;
       }
 
-      /* -------- DURATION (CALENDAR) -------- */
-      if (durationFrom || durationTo) {
-        const start = p.startDate ? new Date(p.startDate) : null;
-        const end = p.deadline ? new Date(p.deadline) : null;
-
-        if (!start || !end) return false;
-
-        if (durationFrom) {
-          const from = new Date(durationFrom);
-          if (start < from) return false;
-        }
-
-        if (durationTo) {
-          const to = new Date(durationTo);
-          if (end > to) return false;
-        }
+      if (durationTo) {
+        const to = new Date(durationTo);
+        if (end > to) return false;
       }
+    }
 
-      return true;
-    });
-  }, [projects, statusFilter, progressFilter, durationFrom, durationTo ,showPinnedOnly,
-  showArchivedOnly,]);
+    return true;
+  });
+}, [
+  projects,
+  statusFilter,
+  progressFilter,
+  durationFrom,
+  durationTo,
+  showPinnedOnly,
+  filterProject,
+  filterMember,
+  filterClient,
+]);
+
+
 
   if (loading) return <p className="p-8 text-center">Loading projects...</p>;
 
@@ -1947,18 +2027,14 @@ export default function AllProjectsPage() {
                 <Eye className="h-4 w-4 mr-2" /> View
               </DropdownMenuItem>
 
-              {/* <DropdownMenuItem onClick={() => { setUpdateProjectId(p.id); setShowUpdateModal(true); }}>
-                <Edit2 className="h-4 w-4 mr-2" /> Edit
-              </DropdownMenuItem> */}
+            
 
               <DropdownMenuItem onClick={() => handlePin(p.id)}>
                 <Pin className="h-4 w-4 mr-2" /> {p.pinned ? "Unpin" : "Pin"}{" "}
                 Project
               </DropdownMenuItem>
 
-              {/* <DropdownMenuItem onClick={() => handleArchive(p.id)}>
-                <Archive className="h-4 w-4 mr-2" /> {p.archived ? "Unarchive" : "Archive"}
-              </DropdownMenuItem> */}
+           
 
               <DropdownMenuSeparator />
 
@@ -2072,8 +2148,25 @@ export default function AllProjectsPage() {
             </div>
 
             {/* <div className="ml-auto flex items-center gap-4">
-              <button onClick={openFilters} className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-800"><Filter className="w-5 h-5" /> Filters</button>
+              <button onClick={openFilters}
+               className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-800">
+                <Filter className="w-5 h-5" /> Filters</button>
             </div> */}
+
+
+ <div className="ml-auto">
+              <Button
+                type="button"
+                variant="outline"
+                className="flex items-center gap-2"
+                onClick={() => setShowFilters(true)}
+              >
+                <Filter className="w-4 h-4" />
+                Filters
+              </Button>
+            </div>
+
+
           </div>
 
           {/* ROW: Add Project + Search + Top-right icons */}
@@ -2097,13 +2190,7 @@ export default function AllProjectsPage() {
 
               <div className="flex items-center bg-white border rounded-lg overflow-hidden">
                 {/* List */}
-                {/* <button
-                  onClick={() => toggleView("list")}
-                  className={`px-3 py-2 hover:bg-gray-50 ${viewMode === "list" && !calendarOpen ? "bg-gray-100" : ""}`}
-                  title="List view"
-                >
-                  <List className="w-4 h-4" />
-                </button> */}
+               
 
                 {/* Grid / Table (default) */}
                 <button
@@ -2114,14 +2201,7 @@ export default function AllProjectsPage() {
                   <List className="w-4 h-4" />
                 </button>
 
-                {/* Archive toggle */}
-                {/* <button
-                  onClick={() => { toggleArchivedOnly(); }}
-                  className={`px-3 py-2 hover:bg-gray-50 ${showArchivedOnly ? "bg-gray-100" : ""}`}
-                  title={showArchivedOnly ? "Showing archived projects" : "Show archived projects"}
-                >
-                  <Archive className="w-4 h-4" />
-                </button> */}
+               
 
                 {/* Pin toggle */}
                 <button
@@ -2331,7 +2411,7 @@ export default function AllProjectsPage() {
               <SelectTrigger className="w-full rounded border px-3 py-2">
                 <SelectValue placeholder="All" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="z-[10001] pointer-events-auto">
                 <SelectItem value="all">All</SelectItem>
                 {projectOptions.map((name) => (
                   <SelectItem key={name} value={name}>
@@ -2353,7 +2433,7 @@ export default function AllProjectsPage() {
               <SelectTrigger className="w-full rounded border px-3 py-2">
                 <SelectValue placeholder="All" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="z-[10001] pointer-events-auto">
                 <SelectItem value="all">All</SelectItem>
                 {memberOptions.map((m) => (
                   <SelectItem key={m} value={m}>
@@ -2373,7 +2453,7 @@ export default function AllProjectsPage() {
               <SelectTrigger className="w-full rounded border px-3 py-2">
                 <SelectValue placeholder="All" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="z-[10001] pointer-events-auto">
                 <SelectItem value="all">All</SelectItem>
                 {clientOptions.map((c) => (
                   <SelectItem key={c.id} value={c.id}>
