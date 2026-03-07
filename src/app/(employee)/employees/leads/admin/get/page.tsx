@@ -160,6 +160,8 @@ export function AddLeadModal({
     leadSource: "",
     addedBy: "",
     leadOwner: "",
+      autoConvertToClient: true,   // ✅ ADD THIS
+
     companyName: "",
     officialWebsite: "",
     officePhone: "",
@@ -254,6 +256,7 @@ export function AddLeadModal({
         leadSource: payload.leadSource || undefined,
         addedBy: payload.addedBy || undefined,
         leadOwner: payload.leadOwner || undefined,
+        autoConvertToClient: !!payload.autoConvertToClient,
 
 
         companyName: payload.companyName,
@@ -441,6 +444,20 @@ export function AddLeadModal({
               {employees.map((emp) => <option key={emp.employeeId} value={emp.employeeId}>{emp.name} ({emp.employeeId})</option>)}
             </select>
           </div>
+
+
+
+<div className="flex items-center gap-2 md:col-span-2">
+  <input
+    type="checkbox"
+    id="autoConvert"
+    checked={!!payload.autoConvertToClient}
+    onChange={(e) => update("autoConvertToClient", e.target.checked)}
+  />
+  <label htmlFor="autoConvert" className="text-sm">
+    Auto Convert lead to client when the deal stage is set to "WIN".
+  </label>
+</div>
 
 
         </div>
@@ -1329,10 +1346,13 @@ function UpdateLeadForm({ lead, onClose, onSaved }: { lead: Lead; onClose: () =>
                   <input className="w-full border rounded-md p-2" value={form.leadOwner} onChange={(e) => update("leadOwner", e.target.value)} />
                 </div>
 
-                <div className="flex items-center gap-2 md:col-span-2">
+                {/* <div className="flex items-center gap-2 md:col-span-2">
                   <input type="checkbox" id="autoConvert" checked={!!form.autoConvertToClient} onChange={(e) => update("autoConvertToClient", e.target.checked)} />
                   <label htmlFor="autoConvert" className="text-sm">Auto Convert lead to client when the deal stage is set to "WIN".</label>
-                </div>
+                </div> */}
+
+
+
               </div>
             </div>
 
