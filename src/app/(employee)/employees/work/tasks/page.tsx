@@ -405,21 +405,45 @@ if (taskFilters.priority !== "All") {
     }
   };
 
-  const handlePinToggle = async (taskId: number) => {
-    const token = localStorage.getItem("accessToken");
+  // const handlePinToggle = async (taskId: number) => {
+  //   const token = localStorage.getItem("accessToken");
 
-    const res = await fetch(`${MAIN_API}/projects/tasks/${taskId}/pin`, {
-      method: "POST",
-      headers: { Authorization: `Bearer ${token}` },
-    });
+  //   const res = await fetch(`${MAIN_API}/projects/tasks/${taskId}/pin`, {
+  //     method: "POST",
+  //     headers: { Authorization: `Bearer ${token}` },
+  //   });
 
-    if (res.ok) {
-      fetchAllTasks();
-      fetchMyTasks();
-    } else {
-      alert("Unable to toggle pin");
-    }
-  };
+  //   if (res.ok) {
+  //     fetchAllTasks();
+  //     fetchMyTasks();
+  //   } else {
+  //     alert("Unable to toggle pin");
+  //   }
+  // };
+
+
+
+const handlePinToggle = async (task: Task) => {
+  const token = localStorage.getItem("accessToken");
+
+  const method = task.pinned ? "DELETE" : "POST";
+
+  const res = await fetch(`${MAIN_API}/projects/tasks/${task.id}/pin`, {
+    method,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (res.ok) {
+    fetchAllTasks();
+    fetchMyTasks();
+  } else {
+    alert("Unable to toggle pin");
+  }
+};
+
+
 
   return (
     <main className="container mx-auto max-w-6xl px-4 py-8">
@@ -506,7 +530,8 @@ if (taskFilters.priority !== "All") {
                   }}
                   onDelete={(task) => handleDeleteTask(task.id)}
                   onDuplicate={handleDuplicateTask}
-                  onTogglePin={(task) => handlePinToggle(task.id)}
+                  // onTogglePin={(task) => handlePinToggle(task.id)}
+                  onTogglePin={handlePinToggle}
                 />
               ) : viewMode === "kanban" ? (
                 <KanbanBoard tasks={sourceTasks} />
