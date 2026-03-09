@@ -66,6 +66,11 @@ export default function ProjectMembersTableFetch({
   const [search, setSearch] = useState("");
   const [actionLoadingId, setActionLoadingId] = useState<string | null>(null);
 
+  const [employees, setEmployees] = useState<AssignedEmployee[]>([]);
+  const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+
   // ------------------------------------------
   // GET Project Members
   // ------------------------------------------
@@ -91,6 +96,45 @@ export default function ProjectMembersTableFetch({
     }
   };
 
+
+
+
+
+  const fetchEmployees = async () => {
+    try {
+      const token = localStorage.getItem("accessToken");
+
+      const res = await fetch(`${MAIN}/employee/all`, {
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+        cache: "no-store",
+      });
+
+      if (!res.ok) {
+        throw new Error(`Employees API failed ${res.status}`);
+      }
+
+      const data = await res.json();
+
+      setEmployees(
+        (data || []).map((e: any) => ({
+          employeeId: e.employeeId,
+          name: e.name,
+          profileUrl: e.profilePictureUrl ?? null,
+        }))
+      );
+    } catch (err: any) {
+      console.error("Failed to load employees:", err.message);
+    }
+  };
+
+
+
+  useEffect(() => {
+    fetchEmployees();
+  }, []);
+
+
+
   useEffect(() => {
     fetchProject();
   }, [projectId]);
@@ -98,22 +142,25 @@ export default function ProjectMembersTableFetch({
   // ------------------------------------------
   // POST Assign Members
   // ------------------------------------------
-  const handleAssign = async () => {
-    const raw = newMemberInput.trim();
-    if (!raw) return alert("Enter employee IDs");
 
-    const employeeIds = raw.split(",").map((x) => x.trim());
+
+
+  const handleAssign = async () => {
+    if (selectedEmployees.length === 0) {
+      return alert("Select employees");
+    }
 
     try {
       setLoading(true);
-      setError(null);
 
-      const url = `${MAIN}/api/projects/${projectId}/assign`;
-      //  console.log("kikikiki", employeeIds);
-      await api.post(url, { employeeIds });
+      await api.post(`/api/projects/${projectId}/assign`, {
+        employeeIds: selectedEmployees,
+      });
 
+      setSelectedEmployees([]);
+      setDropdownOpen(false);
       setShowAddModal(false);
-      setNewMemberInput("");
+
       fetchProject();
     } catch (err: any) {
       setError(err.message);
@@ -121,6 +168,8 @@ export default function ProjectMembersTableFetch({
       setLoading(false);
     }
   };
+
+
 
   // ------------------------------------------
   // DELETE Member
@@ -209,10 +258,10 @@ export default function ProjectMembersTableFetch({
   // ------------------------------------------
 
   return (
-    
+
     // <div className="bg-white rounded-xl border border-gray-200 p-6">
 
-      <div className="bg-white rounded-xl border border-gray-200 p-6 h-fit  self-start">
+    <div className="bg-white rounded-xl border border-gray-200 p-6 h-fit  self-start">
       <h2 className="text-xl font-semibold mb-4">Member</h2>
 
       {/* Top Controls */}
@@ -328,15 +377,97 @@ export default function ProjectMembersTableFetch({
       {/* ADD MODAL */}
       {showAddModal && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded w-full max-w-md">
+          {/* <div className="bg-white p-6 rounded w-full max-w-md"> */}
+          <div className="bg-white p-6 rounded w-full max-w-md relative">
             <h3 className="text-lg font-semibold mb-4">Add Project Members</h3>
 
-            <input
-              className="border px-3 py-2 w-full rounded"
-              placeholder="EMP-015, EMP-010"
-              value={newMemberInput}
-              onChange={(e) => setNewMemberInput(e.target.value)}
-            />
+
+
+
+
+
+
+            <div className="relative w-full">
+              <div
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+                className="border px-3 py-2 rounded cursor-pointer bg-white"
+              >
+                {selectedEmployees.length === 0
+                  ? "Select Project Members"
+                  : `${selectedEmployees.length} members selected`}
+              </div>
+
+              {dropdownOpen && (
+                <div className="absolute left-0 mt-1 w-full max-h-60 overflow-auto border bg-white rounded shadow-lg z-[9999]">
+                  {employees.length === 0 && (
+                    <div className="p-3 text-gray-500 text-sm">
+                      No employees found
+                    </div>
+                  )}
+
+                  {employees.map((emp) => {
+                    const checked = selectedEmployees.includes(emp.employeeId);
+
+                    return (
+                      <div
+                        key={emp.employeeId}
+                        className="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 cursor-pointer"
+                        onClick={() => {
+                          if (checked) {
+                            setSelectedEmployees((prev) =>
+                              prev.filter((id) => id !== emp.employeeId)
+                            );
+                          } else {
+                            setSelectedEmployees((prev) => [
+                              ...prev,
+                              emp.employeeId,
+                            ]);
+                          }
+                        }}
+                      >
+                        <input type="checkbox" checked={checked} readOnly />
+
+                        <span>
+                          {emp.name} ({emp.employeeId})
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            {/* Selected Members Chips */}
+            {selectedEmployees.length > 0 && (
+              <div className="mt-2 flex flex-wrap gap-2">
+                {selectedEmployees.map((id) => {
+                  const emp = employees.find((e) => e.employeeId === id);
+
+                  return (
+                    <span
+                      key={id}
+                      className="flex items-center gap-1 bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs"
+                    >
+                      {emp?.name ?? id}
+
+                      <button
+                        className="ml-1 text-red-500"
+                        onClick={() =>
+                          setSelectedEmployees((prev) =>
+                            prev.filter((x) => x !== id)
+                          )
+                        }
+                      >
+                        ×
+                      </button>
+                    </span>
+                  );
+                })}
+              </div>
+            )}
+
+
+
 
             <div className="text-xs text-gray-500 mt-1">
               Example: EMP-015, EMP-010
