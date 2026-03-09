@@ -683,7 +683,7 @@ export default function Dashboard() {
                 <Summary
                   title="Projects"
                   a={pad(projectsCnt.pending)}
-                  aLabel="In Progress"
+                  aLabel="Pending"
                   b={pad(projectsCnt.overdue)}
                   bLabel="Overdue"
                 />

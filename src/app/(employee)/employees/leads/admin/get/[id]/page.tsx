@@ -1557,12 +1557,12 @@ export default function LeadDetailPage() {
                       <div className="grid gap-y-3">
                         <div className="flex items-start gap-6">
                           <div className="w-48 md:hidden text-sm text-muted-foreground">Name</div>
-                          <div className="text-sm">{fmt(data?.name)}</div>
+                          <div className="text-sm mt-2">{fmt(data?.name)}</div>
                         </div>
 
                         <div className="flex items-start gap-6">
                           <div className="w-48 md:hidden text-sm text-muted-foreground">Email</div>
-                          <div className="text-sm">{fmt(data?.email)}</div>
+                          <div className="text-sm mt-2">{fmt(data?.email)}</div>
                         </div>
 
                         <div className="flex items-start gap-6">
@@ -1572,12 +1572,12 @@ export default function LeadDetailPage() {
 
                         <div className="flex items-start gap-6">
                           <div className="w-48 md:hidden text-sm text-muted-foreground">Source</div>
-                          <div className="text-sm">{fmt(data?.leadSource)}</div>
+                          <div className="text-sm mt-2">{fmt(data?.leadSource)}</div>
                         </div>
 
                         <div className="flex items-start gap-6">
                           <div className="w-48 md:hidden text-sm text-muted-foreground">Company Name</div>
-                          <div className="text-sm">{fmt(data?.companyName)}</div>
+                          <div className="text-sm mt-2">{fmt(data?.companyName)}</div>
                         </div>
 
                         <div className="flex items-start gap-6">
@@ -1587,7 +1587,7 @@ export default function LeadDetailPage() {
 
                         <div className="flex items-start gap-6">
                           <div className="w-48 md:hidden text-sm text-muted-foreground">Mobile</div>
-                          <div className="text-sm">{fmt(data?.mobileNumber)}</div>
+                          <div className="text-sm mt-2">{fmt(data?.mobileNumber)}</div>
                         </div>
 
                         <div className="flex items-start gap-6">
