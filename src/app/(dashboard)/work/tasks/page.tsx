@@ -390,21 +390,46 @@ const TasksPage: React.FC = () => {
     }
   };
 
-  const handlePinToggle = async (taskId: number) => {
-    const token = localStorage.getItem("accessToken");
+  // const handlePinToggle = async (taskId: number) => {
+  //   const token = localStorage.getItem("accessToken");
 
-    const res = await fetch(`${MAIN_API}/projects/tasks/${taskId}/pin`, {
-      method: "POST",
-      headers: { Authorization: `Bearer ${token}` },
-    });
+  //   const res = await fetch(`${MAIN_API}/projects/tasks/${taskId}/pin`, {
+  //     method: "POST",
+  //     headers: { Authorization: `Bearer ${token}` },
+  //   });
 
-    if (res.ok) {
-      fetchAllTasks();
-      fetchMyTasks();
-    } else {
-      alert("Unable to toggle pin");
-    }
-  };
+  //   if (res.ok) {
+  //     fetchAllTasks();
+  //     fetchMyTasks();
+  //   } else {
+  //     alert("Unable to toggle pin");
+  //   }
+  // };
+
+
+
+
+
+
+const handlePinToggle = async (task: Task) => {
+  const token = localStorage.getItem("accessToken");
+
+  const method = task.pinned ? "DELETE" : "POST";
+
+  const res = await fetch(`${MAIN_API}/projects/tasks/${task.id}/pin`, {
+    method,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (res.ok) {
+    fetchAllTasks();
+    fetchMyTasks();
+  } else {
+    alert("Unable to toggle pin");
+  }
+};
 
 
 
@@ -525,7 +550,8 @@ const TasksPage: React.FC = () => {
                   }}
                   onDelete={(task) => handleDeleteTask(task.id)}
                   onDuplicate={handleDuplicateTask}
-                  onTogglePin={(task) => handlePinToggle(task.id)}
+                  // onTogglePin={(task) => handlePinToggle(task.id)}
+                  onTogglePin={handlePinToggle}
                     onApprove={(task) => handleApproveTask(task.id)}   // ✅ ADD THIS
 
                 />
