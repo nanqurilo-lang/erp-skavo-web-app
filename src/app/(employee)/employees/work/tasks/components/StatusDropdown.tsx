@@ -86,7 +86,7 @@ export default function StatusDropdown({ task }) {
                 </button>
             </DropdownMenuTrigger>
 
-            <DropdownMenuContent className="w-40">
+            {/* <DropdownMenuContent className="w-40">
                 {stages.map((stage) => (
                     <DropdownMenuItem
                         key={stage.id}
@@ -100,7 +100,7 @@ export default function StatusDropdown({ task }) {
                         {stage.name}{stage.id}
                     </DropdownMenuItem>
                 ))}
-            </DropdownMenuContent>
+            </DropdownMenuContent> */}
         </DropdownMenu>
     );
 }
