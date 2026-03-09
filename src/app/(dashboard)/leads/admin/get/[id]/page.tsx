@@ -2465,7 +2465,7 @@ const filteredDeals = dealsData?.filter((deal) => {
                     </table>
                   </div>
 
-                  <div className="mt-4 flex items-center justify-between text-sm text-muted-foreground">
+                  {/* <div className="mt-4 flex items-center justify-between text-sm text-muted-foreground">
                    <div>Result per page-8</div>
                     <div>Page 1 of 1 </div>
                     <div className="flex items-center gap-2">
@@ -2476,7 +2476,7 @@ const filteredDeals = dealsData?.filter((deal) => {
                         ›
                       </button>
                     </div>
-                  </div>
+                  </div> */}
                 </>
               )}
 
@@ -2618,7 +2618,7 @@ const filteredDeals = dealsData?.filter((deal) => {
                     </table>
                   </div>
 
-                  <div className="mt-4 flex items-center justify-between text-sm text-muted-foreground">
+                  {/* <div className="mt-4 flex items-center justify-between text-sm text-muted-foreground">
                     <div>Page 1 of 1</div>
                     <div className="flex items-center gap-2">
                       <button className="px-2 py-1" disabled>
@@ -2628,7 +2628,7 @@ const filteredDeals = dealsData?.filter((deal) => {
                         ›
                       </button>
                     </div>
-                  </div>
+                  </div> */}
 
                   {/* Fixed-position popup (rendered outside the table so scrolling doesn't affect it) */}
                   {openNoteMenuId != null && noteMenuPos && (

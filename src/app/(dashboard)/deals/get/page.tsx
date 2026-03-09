@@ -1442,11 +1442,11 @@ const matchesStage =
           </Table>
         </div>
 
-        <div className="mt-4">
+        {/* <div className="mt-4">
           <Link href="/dashboard" className="underline">
             Back to Home
           </Link>
-        </div>
+        </div> */}
       </div>
 
 
