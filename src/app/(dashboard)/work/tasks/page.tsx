@@ -406,6 +406,38 @@ const TasksPage: React.FC = () => {
     }
   };
 
+
+
+  const handleApproveTask = async (taskId: number) => {
+  const token = localStorage.getItem("accessToken");
+
+  try {
+
+
+
+    const res = await fetch(
+      // `${MAIN_API}/api/projects/tasks/${taskId}/approve`,
+     `${MAIN_API}/api/projects/tasks/${taskId}/status?statusId=3`,
+      {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!res.ok) {
+      throw new Error("Failed to approve task");
+    }
+
+    fetchAllTasks();
+    fetchMyTasks();
+  } catch (err) {
+    console.error(err);
+    alert("Unable to approve task");
+  }
+};
+
   return (
     <main className="container mx-auto max-w-6xl px-4 py-8">
       <div className="flex min-h-screen flex-col bg-slate-50">
@@ -494,6 +526,8 @@ const TasksPage: React.FC = () => {
                   onDelete={(task) => handleDeleteTask(task.id)}
                   onDuplicate={handleDuplicateTask}
                   onTogglePin={(task) => handlePinToggle(task.id)}
+                    onApprove={(task) => handleApproveTask(task.id)}   // ✅ ADD THIS
+
                 />
               ) : viewMode === "kanban" ? (
                 <KanbanBoard tasks={sourceTasks} />

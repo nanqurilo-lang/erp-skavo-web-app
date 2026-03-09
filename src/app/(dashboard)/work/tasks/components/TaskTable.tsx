@@ -23,6 +23,7 @@ interface TaskTableProps {
     onDelete?: (task: Task) => void;
     onDuplicate?: (task: Task) => void;
     onTogglePin?: (task: Task) => void;
+    onApprove?: (task: Task) => void;
 }
 
 
@@ -32,7 +33,8 @@ export const TaskTable: React.FC<TaskTableProps> = ({
     onEdit,
     onDelete,
     onDuplicate,
-    onTogglePin
+    onTogglePin,
+    onApprove
 }) => {
     return (
         <div className="w-full overflow-hidden rounded-xl bg-white">
@@ -164,6 +166,8 @@ export const TaskTable: React.FC<TaskTableProps> = ({
                                         onDelete={onDelete}
                                         onDuplicate={onDuplicate}
                                         onTogglePin={onTogglePin}
+                                          onApprove={onApprove}
+
                                     />
 
                                 </TableCell>
