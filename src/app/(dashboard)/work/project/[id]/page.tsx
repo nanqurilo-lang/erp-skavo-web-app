@@ -35,6 +35,9 @@ export default function ProjectDetailsPage() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<TabKey>("overview");
 
+
+
+
   // ---------------- FETCH PROJECT ----------------
   useEffect(() => {
     if (!projectId) return;
@@ -67,6 +70,12 @@ export default function ProjectDetailsPage() {
   if (loading) {
     return <div className="p-8 text-center">Loading project...</div>;
   }
+
+
+
+  // console.log(project?.client.clientId)
+
+  const nan = project?.client.clientId
 
   if (!project) {
     return <div className="p-8 text-center text-red-500">Project not found</div>;
@@ -121,8 +130,11 @@ export default function ProjectDetailsPage() {
             <InvoicesSection projectId={project.id} />
           )}
           {activeTab === "payments" && (
-            <PaymentsSection projectId={project.id} />
+            <PaymentsSection projectId={project.id }
+            client2={nan}
+            />
           )}
+
           {activeTab === "files" && (
             <FilesSection projectId={project.id} />
           )}

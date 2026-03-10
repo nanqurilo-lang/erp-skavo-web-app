@@ -47,17 +47,21 @@ type Payment = {
   paymentGateway?: string | null;
   status?: "Complete" | "Pending" | "Failed" | string;
   receiptFileUrl?: string | null;
+  client2?: string;
+
 };
 
 const BASE_URL = `${process.env.NEXT_PUBLIC_MAIN}`;
 
 export default function PaymentsSection({
   projectId,
+  client2,
   onAdd,
   onSearch,
   onAction,
 }: {
   projectId?: string | number | null;
+  client2?: string;
   onAdd?: () => void;
   onSearch?: (q: string) => void;
   onAction?: (p: Payment) => void;
@@ -77,9 +81,13 @@ export default function PaymentsSection({
   const [amountField, setAmountField] = useState<string>("");
   const [currencyField, setCurrencyField] = useState<string>("USD");
   const [transactionIdField, setTransactionIdField] = useState<string>("");
-  const [paymentGatewayField, setPaymentGatewayField] = useState<string>(
-    "Net Banking"
-  );
+  // const [paymentGatewayField, setPaymentGatewayField] = useState<string>(
+  //   "Net Banking"
+  // );
+
+  const [paymentGatewayField, setPaymentGatewayField] = useState<string>("");
+
+
   const [remarkField, setRemarkField] = useState<string>("");
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [receiptFile, setReceiptFile] = useState<File | null>(null);
@@ -97,6 +105,53 @@ export default function PaymentsSection({
   const [editPayment, setEditPayment] = useState<Payment | null>(null);
 
   const [menuPosition, setMenuPosition] = useState<{ top: number; left: number } | null>(null);
+
+  const [invoices, setInvoices] = useState<{ id: number; invoiceNumber: string }[]>([]);
+  const [clientIdField, setClientIdField] = useState<string>("");
+
+  useEffect(() => {
+    if (!projectId) return;
+
+    const fetchInvoices = async () => {
+      try {
+        const token =
+          typeof window !== "undefined"
+            ? localStorage.getItem("accessToken")
+            : null;
+
+        const res = await fetch(
+          `${BASE_URL}/api/invoices/project/${projectId}`,
+          {
+            headers: {
+              Authorization: token ? `Bearer ${token}` : "",
+              Accept: "application/json",
+            },
+          }
+        );
+
+        if (!res.ok) {
+          console.error("Failed to load invoices");
+          return;
+        }
+
+        const data = await res.json();
+
+        if (Array.isArray(data)) {
+          setInvoices(data);
+
+          // ✅ Prefill first invoice
+          if (data.length > 0) {
+            setInvoiceField(data[0].invoiceNumber);
+          }
+        }
+      } catch (err) {
+        console.error("fetchInvoices error", err);
+      }
+    };
+
+    fetchInvoices();
+  }, [projectId]);
+
 
 
   // fetch payments for client (unchanged)
@@ -118,6 +173,11 @@ export default function PaymentsSection({
 
     const token =
       typeof window !== "undefined" ? localStorage.getItem("accessToken") : null;
+
+
+
+
+
 
     fetch(url, {
       method: "GET",
@@ -151,25 +211,27 @@ export default function PaymentsSection({
             companyName: p.client?.companyName ?? undefined,
             profilePictureUrl: p.client?.profilePictureUrl ?? undefined,
           },
-          orderNumber: (p as any).orderNumber ?? undefined,
-          amount:
-            typeof p.amount === "number"
-              ? p.amount
-              : p.amount
-                ? Number(p.amount)
-                : undefined,
+          orderNumber: p.orderNumber ?? undefined,
+          amount: p.amount ?? undefined,
           currency: p.currency ?? undefined,
           paidOn: p.paymentDate ?? undefined,
           paymentGateway: p.paymentGateway?.name ?? undefined,
-          status: p.status
-            ? String(p.status) === "COMPLETED"
-              ? "COMPLETED"
-              : p.status
-            : undefined,
-          receiptFileUrl: p.receiptFileUrl ?? undefined,
+          status: p.status ?? undefined,
         }));
 
         setPayments(mapped);
+
+        // Prefill clientId
+        if (data.length > 0 && data[0].client?.clientId) {
+
+
+
+          const cid = data[0].client.clientId;
+          setClientIdField(cid);
+          setClientField(cid);
+
+
+        }
       })
       .catch((err) => {
         if ((err as any).name === "AbortError") return;
@@ -180,6 +242,10 @@ export default function PaymentsSection({
       .finally(() => {
         setLoading(false);
       });
+
+
+
+
 
     return () => controller.abort();
   }, [projectId]);
@@ -226,40 +292,128 @@ export default function PaymentsSection({
     }
   };
 
-  // open modal when Add clicked, but still call optional onAdd
+
+
   const handleOpenAdd = () => {
-    if (onAdd) {
-      try {
-        onAdd();
-      } catch { }
+    setProjectField(String(projectId));
+
+    // ✅ Prefill clientId like CLI002
+    setClientField(client2);
+
+    // Prefill invoice
+    if (invoices.length > 0) {
+      setInvoiceField(invoices[0].invoiceNumber);
     }
-    // prefill client if we have clientId
-    setClientField(projectId ? String(projectId) : clientField);
+
     setShowAddModal(true);
   };
+
+
+  useEffect(() => {
+    fetchGateways()
+      ;
+  },
+    [])
+
+
 
   const handleFileClick = () => fileInputRef.current?.click();
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setReceiptFile(e.target.files?.[0] ?? null);
 
-  // Save button: keep simple (logs & close). If you want an API POST, tell me.
-  const handleSavePayment = () => {
-    const payload = {
-      project: projectField,
-      client: clientField,
-      invoice: invoiceField,
-      amount: amountField,
-      currency: currencyField,
-      transactionId: transactionIdField,
-      paymentGateway: paymentGatewayField,
-      remark: remarkField,
-      receiptFileName: receiptFile?.name ?? null,
-    };
 
-    //  console.log("Save payment (client-side):", payload);
-    // close modal
-    setShowAddModal(false);
+
+
+
+  const handleSavePayment = async () => {
+    try {
+      const token =
+        typeof window !== "undefined"
+          ? localStorage.getItem("accessToken")
+          : null;
+
+      const payload = {
+        projectId: String(projectId),
+        clientId: clientField,
+        currency: currencyField,
+        amount: Number(amountField),
+        transactionId: transactionIdField,
+        invoiceId: invoiceField,
+        paymentGatewayId: Number(paymentGatewayField),
+        notes: remarkField,
+      };
+
+
+
+
+
+
+      console.log("Sending payment:", JSON.stringify(payload),
+      );
+
+
+      const formData = new FormData();
+      formData.append("payment", JSON.stringify(payload));
+      // formData.append("clientId", clientField || "");
+
+
+      if (receiptFile) {
+        formData.append("file", receiptFile);
+      }
+
+      const res = await fetch(`${BASE_URL}/api/payments`, {
+        method: "POST",
+        headers: {
+          Authorization: token ? `Bearer ${token}` : "",
+        },
+        body: formData,
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        console.error("Create payment error:", data);
+        alert(data.message || "Failed to create payment");
+        return;
+      }
+
+      // update table instantly
+      setPayments((prev) => [
+        {
+          id: data.id,
+          code: data.project?.projectCode,
+          project: data.project?.projectName,
+          invoice: data.invoice?.invoiceNumber,
+          client: data.client,
+          orderNumber: data.orderNumber,
+          amount: data.amount,
+          currency: data.currency,
+          paidOn: data.paymentDate,
+          paymentGateway: data.paymentGateway?.name,
+          status: data.status,
+          receiptFileUrl: data.receiptFileUrl,
+        },
+        ...prev,
+      ]);
+
+      // reset form
+      setAmountField("");
+      setTransactionIdField("");
+      setRemarkField("");
+      setReceiptFile(null);
+
+      setShowAddModal(false);
+    } catch (err) {
+      console.error("Create payment error:", err);
+    }
   };
+
+
+
+
+
+
+
 
   // ---------- Payment Gateway API integration ----------
   const fetchGateways = async () => {
@@ -323,7 +477,10 @@ export default function PaymentsSection({
       // update local list (append)
       setGateways((s) => [...s, { id: created.id, name: created.name }]);
       // select created gateway in the payment form
-      setPaymentGatewayField(created.name);
+      // setPaymentGatewayField(created.name);
+
+      setPaymentGatewayField(String(created.id));
+
       // close modal (user requested modal to have Save only)
       setShowGatewayModal(false);
     } catch (err) {
@@ -479,22 +636,9 @@ export default function PaymentsSection({
                       </div>
 
                       <div className="w-10 text-center">
-                        {/* <button
-                          onClick={() => (onAction ? onAction(p) : undefined)}
-                          className="p-2 rounded hover:bg-gray-100 inline-flex items-center justify-center"
-                          title="Actions"
-                        >
-                          <MoreHorizontal size={16} />
-                        </button> */}
-
 
                         <div className="relative">
                           <button
-                            // onClick={() =>
-                            //   setActiveMenu(activeMenu === p.id ? null : p.id)
-                            // }
-
-
 
                             onClick={(e) => {
                               if (activeMenu === p.id) {
@@ -516,33 +660,6 @@ export default function PaymentsSection({
                           >
                             <MoreHorizontal size={16} />
                           </button>
-
-                          {/* {activeMenu === p.id && (
-    <div className="absolute right-0 mt-2 w-32 bg-white border rounded shadow-lg z-50">
-      <button
-        onClick={() => {
-          setViewPayment(p);
-          setActiveMenu(null);
-        }}
-        className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
-      >
-        View
-      </button>
-
-      <button
-        onClick={() => {
-          setEditPayment(p);
-          setActiveMenu(null);
-        }}
-        className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
-      >
-        Edit
-      </button>
-    </div>
-  )} */}
-
-
-
 
                           {activeMenu === p.id &&
                             menuPosition &&
@@ -596,26 +713,6 @@ export default function PaymentsSection({
         )}
       </div>
 
-      {/* Add Payment Modal (UI exact like screenshot) */}
-      {/* {showAddModal && (
-        <div className="fixed inset-0 z-[10000] flex items-start justify-center pt-8 px-4 overflow-y-auto">
-          <div
-            className="fixed inset-0 bg-black/40"
-            onClick={() => setShowAddModal(false)}
-          />
-          <div className="relative w-full max-w-4xl bg-white rounded-xl shadow-2xl overflow-y-auto z-10">
-            <div className="flex items-center justify-between p-4 border-b">
-              <h3 className="text-lg font-semibold">Add Payment Details</h3>
-              <button
-                onClick={() => setShowAddModal(false)}
-                className="p-2 rounded hover:bg-gray-100"
-                aria-label="Close"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div> */}
-
-
 
 
       {showAddModal && (
@@ -650,29 +747,51 @@ export default function PaymentsSection({
                 <div className="grid grid-cols-3 gap-4">
                   <div>
                     <label className="text-sm text-gray-600">Project *</label>
+
                     <input
-                      className="w-full border rounded px-3 py-2"
+                      className="w-full border rounded px-3 py-2 bg-gray-50"
                       value={projectField}
-                      onChange={(e) => setProjectField(e.target.value)}
+                      readOnly
                     />
+
+
                   </div>
 
                   <div>
                     <label className="text-sm text-gray-600">Client *</label>
+
+
                     <input
-                      className="w-full border rounded px-3 py-2"
+                      className="w-full border rounded px-3 py-2 bg-gray-50"
                       value={clientField}
-                      onChange={(e) => setClientField(e.target.value)}
+                      readOnly
                     />
+
+
                   </div>
 
                   <div>
                     <label className="text-sm text-gray-600">Invoice *</label>
-                    <input
-                      className="w-full border rounded px-3 py-2"
+
+
+
+                    <select
                       value={invoiceField}
                       onChange={(e) => setInvoiceField(e.target.value)}
-                    />
+                      className="w-full border rounded px-3 py-2"
+                    >
+                      {invoices.length > 0 ? (
+                        invoices.map((inv) => (
+                          <option key={inv.id} value={inv.invoiceNumber}>
+                            {inv.invoiceNumber}
+                          </option>
+                        ))
+                      ) : (
+                        <option>No invoices found</option>
+                      )}
+                    </select>
+
+
                   </div>
 
                   <div>
@@ -716,7 +835,12 @@ export default function PaymentsSection({
                         className="w-full border rounded px-3 py-2"
                       >
                         {gateways.length > 0 ? (
-                          gateways.map((g) => <option key={g.id} value={g.name}>{g.name}</option>)
+                          // gateways.map((g) => <option key={g.id} value={g.name}>{g.name}</option>)
+                          gateways.map((g) => (
+                            <option key={g.id} value={g.id}>
+                              {g.name}
+                            </option>
+                          ))
                         ) : (
                           <>
                             <option>Net Banking</option>
