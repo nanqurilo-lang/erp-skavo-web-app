@@ -7,20 +7,47 @@ import { X, Trash2 } from "lucide-react";
 
 const BASE_URL = process.env.NEXT_PUBLIC_MAIN ||  `${process.env.NEXT_PUBLIC_MAIN}`;
 
+// export default function AddPaymentModal({
+//     open,
+//     onClose,
+//     clientId,
+//     onSaved,
+// }: {
+//     open: boolean;
+//     onClose: () => void;
+//     clientId?: string | number | null;
+//     onSaved?: () => void;
+// })
+
+
+
 export default function AddPaymentModal({
-    open,
-    onClose,
-    clientId,
-    onSaved,
+  open,
+  onClose,
+  projectId,
+  clientId,
+  invoiceNumber,
+  onSaved,
 }: {
-    open: boolean;
-    onClose: () => void;
-    clientId?: string | number | null;
-    onSaved?: () => void;
-}) {
-    const [project, setProject] = useState("pre filled");
-    const [client, setClient] = useState(clientId ? String(clientId) : "pre filled");
-    const [invoice, setInvoice] = useState("pre filled");
+  open: boolean;
+  onClose: () => void;
+  projectId?: string | number | null;
+  clientId?: string | number | null;
+  invoiceNumber?: string | null;
+  onSaved?: () => void;
+})
+
+
+ {
+    // const [project, setProject] = useState("pre filled");
+    // const [client, setClient] = useState(clientId ? String(clientId) : "pre filled");
+    // const [invoice, setInvoice] = useState("pre filled");
+
+
+const [project, setProject] = useState("");
+const [client, setClient] = useState("");
+const [invoice, setInvoice] = useState("");
+
     const [amount, setAmount] = useState("");
     const [currency, setCurrency] = useState("USD");
     const [transactionId, setTransactionId] = useState("");
@@ -34,11 +61,23 @@ export default function AddPaymentModal({
     const [gateways, setGateways] = useState<{ id: number; name: string }[]>([]);
     const [gatewayInput, setGatewayInput] = useState("");
 
-    useEffect(() => {
-        if (open) {
-            setClient(clientId ? String(clientId) : "pre filled");
-        }
-    }, [open, clientId]);
+    // useEffect(() => {
+    //     if (open) {
+    //         setClient(clientId ? String(clientId) : "pre filled");
+    //     }
+    // }, [open, clientId]);
+
+
+
+useEffect(() => {
+  if (open) {
+    setProject(projectId ? String(projectId) : "");
+    setClient(clientId ? String(clientId) : "");
+    setInvoice(invoiceNumber ? String(invoiceNumber) : "");
+  }
+}, [open, projectId, clientId, invoiceNumber]);
+
+
 
     if (!open) return null;
 
@@ -130,9 +169,31 @@ export default function AddPaymentModal({
 
                             {/* GRID */}
                             <div className="grid grid-cols-3 gap-4">
-                                <Input label="Project *" value={project} setValue={setProject} />
+                                {/* <Input label="Project *" value={project} setValue={setProject} />
                                 <Input label="Client *" value={client} setValue={setClient} />
-                                <Input label="Invoice *" value={invoice} setValue={setInvoice} />
+                                <Input label="Invoice *" value={invoice} setValue={setInvoice} /> */}
+
+
+<input
+  className="w-full border rounded px-3 py-2 bg-gray-50"
+  value={project}
+  readOnly
+/>
+
+<input
+  className="w-full border rounded px-3 py-2 bg-gray-50"
+  value={client}
+  readOnly
+/>
+
+<input
+  className="w-full border rounded px-3 py-2 bg-gray-50"
+  value={invoice}
+  readOnly
+/>
+
+
+
                                 <Input label="Amount *" value={amount} setValue={setAmount} />
 
                                 {/* Currency */}

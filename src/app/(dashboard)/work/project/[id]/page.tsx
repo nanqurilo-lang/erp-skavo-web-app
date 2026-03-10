@@ -127,7 +127,7 @@ export default function ProjectDetailsPage() {
             <OverviewSection project={project} metrics={metrics} />
           )}
           {activeTab === "invoices" && (
-            <InvoicesSection projectId={project.id} />
+            <InvoicesSection projectId={project.id}    project={project}/>
           )}
           {activeTab === "payments" && (
             <PaymentsSection projectId={project.id }

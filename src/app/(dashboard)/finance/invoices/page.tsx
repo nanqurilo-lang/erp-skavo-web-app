@@ -178,6 +178,7 @@ export default function InvoiceList() {
         clientId={activeInvoice?.client?.clientId}
         onSaved={fetchInvoices}
       />
+      
       <ViewPaymentsModal
         open={modal.viewPayment}
         onClose={() => setModal(m => ({ ...m, viewPayment: false }))}

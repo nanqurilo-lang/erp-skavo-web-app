@@ -23,12 +23,22 @@ import ViewCreditNotesDrawer from "@/app/(dashboard)/finance/invoices/components
 const BASE_URL = `${process.env.NEXT_PUBLIC_MAIN}`;
 
 export default function InvoicesSection({
-  projectId,
+  projectId, project
 }: {
   projectId: number;
+    // project : string;
 }) {
   const [invoices, setInvoices] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+
+
+  const [showAddModal ,setShowAddModal] = useState(true);
+  const [selectedProjectId, setSelectedProjectId] = useState<string | number | null>(null);
+  const [selectedClientId, setSelectedClientId] = useState<string | number | null>(null);
+  const [selectedInvoiceNumber, setSelectedInvoiceNumber] = useState<string | null>(null);
+
+
+
 
   // 🔍 filters (project auto-fixed)
   const [filters, setFilters] = useState({
@@ -56,13 +66,17 @@ export default function InvoicesSection({
 
   const [activeInvoice, setActiveInvoice] = useState<any>(null);
 
+
+
+  
+
   // 📡 Fetch invoices for this project only
   const fetchInvoices = async () => {
     try {
       setLoading(true);
       // console.log("nbg",projectId)
       const res = await fetch(
-        `${BASE_URL}/api/invoices/project/${projectId}`,
+        `${BASE_URL}/api/invoices/project/${project.id}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -84,7 +98,7 @@ export default function InvoicesSection({
   useEffect(() => {
     if (projectId) fetchInvoices();
   }, [projectId]);
-
+console.log(invoices)
   return (
     <div className="mt-6">
       {/* HEADER */}
@@ -143,12 +157,12 @@ export default function InvoicesSection({
         refresh={fetchInvoices}
       />
 
-      <InvoicePaymentModal
+      {/* <InvoicePaymentModal
         open={modal.payment}
         onClose={() => setModal((m) => ({ ...m, payment: false }))}
         invoice={activeInvoice}
         refresh={fetchInvoices}
-      />
+      /> */}
 
       <InvoiceReceiptModal
         open={modal.receipt}
@@ -163,12 +177,23 @@ export default function InvoicesSection({
         invoice={activeInvoice}
       />
 
-      <AddPaymentModal
+      {/* <AddPaymentModal
         open={modal.payment}
         onClose={() => setModal((m) => ({ ...m, payment: false }))}
         clientId={activeInvoice?.client?.clientId}
         onSaved={fetchInvoices}
-      />
+      /> */}
+
+
+
+      <AddPaymentModal
+  open={showAddModal}
+  onClose={() => setShowAddModal(false)}
+  projectId={projectId}
+  clientId={clientId}
+  invoiceNumber={invoiceNumber}
+  onSaved={fetchPayments}
+/>
 
       <ViewPaymentsModal
         open={modal.viewPayment}
