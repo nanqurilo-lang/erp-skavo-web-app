@@ -2012,21 +2012,21 @@ const filteredDeals = dealsData?.filter((deal) => {
                             <div className="w-48 md:hidden text-sm text-muted-foreground">
                               Name
                             </div>
-                            <div className="text-sm">{fmt(data?.name)}</div>
+                            <div className="text-sm mt-2">{fmt(data?.name)}</div>
                           </div>
 
                           <div className="flex items-start gap-6">
                             <div className="w-48 md:hidden text-sm text-muted-foreground">
                               Email
                             </div>
-                            <div className="text-sm">{fmt(data?.email)}</div>
+                            <div className="text-sm mt-2">{fmt(data?.email)}</div>
                           </div>
 
                           <div className="flex items-start gap-6">
                             <div className="w-48 md:hidden text-sm text-muted-foreground">
                               Lead Owner
                             </div>
-                            <div className="text-sm">
+                            <div className="text-sm mt-2">
                               {data?.leadOwnerMeta?.name ??
                                 data?.leadOwner ??
                                 "--"}
@@ -2037,7 +2037,7 @@ const filteredDeals = dealsData?.filter((deal) => {
                             <div className="w-48 md:hidden text-sm text-muted-foreground">
                               Source
                             </div>
-                            <div className="text-sm">
+                            <div className="text-sm mt-2">
                               {fmt(data?.leadSource)}
                             </div>
                           </div>
@@ -2046,7 +2046,7 @@ const filteredDeals = dealsData?.filter((deal) => {
                             <div className="w-48 md:hidden text-sm text-muted-foreground">
                               Company Name
                             </div>
-                            <div className="text-sm">
+                            <div className="text-sm mt-2">
                               {fmt(data?.companyName)}
                             </div>
                           </div>
