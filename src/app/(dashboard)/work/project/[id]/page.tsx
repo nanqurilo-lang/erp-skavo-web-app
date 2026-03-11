@@ -75,7 +75,7 @@ export default function ProjectDetailsPage() {
 
   // console.log(project?.client.clientId)
 
-  const nan = project?.client.clientId
+  const nan = project?.client?.clientId
 
   if (!project) {
     return <div className="p-8 text-center text-red-500">Project not found</div>;

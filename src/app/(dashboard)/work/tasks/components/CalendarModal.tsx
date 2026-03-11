@@ -8,7 +8,8 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog";
 import { Task } from "../page";
-import { CalendarDays } from "lucide-react";
+// import { CalendarDays } from "lucide-react";
+import { CalendarDays, X } from "lucide-react";
 
 interface CalendarModalProps {
     open: boolean;
@@ -21,15 +22,42 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({
     onOpenChange,
     tasks,
 }) => {
+
+if (!open) return null;
+
     return (
-        <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="max-h-[90vh] w-[600px] overflow-y-auto rounded-2xl border border-slate-200 p-0">
-                <DialogHeader className="border-b border-slate-200 px-6 py-4">
-                    <DialogTitle className="flex items-center gap-2 text-lg font-semibold text-slate-800">
-                        <CalendarDays size={20} />
-                        Task Date Overview
-                    </DialogTitle>
-                </DialogHeader>
+        // <Dialog open={open} onOpenChange={onOpenChange}>
+        //     <DialogContent className="max-h-[90vh] w-[600px] overflow-y-auto rounded-2xl border border-slate-200 p-0">
+        //         <DialogHeader className="border-b border-slate-200 px-6 py-4">
+        //             <DialogTitle className="flex items-center gap-2 text-lg font-semibold text-slate-800">
+        //                 <CalendarDays size={20} />
+        //                 Task Date Overview
+        //             </DialogTitle>
+        //         </DialogHeader>
+
+
+
+ <div className="fixed inset-0 z-50 flex">
+      {/* Overlay */}
+      <div
+        className="flex-1 bg-black/40"
+        onClick={() => onOpenChange(false)}
+      />
+
+      {/* Right Drawer */}
+      <div className="h-full w-[83%] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-300  bg-white shadow-xl">
+        {/* Header */}
+        <div className="flex items-center justify-between border-b border-slate-200 px-6 py-4">
+          <div className="flex items-center gap-2 text-lg font-semibold text-slate-800">
+            <CalendarDays size={20} />
+            Task Date Overview
+          </div>
+
+          <button onClick={() => onOpenChange(false)}>
+            <X size={20} />
+          </button>
+        </div>
+
 
                 {/* BODY */}
                 <div className="space-y-4 px-6 py-4">
@@ -83,7 +111,9 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({
                         </div>
                     )}
                 </div>
-            </DialogContent>
-        </Dialog>
+            {/* </DialogContent> */}
+        {/* </Dialog> */}
+        </div>
+        </div>
     );
 };
