@@ -69,6 +69,14 @@ export default function InvoicesSection({
 
 
   
+const handleOpenAddPayment = (invoice: any) => {
+  setSelectedProjectId(invoice?.project?.id || projectId);
+  setSelectedClientId(invoice?.client?.clientId);
+  setSelectedInvoiceNumber(invoice?.invoiceNumber);
+
+  setShowAddModal(true);
+};
+
 
   // 📡 Fetch invoices for this project only
   const fetchInvoices = async () => {
@@ -88,6 +96,7 @@ export default function InvoicesSection({
 
       //  console.log("nbg",res)
       setInvoices(Array.isArray(data) ? data : data.invoices ?? []);
+
     } catch (err) {
       console.error("Failed to load invoices", err);
     } finally {
@@ -98,6 +107,8 @@ export default function InvoicesSection({
   useEffect(() => {
     if (projectId) fetchInvoices();
   }, [projectId]);
+
+
 console.log(invoices)
   return (
     <div className="mt-6">
@@ -125,6 +136,8 @@ console.log(invoices)
         filters={filters}
         setActiveInvoice={setActiveInvoice}
         setModal={setModal}
+        onAddPayment={handleOpenAddPayment}
+
       />
 
       {/* MODALS */}
@@ -147,6 +160,7 @@ console.log(invoices)
         open={modal.edit}
         onClose={() => setModal((m) => ({ ...m, edit: false }))}
         invoice={activeInvoice}
+        
         refresh={fetchInvoices}
       />
 
@@ -177,23 +191,26 @@ console.log(invoices)
         invoice={activeInvoice}
       />
 
-      {/* <AddPaymentModal
-        open={modal.payment}
-        onClose={() => setModal((m) => ({ ...m, payment: false }))}
-        clientId={activeInvoice?.client?.clientId}
-        onSaved={fetchInvoices}
-      /> */}
+     
+
+
+  
 
 
 
-      <AddPaymentModal
-  open={showAddModal}
-  onClose={() => setShowAddModal(false)}
-  projectId={projectId}
-  clientId={clientId}
-  invoiceNumber={invoiceNumber}
-  onSaved={fetchPayments}
+
+
+
+<AddPaymentModal
+  open={modal.payment}
+  onClose={() => setModal((m) => ({ ...m, payment: false }))}
+  projectId={activeInvoice?.project?.projectCode}
+  clientId={activeInvoice?.client?.clientId}
+  invoiceNumber={activeInvoice?.invoiceNumber}
+    onSaved={fetchInvoices}
+
 />
+
 
       <ViewPaymentsModal
         open={modal.viewPayment}

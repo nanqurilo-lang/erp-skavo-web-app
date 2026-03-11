@@ -175,7 +175,11 @@ export default function InvoiceList() {
       <AddPaymentModal
         open={modal.payment}
         onClose={() => setModal(m => ({ ...m, payment: false }))}
+          projectId={activeInvoice?.project?.projectCode}
+
         clientId={activeInvoice?.client?.clientId}
+          invoiceNumber={activeInvoice?.invoiceNumber}
+
         onSaved={fetchInvoices}
       />
       

@@ -9,16 +9,26 @@ import { Badge } from "@/components/ui/badge";
 
 
 
-
-
 const BASE_URL = process.env.NEXT_PUBLIC_MAIN;
+
+interface InvoiceTableProps {
+    invoices: any[];
+    loading: boolean;
+    filters: any;
+    setActiveInvoice: (invoice: any) => void;
+    setModal: any;
+    onAddPayment: (invoice: any) => void; // ✅ paste here
+}
+
+
 export default function InvoiceTable({
     invoices,
     loading,
     filters,
     setActiveInvoice,
-    setModal
-}) {
+    setModal,
+    onAddPayment,
+}: InvoiceTableProps) {
 
     const safeDate = (d) => {
         if (!d) return "--";
@@ -131,14 +141,7 @@ export default function InvoiceTable({
 
 
     const handleDeleteInvoice = async (invoice) => {
-        // if (!invoice?.invoiceNumber) return;
 
-
-        //console.log("devesh delete ", invoice.invoiceNumber)
-        // const ok = confirm(
-        //     `Are you sure you want to delete invoice ${invoice.invoiceNumber}?`
-        // );
-        // if (!ok) return;
 
         try {
             const res = await fetch(
@@ -212,40 +215,7 @@ export default function InvoiceTable({
 
                                 {/* <TableCell>{inv.currency} {Number(inv.total).toFixed(2)}</TableCell> */}
 
-                                {/* 
-<TableCell>
-    <div className="space-y-1 text-sm">
-        <div>
-            <span className="text-gray-500">Total :</span>{" "}
-            <span className="text-gray-800 font-medium">
-                {inv.currency} {Number(inv.total || 0).toLocaleString()}
-            </span>
-        </div>
 
-        <div>
-            <span className="text-gray-500">Paid :</span>{" "}
-            <span className="text-green-600">
-                {inv.currency} {Number(inv.paidAmount || 0).toLocaleString()}
-            </span>
-        </div>
-
-        <div>
-            <span className="text-gray-500">Unpaid :</span>{" "}
-            <span className="text-red-600">
-                {inv.currency} {Number(inv.unpaidAmount || 0).toLocaleString()}
-            </span>
-        </div>
-
-        {inv.adjustmentAmount > 0 && (
-            <div>
-                <span className="text-yellow-600">Adjustment :</span>{" "}
-                <span className="text-yellow-600">
-                    {inv.currency} {Number(inv.adjustmentAmount).toLocaleString()}
-                </span>
-            </div>
-        )}
-    </div>
-</TableCell> */}
 
 
 
@@ -314,9 +284,19 @@ export default function InvoiceTable({
                                                         <CheckCircle className="h-4 w-4 mr-2" /> Mark as Paid
                                                     </DropdownMenuItem>
 
-                                                    <DropdownMenuItem onClick={() => { setActiveInvoice(inv); setModal(m => ({ ...m, payment: true })); }}>
+
+
+
+                                                    <DropdownMenuItem
+                                                        onClick={() => {
+                                                            setActiveInvoice(inv);
+                                                            setModal((m: any) => ({ ...m, payment: true }));
+                                                        }}
+                                                    >
                                                         <DollarSign className="h-4 w-4 mr-2" /> Add Payment
                                                     </DropdownMenuItem>
+
+
 
                                                     <DropdownMenuItem
                                                         onClick={() => {
@@ -340,13 +320,7 @@ export default function InvoiceTable({
                                             {/* ============================PAID INVOICE ACTIONS============================ */}
                                             {inv.status === "PAID" && (
                                                 <>
-                                                    {/* <DropdownMenuItem onClick={() => { setActiveInvoice(inv); setModal(m => ({ ...m, receipt: true })); }}>
-                                                        <FileText className="h-4 w-4 mr-2" /> Add Receipt
-                                                    </DropdownMenuItem>
 
-                                                    <DropdownMenuItem onClick={() => { setActiveInvoice(inv); setModal(m => ({ ...m, receipt: true })); }}>
-                                                        <FileText className="h-4 w-4 mr-2" /> View Receipt
-                                                    </DropdownMenuItem> */}
 
 
                                                     {/* ADD RECEIPT */}
@@ -447,11 +421,11 @@ export default function InvoiceTable({
 
 
 
-setActiveInvoice({
-  ...inv,
-  invoiceNumber: "", // important
-});
-setModal(m => ({ ...m, create: true }));
+                                                    setActiveInvoice({
+                                                        ...inv,
+                                                        invoiceNumber: "", // important
+                                                    });
+                                                    setModal(m => ({ ...m, create: true }));
 
                                                 }}
                                             >
