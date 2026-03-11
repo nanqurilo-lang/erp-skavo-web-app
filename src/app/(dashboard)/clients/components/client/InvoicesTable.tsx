@@ -1056,6 +1056,8 @@ if (
   setMenuPos(null);
 };
 
+console.log(paymentInvoice)
+
 const openViewPaymentsDrawer = (inv: any) => {
   const invoiceNo = inv?.invoiceNumber ?? inv?.id ?? null;
   if (!invoiceNo) {
@@ -3434,8 +3436,9 @@ onClick={() => openViewPaymentsDrawer(inv)}
         />
       )}
 
-
+{/* 
 {showClientPaymentModal && paymentInvoice && (
+  
   <ClientAddPaymentModal
     open={showClientPaymentModal}
     clientId={paymentInvoice?.client?.clientId}
@@ -3445,6 +3448,26 @@ onClick={() => openViewPaymentsDrawer(inv)}
     }}
     onSaved={async () => {
       // 🔥 payment save ke baad invoices refresh
+      await fetchInvoices(clientId);
+
+      setShowClientPaymentModal(false);
+      setPaymentInvoice(null);
+    }}
+  />
+)} */}
+
+
+{showClientPaymentModal && paymentInvoice && (
+  <ClientAddPaymentModal
+    open={showClientPaymentModal}
+    clientId={paymentInvoice?.client?.clientId}
+    projectId={paymentInvoice?.id}
+    invoiceNumber={paymentInvoice?.invoiceNumber}
+    onClose={() => {
+      setShowClientPaymentModal(false);
+      setPaymentInvoice(null);
+    }}
+    onSaved={async () => {
       await fetchInvoices(clientId);
 
       setShowClientPaymentModal(false);

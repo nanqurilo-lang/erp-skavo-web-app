@@ -3,25 +3,35 @@
 import React, { useState, useRef, useEffect } from "react";
 import { X, Trash2 } from "lucide-react";
 
-const BASE_URL = process.env.NEXT_PUBLIC_MAIN!;
+const BASE_URL = process.env.NEXT_PUBLIC_MAIN;
+
+
 
 export default function ClientAddPaymentModal({
   open,
   onClose,
+  projectId,
   clientId,
+  invoiceNumber,
   onSaved,
 }: {
   open: boolean;
   onClose: () => void;
+  projectId?: string | number | null;
   clientId?: string | number | null;
+  invoiceNumber?: string | null;
   onSaved?: () => void;
 }) {
-  const [project, setProject] = useState("pre filled");
+  // const [project, setProject] = useState("pre filled");
+  const [project, setProject] = useState("");
+  // const [client, setClient] = useState("");
+  const [invoice, setInvoice] = useState("");
   const [client, setClient] = useState(clientId ? String(clientId) : "pre filled");
   const [amount, setAmount] = useState("");
   const [currency, setCurrency] = useState("USD");
   const [transactionId, setTransactionId] = useState("");
-  const [paymentGateway, setPaymentGateway] = useState("Net Banking");
+  // const [paymentGateway, setPaymentGateway] = useState("Net Banking");
+  const [paymentGateway, setPaymentGateway] = useState<number | "">("");
   const [remark, setRemark] = useState("");
 
   const fileRef = useRef<HTMLInputElement | null>(null);
@@ -31,11 +41,30 @@ export default function ClientAddPaymentModal({
   const [gateways, setGateways] = useState<{ id: number; name: string }[]>([]);
   const [gatewayInput, setGatewayInput] = useState("");
 
+  // useEffect(() => {
+  //   if (open) {
+  //     setClient(clientId ? String(clientId) : "pre filled");
+  //   }
+  // }, [open, clientId]);
+
+
+
   useEffect(() => {
     if (open) {
-      setClient(clientId ? String(clientId) : "pre filled");
+      setProject(projectId ? String(projectId) : "");
+      setClient(clientId ? String(clientId) : "");
+      setInvoice(invoiceNumber ? String(invoiceNumber) : "");
     }
-  }, [open, clientId]);
+  }, [open, projectId, clientId, invoiceNumber]);
+
+
+  useEffect(() => {
+    if (open) {
+      fetchGateways();
+    }
+  }, [open]);
+
+
 
   if (!open) return null;
 
@@ -52,7 +81,7 @@ export default function ClientAddPaymentModal({
       if (Array.isArray(data)) {
         setGateways(data.map((g: any) => ({ id: g.id, name: g.name })));
       }
-    } catch {}
+    } catch { }
   };
 
   const saveGateway = async () => {
@@ -78,11 +107,70 @@ export default function ClientAddPaymentModal({
     }
   };
 
-  const savePayment = () => {
 
-    onSaved?.();
-    onClose();
+  const savePayment = async () => {
+    if (!amount) {
+      alert("Amount is required");
+      return;
+    }
+
+    if (!paymentGateway) {
+      alert("Select payment gateway");
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem("accessToken") || "";
+
+      const payload = {
+        projectId: Number(project),
+        clientId: Number(client),
+        invoiceId: invoice,   // ✅ change back
+        amount: Number(amount),
+        currency,
+        transactionId,
+        paymentGatewayId: paymentGateway,
+        notes: remark,
+      };
+
+      console.log("Sending payment payload:", payload);
+
+      const formData = new FormData();
+      formData.append("payment", JSON.stringify(payload));
+
+      if (receiptFile) {
+        formData.append("file", receiptFile);
+      }
+
+      const res = await fetch(`${BASE_URL}/api/payments`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      const text = await res.text();
+
+      console.log("Status:", res.status);
+      console.log("Response:", text);
+
+      if (!res.ok) {
+        alert(text || "Failed to create payment");
+        return;
+      }
+
+      alert("Payment created successfully ✅");
+
+      onSaved?.();
+      onClose();
+
+    } catch (err) {
+      console.error(err);
+      alert("Error creating payment");
+    }
   };
+
 
   return (
     <>
@@ -108,8 +196,35 @@ export default function ClientAddPaymentModal({
               <h4 className="font-medium mb-3">Payment Details</h4>
 
               <div className="grid grid-cols-3 gap-4">
-                <Input label="Project *" value={project} setValue={setProject} />
+                {/* <Input label="Project *" value={project} setValue={setProject} />
                 <Input label="Client *" value={client} setValue={setClient} />
+                <Input label="Invoice *" value={invoice} setValue={setInvoice} /> */}
+
+
+
+                <div>Project *
+                  <input
+                    className="w-full border rounded px-3 py-2 bg-gray-50"
+                    value={project}
+                    readOnly
+                  />
+                </div>
+                <div>Client *
+                  <input
+                    className="w-full border rounded px-3 py-2 bg-gray-50"
+                    value={client}
+                    readOnly
+                  />
+                </div>
+                <div>Invoice *
+
+                  <input
+                    className="w-full border rounded px-3 py-2 bg-gray-50"
+                    value={invoice}
+                    readOnly
+                  />
+                </div>
+
                 <Input label="Amount *" value={amount} setValue={setAmount} />
 
                 <div>
@@ -135,19 +250,35 @@ export default function ClientAddPaymentModal({
                 <div className="col-span-2">
                   <label className="text-sm text-gray-600">Payment Gateway</label>
                   <div className="flex gap-2">
-                    <select
+                    {/* <select
                       className="w-full border rounded px-3 py-2"
                       value={paymentGateway}
                       onChange={(e) => setPaymentGateway(e.target.value)}
                     >
                       {gateways.length
                         ? gateways.map((g) => (
-                            <option key={g.id}>{g.name}</option>
-                          ))
+                          <option key={g.id}>{g.name}</option>
+                        ))
                         : ["Net Banking", "Credit Card", "PayPal"].map((g) => (
-                            <option key={g}>{g}</option>
-                          ))}
+                          <option key={g}>{g}</option>
+                        ))}
+                    </select> */}
+
+
+
+                    <select
+                      value={paymentGateway}
+                      // onChange={(e) => setPaymentGateway(e.target.value)}
+                      onChange={(e) => setPaymentGateway(Number(e.target.value))}
+
+                    >
+                      {gateways.map((g) => (
+                        <option key={g.id} value={g.id}>
+                          {g.name}
+                        </option>
+                      ))}
                     </select>
+
 
                     <button
                       className="px-3 py-2 bg-gray-100 rounded"

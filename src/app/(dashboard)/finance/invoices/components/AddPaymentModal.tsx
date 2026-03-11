@@ -205,34 +205,34 @@ export default function AddPaymentModal({
                             {/* GRID */}
                             <div className="grid grid-cols-3 gap-4">
 
-<div>project *
+                                <div>project *
 
-                                <input
-                                
-                                
-                                    className="w-full border rounded px-3 py-2 bg-gray-50"
-                                   
-                                    value={project}
-                                    readOnly
-                                />
+                                    <input
+
+
+                                        className="w-full border rounded px-3 py-2 bg-gray-50"
+
+                                        value={project}
+                                        readOnly
+                                    />
                                 </div>
 
-<div>Client *
-                                <input
-                                    className="w-full border rounded px-3 py-2 bg-gray-50"
-                                    value={client}
-                                    readOnly
-                                />
-</div>
+                                <div>Client *
+                                    <input
+                                        className="w-full border rounded px-3 py-2 bg-gray-50"
+                                        value={client}
+                                        readOnly
+                                    />
+                                </div>
 
-<div>Invoice *
-                                <input
-                                    className="w-full border rounded px-3 py-2 bg-gray-50"
-                                    value={invoice}
-                                    readOnly
-                                />
+                                <div>Invoice *
+                                    <input
+                                        className="w-full border rounded px-3 py-2 bg-gray-50"
+                                        value={invoice}
+                                        readOnly
+                                    />
 
-</div>
+                                </div>
 
                                 <Input label="Amount *" value={amount} setValue={setAmount} />
 
