@@ -56,8 +56,8 @@ export default function ViewCreditNotesDrawer({
                         <table className="w-full border">
                             <thead className="bg-gray-100">
                                 <tr>
-                                    <th className="p-2">CN No</th>
-                                    <th>Amount</th>
+                                    <th className="p-2 text-left">CN No</th>
+                                    <th className="p-2 text-left">Amount</th>
                                     <th>Date</th>
                                     <th>Notes</th>
                                     <th>File</th>

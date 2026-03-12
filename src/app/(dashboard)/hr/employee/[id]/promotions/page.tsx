@@ -333,9 +333,9 @@ export default function PromotionsTab({ employeeId }: { employeeId: string }) {
               )}
             </div>
 
-            <button className="p-2 hover:bg-gray-100 rounded-full">
+            {/* <button className="p-2 hover:bg-gray-100 rounded-full">
               <MoreVertical className="w-4 h-4 text-gray-500" />
-            </button>
+            </button> */}
           </div>
         ))}
       </div>

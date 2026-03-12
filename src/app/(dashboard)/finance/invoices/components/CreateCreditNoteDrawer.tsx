@@ -78,7 +78,7 @@ export default function CreateCreditNoteDrawer({
             <div className="absolute right-0 top-0 h-full w-[83vw] bg-white shadow-xl transition-all">
                 <div className="flex justify-between items-center p-4 border-b">
                     <h3 className="text-lg font-semibold">
-                        Create Credit Note — {invoiceNumber}
+                        Create Credit Note  — {invoiceNumber}
                     </h3>
                     <button onClick={onClose}><X /></button>
                 </div>
