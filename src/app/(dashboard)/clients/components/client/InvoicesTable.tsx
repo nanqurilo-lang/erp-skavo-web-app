@@ -1357,7 +1357,7 @@ onClick={() => openViewPaymentsDrawer(inv)}
               <FileText className="inline mr-2 -mt-1" /> View Credit(s) Note
             </button>
           </li>
-          <li>
+          {/* <li>
             <button
               className="w-full text-left px-3 py-2 hover:bg-gray-100"
               onClick={() => {
@@ -1365,9 +1365,9 @@ onClick={() => openViewPaymentsDrawer(inv)}
                 setShowDuplicateModal(true);
               }}
             >
-              <FileText className="inline mr-2 -mt-1" /> Create Duplicate
+              <FileText className="inline mr-2 -mt-1" /> Create Duplicate in paid
             </button>
-          </li>
+          </li> */}
 
           <li>
             <button
@@ -1437,14 +1437,14 @@ onClick={() => openViewPaymentsDrawer(inv)}
             </button>
           </li>
          
-          <li>
+          {/* <li>
             <button
               className="w-full text-left px-3 py-2 hover:bg-gray-100"
               onClick={() => handleDuplicate(inv)}
             >
-              <Copy className="inline mr-2 -mt-1" /> Create Duplicate
+              <Copy className="inline mr-2 -mt-1" /> Create Duplicate in unpaid
             </button>
-          </li>
+          </li> */}
           <li>
             <button
               className="w-full text-left px-3 py-2 hover:bg-gray-100 text-red-600"
