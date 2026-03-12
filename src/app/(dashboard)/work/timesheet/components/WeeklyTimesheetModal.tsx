@@ -97,7 +97,7 @@ const WeeklyTimesheetModal: React.FC<WeeklyTimesheetModalProps> = ({
     const token = getEffectiveToken();
 
     try {
-      const res = await fetch(`${apiBaseUrl}/me/tasks`, {
+      const res = await fetch(`${apiBaseUrl}/api/projects/tasks/getAll`, {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       });
 

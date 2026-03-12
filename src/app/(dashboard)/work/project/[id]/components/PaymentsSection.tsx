@@ -787,7 +787,7 @@ export default function PaymentsSection({
                           </option>
                         ))
                       ) : (
-                        <option>No invoices found</option>
+                        <option>Invoices Loading</option>
                       )}
                     </select>
 
