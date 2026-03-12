@@ -84,7 +84,7 @@ export default function InvoicePaymentsDrawer({
         {/* HEADER */}
         <div className="flex items-center justify-between px-6 py-4 border-b">
           <h2 className="text-xl font-semibold">
-            Payments — {invoiceNumber}
+            Payments —{invoiceNumber}
           </h2>
           <button onClick={onClose} className="p-2 rounded hover:bg-gray-100">
             <X size={20} />

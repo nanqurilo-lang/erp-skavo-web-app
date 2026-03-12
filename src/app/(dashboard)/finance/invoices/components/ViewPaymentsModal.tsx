@@ -65,6 +65,10 @@ export default function ViewPaymentsDrawer({
         fetchPayments();
     }, [open, invoiceNumber]);
 
+
+
+// console.log(payments)
+
     if (!open) return null;
 
     const fetchPayments = async () => {
@@ -110,7 +114,7 @@ export default function ViewPaymentsDrawer({
                 {/* HEADER */}
                 <div className="flex items-center justify-between px-6 py-4 border-b">
                     <h2 className="text-xl font-semibold">
-                        Payments — {invoiceNumber}
+                        Payments —{invoiceNumber}
                     </h2>
                     <button
                         onClick={onClose}
@@ -150,7 +154,7 @@ export default function ViewPaymentsDrawer({
                                     className="flex items-center px-4 py-3 border-t text-sm"
                                 >
                                     <div className="w-2/12">
-                                        {p.project?.projectName ?? "--"}
+                                        {p.projectId ?? "--"}
                                     </div>
 
                                     <div className="w-2/12 flex items-center gap-2">
