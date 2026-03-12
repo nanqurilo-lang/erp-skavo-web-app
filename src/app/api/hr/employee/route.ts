@@ -6,7 +6,7 @@ export async function GET(request: NextRequest) {
   try {
     const token = request.headers.get("authorization"); // optional if your external API requires it
 
-    const res = await fetch(`${API_URL}/employee?page=0&size=20`, {
+    const res = await fetch(`${API_URL}/employee?page=0&size=200000`, {
       headers: {
         Authorization: token || "",
       },

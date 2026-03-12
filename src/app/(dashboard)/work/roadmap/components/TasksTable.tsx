@@ -505,10 +505,10 @@ export default function TasksTable({ projectId }: { projectId: number }) {
           </table>
 
           {/* footer (pagination-ish display) */}
-          <div className="px-4 py-3 border-t bg-gray-50 flex items-center justify-between text-sm text-gray-600 rounded-b-md mt-4">
+          {/* <div className="px-4 py-3 border-t bg-gray-50 flex items-center justify-between text-sm text-gray-600 rounded-b-md mt-4">
             <div>Result per page - {tasks.length ? tasks.length : 0}</div>
             <div>Page 1 of 1</div>
-          </div>
+          </div> */}
         </div>
       )}
 

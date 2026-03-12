@@ -92,7 +92,7 @@ export default function EditEmployeePage() {
         Promise.all([
             fetch(`${BASE_URL}/admin/departments`, { headers }).then(r => r.json()),
             fetch(`${BASE_URL}/admin/designations`, { headers }).then(r => r.json()),
-            fetch(`${BASE_URL}/employee?page=0&size=2000`, { headers })
+            fetch(`${BASE_URL}/employee?page=0&size=20000`, { headers })
                 .then(r => r.json())
                 .then(d => d.content),
         ])

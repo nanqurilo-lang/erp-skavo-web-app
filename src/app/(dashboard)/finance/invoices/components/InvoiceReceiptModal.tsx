@@ -57,6 +57,8 @@ export default function InvoiceReceiptModal({ open, onClose, invoice }) {
   }
 
   async function handleSave() {
+
+
     try {
       setSaving(true);
 
@@ -80,6 +82,7 @@ export default function InvoiceReceiptModal({ open, onClose, invoice }) {
       setSaving(false);
     }
   }
+  
 
   return (
     <Modal open={open} onClose={onClose} title="Create Receipt">
