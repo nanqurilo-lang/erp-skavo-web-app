@@ -1366,7 +1366,8 @@ export default function AllProjectsPage() {
     };
 
     return (
-      <div className="fixed inset-0 z-[12000] flex items-start justify-center px-4 py-8 overflow-y-auto">
+      // <div className="fixed inset-0 z-[12000] flex items-start justify-center px-4 py-8 overflow-y-auto">
+      <div className="fixed inset-0 z-[12000] flex justify-end">
 
         <div
           className="fixed inset-0 bg-black/40"
@@ -1377,7 +1378,9 @@ export default function AllProjectsPage() {
         />
         {/* <div className="relative w-full max-w-4xl bg-white rounded-xl shadow-2xl overflow-y-auto z-10"> */}
 
-        <div className="relative w-full max-w-4xl bg-white rounded-xl shadow-2xl z-10 max-h-[90vh] flex flex-col">
+        {/* <div className="relative w-full max-w-4xl bg-white rounded-xl shadow-2xl z-10 max-h-[90vh] flex flex-col"> */}
+
+        <div className="relative w-[83%] h-full bg-white shadow-2xl z-10 flex flex-col overflow-y-auto">
 
 
           <div className="flex items-center justify-between p-4 border-b">
@@ -1404,7 +1407,7 @@ export default function AllProjectsPage() {
               <>
                 {/* Project Details */}
                 <div className="rounded-lg border p-4">
-                  <h4 className="font-medium mb-3">Project Details</h4>
+                  <h4 className="font-medium mb-3">Project Details </h4>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="text-sm text-gray-600">
@@ -2942,7 +2945,8 @@ onChange={(e) => {
 
       {/* ADD PROJECT MODAL */}
       {showAddModal && (
-        <div className="fixed inset-0 z-[10000] flex items-start justify-center pt-12 px-4 overflow-y-auto">
+        // <div className="fixed inset-0 z-[10000] flex items-start justify-center pt-12 px-4 overflow-y-auto">
+          <div className="fixed inset-0 z-[10000] flex justify-end">
           <div
             className="fixed inset-0 bg-black/40"
             onClick={() => {
@@ -2950,7 +2954,9 @@ onChange={(e) => {
               resetAddForm();
             }}
           />
-          <div className="relative w-full max-w-4xl bg-white rounded-xl shadow-2xl overflow-y-auto z-10">
+          {/* <div className="relative w-full max-w-4xl bg-white rounded-xl shadow-2xl overflow-y-auto z-10"> */}
+<div className="relative w-[83%] h-full bg-white shadow-2xl overflow-y-auto z-10">
+
             <div className="flex items-center justify-between p-4 border-b">
               <h3 className="text-lg font-semibold">Add Project</h3>
               <button

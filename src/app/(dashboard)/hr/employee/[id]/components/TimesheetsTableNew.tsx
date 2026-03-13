@@ -602,10 +602,17 @@ export default function TimesheetsTableNew({
 
             {/* Log Time Modal (create/edit) */}
             {isModalOpen && (
-                <div className="fixed inset-0 z-50 flex items-start justify-center pt-12 px-4">
-                    <div className="absolute inset-0 bg-black/40" onClick={() => setIsModalOpen(false)} />
+                // <div className="fixed inset-0 z-50 flex items-start justify-center pt-12 px-4">
+                    <div className="fixed inset-0 z-[9999] flex justify-end">
+                    {/* <div className="absolute inset-0 bg-black/40" onClick={() => setIsModalOpen(false)} /> */}
 
-                    <div className="relative bg-white w-full max-w-4xl rounded-xl shadow-xl overflow-hidden">
+                    <div
+  className="absolute inset-0 bg-black/40"
+  onClick={() => setIsModalOpen(false)}
+/>
+
+                    {/* <div className="relative bg-white w-full max-w-4xl rounded-xl shadow-xl overflow-hidden"> */}
+                    <div className="relative bg-white w-[83%] h-full shadow-xl overflow-y-auto">
                         <div className="flex items-center justify-between px-6 py-4 border-b">
                             <h3 className="text-lg font-semibold">{editingId ? "Edit TimeLog" : "Log Time"}</h3>
                             <button className="p-2 rounded hover:bg-gray-100" onClick={() => setIsModalOpen(false)} aria-label="Close">
