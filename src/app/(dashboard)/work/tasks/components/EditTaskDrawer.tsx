@@ -89,6 +89,7 @@ export default function EditTaskDrawer({
             // Load dependent APIS
             fetchMilestones(String(t.projectId));
             fetchLabels(String(t.projectId));
+            fetchProjectEmployees(String(t.projectId)); // ✅ added
         } finally {
             setLoading(false);
         }
@@ -100,7 +101,7 @@ export default function EditTaskDrawer({
             fetchCategories();
             fetchProjects();
             fetchStages();
-            fetchEmployees();
+            // fetchEmployees();
         }
     }, [open]);
 
@@ -128,13 +129,37 @@ export default function EditTaskDrawer({
         setStages(await res.json());
     };
 
-    const fetchEmployees = async () => {
-        const res = await fetch(`${MAIN}/employee/all`, {
-            method: "GET",
-            headers: { Authorization: `Bearer ${token}` },
-        });
-        setEmployees(await res.json());
-    };
+    // const fetchEmployees = async () => {
+    //     const res = await fetch(`${MAIN}/employee/all`, {
+    //         method: "GET",
+    //         headers: { Authorization: `Bearer ${token}` },
+    //     });
+    //     setEmployees(await res.json());
+    // };
+
+
+
+const fetchProjectEmployees = async (pid: string) => {
+    if (!pid) return;
+
+    const res = await fetch(`${MAIN}/api/projects/${pid}`, {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+    });
+
+    const data = await res.json();
+
+    const list =
+        data?.assignedEmployees ||
+        data?.employees ||
+        data?.data?.assignedEmployees ||
+        [];
+
+    setEmployees(list);
+};
+
+
+
 
     const fetchMilestones = async (pid: string) => {
         if (!pid) return;
@@ -275,6 +300,8 @@ export default function EditTaskDrawer({
                                         setProjectId(v);
                                         fetchMilestones(v);
                                         fetchLabels(v);
+                                                fetchProjectEmployees(v); // ✅ added
+
                                     }}
                                 >
                                     <SelectTrigger>
@@ -333,7 +360,7 @@ export default function EditTaskDrawer({
                             {/* ------------ Assign Employees ------------ */}
                             <div>
                                 <Label>Assign To</Label>
-                                <div className="grid grid-cols-2 gap-2 pt-2">
+                                {/* <div className="grid grid-cols-2 gap-2 pt-2">
                                     {employees.map((emp) => (
                                         <label
                                             key={emp.employeeId}
@@ -355,7 +382,30 @@ export default function EditTaskDrawer({
                                             {emp.name}
                                         </label>
                                     ))}
-                                </div>
+                                </div> */}
+
+{projectId ? (
+    <div className="grid grid-cols-2 gap-2 pt-2">
+        {employees.map((emp) => (
+            <label key={emp.employeeId} className="flex items-center gap-2">
+                <Checkbox
+                    checked={assignedEmployeeIds.includes(emp.employeeId)}
+                    onCheckedChange={() =>
+                        setAssignedEmployeeIds(
+                            toggle(assignedEmployeeIds, emp.employeeId)
+                        )
+                    }
+                />
+                {emp.name}
+            </label>
+        ))}
+    </div>
+) : (
+    <p className="text-sm text-gray-500 pt-2">
+        Select a project first
+    </p>
+)}
+
                             </div>
 
                             {/* ------------ Labels ------------ */}
