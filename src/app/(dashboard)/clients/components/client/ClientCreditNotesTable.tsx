@@ -291,11 +291,13 @@ export default function ClientCreditNotesTable({ clientId }: { clientId?: string
 
       {/* DETAILS MODAL: matches screenshot layout (labels left, values right) */}
       {isModalOpen && active && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 px-4">
+        // <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 px-4">
+        <div className="fixed inset-0 z-50 flex justify-end">
           {/* backdrop */}
           <div className="absolute inset-0 bg-black/40" onClick={closeDetails} />
 
-          <div className="relative z-10 w-[820px] max-w-full">
+          {/* <div className="relative z-10 w-[820px] max-w-full"> */}
+          <div className="relative z-10 w-[83%] h-full bg-white shadow-xl flex flex-col overflow-y-auto">
             <div className="bg-white rounded-lg border shadow">
               {/* modal header */}
               <div className="flex items-center justify-between px-6 py-3 border-b">

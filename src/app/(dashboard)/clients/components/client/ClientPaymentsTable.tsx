@@ -530,12 +530,15 @@ export default function ClientPaymentsTable({
 
       {/* Add Payment Modal (UI exact like screenshot) */}
       {showAddModal && (
-        <div className="fixed inset-0 z-[10000] flex items-start justify-center pt-8 px-4 overflow-y-auto">
+        // <div className="fixed inset-0 z-[10000] flex items-start justify-center pt-8 px-4 overflow-y-auto">
+<div className="fixed inset-0 z-[10000] flex justify-end">
+
           <div
             className="fixed inset-0 bg-black/40"
             onClick={() => setShowAddModal(false)}
           />
-          <div className="relative w-full max-w-4xl bg-white rounded-xl shadow-2xl overflow-y-auto z-10">
+          {/* <div className="relative w-full max-w-4xl bg-white rounded-xl shadow-2xl overflow-y-auto z-10"> */}
+          <div className="relative w-[83%] h-full bg-white shadow-xl flex flex-col overflow-y-auto z-10">
             <div className="flex items-center justify-between p-4 border-b">
               <h3 className="text-lg font-semibold">Add Payment Details  </h3>
               <button
@@ -549,7 +552,7 @@ export default function ClientPaymentsTable({
 
             <div className="p-6 space-y-6">
               <div className="rounded-lg border p-4">
-                <h4 className="font-medium mb-3">Payment Details </h4>
+                <h4 className="font-medium mb-3">Payment Details</h4>
 
                 <div className="grid grid-cols-3 gap-4">
                   <div>
@@ -698,12 +701,16 @@ export default function ClientPaymentsTable({
 
 
  {nan && (
-        <div className="fixed inset-0 z-[10000] flex items-start justify-center pt-8 px-4 overflow-y-auto">
+        // <div className="fixed inset-0 z-[10000] flex items-start justify-center pt-8 px-4 overflow-y-auto">
+        <div className="fixed inset-0 z-[10000] flex justify-end">
           <div
             className="fixed inset-0 bg-black/40"
             onClick={() => setNan(false)}
           />
-          <div className="relative w-full max-w-4xl bg-white rounded-xl shadow-2xl overflow-y-auto z-10">
+          {/* <div className="relative w-full max-w-4xl bg-white rounded-xl shadow-2xl overflow-y-auto z-10"> */}
+          
+
+          <div className="relative w-[83%] h-full bg-white shadow-xl flex flex-col overflow-y-auto z-10">
             <div className="flex items-center justify-between p-4 border-b">
               <h3 className="text-lg font-semibold">Edit Payment Details</h3>
               <button
@@ -867,12 +874,14 @@ export default function ClientPaymentsTable({
 
       {/* Payment Gateway Modal (uses GET/POST/DELETE) */}
       {showGatewayModal && (
-        <div className="fixed inset-0 z-[11000] flex items-start justify-center pt-12 px-4 overflow-y-auto">
+        // <div className="fixed inset-0 z-[11000] flex items-start justify-center pt-12 px-4 overflow-y-auto">
+        <div className="fixed inset-0 z-[11000] flex justify-end">
           <div
             className="fixed inset-0 bg-black/40"
             onClick={() => setShowGatewayModal(false)}
           />
-          <div className="relative w-full max-w-3xl bg-white rounded-xl shadow-2xl overflow-y-auto z-20">
+          {/* <div className="relative w-full max-w-3xl bg-white rounded-xl shadow-2xl overflow-y-auto z-20"> */}
+          <div className="relative w-[83%] h-full bg-white shadow-xl flex flex-col overflow-y-auto z-20">
             <div className="flex items-center justify-between p-4 border-b">
               <h3 className="text-lg font-semibold">Add Payment Gateway</h3>
               <button
@@ -954,13 +963,15 @@ export default function ClientPaymentsTable({
 
       {/* Payment Details Modal (View / Edit) */}
       {showDetailsModal && activePayment && (
-        <div className="fixed inset-0 z-[12000] flex justify-center items-start pt-10">
+        // <div className="fixed inset-0 z-[12000] flex justify-center items-start pt-10">
+        <div className="fixed inset-0 z-[12000] flex justify-end">
           <div
             className="fixed inset-0 bg-black/40"
             onClick={() => setShowDetailsModal(false)}
           />
 
-          <div className="relative bg-white w-full max-w-3xl rounded-xl shadow-xl p-6 z-10">
+          {/* <div className="relative bg-white w-full max-w-3xl rounded-xl shadow-xl p-6 z-10"> */}
+          <div className="relative w-[83%] h-full bg-white shadow-xl flex flex-col overflow-y-auto p-6 z-10">
             <div className="flex justify-between mb-4">
               <h3 className="text-lg font-semibold">Payment Details</h3>
               <button onClick={() => setShowDetailsModal(false)}>

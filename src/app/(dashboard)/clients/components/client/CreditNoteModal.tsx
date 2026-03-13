@@ -136,12 +136,13 @@ export default function CreditNoteModal({
 
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center p-6">
+    // <div className="fixed inset-0 z-50 flex items-start justify-center p-6">
+    <div className="fixed inset-0 z-50 flex justify-end">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
 
       {/* <div className="relative z-10 w-full max-w-3xl bg-white rounded-lg shadow-lg"> */}
-      <div className="relative z-10 w-full max-w-3xl bg-white rounded-lg shadow-lg max-h-[90vh] flex flex-col">
-
+      {/* <div className="relative z-10 w-full max-w-3xl bg-white rounded-lg shadow-lg max-h-[90vh] flex flex-col"> */}
+<div className="relative z-10 w-[83%] h-full bg-white shadow-xl flex flex-col overflow-y-auto p-6 text-sm">
         <div className="flex items-center justify-between px-6 py-4 border-b">
           <h2 className="text-lg font-semibold">
             Credit Note Details

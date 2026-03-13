@@ -1887,7 +1887,9 @@ onClick={() => openViewPaymentsDrawer(inv)}
       {/* VIEW modal */}
       {showViewModal && activeInvoice && (
         // <div className="fixed inset-0 z-50 flex items-start justify-center overflow-auto p-6">
-  <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+  // <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+
+  <div className="fixed inset-0 z-50 flex justify-end">
 
 
           <div
@@ -1898,8 +1900,8 @@ onClick={() => openViewPaymentsDrawer(inv)}
             }}
           />
           {/* <div className="relative z-10 w-full max-w-4xl bg-white rounded shadow-lg overflow-auto"> */}
-              <div className="relative z-10 w-full max-w-4xl bg-white rounded-lg shadow-xl flex flex-col max-h-[90vh]">
-
+              {/* <div className="relative z-10 w-full max-w-4xl bg-white rounded-lg shadow-xl flex flex-col max-h-[90vh]"> */}
+<div className="relative z-10 w-[83%] h-full bg-white shadow-xl flex flex-col overflow-y-auto">
             <div className="flex items-center justify-between p-4 border-b shrink-0">
               <h3 className="text-lg font-semibold">Invoice Details</h3>
               <div className="flex items-center gap-2">
@@ -2250,7 +2252,8 @@ onClick={() => openViewPaymentsDrawer(inv)}
       )}
 
       {showReceiptsModal && selectedInvoiceForReceipts && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center overflow-auto p-6">
+        // <div className="fixed inset-0 z-50 flex items-start justify-center overflow-auto p-6">
+        <div className="fixed inset-0 z-50 flex justify-end">
           <div
             className="absolute inset-0 bg-black/40"
             onClick={() => {
@@ -2260,7 +2263,8 @@ onClick={() => openViewPaymentsDrawer(inv)}
             }}
           />
 
-          <div className="relative z-10 w-full max-w-4xl bg-white rounded shadow-lg overflow-auto">
+          {/* <div className="relative z-10 w-full max-w-4xl bg-white rounded shadow-lg overflow-auto"> */}
+          <div className="relative z-10 w-[83%] h-full bg-white shadow-xl flex flex-col overflow-y-auto">
             <div className="flex items-center justify-between p-4 border-b">
               <h3 className="text-lg font-semibold">Receipts  </h3>
               <div className="flex items-center gap-3">
@@ -2366,13 +2370,15 @@ onClick={() => openViewPaymentsDrawer(inv)}
       )}
 
       {viewReceipt && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center p-6">
+        // <div className="fixed inset-0 z-50 flex items-start justify-center p-6">
+        <div className="fixed inset-0 z-50 flex justify-end">
           <div
             className="absolute inset-0 bg-black/40"
             onClick={() => setViewReceipt(null)}
           />
 
-          <div className="relative z-10 w-full max-w-4xl bg-white rounded shadow-lg p-6 text-sm">
+          {/* <div className="relative z-10 w-full max-w-4xl bg-white rounded shadow-lg p-6 text-sm"> */}
+          <div className="relative z-10 w-[83%] h-full bg-white shadow-xl flex flex-col overflow-y-auto p-6 text-sm">
             <h2 className="text-lg font-semibold mb-2">Proforma Invoice</h2>
             <p>Invoice No.: {viewReceipt.invoiceId}</p>
             {/* <p>Issue Date: {new Date(viewReceipt.issueDate).toDateString()}</p> */}
@@ -2416,15 +2422,15 @@ onClick={() => openViewPaymentsDrawer(inv)}
       {/* CREATE modal (unchanged) */}
       {showCreateModal && (
         // <div className="fixed inset-0 z-50 flex items-start justify-center overflow-auto p-6">
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-
+          // <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+<div className="fixed inset-0 z-50 flex justify-end">
           <div
             className="absolute inset-0 bg-black/40"
             onClick={() => setShowCreateModal(false)}
           />
           {/* <div className="relative z-10 w-full max-w-3xl bg-white rounded shadow-lg overflow-auto"> */}
-              <div className="relative z-10 w-full max-w-3xl bg-white rounded-lg shadow-xl flex flex-col max-h-[90vh]">
-
+              {/* <div className="relative z-10 w-full max-w-3xl bg-white rounded-lg shadow-xl flex flex-col max-h-[90vh]"> */}
+<div className="relative z-10 w-[83%] h-full bg-white shadow-xl flex flex-col overflow-y-auto">
             <div className="flex items-center justify-between p-4 border-b shrink-0">
               <h3 className="text-lg font-semibold">Create Invoice</h3>
               <Button variant="ghost" onClick={() => setShowCreateModal(false)}>
@@ -2736,7 +2742,8 @@ onClick={() => openViewPaymentsDrawer(inv)}
       {/* Create Receipt modal (unchanged UI & logic) */}
       {showReceiptModal && (
         // <div className="fixed inset-0 z-50 flex items-start justify-center overflow-auto p-6">
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          // <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="fixed inset-0 z-50 flex justify-end">
 
           <div
             className="absolute inset-0 bg-black/40"
@@ -2746,8 +2753,8 @@ onClick={() => openViewPaymentsDrawer(inv)}
             }}
           />
           {/* <div className="relative z-10 w-full max-w-4xl bg-white rounded shadow-lg overflow-auto"> */}
-              <div className="relative z-10 w-full max-w-3xl bg-white rounded-lg shadow-xl flex flex-col max-h-[90vh]">
-
+              {/* <div className="relative z-10 w-full max-w-3xl bg-white rounded-lg shadow-xl flex flex-col max-h-[90vh]"> */}
+<div className="relative z-10 w-[83%] h-full bg-white shadow-xl flex flex-col overflow-y-auto">
             <div className="flex items-center justify-between p-4 border-b shrink-0 ">
               <h3 className="text-lg font-semibold">Create Receipt</h3>
               <Button
@@ -3219,12 +3226,14 @@ onClick={() => openViewPaymentsDrawer(inv)}
 
       {/* EDIT modal (unchanged) */}
       {showEditModal && editForm && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center overflow-auto p-6">
+        // <div className="fixed inset-0 z-50 flex items-start justify-center overflow-auto p-6">
+        <div className="fixed inset-0 z-50 flex justify-end">
           <div
             className="absolute inset-0 bg-black/40"
             onClick={() => setShowEditModal(false)}
           />
-          <div className="relative z-10 w-full max-w-2xl bg-white rounded shadow-lg overflow-auto">
+          {/* <div className="relative z-10 w-full max-w-2xl bg-white rounded shadow-lg overflow-auto"> */}
+          <div className="relative z-10 w-[83%] h-full bg-white shadow-xl flex flex-col overflow-y-auto">
             <div className="flex items-center justify-between p-4 border-b">
               <h3 className="text-lg font-semibold">Edit Invoice</h3>
               <Button variant="ghost" onClick={() => setShowEditModal(false)}>
@@ -3315,7 +3324,8 @@ onClick={() => openViewPaymentsDrawer(inv)}
 
       {/* UPLOAD modal (NEW) - matches screenshot style */}
       {showUploadModal && (
-        <div className="fixed inset-0 z-60 flex items-start justify-center overflow-auto p-6">
+        // <div className="fixed inset-0 z-60 flex items-start justify-center overflow-auto p-6">
+        <div className="fixed inset-0 z-60 flex justify-end">
           <div
             className="absolute inset-0 bg-black/40"
             onClick={() => {
@@ -3325,7 +3335,8 @@ onClick={() => openViewPaymentsDrawer(inv)}
               setUploadError(null);
             }}
           />
-          <div className="relative z-10 w-full max-w-2xl bg-white rounded shadow-lg overflow-hidden">
+          {/* <div className="relative z-10 w-full max-w-2xl bg-white rounded shadow-lg overflow-hidden"> */}
+          <div className="relative z-10 w-[83%] h-full bg-white shadow-xl flex flex-col overflow-y-auto">
             <div className="flex items-center justify-between p-3 border-b">
               <h3 className="text-base font-semibold ml-3">Upload File</h3>
               <Button

@@ -175,11 +175,14 @@ export default function ClientAddPaymentModal({
   return (
     <>
       {/* MAIN MODAL */}
-      <div className="fixed inset-0 z-[20000] flex items-center justify-center px-4 py-6">
+      {/* <div className="fixed inset-0 z-[20000] flex items-center justify-center px-4 py-6"> */}
+      <div className="fixed inset-0 z-[20000] flex justify-end">
         <div className="absolute inset-0 bg-black/40" onClick={onClose} />
 
         <div
-          className="relative bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto"
+          // className="relative bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto"
+            className="relative bg-white shadow-2xl w-[83%] h-full overflow-y-auto flex flex-col"
+
           onClick={(e) => e.stopPropagation()}
         >
           {/* HEADER */}

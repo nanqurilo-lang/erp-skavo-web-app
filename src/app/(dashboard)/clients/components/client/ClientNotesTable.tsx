@@ -506,9 +506,11 @@ export default function ClientNotesTable({
 
       {/* Add Note Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center pt-12">
+        // <div className="fixed inset-0 z-50 flex items-start justify-center pt-12">
+        <div className="fixed inset-0 z-50 flex justify-end">
           <div className="absolute inset-0 bg-black/30" onClick={() => !saving && closeAddModal()} />
-          <div className="relative z-10 w-[900px] max-w-[95%] bg-white rounded-lg shadow-xl border">
+          {/* <div className="relative z-10 w-[900px] max-w-[95%] bg-white rounded-lg shadow-xl border"> */}
+          <div className="relative z-10 w-[83%] h-full bg-white shadow-xl flex flex-col overflow-y-auto">
             <div className="flex items-center justify-between p-4 border-b">
               <h4 className="text-lg font-medium">Add Project Note</h4>
               <button className="p-2 rounded hover:bg-gray-100" onClick={() => !saving && closeAddModal()}>
@@ -577,9 +579,11 @@ export default function ClientNotesTable({
 
       {/* View Note Modal */}
       {showViewModal && viewNote && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center pt-12">
+        // <div className="fixed inset-0 z-50 flex items-start justify-center pt-12">
+        <div className="fixed inset-0 z-50 flex justify-end">
           <div className="absolute inset-0 bg-black/30" onClick={() => closeViewModal()} />
-          <div className="relative z-10 w-[900px] max-w-[95%] bg-white rounded-lg shadow-xl border">
+         <div className="relative z-10 w-[83%] h-full bg-white shadow-xl flex flex-col overflow-y-auto">
+          {/* <div className="relative z-10 w-[900px] max-w-[95%] bg-white rounded-lg shadow-xl border"> */}
             <div className="flex items-center justify-between p-4 border-b">
               <h4 className="text-lg font-medium">{viewNote.title ?? "My Note"}</h4>
               <button className="p-2 rounded hover:bg-gray-100" onClick={() => closeViewModal()}>
@@ -624,9 +628,11 @@ export default function ClientNotesTable({
 
       {/* Edit Note Modal */}
       {showEditModal && editNoteId !== null && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center pt-12">
+        // <div className="fixed inset-0 z-50 flex items-start justify-center pt-12">
+        <div className="fixed inset-0 z-50 flex justify-end">
           <div className="absolute inset-0 bg-black/30" onClick={() => !updating && closeEditModal()} />
-          <div className="relative z-10 w-[900px] max-w-[95%] bg-white rounded-lg shadow-xl border">
+          {/* <div className="relative z-10 w-[900px] max-w-[95%] bg-white rounded-lg shadow-xl border"> */}
+          <div className="relative z-10 w-[83%] h-full bg-white shadow-xl flex flex-col overflow-y-auto">
             <div className="flex items-center justify-between p-4 border-b">
               <h4 className="text-lg font-medium">Update Project Note</h4>
               <button className="p-2 rounded hover:bg-gray-100" onClick={() => !updating && closeEditModal()}>
