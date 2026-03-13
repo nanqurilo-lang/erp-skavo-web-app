@@ -1872,8 +1872,8 @@ export default function AllProjectsPage({ employeeId, }: { employeeId: string })
 
                         <div className="overflow-auto p-4">
                             {/* // grid / table (default) */}
-                            <div>
-                                <Table>
+                            <div >
+                                <Table >
                                     <TableHeader>
                                         <TableRow className="bg-blue-50">
                                             <TableHead className="px-4 py-3">Code</TableHead>
@@ -1901,14 +1901,19 @@ export default function AllProjectsPage({ employeeId, }: { employeeId: string })
                     </div>
 
                     {/* PAGINATION */}
-                    <div className="flex items-center justify-between mt-4">
+                    {/* <div className="flex items-center justify-between mt-4">
                         <div className="text-sm text-gray-600">Result per page -{filteredProjects.length ? filteredProjects.length : 0}</div>
                         <div className="flex items-center gap-3">
                             <Button variant="outline" size="sm" onClick={() => { setCurrentPage((c) => Math.max(1, c - 1)); }} disabled={currentPage === 1}><ChevronLeft /> Prev</Button>
                             <div className="text-sm text-gray-600">Page {currentPage} of {totalPages}</div>
                             <Button variant="outline" size="sm" onClick={() => { setCurrentPage((c) => Math.min(totalPages, c + 1)); }} disabled={currentPage === totalPages}>Next <ChevronRight /></Button>
                         </div>
+                    </div> */}
+
+                    <div>
+
                     </div>
+
                 </div>
             </main>
 

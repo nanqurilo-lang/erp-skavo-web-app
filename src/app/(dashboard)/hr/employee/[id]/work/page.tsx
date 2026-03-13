@@ -14,7 +14,7 @@ export default function EmployeeWorkTab({
             <h2 className="font-semibold mb-4">Assigned Tasks</h2>
 
             <TasksTable employeeId={employeeId} />
-
+            <br />
             <TimesheetsTableNew employeeId={employeeId} />
 
             <AllProjectsPage employeeId={employeeId} />

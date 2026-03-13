@@ -388,7 +388,7 @@ export default function TasksTable({ employeeId, }: { employeeId: string }) {
                 <div className="py-6 text-center text-red-500">{error}</div>
             ) : (
                 <div className="overflow-x-auto">
-                    <table className="min-w-full text-sm">
+                    <table className="min-w-full text-sm ">
                         <thead>
                             <tr className="bg-blue-50 text-left text-gray-600">
                                 <th className="px-4 py-3">Code</th>
@@ -582,9 +582,12 @@ export default function TasksTable({ employeeId, }: { employeeId: string }) {
 
                     {/* footer (pagination-ish display) */}
                     <div className="px-4 py-3 border-t bg-gray-50 flex items-center justify-between text-sm text-gray-600 rounded-b-md mt-4">
-                        <div>Result per page - {tasks.length ? tasks.length : 0}</div>
-                        <div>Page 1 of 1</div>
+                        {/* <div>Result per page - {tasks.length ? tasks.length : 0}</div>
+                        <div>Page 1 of 1</div> */}
                     </div>
+
+
+
                 </div>
             )}
 
