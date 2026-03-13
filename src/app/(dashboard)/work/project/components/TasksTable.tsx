@@ -723,10 +723,7 @@ const fetchProjectEmployees = async (pid: number) => {
                 <input value={form.assignedEmployeeIds.join(",")} onChange={(e) => updateForm({ assignedEmployeeIds: e.target.value.split(",").map(s => s.trim()).filter(Boolean) })} className="border px-3 py-2 rounded" />
               </label> */}
 
-              {/* <label className="flex flex-col">
-                <span className="text-xs text-gray-600">Label IDs (comma separated)</span>
-                <input value={form.labelIds.join(",")} onChange={(e) => updateForm({ labelIds: e.target.value.split(",").map(s => s.trim()).filter(Boolean) })} className="border px-3 py-2 rounded" />
-              </label> */}
+            
 
 
 
@@ -778,6 +775,11 @@ const fetchProjectEmployees = async (pid: number) => {
   )}
 </div>
 
+
+  <label className="flex flex-col">
+                <span className="text-xs text-gray-600">Label IDs (comma separated)</span>
+                <input value={form.labelIds.join(",")} onChange={(e) => updateForm({ labelIds: e.target.value.split(",").map(s => s.trim()).filter(Boolean) })} className="border px-3 py-2 rounded" />
+              </label>
 
               <label className="flex flex-col">
                 <span className="text-xs text-gray-600">Priority</span>
