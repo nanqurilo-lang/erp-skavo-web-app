@@ -36,8 +36,10 @@ export default function TimesheetsTableNew({
   gatewayPath = "/timesheets",
   mainBase,
   authToken = PROVIDED_TOKEN,
+  projectId
 }: {
   gatewayPath?: string;
+  projectId?: string;
   mainBase?: string;
   authToken?: string | null;
 }) {
@@ -152,7 +154,8 @@ export default function TimesheetsTableNew({
     setError(null);
     try {
       const url = buildUrl(gatewayPath);
-      const res = await doFetch(url, {
+
+      const res = await doFetch(`${url}/project/${projectId}`, {
         method: "GET",
         headers: headersWithAuth({ "Content-Type": "application/json" }),
         credentials: "same-origin",
@@ -171,9 +174,12 @@ export default function TimesheetsTableNew({
     } finally {
       setLoading(false);
     }
+
+
+
   };
 
-
+// console.log("uhuhuhuhuu",projectTasks)
 
   const fetchProjects = async () => {
     setProjectsLoading(true);
@@ -318,7 +324,7 @@ export default function TimesheetsTableNew({
       const ampm = hours >= 12 ? "PM" : "AM";
       hours = hours % 12 || 12;
       const hoursStr = pad(hours);
-      return `${day}/${mon}/${year} ${hoursStr}:${minutes} ${ampm}`;
+      return `${day}-${mon}-${year} ${hoursStr}:${minutes} ${ampm}`;
     } catch {
       return date + (time ? ` ${time}` : "");
     }
@@ -830,7 +836,9 @@ export default function TimesheetsTableNew({
 
                   <div className="grid grid-cols-3 gap-y-4 gap-x-6 items-center text-sm">
                     <div className="text-gray-500">Start Time</div>
-                    <div className="col-span-2">{fmtDateTime(selectedRow.startDate, selectedRow.startTime)}</div>
+                    <div className="col-span-2">
+                      {fmtDateTime(selectedRow.startDate, selectedRow.startTime)}
+                      </div>
 
                     <div className="text-gray-500">End Time</div>
                     <div className="col-span-2">{fmtDateTime(selectedRow.endDate, selectedRow.endTime)}</div>

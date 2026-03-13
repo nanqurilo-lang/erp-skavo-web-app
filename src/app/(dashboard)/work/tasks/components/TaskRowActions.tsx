@@ -205,13 +205,13 @@ export const TaskRowActions: React.FC<TaskRowActionsProps> = ({
               Edit
             </DropdownMenuItem>
 
-            <DropdownMenuItem
+            {/* <DropdownMenuItem
               className="flex cursor-pointer items-center gap-2 text-slate-700"
               onClick={() => onDuplicate?.(task)}
             >
               <Copy size={16} />
-              Duplicate
-            </DropdownMenuItem>
+              Duplicate h
+            </DropdownMenuItem> */}
 
             <DropdownMenuSeparator />
 
