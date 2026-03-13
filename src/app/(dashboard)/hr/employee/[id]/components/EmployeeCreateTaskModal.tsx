@@ -235,11 +235,13 @@ useEffect(() => {
   if (!open) return null;
 
 return createPortal(
-  <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 p-4">
+//   <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 p-4">
+<div className="fixed inset-0 z-[9999] flex justify-end bg-black/40">
             {/* MAIN FORM */}
             <form
                 onSubmit={handleSubmit}
-                className="bg-white w-full max-w-4xl rounded-lg p-6 shadow-lg overflow-auto max-h-[90vh]"
+                // className="bg-white w-full max-w-4xl rounded-lg p-6 shadow-lg overflow-auto max-h-[90vh]"
+                className="bg-white w-[83%] h-full p-6 shadow-xl overflow-y-auto"
             >
                 <div className="flex items-center justify-between mb-4">
                     <h3 className="text-lg font-semibold">Add Task</h3>
