@@ -324,11 +324,16 @@ function DealCategoryModal({
   return (
     <div className="fixed inset-0 z-50">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
-      <div className="fixed inset-0 flex items-start justify-center px-4 pt-12">
-        <div
+      {/* <div className="fixed inset-0 flex items-start justify-center px-4 pt-12"> */}
+      <div className="fixed inset-0 flex justify-end">
+        {/* <div
           className="max-w-3xl w-full bg-white rounded-lg shadow-lg border overflow-auto"
           style={{ maxHeight: "80vh" }}
-        >
+        > */}
+ <div
+    className="w-[83%] h-full bg-white shadow-xl overflow-y-auto flex flex-col"
+  >
+
           <div className="flex items-center justify-between p-4 border-b">
             <h3 className="text-lg font-semibold">Deal Category</h3>
             <button
@@ -651,11 +656,17 @@ function AddDealModal({
   return (
     <div className="fixed inset-0 z-50">
       <div className="absolute inset-0 bg-black/30" onClick={onClose} />
-      <div className="fixed inset-0 flex items-start justify-center px-4 pt-12">
-        <div
+      {/* <div className="fixed inset-0 flex items-start justify-center px-4 pt-12"> */}
+      <div className="fixed inset-0 flex justify-end">
+        {/* <div
           className="max-w-4xl w-full bg-white rounded-lg shadow-lg border overflow-auto"
           style={{ maxHeight: "92vh" }}
-        >
+        > */}
+
+<div
+  className="w-[83%] h-full bg-white shadow-xl overflow-y-auto flex flex-col"
+>
+
           <div className="flex items-center justify-between p-4 border-b">
             <h3 className="text-lg font-semibold">Add Deal Information</h3>
             <button
@@ -1052,11 +1063,17 @@ function EditModal({
     <div className="fixed inset-0 z-50">
       <div className="absolute inset-0 bg-black/30" onClick={onClose} />
 
-      <div className="fixed inset-0 flex items-start justify-center px-4 pt-12">
-        <div
+      {/* <div className="fixed inset-0 flex items-start justify-center px-4 pt-12"> */}
+      <div className="fixed inset-0 flex justify-end">
+        {/* <div
           className="max-w-4xl w-full bg-white rounded-lg shadow-lg border overflow-auto"
           style={{ maxHeight: "92vh" }}
-        >
+        > */}
+
+<div
+  className="w-[83%] h-full bg-white shadow-xl overflow-y-auto flex flex-col"
+>
+
           <div className="flex items-center justify-between p-4 border-b">
             <h3 className="text-lg font-semibold">Update Lead Contact</h3>
             <button
@@ -1343,11 +1360,17 @@ function AddEditNoteModal({
   return (
     <div className="fixed inset-0 z-50">
       <div className="absolute inset-0 bg-black/30" onClick={onClose} />
-      <div className="fixed inset-0 flex items-start justify-center px-4 pt-12">
-        <div
+      {/* <div className="fixed inset-0 flex items-start justify-center px-4 pt-12"> */}
+      <div className="fixed inset-0 flex justify-end">
+        {/* <div
           className="max-w-3xl w-full bg-white rounded-lg shadow-lg border overflow-auto"
           style={{ maxHeight: "90vh" }}
-        >
+        > */}
+
+<div
+  className="w-[83%] h-full bg-white shadow-xl overflow-y-auto flex flex-col"
+>
+
           <div className="flex items-center justify-between p-4 border-b">
             <h3 className="text-lg font-semibold">
               {isEdit ? "Edit Lead Note" : "Add Lead Note"}
@@ -1460,11 +1483,17 @@ function ViewNoteModal({ note, onClose }: { note: Note; onClose: () => void }) {
   return (
     <div className="fixed inset-0 z-50">
       <div className="absolute inset-0 bg-black/30" onClick={onClose} />
-      <div className="fixed inset-0 flex items-start justify-center px-4 pt-12">
-        <div
+      {/* <div className="fixed inset-0 flex items-start justify-center px-4 pt-12"> */}
+      <div className="fixed inset-0 flex justify-end">
+        {/* <div
           className="max-w-3xl w-full bg-white rounded-lg shadow-lg border overflow-auto"
           style={{ maxHeight: "90vh" }}
-        >
+        > */}
+
+ <div
+    className="w-[83%] h-full bg-white shadow-xl overflow-y-auto flex flex-col"
+  >
+
           <div className="flex items-center justify-between p-4 border-b">
             <h3 className="text-lg font-semibold">
               {note.noteTitle ?? "My Note"}

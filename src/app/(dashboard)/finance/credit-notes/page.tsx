@@ -728,19 +728,25 @@ function ViewCreditNoteModal({
         aria-hidden
       />
       <div
-        className="fixed inset-0 z-50 flex items-start justify-center pt-12 px-4"
+        // className="fixed inset-0 z-50 flex items-start justify-center pt-12 px-4"
+  className="fixed inset-0 z-50 flex justify-end"
+
+
         role="dialog"
         aria-modal="true"
         onClick={onClose}
       >
         <div
-          className="bg-white w-full max-w-4xl rounded-lg shadow-lg overflow-hidden"
+          // className="bg-white w-full max-w-4xl rounded-lg shadow-lg overflow-hidden"
+  className="bg-white w-[83%] h-full shadow-xl overflow-y-auto"
+
+
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
           <div className="flex items-center justify-between px-6 py-4 border-b">
             <h3 className="text-lg font-semibold text-slate-900">
-              Credit Note Details
+              Credit Note Details hv
             </h3>
             <button
               onClick={onClose}

@@ -1022,12 +1022,16 @@ export default function TimesheetPage() {
 
       {/* Log Time Modal */}
       {showLogModal && (
-        <div className="fixed inset-0 z-[10020] flex items-start justify-center pt-12 px-4">
+        // <div className="fixed inset-0 z-[10020] flex items-start justify-center pt-12 px-4">
+<div className="fixed inset-0 z-[10020] flex justify-end">
+
           <div
             className="absolute inset-0 bg-black/40"
             onClick={() => setShowLogModal(false)}
           />
-          <div className="relative bg-white w-full max-w-4xl rounded-xl shadow-xl overflow-hidden">
+          {/* <div className="relative bg-white w-full max-w-4xl rounded-xl shadow-xl overflow-hidden"> */}
+<div className="relative bg-white w-[83%] h-full shadow-xl overflow-y-auto">
+
             <div className="flex items-center justify-between px-6 py-4 border-b">
               <h3 className="text-lg font-semibold">
                 {editingId ? "Edit TimeLog" : "Log Time"}
@@ -1043,7 +1047,7 @@ export default function TimesheetPage() {
 
             <div className="p-6">
               <div className="bg-white rounded-md border p-6">
-                <h4 className="text-md font-medium mb-4">TimeLog Details </h4>
+                <h4 className="text-md font-medium mb-4">TimeLog Details</h4>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
@@ -1349,14 +1353,20 @@ export default function TimesheetPage() {
 
       {/* View Modal */}
       {isViewOpen && selectedRow && (
-        <div className="
-fixed inset-0 z-[10020] flex items-start justify-center pt-12 px-4        ">
+        // <div 
+        // className="fixed inset-0 z-[10020] flex items-start justify-center pt-12 px-4 "
+        // >
+
+<div className="fixed inset-0 z-[10020] flex justify-end">
+
           <div
             className="absolute inset-0 bg-black/40"
             onClick={() => setIsViewOpen(false)}
           />
 
-          <div className="relative bg-white w-full max-w-4xl rounded-xl shadow-xl overflow-hidden">
+          {/* <div className="relative bg-white w-full max-w-4xl rounded-xl shadow-xl overflow-hidden"> */}
+
+          <div className="relative bg-white w-[83%] h-full shadow-xl overflow-y-auto">
             <div className="flex items-center justify-between px-6 py-4 border-b">
               <h3 className="text-xl font-semibold">Timesheet</h3>
               <button
@@ -1553,13 +1563,15 @@ fixed inset-0 z-[10020] flex items-start justify-center pt-12 px-4        ">
 
       {/* Calendar full-screen modal */}
       {showCalendarModal && (
-        <div className="fixed inset-0 z-[10050] flex items-start justify-center pt-8 px-6">
+        // <div className="fixed inset-0 z-[10050] flex items-start justify-center pt-8 px-6">
+        <div className="fixed inset-0 z-[10020] flex justify-end">
           <div
             className="absolute inset-0 bg-black/40"
             onClick={() => setShowCalendarModal(false)}
           />
 
-          <div className="relative bg-white w-full max-w-[1180px] rounded-xl shadow-xl overflow-hidden">
+          {/* <div className="relative bg-white w-full max-w-[1180px] rounded-xl shadow-xl overflow-hidden"> */}
+          <div className="relative bg-white w-[83%] h-full shadow-xl overflow-y-auto">
             <div className="flex items-center justify-between px-6 py-4 border-b">
               <h3 className="text-xl font-semibold">Calendar</h3>
               <div className="flex items-center gap-2">

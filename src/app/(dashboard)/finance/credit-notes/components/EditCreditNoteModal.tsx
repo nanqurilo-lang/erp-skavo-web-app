@@ -125,7 +125,9 @@ export default function EditCreditNoteModal({
   ];
 
   return (
-    <div className="fixed inset-0 z-60 flex items-start justify-center pt-10">
+    // <div className="fixed inset-0 z-60 flex items-start justify-center pt-10">
+<div className="fixed inset-0 z-[10060] flex justify-end">
+
       {/* overlay */}
       <div
         className="absolute inset-0 bg-black/30"
@@ -135,8 +137,11 @@ export default function EditCreditNoteModal({
 
       <div
         // ensure modal content receives pointer events and is above overlay
-     className="relative z-70 w-[900px] max-w-full bg-white rounded-lg border shadow-lg pointer-events-auto
-             max-h-[85vh] flex flex-col"
+    //  className="relative z-70 w-[900px] max-w-full bg-white rounded-lg border shadow-lg pointer-events-auto
+    //          max-h-[85vh] flex flex-col"
+
+className="relative z-70 w-[83%] h-full bg-white shadow-xl pointer-events-auto flex flex-col overflow-y-auto"
+
      
    // className="relative z-70 w-[900px] max-w-full bg-white rounded-lg border shadow-lg pointer-events-auto"
       >

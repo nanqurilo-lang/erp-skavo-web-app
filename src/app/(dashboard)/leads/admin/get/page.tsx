@@ -1624,11 +1624,18 @@ function UpdateLeadForm({
     <div className="fixed inset-0 z-50">
       <div className="absolute inset-0 bg-black/30" onClick={onClose} />
 
-      <div className="fixed inset-0 flex items-start justify-center px-4 pt-12">
-        <div
+      {/* <div className="fixed inset-0 flex items-start justify-center px-4 pt-12"> */}
+<div className="fixed inset-0 flex justify-end">
+
+        {/* <div
           className="max-w-4xl w-full bg-white rounded-lg shadow-lg border overflow-auto"
           style={{ maxHeight: "92vh" }}
-        >
+        > */}
+
+<div
+  className="w-[83%] h-full bg-white shadow-xl overflow-y-auto flex flex-col"
+>
+
           {/* <form onSubmit={submit} className="p-6 space-y-6"> */}
           {/* 🔽🔽 tumhara poora form yahin rahega */}
 
@@ -1703,7 +1710,7 @@ function UpdateLeadForm({
             </div>
 
             <div className="rounded-lg border p-4">
-              <h4 className="font-medium mb-3">Company Details</h4>
+              <h4 className="font-medium mb-3">Company Details </h4>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
                 <div>
                   <label className="text-sm text-muted-foreground">Company Name</label>

@@ -179,14 +179,18 @@ export default function AddPaymentModal({
     return (
         <>
             {/* MAIN PAYMENT MODAL */}
-            <div className="fixed inset-0 z-[20000] flex items-center justify-center px-4 py-6">
+            {/* <div className="fixed inset-0 z-[20000] flex items-center justify-center px-4 py-6"> */}
+            <div className="fixed inset-0 z-[20000] flex justify-end">
 
                 {/* BACKDROP */}
                 <div className="absolute inset-0 bg-black/40" onClick={onClose} />
 
                 {/* CENTERED MODAL */}
                 <div
-                    className="relative bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto"
+                    // className="relative bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto"
+
+                      className="relative bg-white w-[83%] h-full shadow-2xl overflow-y-auto"
+
                     onClick={(e) => e.stopPropagation()}
                 >
                     {/* HEADER */}

@@ -1948,10 +1948,14 @@ const getLogById = (id: number) => {
       {/* View Modal */}
       {isViewOpen && selectedLog && (
         // <div className="fixed inset-0 z-[10020] flex items-start justify-center pt-8 px-6">
-                <div className="fixed inset-0 z-[10020] flex items-start justify-center pt-8 px-4">
+                // <div className="fixed inset-0 z-[10020] flex items-start justify-center pt-8 px-4">
+<div className="fixed inset-0 z-[10020] flex justify-end">
+
 
           <div className="absolute inset-0 bg-black/40" onClick={() => setIsViewOpen(false)} />
-          <div className="relative bg-white w-full max-w-4xl rounded-xl shadow-xl overflow-hidden">
+          {/* <div className="relative bg-white w-full max-w-4xl rounded-xl shadow-xl overflow-hidden"> */}
+<div className="relative bg-white w-[83%] h-full shadow-xl overflow-y-auto">
+
             <div className="flex items-center justify-between px-6 py-4 border-b">
               <h3 className="text-xl font-semibold">Timesheet</h3>
               <button
@@ -2056,9 +2060,12 @@ const getLogById = (id: number) => {
 
       {/* Log Time (Edit/Create) Modal */}
       {showLogModal && (
-        <div className="fixed inset-0 z-[10020] flex items-start justify-center pt-12 px-4">
+        // <div className="fixed inset-0 z-[10020] flex items-start justify-center pt-12 px-4">
+<div className="fixed inset-0 z-[10020] flex justify-end">
+
           <div className="absolute inset-0 bg-black/40" onClick={() => setShowLogModal(false)} />
-          <div className="relative bg-white w-full max-w-4xl rounded-xl shadow-xl overflow-hidden">
+          {/* <div className="relative bg-white w-full max-w-4xl rounded-xl shadow-xl overflow-hidden"> */}
+          <div className="relative bg-white w-[83%] h-full shadow-xl overflow-y-auto">
             <div className="flex items-center justify-between px-6 py-4 border-b">
               <h3 className="text-lg font-semibold">{editingId ? "Edit TimeLog" : "Log Time"}</h3>
               <button className="p-2 rounded hover:bg-gray-100" onClick={() => setShowLogModal(false)} aria-label="Close">✕</button>
