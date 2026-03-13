@@ -85,6 +85,10 @@ export default function TasksTable({ employeeId, }: { employeeId: string }) {
     const [actionOpenFor, setActionOpenFor] = useState<number | null>(null);
     const [statusOpenFor, setStatusOpenFor] = useState<number | null>(null);
 
+
+    const [projectEmployees, setProjectEmployees] = useState<Employee[]>([]);
+const [employeeDropdownOpen, setEmployeeDropdownOpen] = useState(false);
+
     // form helpers
     const emptyForm = {
         title: "",
@@ -146,6 +150,31 @@ export default function TasksTable({ employeeId, }: { employeeId: string }) {
         }
     };
 
+
+
+const fetchProjectEmployees = async (pid: number) => {
+    try {
+        const token = localStorage.getItem("accessToken");
+
+        const res = await axios.get(`${MAIN}/api/projects/${pid}`, {
+            headers: { Authorization: token ? `Bearer ${token}` : "" },
+        });
+
+        const list =
+            res.data?.assignedEmployees ||
+            res.data?.employees ||
+            res.data?.data?.assignedEmployees ||
+            [];
+
+        setProjectEmployees(list);
+    } catch (err) {
+        console.warn("Failed to load project employees");
+        setProjectEmployees([]);
+    }
+};
+
+
+
     useEffect(() => {
         fetchStatuses();
         fetchTasks();
@@ -191,6 +220,9 @@ export default function TasksTable({ employeeId, }: { employeeId: string }) {
     // edit
     const openEdit = (t: Task) => {
         setEditTask(t);
+
+    fetchProjectEmployees(t.projectId); // load employees of that project
+
         setForm({
             title: t.title || "",
             category: (t as any).categoryId?.id ? String((t as any).categoryId.id) : "",
@@ -226,7 +258,8 @@ export default function TasksTable({ employeeId, }: { employeeId: string }) {
             fd.append("isPrivate", String(form.isPrivate));
             fd.append("timeEstimateMinutes", String(form.timeEstimateMinutes || ""));
             fd.append("isDependent", String(form.isDependent));
-            fd.append("projectId", String(projectId));
+            // fd.append("projectId", String(projectId));
+            fd.append("projectId", String(form.projectId));
             fd.append("assignedEmployeeIds", JSON.stringify(form.assignedEmployeeIds));
             if (form.taskFile) fd.append("taskFile", form.taskFile);
 
@@ -247,7 +280,7 @@ export default function TasksTable({ employeeId, }: { employeeId: string }) {
     const handleDelete = async (taskId: number) => {
         if (!confirm("Are you sure to delete this task?")) return;
         try {
-            await deleteAPI(base(`/api/projects/${projectId}/tasks/${taskId}`));
+            await deleteAPI(base(`/api/projects/${editTask?.projectId}/tasks/${taskId}`));
             setActionOpenFor(null);
             await fetchTasks();
         } catch (err: any) {
@@ -623,10 +656,64 @@ export default function TasksTable({ employeeId, }: { employeeId: string }) {
                                 <textarea value={form.description} onChange={(e) => updateForm({ description: e.target.value })} className="border px-3 py-2 rounded" />
                             </label>
 
-                            <label className="flex flex-col">
+                            {/* <label className="flex flex-col">
                                 <span className="text-xs text-gray-600">Assigned Employee IDs (comma separated)</span>
                                 <input value={form.assignedEmployeeIds.join(",")} onChange={(e) => updateForm({ assignedEmployeeIds: e.target.value.split(",").map(s => s.trim()).filter(Boolean) })} className="border px-3 py-2 rounded" />
-                            </label>
+                            </label> */}
+
+
+<div className="relative md:col-span-2">
+    <span className="text-xs text-gray-600">Assign Employees</span>
+
+    <button
+        type="button"
+        onClick={() => setEmployeeDropdownOpen(v => !v)}
+        className="mt-1 w-full border px-3 py-2 rounded text-left flex justify-between items-center"
+    >
+        <span>
+            {form.assignedEmployeeIds.length === 0
+                ? "Select employees"
+                : `${form.assignedEmployeeIds.length} selected`}
+        </span>
+        <span>▾</span>
+    </button>
+
+    {employeeDropdownOpen && (
+        <div className="absolute z-50 mt-1 w-full bg-white border rounded shadow max-h-56 overflow-auto">
+
+            {projectEmployees.map(emp => {
+
+                const checked = form.assignedEmployeeIds.includes(emp.employeeId);
+
+                return (
+                    <label
+                        key={emp.employeeId}
+                        className="flex items-center gap-2 px-3 py-2 hover:bg-gray-50 cursor-pointer"
+                    >
+                        <input
+                            type="checkbox"
+                            checked={checked}
+                            onChange={() => {
+
+                                updateForm({
+                                    assignedEmployeeIds: checked
+                                        ? form.assignedEmployeeIds.filter(id => id !== emp.employeeId)
+                                        : [...form.assignedEmployeeIds, emp.employeeId]
+                                });
+
+                            }}
+                        />
+
+                        <span>{emp.name}</span>
+                    </label>
+                );
+            })}
+
+        </div>
+    )}
+</div>
+
+
 
                             <label className="flex flex-col">
                                 <span className="text-xs text-gray-600">Label IDs (comma separated)</span>
