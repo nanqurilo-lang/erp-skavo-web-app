@@ -74,12 +74,30 @@ export default function CreateTaskModal({ open, onClose, onCreated, projectId }:
             .then((r) => r.json())
             .then(setStages);
 
-        fetch(`${MAIN}/employee/all`, {
+    //     fetch(`${MAIN}/employee/all`, {
+    //         headers: { Authorization: `Bearer ${token}` },
+    //     })
+    //         .then((r) => r.json())
+    //         .then(setEmployees);
+    // }, [open]);
+
+
+
+
+// project employees only
+    if (projectId) {
+        fetch(`${MAIN}/projects/${projectId}`, {
             headers: { Authorization: `Bearer ${token}` },
         })
             .then((r) => r.json())
-            .then(setEmployees);
-    }, [open]);
+            .then((data) => {
+                setEmployees(data.assignedEmployees || []);
+            });
+    }
+
+}, [open, projectId]);
+
+
 
     useEffect(() => {
         if (!projectId) return;

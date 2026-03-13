@@ -329,7 +329,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
 
           {/* Stage */}
           <div>
-            <Label>Task Stage *</Label>
+            <Label>Task Stage  *</Label>
             <Select onValueChange={setTaskStageId}>
               <SelectTrigger>
                 <SelectValue placeholder="Select stage" />
