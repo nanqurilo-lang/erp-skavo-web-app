@@ -627,9 +627,11 @@ export default function MilestonesTable({
 
       {/* Create modal */}
       {isCreateOpen && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center pt-12 px-4">
+        // <div className="fixed inset-0 z-50 flex items-start justify-center pt-12 px-4">
+        <div className="fixed inset-0 z-[10000] flex justify-end">
           <div className="absolute inset-0 bg-black/40" onClick={() => setIsCreateOpen(false)} />
-          <div className="relative bg-white w-full max-w-3xl rounded-lg shadow-xl overflow-hidden">
+          {/* <div className="relative bg-white w-full max-w-3xl rounded-lg shadow-xl overflow-hidden"> */}
+          <div className="relative bg-white w-[83%] h-full shadow-xl overflow-y-auto">
             <div className="flex items-center justify-between px-6 py-4 border-b">
               <h3 className="text-lg font-semibold">Create Milestone</h3>
               <button onClick={() => setIsCreateOpen(false)} className="p-2 rounded hover:bg-gray-100">
@@ -725,9 +727,13 @@ export default function MilestonesTable({
 
       {/* View modal */}
       {isViewOpen && selected && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center pt-12 px-4">
+        // <div className="fixed inset-0 z-50 flex items-start justify-center pt-12 px-4">
+
+        <div className="fixed inset-0 z-[10000] flex justify-end">
           <div className="absolute inset-0 bg-black/40" onClick={() => setIsViewOpen(false)} />
-          <div className="relative bg-white w-full max-w-2xl rounded-lg shadow-xl overflow-hidden">
+          {/* <div className="relative bg-white w-full max-w-2xl rounded-lg shadow-xl overflow-hidden"> */}
+
+          <div className="relative bg-white w-[83%] h-full shadow-xl overflow-y-auto">
             <div className="flex items-center justify-between px-6 py-4 border-b">
               <h3 className="text-lg font-semibold">Milestone Details</h3>
               <button onClick={() => setIsViewOpen(false)} className="p-2 rounded hover:bg-gray-100">
@@ -786,9 +792,13 @@ export default function MilestonesTable({
 
       {/* Edit modal */}
       {isEditOpen && selected && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center pt-12 px-4">
+        // <div className="fixed inset-0 z-50 flex items-start justify-center pt-12 px-4">
+
+        <div className="fixed inset-0 z-[10000] flex justify-end">
           <div className="absolute inset-0 bg-black/40" onClick={() => setIsEditOpen(false)} />
-          <div className="relative bg-white w-full max-w-3xl rounded-lg shadow-xl overflow-hidden">
+          {/* <div className="relative bg-white w-full max-w-3xl rounded-lg shadow-xl overflow-hidden"> */}
+<div className="relative bg-white w-[83%] h-full shadow-xl overflow-y-auto">
+
             <div className="flex items-center justify-between px-6 py-4 border-b">
               <h3 className="text-lg font-semibold">Edit Milestone</h3>
               <button onClick={() => setIsEditOpen(false)} className="p-2 rounded hover:bg-gray-100">

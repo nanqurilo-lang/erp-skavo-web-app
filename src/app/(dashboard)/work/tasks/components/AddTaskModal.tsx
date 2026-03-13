@@ -264,7 +264,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
       >
         <DialogHeader className="px-6 py-4 border-b bg-slate-50">
           <DialogTitle className="text-lg font-semibold">
-            Add New Task
+            Add New Task 
           </DialogTitle>
         </DialogHeader>
 
