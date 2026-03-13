@@ -215,7 +215,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
 
 
         <DialogHeader>
-          <DialogTitle>Add New Task</DialogTitle>
+          <DialogTitle>Add New Task </DialogTitle>
         </DialogHeader>
 
         {/* FORM */}

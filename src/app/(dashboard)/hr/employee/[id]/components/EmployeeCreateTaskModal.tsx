@@ -822,7 +822,11 @@ export default function EmployeeCreateTaskModal({
 
     /* ================= FETCH BASE DATA ================= */
     useEffect(() => {
-        if (!open || !MAIN || !token) return;
+        // if (!open || !MAIN || !token) return;
+        if (!selectedProjectId || !MAIN || !token) {
+            setEmployees([]);
+            return;
+        }
 
         fetch(`${MAIN}/task/task-categories`, {
             headers: { Authorization: `Bearer ${token}` },
@@ -838,17 +842,37 @@ export default function EmployeeCreateTaskModal({
             .then((r) => r.json())
             .then((j) => setStages(Array.isArray(j) ? j : j?.data || []));
 
-        fetch(`${MAIN}/employee/all`, {
+        //     fetch(`${MAIN}/employee/all`, {
+        //         headers: { Authorization: `Bearer ${token}` },
+        //     })
+        //         .then((r) => r.json())
+        //         .then((j) => setEmployees(Array.isArray(j) ? j : j?.data || []));
+        // }, [open, MAIN, token]);
+
+
+
+        fetch(`${MAIN}/api/projects/${selectedProjectId}`, {
             headers: { Authorization: `Bearer ${token}` },
         })
             .then((r) => r.json())
-            .then((j) => setEmployees(Array.isArray(j) ? j : j?.data || []));
-    }, [open, MAIN, token]);
+            .then((data) => {
+                const list =
+                    data?.assignedEmployees ||
+                    data?.employees ||
+                    data?.data?.assignedEmployees ||
+                    [];
+
+                setEmployees(list);
+            })
+            .catch(() => setEmployees([]));
+    }, [selectedProjectId, MAIN, token]);
+
+
 
     /* ================= EMPLOYEE PROJECTS ================= */
     useEffect(() => {
-       // if (!open || !MAIN || !token || !projectId) return;
-console.log("Fetching projects for employeeId:", projectId);
+        // if (!open || !MAIN || !token || !projectId) return;
+        console.log("Fetching projects for employeeId:", projectId);
         fetch(`${MAIN}/api/projects/employee/${projectId}`, {
             headers: { Authorization: `Bearer ${token}` },
         })
@@ -1029,6 +1053,8 @@ console.log("Fetching projects for employeeId:", projectId);
                                     const pid = e.target.value;
                                     setSelectedProjectId(pid);
                                     setLabelProjectId(pid); // 🔥 milestone + label sync
+                                    // reset assigned employees when project changes
+                                    setAssignedEmployeeIds([]);
                                 }}
                                 required
                             >
@@ -1073,10 +1099,39 @@ console.log("Fetching projects for employeeId:", projectId);
                         {/* ASSIGNED TO */}
                         <div className="relative">
                             <label className="text-xs text-gray-600">Assigned To *</label>
-                            <button type="button" onClick={() => setAssignOpen((v) => !v)} className="flex h-10 w-full items-center justify-between rounded-md border bg-white px-3 py-2 text-sm">
-                                <span>{assignedEmployeeIds.length === 0 ? "Select employees" : `${assignedEmployeeIds.length} selected`}</span>
+                            {/* <button type="button" onClick={() => setAssignOpen((v) => !v)} */}
+
+                            {/* <button
+type="button"
+disabled={!selectedProjectId}
+onClick={() => setAssignOpen((v) => !v)}
+
+                             className="flex h-10 w-full items-center justify-between rounded-md border bg-white px-3 py-2 text-sm">
+                                <span>{assignedEmployeeIds.length === 0 ? "Select employees" : 
+                                `${assignedEmployeeIds.length} selected`}</span>
+                                <span>▾</span>
+                            </button> */}
+
+
+
+                            <button
+                                type="button"
+                                disabled={!selectedProjectId}
+                                onClick={() => setAssignOpen((v) => !v)}
+                                className="flex h-10 w-full items-center justify-between rounded-md border bg-white px-3 py-2 text-sm"
+                            >
+                                <span>
+                                    {!selectedProjectId
+                                        ? "Select project first"
+                                        : assignedEmployeeIds.length === 0
+                                            ? "Select employees"
+                                            : `${assignedEmployeeIds.length} selected`}
+                                </span>
+
                                 <span>▾</span>
                             </button>
+
+
                             {assignOpen && (
                                 <div className="absolute z-50 mt-1 w-full rounded-md border bg-white shadow-md max-h-56 overflow-auto">
                                     {employees.map((emp) => {
