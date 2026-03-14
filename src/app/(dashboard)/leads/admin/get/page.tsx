@@ -514,7 +514,8 @@ export function AddLeadModal({
 
           <div className="flex items-center gap-3">
             <input id="autoConvert" type="checkbox" checked={!!payload.autoConvertToClient} onChange={(e) => update("autoConvertToClient", e.target.checked)} />
-            <label htmlFor="autoConvert" className="text-sm">Auto convert on WIN</label>
+            <label htmlFor="autoConvert" className="text-sm">
+Auto Convert lead to client when the deal stage is set to "WIN".</label>
           </div>
         </div>
       </div>

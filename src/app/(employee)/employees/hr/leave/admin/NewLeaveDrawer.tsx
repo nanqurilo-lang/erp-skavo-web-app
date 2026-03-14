@@ -117,7 +117,7 @@ export default function NewLeaveDrawer({ open, onClose, onSuccess }: Props) {
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
 
       {/* DRAWER */}
-      <div className="absolute right-0 top-0 h-full w-[83vw] max-w-[82vw] bg-white shadow-xl overflow-y-auto">
+      <div className="absolute right-0 top-0 h-full w-[83vw] max-w-[83vw] bg-white shadow-xl overflow-y-auto">
         {/* HEADER */}
         <div className="flex items-center justify-between px-6 py-4 border-b">
           <h2 className="text-lg font-semibold">New Leave</h2>
