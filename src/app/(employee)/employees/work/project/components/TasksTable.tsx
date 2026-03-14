@@ -446,7 +446,7 @@ export default function TasksTable({ projectId }: { projectId: number }) {
                             onClick={(ev) => {
                               ev.stopPropagation();
                               setActionOpenFor(null);
-                              setStatusOpenFor((cur) => (cur === t.id ? null : t.id));
+                              // setStatusOpenFor((cur) => (cur === t.id ? null : t.id));
                             }}
                             className="inline-flex items-center gap-2 px-3 py-1 rounded-full border text-xs bg-white hover:bg-gray-50"
                             title="Change status"
