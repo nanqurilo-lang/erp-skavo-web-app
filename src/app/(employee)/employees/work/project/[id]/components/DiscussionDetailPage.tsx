@@ -216,10 +216,33 @@ export default function DiscussionDetailPage({
 
 
   /* ================= UPDATE MESSAGE ================= */
-  const updateMessage = async () => {
-    if (!editMessage) return;
+ 
+  // const updateMessage = async () => {
+  //   if (!editMessage) return;
 
-    await fetch(
+  //   await fetch(
+  //     `${BASE_URL}/api/projects/discussion-rooms/${roomId}/messages/${editMessage.id}`,
+  //     {
+  //       method: "PUT",
+  //       headers: {
+  //         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+  //         "Content-Type": "text/plain",
+  //       },
+  //       body: editContent,
+  //     }
+  //   );
+
+  //   setEditMessage(null);
+  //   setEditContent("");
+  // };
+
+
+
+const updateMessage = async () => {
+  if (!editMessage) return;
+
+  try {
+    const res = await fetch(
       `${BASE_URL}/api/projects/discussion-rooms/${roomId}/messages/${editMessage.id}`,
       {
         method: "PUT",
@@ -231,9 +254,27 @@ export default function DiscussionDetailPage({
       }
     );
 
+    if (!res.ok) {
+      throw new Error("Failed to update message");
+    }
+
+    // update UI instantly
+    setMessages((prev) =>
+      prev.map((msg) =>
+        msg.id === editMessage.id
+          ? { ...msg, content: editContent }
+          : msg
+      )
+    );
+
     setEditMessage(null);
     setEditContent("");
-  };
+  } catch (err) {
+    console.error(err);
+    alert("Unable to update reply");
+  }
+};
+
 
   /* ================= DELETE ================= */
   const deleteMessage = async (id: number) => {
@@ -282,7 +323,13 @@ export default function DiscussionDetailPage({
   /* ================= UI (UNCHANGED BELOW) ================= */
 
   return (
-    <div className="fixed inset-0 bg-white z-50 flex flex-col">
+    // <div className="fixed inset-0 bg-white z-50 flex flex-col">
+
+<div className="fixed inset-0 z-50 flex justify-end">
+  <div className="absolute inset-0 bg-black/40" onClick={onClose} />
+
+  <div className="relative w-[83%] h-full bg-white shadow-xl flex flex-col overflow-y-auto">
+
       {/* HEADER */}
       <div className="flex justify-between items-center px-6 py-4 border-b">
         <h3 className="text-lg font-medium">Discussion</h3>
@@ -387,7 +434,7 @@ export default function DiscussionDetailPage({
                 <div className="relative flex items-center gap-3 text-xs text-gray-400">
                   {formatTime(m.createdAt)}
 
-                  {isInitialMessage && isOwnMessage && (
+                  {/* {isInitialMessage && isOwnMessage && (
                     <button
                       onClick={() => {
                         setEditMessage(m);
@@ -396,9 +443,9 @@ export default function DiscussionDetailPage({
                       className="flex items-center gap-1 border px-3 py-1 rounded"
                     >
                       <Edit2 size={14} />
-                      Edit
+                      Edit 
                     </button>
-                  )}
+                  )} */}
 
                   {!isInitialMessage && (
                     <>
@@ -424,7 +471,7 @@ export default function DiscussionDetailPage({
                               className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-100 w-full"
                             >
                               <Edit2 size={14} />
-                              Edit
+                              Edit 
                             </button>
                           )}
 
@@ -519,6 +566,8 @@ export default function DiscussionDetailPage({
         </div>
       )}
     </div>
+    </div>
+  
   );
 }
 

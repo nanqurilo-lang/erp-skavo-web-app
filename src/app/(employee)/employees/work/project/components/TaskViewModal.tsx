@@ -687,12 +687,12 @@ export default function TaskViewModal({
 
                   {menuOpen && (
                     <div ref={menuRef} className="absolute right-10 top-10 w-48 bg-white border rounded-lg shadow-md p-2 z-50">
-                      <button onClick={handleSendReminderMenu} className="w-full text-left px-3 py-2 hover:bg-gray-100 text-sm">
-                        🔔 Send Reminder
-                      </button>
-                      <button onClick={handleEditTask} className="w-full text-left px-3 py-2 hover:bg-gray-100 text-sm">
+                      {/* <button onClick={handleSendReminderMenu} className="w-full text-left px-3 py-2 hover:bg-gray-100 text-sm">
+                        🔔 Send Reminder hv
+                      </button> */}
+                      {/* <button onClick={handleEditTask} className="w-full text-left px-3 py-2 hover:bg-gray-100 text-sm">
                         ✏️ Edit Task
-                      </button>
+                      </button> */}
                       <button onClick={handlePinTask} className="w-full text-left px-3 py-2 hover:bg-gray-100 text-sm">
                         📌 Pin Task
                       </button>

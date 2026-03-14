@@ -1107,7 +1107,7 @@ export default function LeadsAdminPage() {
             </div>
 
             {/* Footer */}
-            <div className="mt-6 flex items-center justify-between text-sm text-muted-foreground">
+            {/* <div className="mt-6 flex items-center justify-between text-sm text-muted-foreground">
               <div>Result per page-8</div>
               <div>Page 1 of 1 </div>
               <div className="flex items-center gap-3">
@@ -1118,7 +1118,7 @@ export default function LeadsAdminPage() {
                   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
                 </button>
               </div>
-            </div>
+            </div> */}
           </>
         )}
       </Card>

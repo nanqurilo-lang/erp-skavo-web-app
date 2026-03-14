@@ -217,10 +217,32 @@ export default function DiscussionDetailPage({
 
 
   /* ================= UPDATE MESSAGE ================= */
-  const updateMessage = async () => {
-    if (!editMessage) return;
 
-    await fetch(
+  // const updateMessage = async () => {
+  //   if (!editMessage) return;
+
+  //   await fetch(
+  //     `${BASE_URL}/api/projects/discussion-rooms/${roomId}/messages/${editMessage.id}`,
+  //     {
+  //       method: "PUT",
+  //       headers: {
+  //         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+  //         "Content-Type": "text/plain",
+  //       },
+  //       body: editContent,
+  //     }
+  //   );
+
+  //   setEditMessage(null);
+  //   setEditContent("");
+  // };
+
+
+const updateMessage = async () => {
+  if (!editMessage) return;
+
+  try {
+    const res = await fetch(
       `${BASE_URL}/api/projects/discussion-rooms/${roomId}/messages/${editMessage.id}`,
       {
         method: "PUT",
@@ -232,9 +254,27 @@ export default function DiscussionDetailPage({
       }
     );
 
+    if (!res.ok) {
+      throw new Error("Failed to update message");
+    }
+
+    // update UI instantly
+    setMessages((prev) =>
+      prev.map((msg) =>
+        msg.id === editMessage.id
+          ? { ...msg, content: editContent }
+          : msg
+      )
+    );
+
     setEditMessage(null);
     setEditContent("");
-  };
+  } catch (err) {
+    console.error(err);
+    alert("Unable to update reply");
+  }
+};
+
 
   /* ================= DELETE ================= */
   const deleteMessage = async (id: number) => {
