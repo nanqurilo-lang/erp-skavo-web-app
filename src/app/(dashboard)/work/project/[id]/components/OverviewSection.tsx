@@ -389,10 +389,14 @@ export default function ProjectDetailsPage() {
     : 0;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+
+        <main className="container mx-auto max-w-6xl px-4 py-8">
+
+
+    <div className="min-h-screen bg-gray-50 ">
       <div className="px-6 py-6">
         {/* Header */}
-        <div className="mb-4">
+        <div className="mb-2">
           <h1 className="text-3xl font-semibold text-gray-800">
             {project.name}
           </h1>
@@ -619,19 +623,20 @@ export default function ProjectDetailsPage() {
 
         {/* Keep the tasks table below as before */}
         {project && (
-          <div className="mt-6">
+          <div className="mt-6 overflow-x-auto">
             <TasksTable projectId={project.id} />
           </div>
         )}
 
         {/* other components shown for reference */}
         {/* <div className="mt-6 grid grid-cols-1 lg:grid-rows-2 gap-2"> */}
-          <div className="mt-6 space-y-6">
+          <div className="mt-6 space-y-6 overflow-x-auto">
           <ProjectMembersTable projectId={project.id} />
           <TimesheetsTableNew gatewayPath="https://6jnqmj85-80.inc1.devtunnels.ms/timesheets"   projectId={project.id} />
           <MilestonesTable projectId={project.id} />
         </div>
       </div>
     </div>
+    </main>
   );
 }
