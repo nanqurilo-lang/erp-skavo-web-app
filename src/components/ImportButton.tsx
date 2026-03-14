@@ -70,7 +70,9 @@ export default function ImportButton({
         variant="outline"
         disabled={loading}
         onClick={() => fileRef.current?.click()}
-        className="flex items-center gap-2"
+        // className="flex items-center gap-2"
+          className="flex items-center gap-2 bg-gradient-to-r from-voilet-800 to-indigo-600 hover:from-voilet-600 hover:to-indigo-700 text-white border-none"
+
       >
         <Upload className="w-4 h-4" />
         {loading ? "Importing..." : label}

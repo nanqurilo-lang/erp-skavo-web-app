@@ -41,6 +41,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { format } from "date-fns";
+import ImportButton from "@/components/ImportButton";
 
 interface Company {
   companyName: string;
@@ -407,6 +408,13 @@ export default function ClientsPage() {
         <Button onClick={() => router.push("/clients/new")}>
           + Add Client
         </Button>
+
+
+         <ImportButton
+      api="/clients/import/csv"
+      label="Import Clients"
+      onSuccess={() => fetchClients()}
+    />
 
         <div />
 

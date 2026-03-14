@@ -51,6 +51,7 @@ import {
 } from "lucide-react";
 import ProjectCalendarMonth from "./ProjectCalendarMonth";
 import { format } from "date-fns";
+import ImportButton from "@/components/ImportButton";
 
 const MAIN = process.env.NEXT_PUBLIC_MAIN;
 const projectsFromApi = `${MAIN}/api/projects`;
@@ -2579,6 +2580,13 @@ onChange={(e) => {
               >
                 + Add Project
               </Button>
+
+ <ImportButton
+      api="/api/projects/import/csv"
+      label="Import Projects"
+      onSuccess={() => getProjects(token ?? null)}
+    />
+
             </div>
 
             <div className="flex items-center gap-3">
