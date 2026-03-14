@@ -656,6 +656,8 @@ export default function TimesheetPage() {
         throw new Error("Failed to save entry");
       }
 
+
+     
       setShowLogModal(false);
       setEditingId(null);
       setForm({
@@ -881,7 +883,7 @@ export default function TimesheetPage() {
         </div>
 
         <div className="px-4 py-3 flex items-center justify-between text-sm text-gray-600">
-          <div>Result per page - {filtered.length}</div>
+          {/* <div>Result per page - {filtered.length}</div>
           <div className="flex items-center gap-2">
             <button
               className="p-2 rounded hover:bg-gray-100"
@@ -902,7 +904,7 @@ export default function TimesheetPage() {
             >
               <ChevronRight />
             </button>
-          </div>
+          </div> */}
         </div>
       </>
     );
