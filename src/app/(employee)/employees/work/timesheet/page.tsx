@@ -1536,13 +1536,15 @@ export default function TimesheetPage() {
 
       {/* Calendar full-screen modal */}
       {showCalendarModal && (
-        <div className="fixed inset-0 z-[10050] flex items-start justify-center pt-8 px-6">
+        // <div className="fixed inset-0 z-[10050] flex items-start justify-center pt-8 px-6">
+        <div className="fixed inset-0 z-[10020] flex justify-end">
           <div
             className="absolute inset-0 bg-black/40"
             onClick={() => setShowCalendarModal(false)}
           />
 
-          <div className="relative bg-white w-full max-w-[1180px] rounded-xl shadow-xl overflow-hidden">
+          {/* <div className="relative bg-white w-full max-w-[1180px] rounded-xl shadow-xl overflow-hidden"> */}
+          <div className="relative w-[83%] h-full bg-white shadow-xl flex flex-col overflow-y-auto">
             <div className="flex items-center justify-between px-6 py-4 border-b">
               <h3 className="text-xl font-semibold">Calendar</h3>
               <div className="flex items-center gap-2">
