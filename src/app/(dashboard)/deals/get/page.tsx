@@ -24,6 +24,7 @@ import AddFollowupModal from "../_components/AddFollowupModal";
 
 
 
+
 import {
   Table,
   TableBody,
@@ -46,6 +47,7 @@ import {
   SlidersHorizontal,
   Search,
 } from "lucide-react";
+import ImportButton from "@/components/ImportButton";
 
 type Followup = {
   id: number;
@@ -1015,6 +1017,12 @@ const matchesStage =
             <Button asChild >
               <Link href="/deals/create">+ Add Deal</Link>
             </Button>
+
+             <ImportButton
+    api="/deals/import/csv"
+    label="Import Deals"
+    onSuccess={() => mutateDeals()}
+  />
           </div>
 
           <div className="flex w-full items-center gap-3 md:max-w-2xl md:justify-end">
