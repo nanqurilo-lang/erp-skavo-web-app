@@ -3,6 +3,7 @@
 "use client";
 import React, { useEffect, useMemo, useState, useRef } from "react";
 import { UserIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { createPortal } from "react-dom";
 
 type EmployeeItem = {
   employeeId: string;
@@ -62,7 +63,7 @@ export default function TimesheetsTableNew({
 
 
   const actionMenuRef = useRef<HTMLDivElement | null>(null);
-
+const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
 
 
   const [form, setForm] = useState({
@@ -572,7 +573,7 @@ export default function TimesheetsTableNew({
                         <td className="px-4 py-4 align-top">{typeof row.durationHours === "number" ? `${row.durationHours}h` : "-"}</td>
                         <td className="px-4 py-4 align-top">
                           <div className="relative inline-block text-left">
-                            <button
+                            {/* <button
                               onClick={(e) => {
                                 e.stopPropagation();
                                 setActionOpenFor(actionOpenFor === row.id ? null : row.id);
@@ -580,12 +581,35 @@ export default function TimesheetsTableNew({
                               className="px-2 py-1 border rounded text-sm"
                             >
                               ⋮
-                            </button>
+                            </button> */}
 
-                            {actionOpenFor === row.id && (
+
+<button
+  onClick={(e) => {
+    e.stopPropagation();
+
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+
+    setMenuPosition({
+      top: rect.bottom + window.scrollY + 6,
+      left: rect.left + window.scrollX - 120,
+    });
+
+    setActionOpenFor(actionOpenFor === row.id ? null : row.id);
+  }}
+  className="px-2 py-1 border rounded text-sm"
+>
+  ⋮
+</button>
+
+
+
+
+                            {/* {actionOpenFor === row.id && (
                               <div
                                 ref={actionMenuRef}
-                                className="absolute right-0 bottom-full mb-2 z-[9999] w-40 bg-white border rounded-md shadow-lg text-sm"
+                                // className="absolute right-0 bottom-full mb-2 z-[9999] w-40 bg-white border rounded-md shadow-lg text-sm"
+                                className="absolute right-0 top-full mt-2 z-[9999] w-40 bg-white border rounded-md shadow-lg text-sm"
                               >
                                 <button
                                   onClick={() => openView(row)}
@@ -611,7 +635,49 @@ export default function TimesheetsTableNew({
                                   Delete
                                 </button>
                               </div>
-                            )}
+                            )} */}
+
+
+
+{actionOpenFor === row.id &&
+  createPortal(
+    <div
+      ref={actionMenuRef}
+      style={{
+        position: "absolute",
+        top: menuPosition.top,
+        left: menuPosition.left,
+        zIndex: 9999,
+      }}
+      className="w-40 bg-white border rounded-md shadow-lg text-sm"
+    >
+      <button
+        onClick={() => openView(row)}
+        className="w-full text-left px-4 py-2 hover:bg-gray-50"
+      >
+        View
+      </button>
+
+      <button
+        onClick={() => {
+          openModal(row);
+          setActionOpenFor(null);
+        }}
+        className="w-full text-left px-4 py-2 hover:bg-gray-50"
+      >
+        Edit
+      </button>
+
+      <button
+        onClick={() => openDelete(row)}
+        className="w-full text-left px-4 py-2 hover:bg-gray-50 text-red-600"
+      >
+        Delete
+      </button>
+    </div>,
+    document.body
+  )}
+
                           </div>
                         </td>
 
