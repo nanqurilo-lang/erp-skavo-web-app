@@ -18,7 +18,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { CalendarIcon } from "lucide-react";
-import { Popover, PopoverContent, PopoverTrigger } from "@radix-ui/react-popover";
+// import { Popover, PopoverContent, PopoverTrigger } from "@radix-ui/react-popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { format } from "date-fns";
 
 /* =======================
@@ -160,7 +165,7 @@ export function AddLeadModal({
     leadSource: "",
     addedBy: "",
     leadOwner: "",
-      autoConvertToClient: true,   // ✅ ADD THIS
+    autoConvertToClient: true,   // ✅ ADD THIS
 
     companyName: "",
     officialWebsite: "",
@@ -447,17 +452,17 @@ export function AddLeadModal({
 
 
 
-<div className="flex items-center gap-2 md:col-span-2">
-  <input
-    type="checkbox"
-    id="autoConvert"
-    checked={!!payload.autoConvertToClient}
-    onChange={(e) => update("autoConvertToClient", e.target.checked)}
-  />
-  <label htmlFor="autoConvert" className="text-sm">
-    Auto Convert lead to client when the deal stage is set to "WIN".
-  </label>
-</div>
+          <div className="flex items-center gap-2 md:col-span-2">
+            <input
+              type="checkbox"
+              id="autoConvert"
+              checked={!!payload.autoConvertToClient}
+              onChange={(e) => update("autoConvertToClient", e.target.checked)}
+            />
+            <label htmlFor="autoConvert" className="text-sm">
+              Auto Convert lead to client when the deal stage is set to "WIN".
+            </label>
+          </div>
 
 
         </div>
@@ -968,8 +973,16 @@ export default function LeadsAdminPage() {
 
             </PopoverTrigger>
 
-            <PopoverContent className="w-[320px] p-4">
-              <div className="space-y-4 bg-white border rounded-md p-4">
+            {/* <PopoverContent className="w-[320px] p-4"> */}
+            <PopoverContent
+              side="bottom"
+              align="start"
+              sideOffset={8}
+              className="w-[320px] p-0 z-50"
+            >
+
+              {/* <div className="space-y-4 bg-white border rounded-md p-4"> */}
+              <div className="space-y-4 bg-white p-4">
                 <h4 className="font-medium">Select Duration</h4>
 
                 {/* Start Date */}
