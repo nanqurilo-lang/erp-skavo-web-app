@@ -28,6 +28,8 @@ import { Calendar, CalendarIcon } from "lucide-react";
 import { createPortal } from "react-dom";
 import { format } from "date-fns";
 
+import ImportButton from "@/components/ImportButton";
+
 
 /* =======================
    Types & constants
@@ -1283,6 +1285,13 @@ export default function LeadsAdminPage() {
             <button onClick={() => setAddModalOpen(true)} className="inline-flex items-center gap-2 rounded-md bg-blue-700  px-4 py-2 text-white text-sm font-medium shadow-sm hover:bg-blue-600">
               + Add Lead
             </button>
+
+  <ImportButton
+    api="/leads/import/file"
+    label="Import Leads"
+    onSuccess={() => mutate()}
+  />
+
           </div>
 
           <div className="flex items-center gap-2">
