@@ -657,7 +657,7 @@ export default function TimesheetPage() {
       }
 
 
-     
+
       setShowLogModal(false);
       setEditingId(null);
       setForm({
@@ -1064,12 +1064,15 @@ export default function TimesheetPage() {
 
       {/* Log Time Modal */}
       {showLogModal && (
-        <div className="fixed inset-0 z-[10020] flex items-start justify-center pt-12 px-4">
+        // <div className="fixed inset-0 z-[10020] flex items-start justify-center pt-12 px-4">
+        <div className="fixed inset-0 z-[10020] flex justify-end">
           <div
             className="absolute inset-0 bg-black/40"
             onClick={() => setShowLogModal(false)}
           />
-          <div className="relative bg-white w-full max-w-4xl rounded-xl shadow-xl overflow-hidden">
+          {/* <div className="relative bg-white w-full max-w-4xl rounded-xl shadow-xl overflow-hidden"> */}
+          <div className="relative w-[83%] h-full bg-white shadow-xl flex flex-col overflow-y-auto">
+
             <div className="flex items-center justify-between px-6 py-4 border-b">
               <h3 className="text-lg font-semibold">
                 {editingId ? "Edit TimeLog" : "Log Time"}
