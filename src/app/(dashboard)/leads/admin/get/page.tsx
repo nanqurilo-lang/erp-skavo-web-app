@@ -29,6 +29,7 @@ import { createPortal } from "react-dom";
 import { format } from "date-fns";
 
 import ImportButton from "@/components/ImportButton";
+import ExportButton from "@/components/ExportButton";
 
 
 /* =======================
@@ -1290,6 +1291,12 @@ export default function LeadsAdminPage() {
     api="/leads/import/file"
     label="Import Leads"
     onSuccess={() => mutate()}
+  />
+
+  <ExportButton
+    api="/leads"
+    label="Export Leads"
+    fileName="leads.csv"
   />
 
           </div>

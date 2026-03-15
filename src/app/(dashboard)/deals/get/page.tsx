@@ -48,6 +48,7 @@ import {
   Search,
 } from "lucide-react";
 import ImportButton from "@/components/ImportButton";
+import ExportButton from "@/components/ExportButton";
 
 type Followup = {
   id: number;
@@ -1023,6 +1024,12 @@ const matchesStage =
     label="Import Deals"
     onSuccess={() => mutateDeals()}
   />
+
+  <ExportButton
+  api="/deals"
+  label="Export Deals"
+  fileName="deals.csv"
+/>
           </div>
 
           <div className="flex w-full items-center gap-3 md:max-w-2xl md:justify-end">

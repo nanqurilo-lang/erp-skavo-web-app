@@ -42,6 +42,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { format } from "date-fns";
 import ImportButton from "@/components/ImportButton";
+import ExportButton from "@/components/ExportButton";
 
 interface Company {
   companyName: string;
@@ -415,6 +416,14 @@ export default function ClientsPage() {
       label="Import Clients"
       onSuccess={() => fetchClients()}
     />
+
+
+
+    <ExportButton
+  api="/clients"
+  label="Export Clients"
+  fileName="clients.csv"
+/>
 
         <div />
 
