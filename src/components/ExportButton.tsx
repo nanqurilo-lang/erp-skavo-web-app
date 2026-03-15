@@ -76,7 +76,9 @@ export default function ExportButton({
       variant="outline"
       onClick={handleExport}
       disabled={loading}
-      className="flex items-center gap-2"
+    //   className="flex items-center gap-2 bg-linear-to-r from-indigo-500 via-purple-500 to-pink-500"
+    className="flex items-center gap-2 bg-gradient-to-r from-indigo-500 to-teal-500 hover:from-voilet-600 hover:to-indigo-700 text-white border-none"
+
     >
       <Download className="w-4 h-4" />
       {loading ? "Exporting..." : label}

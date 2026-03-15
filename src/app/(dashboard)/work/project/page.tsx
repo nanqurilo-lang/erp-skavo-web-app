@@ -52,6 +52,7 @@ import {
 import ProjectCalendarMonth from "./ProjectCalendarMonth";
 import { format } from "date-fns";
 import ImportButton from "@/components/ImportButton";
+import ExportButton from "@/components/ExportButton";
 
 const MAIN = process.env.NEXT_PUBLIC_MAIN;
 const projectsFromApi = `${MAIN}/api/projects`;
@@ -2592,6 +2593,11 @@ onChange={(e) => {
       onSuccess={() => getProjects(token ?? null)}
     />
 
+<ExportButton
+  api="/projects"
+  label="Export Projects"
+  fileName="projects.csv"
+/>
 
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2 border rounded px-2 py-1 bg-white">
