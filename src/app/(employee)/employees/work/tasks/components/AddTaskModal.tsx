@@ -67,9 +67,11 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
   const [categories, setCategories] = useState<any[]>([]);
   const [projects, setProjects] = useState<any[]>([]);
   const [stages, setStages] = useState<any[]>([]);
-  const [employees, setEmployees] = useState<any[]>([]);
+  // const [employees, setEmployees] = useState<any[]>([]);
   const [milestones, setMilestones] = useState<any[]>([]);
   const [labels, setLabels] = useState<any[]>([]);
+
+  const [projectTasks, setProjectTasks] = useState<any[]>([]);
 
   // ---------------- API FETCH ----------------
   const token =
@@ -145,13 +147,27 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
     setLabels(data);
   };
 
+
+// ✅ ADD HERE
+const fetchProjectTasks = async (pid: string) => {
+  if (!pid) return;
+
+  const res = await fetch(`${MAIN}/projects/${pid}/tasks`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  const data = await res.json();
+  setProjectTasks(data);
+};
+
+
   // Initial load
   useEffect(() => {
     if (open) {
       fetchCategories();
       fetchProjects();
       fetchStages();
-      fetchEmployees();
+      // fetchEmployees();
     }
   }, [open]);
 
@@ -160,8 +176,29 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
     if (projectId) {
       fetchMilestones(projectId);
       fetchLabels(projectId);
+          fetchProjectTasks(projectId); // ✅ added
+
     }
   }, [projectId]);
+
+
+
+const projectAssignedEmployees = React.useMemo(() => {
+  if (!projectTasks.length) return [];
+
+  const unique = new Map();
+
+  projectTasks.forEach((task) => {
+    task.assignedEmployees?.forEach((emp: any) => {
+      if (!unique.has(emp.employeeId)) {
+        unique.set(emp.employeeId, emp);
+      }
+    });
+  });
+
+  return Array.from(unique.values());
+}, [projectTasks]);
+
 
   // Multi-select toggle
   const toggle = (arr: string[], v: string) =>
@@ -188,19 +225,37 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
       fd.append("milestoneId", milestoneId); // REQUIRED
 
       // Arrays
-      assignedEmployeeIds.forEach((id) => fd.append("assignedEmployeeIds", id));
+      // assignedEmployeeIds.forEach((id) => fd.append("assignedEmployeeIds", id));
+      assignedEmployeeIds.forEach((id) =>
+  fd.append("assignedEmployeeIds[]", id)
+);
 
       labelIds.forEach((id) => fd.append("labelIds", id));
 
       if (file) fd.append("taskFile", file);
 
-      const res = await fetch(`${MAIN}/projects/tasks`, {
-        method: "POST",
-        body: fd,
-        // TODO: yaha pe agar token chahiye ho to header add karna
-        headers: { Authorization: `Bearer ${token}` },
-        // credentials: "include",
-      });
+      // const res = await fetch(`${MAIN}/projects/tasks`, {
+      //   method: "POST",
+      //   body: fd,
+      //   // TODO: yaha pe agar token chahiye ho to header add karna
+      //   headers: { Authorization: `Bearer ${token}` },
+      //   // credentials: "include",
+      // });
+
+
+const res = await fetch(`${MAIN}/projects/tasks`, {
+  method: "POST",
+  body: fd,
+  headers: { Authorization: `Bearer ${token}` },
+});
+
+const result = await res.json();
+
+if (!res.ok) {
+  console.log("API ERROR:", result);
+  alert(result.message || "Failed to create task");
+  return;
+}
 
       if (!res.ok) throw new Error("Failed");
 
@@ -333,7 +388,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
               choose only project Assign members
             </span>
             <div className="grid grid-cols-2 gap-2 pt-2">
-              {employees.map((emp) => (
+              {/* {employees.map((emp) => (
                 <div key={emp.employeeId} className="flex items-center gap-2">
                   <Checkbox
                     checked={assignedEmployeeIds.includes(emp.employeeId)}
@@ -345,7 +400,32 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
                   />
                   <span className="text-sm">{emp.name}</span>
                 </div>
-              ))}
+              ))} */}
+
+
+
+
+{projectAssignedEmployees.length > 0 ? (
+  projectAssignedEmployees.map((emp) => (
+    <div key={emp.employeeId} className="flex items-center gap-2">
+      <Checkbox
+        checked={assignedEmployeeIds.includes(emp.employeeId)}
+        onCheckedChange={() =>
+          setAssignedEmployeeIds(
+            toggle(assignedEmployeeIds, emp.employeeId)
+          )
+        }
+      />
+      <span className="text-sm">{emp.name}</span>
+    </div>
+  ))
+) : (
+  <p className="text-sm text-muted-foreground">
+    Select project to see assigned employees
+  </p>
+)}
+
+
             </div>
           </div>
 
