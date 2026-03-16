@@ -1,12 +1,19 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+// import {
+//   Dialog,
+//   DialogContent,
+//   DialogHeader,
+//   DialogTitle,
+// } from "@/components/ui/dialog";
+
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -208,20 +215,44 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
 
   // ---------------- UI ----------------
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent 
-      className="max-h-[95vh] w-[900px] overflow-y-auto rounded-xl"
-     >
+    // <Dialog open={open} onOpenChange={onOpenChange}>
+    //   <DialogContent 
+    //   className="max-h-[95vh] w-[900px] overflow-y-auto rounded-xl"
+    //  >
 
 
-        <DialogHeader>
+<Sheet open={open} onOpenChange={onOpenChange}>
+  <SheetContent
+     side="right"
+     className="
+      w-[83%]
+     sm:max-w-[83%]
+     max-w-[83%]
+       h-screen
+       overflow-y-auto
+       p-0
+     "
+   >
+
+
+        {/* <DialogHeader>
           <DialogTitle>Add New Task </DialogTitle>
-        </DialogHeader>
+        </DialogHeader> */}
+
+<SheetHeader className="px-6 py-4 border-b bg-white">
+  <SheetTitle className="text-lg font-semibold">
+    Add New Task
+  </SheetTitle>
+</SheetHeader>
+
 
         {/* FORM */}
-        <div className="grid gap-5">
+        {/* <div className="grid gap-5"> */}
+
+        <div className="p-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Title */}
-          <div>
+          {/* <div> */}
+          <div className="lg:col-span-2">
             <Label>Title *</Label>
             <Input value={title} onChange={(e) => setTitle(e.target.value)} />
           </div>
@@ -295,7 +326,8 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
           </div>
 
           {/* Assigned Employees */}
-          <div>
+         <div className="lg:col-span-2">
+          {/* <div> */}
             <Label>Assign To *</Label>{" "}
             <span className="text-sm text-gray-300">
               choose only project Assign members
@@ -318,7 +350,8 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
           </div>
 
           {/* Labels */}
-          <div>
+        <div className="lg:col-span-2">
+          {/* <div> */}
             <Label>Labels *</Label>
             <div className="grid grid-cols-2 gap-2 pt-2">
               {labels.map((l) => (
@@ -357,7 +390,8 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
           </div>
 
           {/* Description */}
-          <div>
+          <div className="lg:col-span-2">
+          {/* <div> */}
             <Label>Description *</Label>
             <Textarea
               value={description}
@@ -416,7 +450,8 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
           </div>
 
           {/* File Upload */}
-          <div>
+          {/* <div> */}
+          <div className="lg:col-span-2">
             <Label>Attachment *</Label>
             <Input
               type="file"
@@ -426,7 +461,8 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
         </div>
 
         {/* FOOTER */}
-        <div className="flex justify-end gap-3 pt-4">
+        {/* <div className="flex justify-end gap-3 pt-4"> */}
+        <div className="sticky bottom-0 bg-white border-t px-6 py-4 flex justify-end gap-3">
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
@@ -439,8 +475,10 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
             )}
           </Button>
         </div>
-      </DialogContent>
-    </Dialog>
+      {/* </DialogContent>
+    </Dialog> */}
+    </SheetContent>
+    </Sheet>
   );
 };
 
