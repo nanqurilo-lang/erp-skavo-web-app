@@ -1,12 +1,14 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
+
 
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -250,102 +252,110 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
 
   // ---------------- UI ----------------
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent
-        className="
-    w-full
-    max-w-[95vw]
-    md:max-w-[1200px]
-    h-[95vh]
-    overflow-y-auto
-    rounded-2xl
-    p-6
-  "
-      >
-        <DialogHeader className="px-6 py-4 border-b bg-slate-50">
-          <DialogTitle className="text-lg font-semibold">
-            Add New Task 
-          </DialogTitle>
-        </DialogHeader>
+  
+<Sheet open={open} onOpenChange={onOpenChange}>
+  <SheetContent
+    side="right"
+    className="
+     w-[83%]
+    sm:max-w-[83%]
+    max-w-[83%]
+      h-screen
+      overflow-y-auto
+      p-0
+    "
+  >
+
+
+
+<SheetHeader className="px-6 py-4 border-b bg-slate-50">
+  <SheetTitle className="text-lg font-semibold">
+    Add New Task
+  </SheetTitle>
+</SheetHeader>
+
 
         {/* FORM */}
-        <div className="grid gap-5">
+        <div className="p-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Title */}
-          <div>
+            <div className="lg:col-span-2">
+
             <Label>Title *</Label>
             <Input value={title} onChange={(e) => setTitle(e.target.value)} />
           </div>
 
-          {/* Category */}
-          <div>
-            <Label>Category *</Label>
-            <Select onValueChange={setCategory}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select category" />
-              </SelectTrigger>
-              <SelectContent>
-                {categories.map((c) => (
-                  <SelectItem value={String(c.id)} key={c.id}>
-                    {c.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+       {/* Category */} 
+<div>
+  <Label>Category *</Label>
+  <Select onValueChange={setCategory}>
+    <SelectTrigger>
+      <SelectValue placeholder="Select category" />
+    </SelectTrigger>
+    <SelectContent>
+      {categories.map((c) => (
+        <SelectItem value={String(c.id)} key={c.id}>
+          {c.name}
+        </SelectItem>
+      ))}
+    </SelectContent>
+  </Select>
+</div>
 
-          {/* Project */}
-          <div>
-            <Label>Project *</Label>
-            <Select onValueChange={setProjectId}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select project" />
-              </SelectTrigger>
-              <SelectContent>
-                {projects.map((p) => (
-                  <SelectItem value={String(p.id)} key={p.id}>
-                    {p.shortCode} - {p.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+<div>
+  <Label>Project *</Label>
+  <Select onValueChange={setProjectId}>
+    <SelectTrigger>
+      <SelectValue placeholder="Select project" />
+    </SelectTrigger>
+    <SelectContent>
+      {projects.map((p) => (
+        <SelectItem value={String(p.id)} key={p.id}>
+          {p.shortCode} - {p.name}
+        </SelectItem>
+      ))}
+    </SelectContent>
+  </Select>
+</div>
 
-          {/* Milestones */}
-          <div>
-            <Label>Milestone *</Label>
-            <Select onValueChange={setMilestoneId}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select milestone" />
-              </SelectTrigger>
-              <SelectContent>
-                {milestones.map((m) => (
-                  <SelectItem value={String(m.id)} key={m.id}>
-                    {m.title}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
 
-          {/* Stage */}
-          <div>
-            <Label>Task Stage  *</Label>
-            <Select onValueChange={setTaskStageId}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select stage" />
-              </SelectTrigger>
-              <SelectContent>
-                {stages.map((s) => (
-                  <SelectItem value={String(s.id)} key={s.id}>
-                    {s.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+
+
+<div>
+  <Label>Milestone *</Label>
+  <Select onValueChange={setMilestoneId}>
+    <SelectTrigger>
+      <SelectValue placeholder="Select milestone" />
+    </SelectTrigger>
+    <SelectContent>
+      {milestones.map((m) => (
+        <SelectItem value={String(m.id)} key={m.id}>
+          {m.title}
+        </SelectItem>
+      ))}
+    </SelectContent>
+  </Select>
+</div>
+
+<div>
+  <Label>Task Stage *</Label>
+  <Select onValueChange={setTaskStageId}>
+    <SelectTrigger>
+      <SelectValue placeholder="Select stage" />
+    </SelectTrigger>
+    <SelectContent>
+      {stages.map((s) => (
+        <SelectItem value={String(s.id)} key={s.id}>
+          {s.name}
+        </SelectItem>
+      ))}
+    </SelectContent>
+  </Select>
+</div>
+
+
 
           {/* Assigned Employees */}
-          <div>
+          <div className="lg:col-span-2">
             <Label>Assign To *</Label>
             <div className="grid grid-cols-2 gap-2 pt-2">
 
@@ -371,7 +381,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
 
 
           {/* Labels */}
-          <div>
+         <div className="lg:col-span-2">
             <div className="flex items-center justify-between">
               <Label>Labels *</Label>
               <Button
@@ -411,35 +421,37 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
             onCreated={() => fetchLabels(projectId)}
           />
 
-          {/* Dates */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label>Start Date *</Label>
-              <Input
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-              />
-            </div>
+         
 
-            <div>
-              <Label>Due Date *</Label>
-              <Input
-                type="date"
-                value={dueDate}
-                onChange={(e) => setDueDate(e.target.value)}
-              />
-            </div>
-          </div>
+<div>
+  <Label>Start Date *</Label>
+  <Input
+    type="date"
+    value={startDate}
+    onChange={(e) => setStartDate(e.target.value)}
+  />
+</div>
 
-          {/* Description */}
-          <div>
-            <Label>Description *</Label>
-            <Textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
-          </div>
+<div>
+  <Label>Due Date *</Label>
+  <Input
+    type="date"
+    value={dueDate}
+    onChange={(e) => setDueDate(e.target.value)}
+  />
+</div>
+
+
+        
+
+<div className="lg:col-span-2">
+  <Label>Description *</Label>
+  <Textarea
+    value={description}
+    onChange={(e) => setDescription(e.target.value)}
+  />
+</div>
+
 
           {/* Priority */}
           <div>
@@ -492,7 +504,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
           </div>
 
           {/* File Upload */}
-          <div>
+        <div className="lg:col-span-2">
             <Label>Attachment *</Label>
             <Input
               type="file"
@@ -502,7 +514,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
         </div>
 
         {/* FOOTER */}
-        <div className="flex justify-end gap-3 pt-4">
+        <div className="sticky bottom-0 bg-white border-t px-6 py-4 flex justify-end gap-3">
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
@@ -515,7 +527,10 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
             )}
           </Button>
         </div>
-      </DialogContent>
-    </Dialog>
+     
+
+
+    </SheetContent>
+</Sheet>
   );
 };
