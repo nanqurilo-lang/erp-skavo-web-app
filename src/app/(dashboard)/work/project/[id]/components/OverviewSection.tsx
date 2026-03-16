@@ -386,7 +386,7 @@ export default function ProjectDetailsPage() {
 
   const totalHours = project.totalTimeLoggedMinutes
     ? Math.floor(project.totalTimeLoggedMinutes / 60)
-    : 0;
+    : project.hoursEstimate ||0;
 
   return (
 
