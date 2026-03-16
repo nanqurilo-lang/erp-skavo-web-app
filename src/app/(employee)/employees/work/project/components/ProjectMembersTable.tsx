@@ -171,24 +171,24 @@ export default function ProjectMembersTableFetch({
   // ------------------------------------------
   // REMOVE Project Admin Only
   // ------------------------------------------
-  const handleRemoveAdmin = async () => {
-    if (!confirm("Remove Project Admin?")) return;
+  // const handleRemoveAdmin = async () => {
+  //   if (!confirm("Remove Project Admin?")) return;
 
-    try {
-      setActionLoadingId("admin");
-      setError(null);
+  //   try {
+  //     setActionLoadingId("admin");
+  //     setError(null);
 
-      const url = `${MAIN}/projects/${projectId}/admin`;
+  //     const url = `${MAIN}/projects/${projectId}/admin`;
 
-      await api.delete(url);
+  //     await api.delete(url);
 
-      fetchProject();
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setActionLoadingId(null);
-    }
-  };
+  //     fetchProject();
+  //   } catch (err: any) {
+  //     setError(err.message);
+  //   } finally {
+  //     setActionLoadingId(null);
+  //   }
+  // };
 
   // ------------------------------------------
   // SEARCH FILTER
@@ -271,9 +271,9 @@ export default function ProjectMembersTableFetch({
                 </td>
 
                 {/* Role */}
-                <td className="px-4 py-4">
+                {/* <td className="px-4 py-4">
 
-                  <span className="ml-1">Project Admin</span>
+                  <span className="ml-1">--</span>
 
                   {project?.projectAdminId === m.employeeId && (
                     <button
@@ -281,11 +281,23 @@ export default function ProjectMembersTableFetch({
                       disabled={actionLoadingId}
                       className="ml-3 px-3 py-1 border rounded text-sm bg-white"
                     >
-                      {actionLoadingId ? "Removing..." : "Remove Admin"}
+                      {actionLoadingId ? "Removing..." : "Admin"}
                     </button>
                   )}
-                </td>
+                </td> */}
 
+
+
+
+<td className="px-4 py-4">
+  {project?.projectAdminId === m.employeeId ? (
+    <span className="px-2 py-1 text-xs rounded bg-green-100 text-green-700">
+      Admin
+    </span>
+  ) : (
+    <span className="ml-1">--</span>
+  )}
+</td>
 
               </tr>
             ))}
