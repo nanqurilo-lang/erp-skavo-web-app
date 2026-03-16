@@ -255,7 +255,8 @@ const fetchProjectEmployees = async (pid: string) => {
                 </div>
 
                 {/* BODY */}
-                <div className="p-6 space-y-6">
+                {/* <div className="p-6 space-y-6"> */}
+                <div className="p-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {loading ? (
                         <div className="flex justify-center py-20">
                             <Loader2 className="w-8 h-8 animate-spin text-gray-500" />
@@ -263,7 +264,8 @@ const fetchProjectEmployees = async (pid: string) => {
                     ) : (
                         <>
                             {/* ------------ Title ------------ */}
-                            <div>
+                            {/* <div> */}
+                            <div className="lg:col-span-2">
                                 <Label>Title *</Label>
                                 <Input
                                     value={title}
@@ -358,31 +360,10 @@ const fetchProjectEmployees = async (pid: string) => {
                             </div>
 
                             {/* ------------ Assign Employees ------------ */}
-                            <div>
+                            {/* <div> */}
+                            <div className="lg:col-span-2">
                                 <Label>Assign To</Label>
-                                {/* <div className="grid grid-cols-2 gap-2 pt-2">
-                                    {employees.map((emp) => (
-                                        <label
-                                            key={emp.employeeId}
-                                            className="flex items-center gap-2"
-                                        >
-                                            <Checkbox
-                                                checked={assignedEmployeeIds.includes(
-                                                    emp.employeeId
-                                                )}
-                                                onCheckedChange={() =>
-                                                    setAssignedEmployeeIds(
-                                                        toggle(
-                                                            assignedEmployeeIds,
-                                                            emp.employeeId
-                                                        )
-                                                    )
-                                                }
-                                            />
-                                            {emp.name}
-                                        </label>
-                                    ))}
-                                </div> */}
+                              
 
 {projectId ? (
     <div className="grid grid-cols-2 gap-2 pt-2">
@@ -409,7 +390,8 @@ const fetchProjectEmployees = async (pid: string) => {
                             </div>
 
                             {/* ------------ Labels ------------ */}
-                            <div>
+                            {/* <div> */}
+                            <div className="lg:col-span-2">
                                 <Label>Labels</Label>
                                 <div className="grid grid-cols-2 gap-2 pt-2">
                                     {labels.map((l) => (
@@ -453,7 +435,8 @@ const fetchProjectEmployees = async (pid: string) => {
                             </div>
 
                             {/* ------------ Description ------------ */}
-                            <div>
+                            {/* <div> */}
+                            <div className="lg:col-span-2">
                                 <Label>Description</Label>
                                 <Textarea
                                     value={description}
@@ -477,7 +460,8 @@ const fetchProjectEmployees = async (pid: string) => {
                             </div>
 
                             {/* ------------ Toggles ------------ */}
-                            <div className="grid grid-cols-2 gap-4">
+                            {/* <div className="grid grid-cols-2 gap-4"> */}
+                            <div className="lg:col-span-2 grid grid-cols-3 gap-4">
                                 <label className="flex items-center gap-2">
                                     <Checkbox
                                         checked={isPrivate}
@@ -521,7 +505,8 @@ const fetchProjectEmployees = async (pid: string) => {
                 </div>
 
                 {/* FOOTER */}
-                <div className="flex justify-end gap-3 p-6 border-t bg-white">
+                {/* <div className="flex justify-end gap-3 p-6 border-t bg-white"> */}
+                <div className="sticky bottom-0 flex justify-end gap-3 p-6 border-t bg-white">
                     <button
                         onClick={() => onOpenChange(false)}
                         className="px-5 py-2 rounded-md border"
