@@ -318,7 +318,21 @@ export default function ProjectDetailsPage() {
   >("overview");
 
   // New: metrics state fetched from /projects/{projectId}/metrics
-  const [metrics, setMetrics] = useState<any | null>(null);
+  // const [metrics, setMetrics] = useState<any | null>(null);
+
+
+  type ProjectMetrics = {
+    totalTimeLoggedMinutes?: number;
+    currency?: string;
+    earning?: number | string;
+    expenses?: number;
+    profit?: number;
+    hoursEstimate?: number;
+  };
+
+  const [metrics, setMetrics] = useState<ProjectMetrics | null>(null);
+
+
   const [metricsLoading, setMetricsLoading] = useState(false);
 
   // Fetch project; fallback demo so UI always matches preview
@@ -408,7 +422,12 @@ export default function ProjectDetailsPage() {
   // derive totals: prefer metrics if available, otherwise fall back to project
   const totalMinutes =
     metrics?.totalTimeLoggedMinutes ?? project.totalTimeLoggedMinutes ?? 0;
-  const totalHours = Math.floor((totalMinutes || 0) / 60);
+  // const totalHours = Math.floor((totalMinutes || 0) / 60);
+
+
+  const totalHours = Math.floor(totalMinutes / 60);
+  const totalMinutesRemaining = totalMinutes % 60;
+
   const currency = metrics?.currency ?? project.currency ?? "$";
   const earnings =
     typeof metrics?.earning === "number"
@@ -583,86 +602,90 @@ export default function ProjectDetailsPage() {
               <h3 className="text-lg font-medium mb-4">Task Statistics</h3>
               <TaskStatistics projectId={project.id} />
 
-             
+
             </div>
 
 
 
- {/* Single Hours Logged chart placed immediately below TaskStatistics (only once) */}
-              <div className="mt-6 bg-white rounded border border-gray-200 p-4 shadow-sm">
-                <div className="flex items-center justify-between mb-3">
-                  <h4 className="text-sm font-medium">Hours Logged</h4>
-                  <div className="text-xs text-gray-500">
-                    {metricsLoading ? "Loading..." : `${totalHours} hrs`}
+            {/* Single Hours Logged chart placed immediately below TaskStatistics (only once) */}
+            <div className="mt-6 bg-white rounded border border-gray-200 p-4 shadow-sm">
+              <div className="flex items-center justify-between mb-3">
+                <h4 className="text-sm font-medium">Hours Logged</h4>
+                <div className="text-xs text-gray-500">
+                  {/* {metricsLoading ? "Loading..." : `${totalHours} hrs`} */}
+                  {metricsLoading
+                    ? "Loading..."
+                    : `${totalHours} hrs ${totalMinutesRemaining} min`}
+                </div>
+              </div>
+
+              {/* Chart area: bar columns and horizontal progress line (visual match to your screenshot) */}
+              <div className="h-40">
+                <div className="flex items-end gap-8 h-full">
+                  {/* Planned column */}
+                  <div className="flex-1 text-center">
+                    <div className="text-xs text-gray-500 mb-2">Planned</div>
+                    <div className="h-28 flex items-end justify-center">
+                      <div
+                        className="w-24 rounded-t-md"
+                        style={{
+                          height: `${Math.max(30, plannedBarWidth)}%`,
+                          background: "#16a34a",
+                        }}
+                      >
+                        <div className="text-xs text-white text-center py-1">
+                          {hoursEstimate} hrs
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Actual column */}
+                  <div className="flex-1 text-center">
+                    <div className="text-xs text-gray-500 mb-2">Actual</div>
+                    <div className="h-28 flex items-end justify-center">
+                      <div
+                        className="w-24 rounded-t-md"
+                        style={{
+                          height: `${Math.max(30, actualBarWidth)}%`,
+                          background: "#ef4444",
+                        }}
+                      >
+                        <div className="text-xs text-white text-center py-1">
+                          {totalHours} hrs
+                          {/* {hoursEstimate}h {totalMinutesRemaining}m */}
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
-                {/* Chart area: bar columns and horizontal progress line (visual match to your screenshot) */}
-                <div className="h-40">
-                  <div className="flex items-end gap-8 h-full">
-                    {/* Planned column */}
-                    <div className="flex-1 text-center">
-                      <div className="text-xs text-gray-500 mb-2">Planned</div>
-                      <div className="h-28 flex items-end justify-center">
-                        <div
-                          className="w-24 rounded-t-md"
-                          style={{
-                            height: `${Math.max(30, plannedBarWidth)}%`,
-                            background: "#16a34a",
-                          }}
-                        >
-                          <div className="text-xs text-white text-center py-1">
-                            {hoursEstimate} hrs
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Actual column */}
-                    <div className="flex-1 text-center">
-                      <div className="text-xs text-gray-500 mb-2">Actual</div>
-                      <div className="h-28 flex items-end justify-center">
-                        <div
-                          className="w-24 rounded-t-md"
-                          style={{
-                            height: `${Math.max(30, actualBarWidth)}%`,
-                            background: "#ef4444",
-                          }}
-                        >
-                          <div className="text-xs text-white text-center py-1">
-                            {totalHours} hrs
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                {/* horizontal progress line */}
+                <div className="mt-4">
+                  <div className="h-2 bg-gray-200 rounded overflow-hidden">
+                    <div
+                      className="h-2 rounded"
+                      style={{
+                        width: `${hoursProgressPct}%`,
+                        background:
+                          hoursProgressPct > 100 ? "#ef4444" : "#16a34a",
+                      }}
+                    />
                   </div>
-
-                  {/* horizontal progress line */}
-                  <div className="mt-4">
-                    <div className="h-2 bg-gray-200 rounded overflow-hidden">
-                      <div
-                        className="h-2 rounded"
-                        style={{
-                          width: `${hoursProgressPct}%`,
-                          background:
-                            hoursProgressPct > 100 ? "#ef4444" : "#16a34a",
-                        }}
-                      />
-                    </div>
-                    <div className="mt-2 text-xs text-gray-500 flex justify-between">
-                      <span>{hoursProgressPct}% of estimate</span>
-                      <span>
-                        {currency}
-                        {(earnings ?? 0).toLocaleString(undefined, {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        })}
-                      </span>
-                    </div>
+                  <div className="mt-2 text-xs text-gray-500 flex justify-between">
+                    <span>{hoursProgressPct}% of estimate</span>
+                    {/* <span>
+                      {currency}
+                      {(earnings ?? 0).toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
+                    </span> */}
                   </div>
                 </div>
               </div>
-              {/* end Hours Logged chart */}
+            </div>
+            {/* end Hours Logged chart */}
 
 
           </div>

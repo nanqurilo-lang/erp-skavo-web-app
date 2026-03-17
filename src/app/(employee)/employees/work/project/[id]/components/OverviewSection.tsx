@@ -43,6 +43,20 @@ interface Project {
   archivedAt?: string | null;
 }
 
+
+
+
+type ProjectMetrics = {
+  totalTimeLoggedMinutes?: number;
+  // currency?: string;
+  // earning?: number | string;
+  // expenses?: number;
+  // profit?: number;
+  hoursEstimate?: number;
+};
+
+
+
 type StatusItem = {
   id: number;
   name: string;
@@ -306,6 +320,12 @@ export default function ProjectDetailsPage() {
   const params = useParams() as any;
   const { id } = params || {};
 
+
+
+
+   const [metrics, setMetrics] = useState<ProjectMetrics | null>(null);
+    const [metricsLoading, setMetricsLoading] = useState(false);
+
   const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<
@@ -372,18 +392,93 @@ export default function ProjectDetailsPage() {
     }
   };
 
+
+
+ // 👇 PASTE HERE
+  const getProjectMetrics = async (accessToken: string) => {
+    try {
+      setMetricsLoading(true);
+
+      const res = await fetch(`${MAIN}/projects/${id}/metrics`, {
+        headers: accessToken
+          ? { Authorization: `Bearer ${accessToken}` }
+          : undefined,
+      });
+
+      if (!res.ok) throw new Error("Failed to fetch metrics");
+
+      const data = await res.json();
+      setMetrics(data);
+    } catch (err) {
+      console.error("Metrics fetch failed:", err);
+      setMetrics(null);
+    } finally {
+      setMetricsLoading(false);
+    }
+  };
+
+
+
+
+
   useEffect(() => {
     const token = localStorage.getItem("accessToken") || "";
     getProjectDetails(token);
+        getProjectMetrics(token);
+
   }, [id]);
 
   if (loading) return <p className="p-8 text-center">Loading project...</p>;
   if (!project)
     return <p className="p-8 text-center text-red-600">Project not found</p>;
 
-  const totalHours = project.totalTimeLoggedMinutes
-    ? Math.floor(project.totalTimeLoggedMinutes / 60)
-    : project.hoursEstimate ||0;
+  // const totalHours = project.totalTimeLoggedMinutes
+  //   ? Math.floor(project.totalTimeLoggedMinutes / 60)
+  //   : project.hoursEstimate ||0;
+
+
+
+const totalMinutes = project.totalTimeLoggedMinutes ?? 0;
+
+const totalHours = Math.floor(totalMinutes / 60);
+const totalMinutesRemaining = totalMinutes % 60;
+
+const hoursEstimateMinutes = metrics?.hoursEstimate ?? project.hoursEstimate ?? 0;
+const hoursEstimate = Math.floor(hoursEstimateMinutes / 60);
+
+
+const maxHours = Math.max(hoursEstimate, totalHours, 1);
+
+const plannedBarHeight = (hoursEstimate / maxHours) * 100;
+const actualBarHeight = (totalHours / maxHours) * 100;
+
+
+
+  // safe percentages for progress bars
+  const hoursProgressPct =
+    hoursEstimate > 0
+      ? Math.min(100, Math.round((totalHours / hoursEstimate) * 100))
+      : 0;
+  const plannedBarWidth =
+    hoursEstimate > 0
+      ? Math.min(
+        100,
+        Math.round(
+          (hoursEstimate / Math.max(hoursEstimate, totalHours || 1)) * 100
+        )
+      )
+      : 50;
+  const actualBarWidth = Math.min(
+    100,
+    Math.round((totalHours / Math.max(hoursEstimate, totalHours || 1)) * 100)
+  );
+
+
+
+
+
+  
+
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -425,7 +520,8 @@ export default function ProjectDetailsPage() {
                         textAnchor="middle"
                         fill="#374151"
                       >
-                        {project.progressPercent}%
+                        {/* {project.progressPercent}% */}
+                        {project.progressPercent ?? 0}%
                       </text>
                     </svg>
                   </div>
@@ -495,6 +591,105 @@ export default function ProjectDetailsPage() {
             <div className="lg:col-span-2 bg-white rounded-xl border border-gray-200 p-6">
               <h3 className="text-lg font-medium mb-4">Task Statistics</h3>
               <TaskStatistics projectId={project.id} />
+
+
+
+
+
+  {/* Single Hours Logged chart placed immediately below TaskStatistics (only once) */}
+                <div className="mt-6 bg-white rounded border border-gray-200 p-4 shadow-sm">
+                  <div className="flex items-center justify-between mb-3">
+                    <h4 className="text-sm font-medium">Hours Logged</h4>
+                    <div className="text-xs text-gray-500">
+                      {/* {metricsLoading ? "Loading..." : `${totalHours} hrs`} */}
+                      {metricsLoading
+                        ? "Loading..."
+                        : `${totalHours} hrs ${totalMinutesRemaining} min`}
+                    </div>
+                  </div>
+
+                  {/* Chart area: bar columns and horizontal progress line (visual match to your screenshot) */}
+                  <div className="h-40 mb-10">
+                    <div className="flex items-end gap-8 h-full">
+                      {/* Planned column */}
+                      <div className="flex-1 text-center">
+                        <div className="text-xs text-gray-500 mb-2">Planned</div>
+                        <div className="h-28 flex items-end justify-center">
+                          <div
+                            className="w-24 rounded-t-md"
+                            style={{
+                              // height: `${Math.max(30, plannedBarWidth)}%`,
+                              height: `${plannedBarHeight}%`,
+                              background: "#16a34a",
+                            }}
+                          >
+                            <div className="text-xs text-white text-center py-1">
+                              {hoursEstimate} hrs
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Actual column */}
+                      <div className="flex-1 text-center">
+                        <div className="text-xs text-gray-500 mb-2">Actual</div>
+                        <div className="h-28 flex items-end justify-center">
+                          <div
+                            className="w-24 rounded-t-md"
+                            style={{
+                              // height: `${Math.max(30, actualBarWidth)}%`,
+                              height: `${actualBarHeight}%`,
+                              background: "#ef4444",
+                            }}
+                          >
+                            <div className="text-xs text-white text-center py-1">
+                              {totalHours} hrs
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+
+
+
+
+
+
+
+
+                    
+
+                    {/* horizontal progress line */}
+                    <div className="mt-4">
+                      <div className="h-2 bg-gray-200 rounded overflow-hidden">
+                        <div
+                          className="h-2 rounded"
+                          style={{
+                            width: `${hoursProgressPct}%`,
+                            background:
+                              hoursProgressPct > 100 ? "#ef4444" : "#16a34a",
+                          }}
+                        />
+                      </div>
+                      <div className="mt-2 text-xs text-gray-500 flex justify-between">
+                        <span>{hoursProgressPct}% of estimate</span>
+                        {/* <span>
+                          {currency}
+                          {(earnings ?? 0).toLocaleString(undefined, {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          })}
+                        </span> */}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {/* end Hours Logged chart */}
+
+
+
+
             </div>
 
             <div className="space-y-4">
@@ -502,7 +697,9 @@ export default function ProjectDetailsPage() {
               <div className="bg-white rounded-xl border border-gray-200 p-4">
                 <p className="text-sm text-gray-500">Hours Logged</p>
                 <div className="text-2xl font-semibold text-blue-600 mt-2">
-                  {totalHours}hrs 0 min
+                  {/* {totalHours}hrs 0 min */}
+                    { hoursEstimate} hrs {totalMinutesRemaining} min
+
                 </div>
               </div>
 

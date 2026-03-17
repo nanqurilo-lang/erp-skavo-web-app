@@ -270,11 +270,28 @@ export default function ProjectMembersTableFetch({
                 </td>
 
                 {/* Role */}
-                <td className="px-4 py-4">
+                {/* <td className="px-4 py-4">
                   
                   <span className="ml-1">Project Admin</span>
 
-                </td>
+                </td> */}
+
+
+
+
+
+
+<td className="px-4 py-4">
+  {project?.projectAdminId === m.employeeId ? (
+    <span className="px-2 py-1 text-xs rounded bg-green-100 text-green-700">
+      Admin
+    </span>
+  ) : (
+    <span className="ml-1">--</span>
+  )}
+</td>
+
+
 
                 
               </tr>

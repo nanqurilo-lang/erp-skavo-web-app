@@ -87,6 +87,7 @@ export default function TaskStatistics({
 
     return (
         <ul className="space-y-2">
+           
             {counts.map((c) => (
                 <li key={c.id} className="flex justify-between text-sm">
                     <span className="flex items-center gap-2">
