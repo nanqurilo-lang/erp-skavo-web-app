@@ -398,6 +398,44 @@ function getDealFollowupDate(deal: Deal): Date | null {
     }
   };
 
+
+
+
+
+
+const deleteGlobalPriority = async (priorityId: number) => {
+  try {
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+    };
+
+    if (token) headers["Authorization"] = `Bearer ${token}`;
+
+    const res = await fetch(`${PRIORITIES_ADMIN_ENDPOINT}/${priorityId}`, {
+      method: "DELETE",
+      headers,
+    });
+
+    if (!res.ok) {
+      const txt = await res.text();
+      throw new Error(`Delete priority failed ${res.status} ${txt}`);
+    }
+
+    // remove from palette instantly
+    setGlobalPalette((prev) =>
+      prev.filter((p) => p.id !== priorityId)
+    );
+  } catch (err) {
+    console.error("Failed to delete priority", err);
+  }
+};
+
+
+
+
+
+
+
   // --- Stage delete handler ---
   const [openStageMenuId, setOpenStageMenuId] = useState<
     string | number | null
@@ -615,17 +653,35 @@ const stageDeals = filteredDeals
                   </div>
                 ) : (
                   stageDeals.map((deal) => (
-                    <DealCard
-                      key={deal.id}
-                      deal={deal}
-                        stages={stagesState}
-  onStageChange={updateDealStage}
+  //                   <DealCard
+  //                     key={deal.id}
+  //                     deal={deal}
+  //                       stages={stagesState}
+  // onStageChange={updateDealStage}
 
-                      palette={globalPalette}
-                      paletteLoading={paletteLoading}
-                      addPriorityAndAssignFlow={addPriorityAndAssignFlow}
-                      token={token}
-                    />
+  //                     palette={globalPalette}
+  //                     paletteLoading={paletteLoading}
+  //                     addPriorityAndAssignFlow={addPriorityAndAssignFlow}
+  //                     token={token}
+  //                   />
+
+
+
+<DealCard
+  key={deal.id}
+  deal={deal}
+  stages={stagesState}
+  onStageChange={updateDealStage}
+  palette={globalPalette}
+  paletteLoading={paletteLoading}
+  addPriorityAndAssignFlow={addPriorityAndAssignFlow}
+  deleteGlobalPriority={deleteGlobalPriority}
+  token={token}
+/>
+
+
+
+
                   ))
                 )}
               </div>
@@ -682,6 +738,8 @@ function DealCard({
   palette,
   paletteLoading,
   addPriorityAndAssignFlow,
+    deleteGlobalPriority,
+
   token,
 }: {
   deal: Deal;
@@ -699,6 +757,7 @@ onStageChange: (
     dealId: string | number,
     existingId?: number,
   ) => Promise<{ id?: number; name: string; color: string }>;
+  deleteGlobalPriority: (priorityId: number) => Promise<void>;
   token: string | null;
 }) {
   const leadName =
@@ -751,6 +810,13 @@ onStageChange: (
   };
 
   const initialComments = parseComments(initialCommentsRaw);
+
+
+
+
+
+
+
 
   // ---- FOLLOWUP CREATED DATES (NEW) ----
   const initialFollowupsRaw =
@@ -1049,6 +1115,47 @@ onStageChange: (
         (deal as any).id,
         p.id,
       );
+
+
+
+// const applyPalettePriority = async (p: {
+//   id?: number;
+//   name: string;
+//   color: string;
+// }) => {
+
+//   setPriorities([{ name: p.name, color: p.color }]);
+
+//   try {
+
+//     let assigned;
+
+//     // if priority already exists → update
+//     if (priorities.length > 0) {
+//       assigned = await updatePriorityForDealFallback(
+//         (deal as any).id,
+//         p.id as number
+//       );
+//     } 
+//     // if no priority → assign
+//     else {
+//       assigned = await assignPriorityToDeal(
+//         (deal as any).id,
+//         p.id as number
+//       );
+//     }
+
+//     setPriorities([{ name: assigned.name, color: assigned.color }]);
+
+//   } catch (err) {
+//     console.error("Failed to persist selected priority:", err);
+//   }
+// };
+
+
+
+
+
       setPriorities([{ name: assigned.name, color: assigned.color }]);
     } catch (err) {
       console.error("Failed to persist selected priority:", err);
@@ -1415,12 +1522,38 @@ palette.map((pp) => {
       {isAssigned ? (
         <Check className="w-4 h-4 text-green-600" />
       ) : (
-        <button
-          onClick={removePriority}
-          className="p-1 rounded hover:bg-red-50"
-        >
-          <X className="w-4 h-4 text-red-500" />
-        </button>
+        // <button
+        //   onClick={removePriority}
+        //   className="p-1 rounded hover:bg-red-50"
+        // >
+        //   <X className="w-4 h-4 text-red-500" />
+        // </button>
+
+
+
+// <button
+//   onClick={() => {
+//     if (pp.id) deleteGlobalPriority(pp.id);
+//   }}
+//   className="p-1 rounded hover:bg-red-50"
+// >
+//   <X className="w-4 h-4 text-red-500" />
+// </button>
+
+
+ !isAssigned &&
+  pp.id && (
+    <button
+      onClick={() => deleteGlobalPriority(pp.id)}
+      className="p-1 rounded hover:bg-red-50"
+    >
+      <X className="w-4 h-4 text-red-500" />
+    </button>
+  )
+
+
+
+
       )}
     </div>
   );
@@ -1433,7 +1566,7 @@ palette.map((pp) => {
 
               <div className="border-t border-border/60 my-2" />
 
-              <div className="flex items-center gap-2">
+              {/* <div className="flex items-center gap-2">
                 <div className="flex items-center gap-2 w-full">
                   <button
                     type="button"
@@ -1447,12 +1580,38 @@ palette.map((pp) => {
                   </button>
                   <div className="text-sm text-muted-foreground">Add Priority</div>
                 </div>
-              </div>
+              </div> */}
+
+
+<button
+  type="button"
+  onClick={() => {
+  setOpenPopover(false);   // close dropdown
+
+ setOpenModal(true)
+    
+
+  }
+    
+   
+  }
+  className="flex items-center gap-2 w-full hover:bg-muted/20 rounded-md p-1"
+>
+  <div className="h-6 w-6 rounded-full flex items-center justify-center bg-blue-600 text-white">
+    ＋
+  </div>
+
+  <div className="text-sm text-muted-foreground">
+    Add Priority
+  </div>
+</button>
+
+
 
 <br />
 
 
-
+{/* 
  <div className="flex items-center gap-2">
                 <div className="flex items-center gap-2 w-full">
                   <button
@@ -1465,8 +1624,25 @@ palette.map((pp) => {
                   </button>
                   <div className="text-sm text-muted-foreground">Remove Priority</div>
                 </div>
-              </div>
+              </div> */}
 
+
+
+
+
+<button
+  type="button"
+  onClick={removePriority}
+  className="flex items-center gap-2 w-full hover:bg-muted/20 rounded-md p-1"
+>
+  <div className="h-6 w-6 rounded-full flex items-center justify-center bg-red-500 text-white">
+    -
+  </div>
+
+  <div className="text-sm text-muted-foreground">
+    Remove Priority
+  </div>
+</button>
 
 
 
