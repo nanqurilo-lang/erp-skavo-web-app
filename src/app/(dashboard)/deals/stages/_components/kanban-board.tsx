@@ -930,6 +930,8 @@ onStageChange: (
     Array<{ name: string; color?: string }>
   >(parsePriorities(rawPriority));
 
+  const [popoverPos, setPopoverPos] = useState({ top: 0, right: 0 });
+
   const [openPopover, setOpenPopover] = useState(false);
   const popRef = useRef<HTMLDivElement | null>(null);
 
@@ -1492,7 +1494,20 @@ const removePriority = async () => {
             ) : (
               <button
                 type="button"
-                onClick={() => setOpenPopover(true)}
+                // onClick={() => setOpenPopover(true)}
+
+onClick={(e) => {
+  const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+
+  setPopoverPos({
+    top: rect.bottom + 6,
+    right: window.innerWidth - rect.right,
+  });
+
+  setOpenPopover(true);
+}}
+
+
                 className="h-6 w-6 rounded-full flex items-center justify-center"
                 aria-label="Open priority list"
                 title={priorities.map((p) => p.name).join(", ")}
@@ -1518,12 +1533,26 @@ const removePriority = async () => {
           </div>
 
           {openPopover && (
-            <div
-              ref={popRef}
-              className="absolute right-0 mt-2 w-44 rounded-lg bg-white border border-border shadow-xl p-3 text-sm z-[9999]"
-              role="dialog"
-              aria-modal="false"
-            >
+            // <div
+            //   ref={popRef}
+            //   className="absolute right-0 mt-2 w-44 rounded-lg bg-white border border-border shadow-xl p-3 text-sm z-[9999]"
+            //   role="dialog"
+            //   aria-modal="false"
+            // >
+
+
+
+
+<div
+  ref={popRef}
+  className="fixed w-44 rounded-lg bg-white border border-border shadow-xl p-3 text-sm z-[9999]"
+  style={{
+    top: popoverPos.top,
+    right: popoverPos.right,
+  }}
+>
+
+
               <div className="flex flex-col gap-2">
                 {paletteLoading ? (
                   <div className="text-xs text-muted-foreground">
