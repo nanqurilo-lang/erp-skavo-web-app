@@ -1428,8 +1428,25 @@ const removePriority = async () => {
 
 
   return (
-    <div className="group rounded-lg border border-border bg-card hover:border-primary/50 hover:shadow-md transition-all duration-200 cursor-default">
-      <div className="p-4 flex flex-col gap-3 relative">
+    // <div className="group rounded-lg border border-border bg-card hover:border-primary/50 hover:shadow-md transition-all duration-200 cursor-default">
+     
+     
+     <div
+ className="group rounded-xl border border-gray-200 bg-white hover:shadow-xl hover:-translate-y-[2px] transition-all duration-200 cursor-default relative overflow-hidden"
+     // className="group rounded-lg border border-border bg-card hover:border-primary/50 hover:shadow-md transition-all duration-200 cursor-default relative"
+  style={
+    priorities.length > 0
+      ? {
+          borderLeft: `3px solid ${priorities[0].color}`,
+          background: `linear-gradient(90deg, ${priorities[0].color}35 0%, white 40%)`,
+        }
+      : {}
+  }
+>
+     
+     
+     
+     <div className="p-4 flex flex-col gap-3 relative">
         <div className="absolute right-3 top-3">
           <div>
             {priorities.length === 0 ? (
