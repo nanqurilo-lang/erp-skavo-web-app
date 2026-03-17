@@ -408,7 +408,15 @@ export default function ProjectDetailsPage() {
   // derive totals: prefer metrics if available, otherwise fall back to project
   const totalMinutes =
     metrics?.totalTimeLoggedMinutes ?? project.totalTimeLoggedMinutes ?? 0;
-  const totalHours = Math.floor((totalMinutes || 0) / 60);
+  // const totalHours = Math.floor((totalMinutes || 0) / 60);
+
+
+
+  const totalHours = Math.floor(totalMinutes / 60);
+  const totalMinutesRemaining = totalMinutes % 60;
+
+
+
   const currency = metrics?.currency ?? project.currency ?? "$";
   const earnings =
     typeof metrics?.earning === "number"
@@ -589,12 +597,15 @@ export default function ProjectDetailsPage() {
                 <div className="flex items-center justify-between mb-3">
                   <h4 className="text-sm font-medium">Hours Logged</h4>
                   <div className="text-xs text-gray-500">
-                    {metricsLoading ? "Loading..." : `${totalHours} hrs`}
+                    {/* {metricsLoading ? "Loading..." : `${totalHours} hrs`} */}
+                    {metricsLoading
+                      ? "Loading..."
+                      : `${totalHours} hrs ${totalMinutesRemaining} min`}
                   </div>
                 </div>
 
                 {/* Chart area: bar columns and horizontal progress line (visual match to your screenshot) */}
-                <div className="h-40">
+                <div className="h-40 mb-10">
                   <div className="flex items-end gap-8 h-full">
                     {/* Planned column */}
                     <div className="flex-1 text-center">
@@ -673,7 +684,9 @@ export default function ProjectDetailsPage() {
               <div className="bg-white rounded-xl border border-gray-200 p-4">
                 <p className="text-sm text-gray-500">Hours Logged</p>
                 <div className="text-2xl font-semibold text-blue-600 mt-2">
-                  {hoursEstimate}hrs 0 min
+                  {/* {hoursEstimate}hrs 0 min */}
+                  {hoursEstimate} hrs {totalMinutesRemaining} min
+
                 </div>
               </div>
 

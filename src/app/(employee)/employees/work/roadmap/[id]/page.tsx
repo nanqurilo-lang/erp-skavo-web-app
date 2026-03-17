@@ -583,7 +583,12 @@ export default function ProjectDetailsPage() {
               <h3 className="text-lg font-medium mb-4">Task Statistics</h3>
               <TaskStatistics projectId={project.id} />
 
-              {/* Single Hours Logged chart placed immediately below TaskStatistics (only once) */}
+             
+            </div>
+
+
+
+ {/* Single Hours Logged chart placed immediately below TaskStatistics (only once) */}
               <div className="mt-6 bg-white rounded border border-gray-200 p-4 shadow-sm">
                 <div className="flex items-center justify-between mb-3">
                   <h4 className="text-sm font-medium">Hours Logged</h4>
@@ -658,7 +663,6 @@ export default function ProjectDetailsPage() {
                 </div>
               </div>
               {/* end Hours Logged chart */}
-            </div>
 
 
           </div>
