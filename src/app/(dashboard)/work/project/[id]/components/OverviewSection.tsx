@@ -511,7 +511,7 @@ export default function ProjectDetailsPage() {
                 <div className="flex items-center justify-between gap-6">
                   <div className="flex items-center gap-6">
                     <div className="w-36 h-20">
-                      <svg viewBox="0 0 100 50" className="w-full h-full">
+                      {/* <svg viewBox="0 0 100 50" className="w-full h-full">
                         <path
                           d="M5 50 A45 45 0 0 1 95 50"
                           fill="none"
@@ -535,7 +535,48 @@ export default function ProjectDetailsPage() {
                         >
                           {project.progressPercent}%
                         </text>
-                      </svg>
+                      </svg> */}
+
+
+
+
+<div className="w-36 h-20">
+  <svg viewBox="0 0 100 50" className="w-full h-full">
+    {/* background arc */}
+    <path
+      d="M5 50 A45 45 0 0 1 95 50"
+      fill="none"
+      stroke="#e6e6e6"
+      strokeWidth="10"
+      strokeLinecap="round"
+      pathLength="100"
+    />
+
+    {/* progress arc */}
+    <path
+      d="M5 50 A45 45 0 0 1 95 50"
+      fill="none"
+      stroke="#f5c518"
+      strokeWidth="10"
+      strokeLinecap="round"
+      pathLength="100"
+      strokeDasharray="100"
+      strokeDashoffset={100 - project.progressPercent}
+    />
+
+    <text
+      x="50"
+      y="40"
+      fontSize="8"
+      textAnchor="middle"
+      fill="#374151"
+    >
+      {project.progressPercent}%
+    </text>
+  </svg>
+</div>
+
+
                     </div>
 
                     <div>
