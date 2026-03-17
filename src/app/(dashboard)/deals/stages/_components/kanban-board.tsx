@@ -1084,6 +1084,41 @@ onStageChange: (
     }
   };
 
+
+
+
+const removePriority = async () => {
+  try {
+    // console.log("fgc", deal.id);
+
+    const res = await fetch(`${API_BASE}/deals/${deal.id}/priority`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+    });
+
+    if (!res.ok) {
+      const errText = await res.text();
+      throw new Error(`Delete failed ${res.status} ${errText}`);
+    }
+
+    const text = await res.text();
+    const data = text ? JSON.parse(text) : null;
+
+    // console.log("response", data);
+
+    // remove priority from UI
+    setPriorities([]);
+
+  } catch (err) {
+    console.error("Could not remove priority", err);
+  }
+};
+
+
+
+
   const onCancelModal = () => {
     setOpenModal(false);
   };
@@ -1361,14 +1396,36 @@ onStageChange: (
                     onClick={() => {
                       setOpenModal(true);
                     }}
-                    className="h-8 w-8 rounded-full flex items-center justify-center bg-blue-600 text-white"
+                    className="h-6 w-6 rounded-full flex items-center justify-center bg-blue-600 text-white"
                     title="Add"
                   >
                     ＋
                   </button>
-                  <div className="text-sm text-muted-foreground">Add</div>
+                  <div className="text-sm text-muted-foreground">Add Priority</div>
                 </div>
               </div>
+
+<br />
+
+
+
+ <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 w-full">
+                  <button
+                    type="button"
+                    onClick={removePriority}
+                    className="h-6 w-6 rounded-full flex items-center justify-center bg-red-500 text-white"
+                    title="Add"
+                  >
+                    -
+                  </button>
+                  <div className="text-sm text-muted-foreground">Remove Priority</div>
+                </div>
+              </div>
+
+
+
+
             </div>
           )}
         </div>
