@@ -5,6 +5,8 @@ import type { Stage } from "@/types/stages";
 import type { Deal } from "@/types/deals";
 import { Calendar, Phone, MoreHorizontal, Trash2, Check ,X } from "lucide-react";
 
+
+
 type Filters = {
   pipeline?: string;
   category?: string;
@@ -1432,8 +1434,8 @@ const removePriority = async () => {
      
      
      <div
- className="group rounded-xl border border-gray-200 bg-white hover:shadow-xl hover:-translate-y-[2px] transition-all duration-200 cursor-default relative overflow-hidden"
-     // className="group rounded-lg border border-border bg-card hover:border-primary/50 hover:shadow-md transition-all duration-200 cursor-default relative"
+//  className="group rounded-xl border border-gray-200 bg-white hover:shadow-xl hover:-translate-y-[2px] transition-all duration-200 cursor-default relative overflow-hidden"
+     className="group rounded-lg border border-border bg-card hover:border-primary/50 hover:shadow-md transition-all duration-200 cursor-default relative"
   style={
     priorities.length > 0
       ? {
@@ -1448,6 +1450,10 @@ const removePriority = async () => {
      
      <div className="p-4 flex flex-col gap-3 relative">
         <div className="absolute right-3 top-3">
+
+{/* <div className="absolute right-3 top-3 flex items-center gap-2"> */}
+
+
           <div>
             {priorities.length === 0 ? (
               <button
@@ -1462,6 +1468,7 @@ const removePriority = async () => {
                   <span className="text-xs">Add priority</span>
                 </div>
               </button>
+
             ) : (
               <button
                 type="button"
@@ -1478,6 +1485,15 @@ const removePriority = async () => {
                   }}
                 />
               </button>
+
+
+
+
+
+
+
+
+
             )}
           </div>
 
@@ -1582,6 +1598,14 @@ palette.map((pp) => {
               </div>
 
               <div className="border-t border-border/60 my-2" />
+
+
+
+
+
+
+
+              
 
               {/* <div className="flex items-center gap-2">
                 <div className="flex items-center gap-2 w-full">
