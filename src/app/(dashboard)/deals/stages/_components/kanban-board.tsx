@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import type { Stage } from "@/types/stages";
 import type { Deal } from "@/types/deals";
-import { Calendar, Phone, MoreHorizontal, Trash2 } from "lucide-react";
+import { Calendar, Phone, MoreHorizontal, Trash2, Check ,X } from "lucide-react";
 
 type Filters = {
   pipeline?: string;
@@ -1110,6 +1110,8 @@ const removePriority = async () => {
 
     // remove priority from UI
     setPriorities([]);
+        setOpenPopover(false);
+
 
   } catch (err) {
     console.error("Could not remove priority", err);
@@ -1368,22 +1370,64 @@ const removePriority = async () => {
                     Loading...
                   </div>
                 ) : (
-                  palette.map((pp) => (
-                    <button
-                      key={pp.id ?? pp.name}
-                      type="button"
-                      onClick={() => applyPalettePriority(pp)}
-                      className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-muted/20 text-left"
-                    >
-                      <span
-                        className="h-3 w-3 rounded-full"
-                        style={{ backgroundColor: pp.color }}
-                      />
-                      <span className="font-medium" style={{ color: pp.color }}>
-                        {pp.name}
-                      </span>
-                    </button>
-                  ))
+                  // palette.map((pp) => (
+                  //   <button
+                  //     key={pp.id ?? pp.name}
+                  //     type="button"
+                  //     onClick={() => applyPalettePriority(pp)}
+                  //     className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-muted/20 text-left"
+                  //   >
+                  //     <span
+                  //       className="h-3 w-3 rounded-full"
+                  //       style={{ backgroundColor: pp.color }}
+                  //     />
+                  //     <span className="font-medium" style={{ color: pp.color }}>
+                  //       {pp.name}
+                  //     </span>
+                  //   </button>
+                  // ))
+
+
+
+palette.map((pp) => {
+  const isAssigned =
+    priorities[0]?.name?.toLowerCase() === pp.name.toLowerCase();
+
+  return (
+    <div
+      key={pp.id ?? pp.name}
+      className="flex items-center justify-between px-2 py-2 rounded-md hover:bg-muted/20"
+    >
+      <button
+        type="button"
+        onClick={() => applyPalettePriority(pp)}
+        className="flex items-center gap-3 flex-1 text-left"
+      >
+        <span
+          className="h-3 w-3 rounded-full"
+          style={{ backgroundColor: pp.color }}
+        />
+        <span className="font-medium" style={{ color: pp.color }}>
+          {pp.name}
+        </span>
+      </button>
+
+      {isAssigned ? (
+        <Check className="w-4 h-4 text-green-600" />
+      ) : (
+        <button
+          onClick={removePriority}
+          className="p-1 rounded hover:bg-red-50"
+        >
+          <X className="w-4 h-4 text-red-500" />
+        </button>
+      )}
+    </div>
+  );
+})
+
+
+
                 )}
               </div>
 
