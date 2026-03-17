@@ -6,6 +6,9 @@ import type { Deal } from "@/types/deals";
 import { Calendar, Phone, MoreHorizontal, Trash2, Check ,X } from "lucide-react";
 
 
+import { ExternalLink } from "lucide-react";
+import DealDetailPage from "../../get/[id]/page";
+
 
 type Filters = {
   pipeline?: string;
@@ -1449,9 +1452,26 @@ const removePriority = async () => {
      
      
      <div className="p-4 flex flex-col gap-3 relative">
-        <div className="absolute right-3 top-3">
+        {/* <div className="absolute right-3 top-3"> */}
 
-{/* <div className="absolute right-3 top-3 flex items-center gap-2"> */}
+<div className="absolute right-3 top-3 flex items-center gap-2">
+
+
+
+
+<button
+  type="button"
+  onClick={() => {
+    window.location.href = `/deals/get/${deal.id}`;
+  }}
+ className="h-7 w-7 rounded-full bg-gray-300 border border-gray-200 flex items-center justify-center shadow-sm hover:bg-gray-500 transition-all  duration-200"
+  // className="opacity-1 group-hover:opacity-100 transition-all duration-200 h-7 w-7 rounded-full bg-gray-800 border border-gray-200 flex items-center justify-center shadow-sm hover:bg-gray-50"
+  title="Open deal"
+>
+  <ExternalLink className="w-3.5 h-3.5 text-gray-600" />
+</button>
+
+
 
 
           <div>
