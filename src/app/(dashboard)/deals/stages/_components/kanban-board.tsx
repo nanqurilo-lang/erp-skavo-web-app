@@ -1746,9 +1746,9 @@ palette.map((pp) => {
               {dealName}
             </div>
             <div className="flex items-center gap-2 mt-1">
-              {/* <div className="text-xs text-muted-foreground truncate">
-                {dealName}
-              </div> */}
+              <div className="text-xs text-muted-foreground truncate">
+                {leadName}
+              </div>
 
 
 <div className="mt-2">
