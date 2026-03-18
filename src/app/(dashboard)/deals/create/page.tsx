@@ -255,6 +255,27 @@ export default function CreateDealPage() {
 
             {/* 3-column layout like image */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+
+
+
+{/* Deal Name */}
+              <div>
+                <label className="block text-xs text-gray-500 mb-2">Deal Title *</label>
+                <input
+                  type="text"
+                  name="title"
+                  value={formData.title}
+                  onChange={handleInputChange}
+                  className="w-full p-2 border rounded-md"
+                  placeholder="--"
+                />
+              </div>
+
+
+
+
+
               {/* Lead Contact (POPULATED FROM /leads) */}
               <div>
                 <label className="block text-xs text-gray-500 mb-2">Lead Contact *</label>
@@ -273,18 +294,7 @@ export default function CreateDealPage() {
                 </select>
               </div>
 
-              {/* Deal Name */}
-              <div>
-                <label className="block text-xs text-gray-500 mb-2">Deal Name *</label>
-                <input
-                  type="text"
-                  name="title"
-                  value={formData.title}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border rounded-md"
-                  placeholder="--"
-                />
-              </div>
+              
 
               {/* Pipeline */}
               <div>

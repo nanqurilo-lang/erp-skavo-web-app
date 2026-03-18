@@ -1743,7 +1743,7 @@ palette.map((pp) => {
         <div className="flex items-start justify-between gap-2">
           <div className="flex-1 min-w-0">
             <div className="text-sm font-semibold text-foreground truncate">
-              {leadName}
+              {dealName}
             </div>
             <div className="flex items-center gap-2 mt-1">
               {/* <div className="text-xs text-muted-foreground truncate">

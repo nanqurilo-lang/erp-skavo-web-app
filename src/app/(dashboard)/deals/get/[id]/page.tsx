@@ -1366,7 +1366,7 @@ const [noteActionMode, setNoteActionMode] = useState<"view" | "edit" | null>(nul
                   <span className="font-medium">Sales Pipeline</span> →{" "}
                   <span className="font-semibold">{deal.dealStage || "—"}</span>
                 </div>
-                <h2 className="text-lg font-semibold">{deal.title || "—"}</h2>
+                <h2 className="text-lg font-semibold">{deal.title ||  "—"} </h2>
                 <p className="text-xs text-muted-foreground mt-1">ID: {deal.id}</p>
               </div>
 

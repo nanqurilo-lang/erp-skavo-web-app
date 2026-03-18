@@ -1176,7 +1176,7 @@ const matchesStage =
                             {deal.title || "—"}
                           </Link>
                           <div className="text-xs text-muted-foreground">
-                            ID: {deal.id}
+                            ID:  {deal.id}
                           </div>
                         </div>
                       </div>
