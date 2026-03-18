@@ -1751,7 +1751,7 @@ palette.map((pp) => {
               </div>
 
 
-<div className="mt-2">
+<div className="mt-2 ml-16">
   <select
     value={deal.dealStage}
     onChange={(e) =>
