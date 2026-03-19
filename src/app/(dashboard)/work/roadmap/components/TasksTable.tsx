@@ -9,6 +9,12 @@ import { getStorage } from "../../../../../lib/storage/storege";
 import TaskViewModal, { TaskForView } from "../components/TaskViewModal"; // adjust path if needed
 import { format } from "date-fns";
 
+
+
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
+
 type Employee = {
   employeeId: string;
   name: string;
@@ -363,11 +369,14 @@ export default function TasksTable({ projectId }: { projectId: number }) {
       </div>
 
       {/* table */}
-      {loading ? (
+      {/* {loading ? (
         <div className="py-6 text-center text-gray-500">Loading tasks...</div>
-      ) : error ? (
+      ) :  */}
+      
+      
+      {/* error ? ( */}
         <div className="py-6 text-center text-red-500">{error}</div>
-      ) : (
+      {/* ) : ( */}
         <div className="overflow-x-auto">
           <table className="min-w-full text-sm">
             <thead>
@@ -510,7 +519,7 @@ export default function TasksTable({ projectId }: { projectId: number }) {
             <div>Page 1 of 1</div>
           </div> */}
         </div>
-      )}
+      {/* )} */}
 
       {/* Create modal (unchanged) */}
       {showCreate && (
