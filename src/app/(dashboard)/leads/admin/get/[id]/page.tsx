@@ -12,6 +12,9 @@ import Link from "next/link";
 import { format, formatDate } from "date-fns";
 import { createPortal } from "react-dom";
 
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
 type EmployeeMeta = {
   employeeId?: string;
   name?: string;
@@ -1928,11 +1931,39 @@ const filteredDeals = dealsData?.filter((deal) => {
 
         {/* Card */}
         <Card className="p-6">
-          {isLoading ? (
+          {/* {isLoading ? (
             <div className="py-12 text-center text-muted-foreground">
               Loading lead details…
             </div>
-          ) : error ? (
+          ) : error ? ( */}
+
+
+
+{isLoading ? (
+  <div className="space-y-6">
+
+    {/* Title */}
+    <Skeleton height={25} width={200} />
+
+    {/* Profile Grid */}
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {[...Array(12)].map((_, i) => (
+        <Skeleton key={i} height={20} />
+      ))}
+    </div>
+
+    {/* Bottom Info */}
+    <div className="flex justify-between">
+      <Skeleton width={200} />
+      <Skeleton width={120} />
+    </div>
+
+  </div>
+) : error ? (
+
+
+
+
             <div className="py-12 text-center">
               <p className="text-destructive">Failed to load lead details.</p>
               <p className="text-sm text-muted-foreground mt-2">
@@ -2220,7 +2251,7 @@ const filteredDeals = dealsData?.filter((deal) => {
                       </thead>
 
                       <tbody>
-                        {dealsLoading ? (
+                        {/* {dealsLoading ? (
                           <tr>
                             <td
                               colSpan={10}
@@ -2228,7 +2259,24 @@ const filteredDeals = dealsData?.filter((deal) => {
                             >
                               Loading deals…
                             </td>
-                          </tr>
+                          </tr> */}
+
+
+
+{dealsLoading ? (
+  [...Array(5)].map((_, i) => (
+    <tr key={i}>
+      {[...Array(10)].map((_, j) => (
+        <td key={j} className="px-4 py-3">
+          <Skeleton height={15} />
+        </td>
+      ))}
+    </tr>
+  ))
+
+
+
+
                         ) : dealsError ? (
                           <tr>
                             <td
@@ -2539,7 +2587,7 @@ const filteredDeals = dealsData?.filter((deal) => {
                       </thead>
 
                       <tbody>
-                        {notesLoading ? (
+                        {/* {notesLoading ? (
                           <tr>
                             <td
                               colSpan={4}
@@ -2547,7 +2595,22 @@ const filteredDeals = dealsData?.filter((deal) => {
                             >
                               Loading notes…
                             </td>
-                          </tr>
+                          </tr> */}
+
+
+{notesLoading ? (
+  [...Array(5)].map((_, i) => (
+    <tr key={i}>
+      {[...Array(4)].map((_, j) => (
+        <td key={j} className="px-4 py-3">
+          <Skeleton height={15} />
+        </td>
+      ))}
+    </tr>
+  ))
+
+
+
                         ) : notesError ? (
                           <tr>
                             <td

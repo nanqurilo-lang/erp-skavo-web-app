@@ -21,7 +21,8 @@ import { format } from "date-fns";
 import AddFollowupModal from "../_components/AddFollowupModal";
 
 
-
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 
 
@@ -716,13 +717,98 @@ const matchesStage =
 
 
 
-  if (dealsLoading) {
-    return (
-      <div className="flex min-h-[60vh] items-center justify-center text-lg font-semibold">
-        Loading deals...
+  // if (dealsLoading) {
+  //   return (
+  //     <div className="flex min-h-[60vh] items-center justify-center text-lg font-semibold">
+  //       Loading deals...
+  //     </div>
+  //   );
+  // }
+
+
+
+if (dealsLoading) {
+  return (
+    <main className="container mx-auto max-w-6xl px-4 py-8">
+
+      {/* Top bar skeleton */}
+      <div className="mb-4 flex justify-between items-center">
+        <Skeleton width={200} height={30} />
+        <Skeleton width={120} height={30} />
       </div>
-    );
-  }
+
+      {/* Buttons */}
+      <div className="mb-6 flex gap-4">
+        <Skeleton width={120} height={35} />
+        <Skeleton width={120} height={35} />
+        <Skeleton width={120} height={35} />
+      </div>
+
+      {/* Table */}
+      <div className="overflow-x-auto rounded-xl border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              {[
+                "Deal",
+                "Lead",
+                "Contact",
+                "Value",
+                "Close",
+                "Followup",
+                "Agent",
+                "Watcher",
+                "Stage",
+                "Priority",
+                "Tags",
+                "Action",
+              ].map((h, i) => (
+                <TableHead key={i}>
+                  <Skeleton width={80} />
+                </TableHead>
+              ))}
+            </TableRow>
+          </TableHeader>
+
+          <TableBody>
+            {[...Array(6)].map((_, i) => (
+              <TableRow key={i}>
+                <TableCell>
+                  <div className="flex items-center gap-3">
+                    <Skeleton circle width={40} height={40} />
+                    <Skeleton width={120} />
+                  </div>
+                </TableCell>
+
+                <TableCell><Skeleton width={100} /></TableCell>
+                <TableCell><Skeleton width={120} /></TableCell>
+                <TableCell><Skeleton width={80} /></TableCell>
+                <TableCell><Skeleton width={90} /></TableCell>
+                <TableCell><Skeleton width={100} /></TableCell>
+
+                <TableCell>
+                  <div className="flex items-center gap-2">
+                    <Skeleton circle width={30} height={30} />
+                    <Skeleton width={80} />
+                  </div>
+                </TableCell>
+
+                <TableCell><Skeleton width={100} /></TableCell>
+                <TableCell><Skeleton width={90} /></TableCell>
+                <TableCell><Skeleton width={90} /></TableCell>
+                <TableCell><Skeleton width={80} /></TableCell>
+                <TableCell><Skeleton width={30} /></TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    </main>
+  );
+}
+
+
+
 
   if (dealsError) {
     return (

@@ -10,6 +10,8 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { format } from "date-fns";
 
+import DashboardSkeleton from "@/components/skeletons/DashboardSkeleton";
+
 type Employee = {
   employeeId: string;
   name: string;
@@ -481,10 +483,16 @@ export default function Dashboard() {
     }
   };
 
-  if (loading)
-    return (
-      <div className="flex items-center justify-center h-56">Loading…</div>
-    );
+  // if (loading)
+  //   return (
+  //     <div className="flex items-center justify-center h-56">Loading…</div>
+  //   );
+
+
+
+if (loading) return <DashboardSkeleton />;
+
+
   if (!employee)
     return <div className="p-6 text-muted-foreground">No profile found</div>;
 
