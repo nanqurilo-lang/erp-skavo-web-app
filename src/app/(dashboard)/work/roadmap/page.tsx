@@ -46,6 +46,11 @@ import {
 import ProjectCalendarMonth from "./ProjectCalendarMonth";
 import { format } from "date-fns";
 
+
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
+
 const MAIN = process.env.NEXT_PUBLIC_MAIN;
 const projectsFromApi = `${MAIN}/api/projects`;
 const STATUS_OPTIONS = [
@@ -1333,7 +1338,7 @@ export default function AllProjectsPage() {
 
 
 
-  if (loading) return <p className="p-8 text-center">Loading projects...</p>;
+  // if (loading) return <p className="p-8 text-center">Loading projects...</p>;
 
   // Row component reused (same as your file) — uses clientOptions/departments/categories data loaded above
   const ProjectRow: React.FC<{ p: Project }> = ({ p }) => {
@@ -1536,7 +1541,17 @@ export default function AllProjectsPage() {
           {/* MAIN content area */}
           <div className="bg-white rounded-lg border overflow-hidden">
             <div className="bg-blue-50 px-6 py-3 border-b flex items-center justify-between">
-              <h2 className="font-semibold text-gray-900">Projects ({filteredProjects.length})</h2>
+              {/* <h2 className="font-semibold text-gray-900">Projects ({filteredProjects.length})</h2> */}
+
+{loading ? (
+  <Skeleton width={200} height={20} />
+) : (
+  <h2 className="font-semibold text-gray-900">
+    Projects ({filteredProjects.length})
+  </h2>
+)}
+
+
               <div className="text-sm text-gray-600">{showArchivedOnly ? "Viewing: Archived" : showPinnedOnly ? "Viewing: Pinned" : "All active"}</div>
             </div>
 
@@ -1589,13 +1604,50 @@ export default function AllProjectsPage() {
                       </TableRow>
                     </TableHeader>
 
-                    <TableBody>
+                    {/* <TableBody>
                       {filteredProjects.length === 0 ? (
                         <TableRow><TableCell colSpan={8} className="py-8 text-center text-gray-500">No projects found</TableCell></TableRow>
                       ) : (
                         filteredProjects.map((p) => <ProjectRow key={p.id} p={p} />)
                       )}
-                    </TableBody>
+                    </TableBody> */}
+
+
+
+<TableBody>
+  {loading ? (
+    <>
+      {Array.from({ length: 6 }).map((_, i) => (
+        <TableRow key={i}>
+          <TableCell><Skeleton width={60} /></TableCell>
+          <TableCell><Skeleton width={150} /></TableCell>
+          <TableCell>
+            <div className="flex gap-2">
+              <Skeleton circle width={30} height={30} />
+              <Skeleton circle width={30} height={30} />
+            </div>
+          </TableCell>
+          <TableCell><Skeleton width={100} /></TableCell>
+          <TableCell><Skeleton width={100} /></TableCell>
+          <TableCell><Skeleton width={120} /></TableCell>
+          <TableCell><Skeleton width={120} height={20} /></TableCell>
+          <TableCell><Skeleton width={40} height={30} /></TableCell>
+        </TableRow>
+      ))}
+    </>
+  ) : filteredProjects.length === 0 ? (
+    <TableRow>
+      <TableCell colSpan={8} className="py-8 text-center text-gray-500">
+        No projects found
+      </TableCell>
+    </TableRow>
+  ) : (
+    filteredProjects.map((p) => <ProjectRow key={p.id} p={p} />)
+  )}
+</TableBody>
+
+
+
                   </Table>
                 </div>
               )}
@@ -1603,6 +1655,15 @@ export default function AllProjectsPage() {
           </div>
 
           {/* PAGINATION */}
+
+
+{loading ? (
+  <div className="flex justify-between mt-4">
+    <Skeleton width={150} />
+    <Skeleton width={200} />
+  </div>
+) : (
+
           <div className="flex items-center justify-between mt-4">
             <div className="text-sm text-gray-600">Result per page -{filteredProjects.length ? filteredProjects.length : 0}</div>
             <div className="flex items-center gap-3">
@@ -1611,6 +1672,9 @@ export default function AllProjectsPage() {
               <Button variant="outline" size="sm" onClick={() => { setCurrentPage((c) => Math.min(totalPages, c + 1)); }} disabled={currentPage === totalPages}>Next <ChevronRight /></Button>
             </div>
           </div>
+)}
+
+
         </div>
       </main>
 
