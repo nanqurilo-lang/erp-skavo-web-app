@@ -13,6 +13,9 @@ import NoteActionModal from "../../_components/NoteActionModal";
 import { format } from "date-fns";
 
 
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
 
 type DocumentItem = {
   id: number;
@@ -1310,13 +1313,69 @@ const [noteActionMode, setNoteActionMode] = useState<"view" | "edit" | null>(nul
     }
   };
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen text-lg font-semibold">
-        Loading deal details...
+  // if (loading) {
+  //   return (
+  //     <div className="flex justify-center items-center min-h-screen text-lg font-semibold">
+  //       Loading deal details...
+  //     </div>
+  //   );
+  // }
+
+
+if (loading) {
+  return (
+    <div className="p-6 max-w-6xl mx-auto space-y-6">
+
+      {/* Header */}
+      <div className="flex justify-between items-center">
+        <Skeleton width={180} height={25} />
+        <Skeleton width={30} height={30} />
       </div>
-    );
-  }
+
+      {/* Main Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-6">
+
+        {/* Left Card */}
+        <div className="bg-white border rounded-2xl p-6 space-y-4">
+          <Skeleton width={200} height={20} />
+          <Skeleton width={150} height={15} />
+
+          <div className="grid grid-cols-2 gap-4">
+            {[...Array(8)].map((_, i) => (
+              <Skeleton key={i} height={15} />
+            ))}
+          </div>
+        </div>
+
+        {/* Right Card */}
+        <div className="bg-white border rounded-2xl p-6 space-y-3">
+          <Skeleton width={150} height={20} />
+          {[...Array(4)].map((_, i) => (
+            <Skeleton key={i} height={15} />
+          ))}
+        </div>
+
+      </div>
+
+      {/* Tabs Section */}
+      <div className="bg-white border rounded-2xl p-4 space-y-4">
+        <div className="flex gap-4">
+          {[...Array(5)].map((_, i) => (
+            <Skeleton key={i} width={80} height={20} />
+          ))}
+        </div>
+
+        {[...Array(5)].map((_, i) => (
+          <Skeleton key={i} height={20} />
+        ))}
+      </div>
+
+    </div>
+  );
+}
+
+
+
 
   if (error || !deal) {
     return (
@@ -1552,7 +1611,22 @@ const [noteActionMode, setNoteActionMode] = useState<"view" | "edit" | null>(nul
                   </div>
 
                   <div className="mt-6 text-sm text-gray-500">
-                    {docsLoading && <div>Loading documents...</div>}
+                    {/* {docsLoading && <div>Loading documents...</div>} */}
+
+
+{docsLoading && (
+  <div className="space-y-3 mt-4">
+    {[...Array(3)].map((_, i) => (
+      <div key={i} className="flex items-center gap-3">
+        <Skeleton width={50} height={50} />
+        <Skeleton width={200} />
+      </div>
+    ))}
+  </div>
+)}
+
+
+
                     {docsError && <div className="text-red-600">{docsError}</div>}
                     {!docsLoading && documents.length === 0 && <div>No files uploaded yet.</div>}
                     <div className="space-y-3 mt-4">
@@ -1625,7 +1699,25 @@ const [noteActionMode, setNoteActionMode] = useState<"view" | "edit" | null>(nul
                     </div>
 
                     <div>
-                      {followupsLoading && <div className="p-4">Loading followups...</div>}
+                      {/* {followupsLoading && <div className="p-4">Loading followups...</div>} */}
+
+
+
+{followupsLoading && (
+  <div className="space-y-3 p-4">
+    {[...Array(4)].map((_, i) => (
+      <div key={i} className="grid grid-cols-4 gap-4">
+        <Skeleton height={15} />
+        <Skeleton height={15} />
+        <Skeleton height={15} />
+        <Skeleton height={15} />
+      </div>
+    ))}
+  </div>
+)}
+
+
+
                       {followupsError && <div className="p-4 text-red-600">{followupsError}</div>}
                       {!followupsLoading && followups.length === 0 && (
                         <div className="p-4 text-sm text-gray-500">No follow ups</div>
@@ -1744,7 +1836,20 @@ const [noteActionMode, setNoteActionMode] = useState<"view" | "edit" | null>(nul
                     </div>
 
                     <div>
-                      {employeesLoading && <div className="p-4">Loading people...</div>}
+                      {/* {employeesLoading && <div className="p-4">Loading people...</div>} */}
+
+{employeesLoading && (
+  <div className="space-y-3 p-4">
+    {[...Array(4)].map((_, i) => (
+      <div key={i} className="flex items-center gap-3">
+        <Skeleton circle width={40} height={40} />
+        <Skeleton width={150} />
+      </div>
+    ))}
+  </div>
+)}
+
+
                       {employeesError && <div className="p-4 text-red-600">{employeesError}</div>}
                       {!employeesLoading && assignedEmployees.length === 0 && (
                         <div className="p-4 text-sm text-gray-500">No people assigned</div>
@@ -1810,7 +1915,19 @@ const [noteActionMode, setNoteActionMode] = useState<"view" | "edit" | null>(nul
                     </div>
 
                     <div>
-                      {notesLoading && <div className="p-6 text-sm text-gray-500">Loading notes...</div>}
+                      {/* {notesLoading && <div className="p-6 text-sm text-gray-500">Loading notes...</div>} */}
+
+
+{notesLoading && (
+  <div className="space-y-3 p-4">
+    {[...Array(4)].map((_, i) => (
+      <Skeleton key={i} height={20} />
+    ))}
+  </div>
+)}
+
+
+
                       {notesError && <div className="p-6 text-sm text-red-600">{notesError}</div>}
 
                       {!notesLoading && notes.length === 0 && (
@@ -1977,7 +2094,18 @@ const [noteActionMode, setNoteActionMode] = useState<"view" | "edit" | null>(nul
                     </div>
 
                     <div>
-                      {tagsLoading && <div className="p-6 text-sm text-gray-500">Loading tags...</div>}
+                      {/* {tagsLoading && <div className="p-6 text-sm text-gray-500">Loading tags...</div>} */}
+
+
+{tagsLoading && (
+  <div className="space-y-3 p-4">
+    {[...Array(3)].map((_, i) => (
+      <Skeleton key={i} height={20} />
+    ))}
+  </div>
+)}
+
+
                       {tagsError && <div className="p-6 text-sm text-red-600">{tagsError}</div>}
 
                       {!tagsLoading && tags.length === 0 && (
