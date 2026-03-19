@@ -5,6 +5,11 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { Stage } from "@/types/stages";
 
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
+
+
 type Employee = {
   employeeId: string;
   name: string;
@@ -172,13 +177,59 @@ export default function EditDealPage() {
     }
   };
 
-  if (initialLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen text-lg font-semibold">
-        Loading deal details...
+  // if (initialLoading) {
+  //   return (
+  //     <div className="flex justify-center items-center min-h-screen text-lg font-semibold">
+  //       Loading deal details...
+  //     </div>
+  //   );
+  // }
+
+
+
+if (initialLoading) {
+  return (
+    <div className="p-6 max-w-4xl mx-auto space-y-6">
+
+      {/* Title */}
+      <Skeleton width={200} height={30} />
+
+      {/* Form Card */}
+      <div className="bg-white p-6 border rounded-2xl space-y-6">
+
+        {/* Grid Fields */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {[...Array(8)].map((_, i) => (
+            <div key={i} className="space-y-2">
+              <Skeleton width={120} height={12} />
+              <Skeleton height={35} />
+            </div>
+          ))}
+        </div>
+
+        {/* Watchers */}
+        <div className="space-y-2">
+          <Skeleton width={150} height={15} />
+          <div className="grid grid-cols-3 gap-2">
+            {[...Array(6)].map((_, i) => (
+              <Skeleton key={i} height={15} />
+            ))}
+          </div>
+        </div>
+
+        {/* Buttons */}
+        <div className="flex gap-4">
+          <Skeleton width={120} height={40} />
+          <Skeleton width={80} height={40} />
+        </div>
+
       </div>
-    );
-  }
+    </div>
+  );
+}
+
+
+
 
   return (
     <div className="p-6 max-w-4xl mx-auto">

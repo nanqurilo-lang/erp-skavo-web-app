@@ -5,6 +5,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Stage } from "@/types/stages";
 
+
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
+
 type Employee = {
   employeeId: string;
   name: string;
@@ -188,13 +193,66 @@ export default function CreateDealPage() {
     }
   };
 
-  if (stagesLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen text-lg font-semibold">
-        Loading form...
+  // if (stagesLoading) {
+  //   return (
+  //     <div className="flex justify-center items-center min-h-screen text-lg font-semibold">
+  //       Loading form...
+  //     </div>
+  //   );
+  // }
+
+
+
+if (stagesLoading) {
+  return (
+    <div className="min-h-screen bg-gray-50 flex items-start justify-center py-10 px-4">
+      <div className="w-full max-w-4xl space-y-6">
+
+        {/* Header */}
+        <div className="flex justify-between items-center">
+          <Skeleton width={220} height={30} />
+          <Skeleton width={30} height={30} />
+        </div>
+
+        {/* Form Card */}
+        <div className="bg-white border rounded-2xl p-6 space-y-6">
+
+          {/* Title */}
+          <Skeleton width={150} height={20} />
+
+          {/* Grid Fields */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {[...Array(9)].map((_, i) => (
+              <div key={i} className="space-y-2">
+                <Skeleton width={100} height={12} />
+                <Skeleton height={35} />
+              </div>
+            ))}
+          </div>
+
+          {/* Watchers Section */}
+          <div className="space-y-2">
+            <Skeleton width={150} height={15} />
+            <div className="grid grid-cols-3 gap-2">
+              {[...Array(6)].map((_, i) => (
+                <Skeleton key={i} height={15} />
+              ))}
+            </div>
+          </div>
+
+          {/* Buttons */}
+          <div className="flex justify-center gap-4">
+            <Skeleton width={100} height={35} />
+            <Skeleton width={100} height={35} />
+          </div>
+
+        </div>
       </div>
-    );
-  }
+    </div>
+  );
+}
+
+
 
   // ---------- CATEGORY MODAL HELPERS (NEW) ----------
   const openCategoryModal = () => {

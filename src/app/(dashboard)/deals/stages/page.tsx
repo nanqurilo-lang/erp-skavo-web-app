@@ -38,6 +38,12 @@ import { format } from "date-fns";
 import { FiltersDrawer } from "../get/page";
 
 
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
+
+
+
 // import { format } from "date-fns";
 
 export default function StagesPage() {
@@ -149,13 +155,57 @@ export default function StagesPage() {
   }, [dealsData]);
 
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen text-lg font-semibold">
-        Loading stages and deals...
+//  if (loading) {
+//      return (
+//       <div className="flex justify-center items-center min-h-screen text-lg font-semibold">
+//         Loading stages and deals...
+//       </div>
+//     );
+//   }
+
+
+
+
+
+if (loading) {
+  return (
+    <main className="container h-screen flex flex-col overflow-hidden p-4 space-y-4">
+
+      {/* Top Filters */}
+      <div className="flex justify-between items-center">
+        <Skeleton width={250} height={30} />
+        <Skeleton width={120} height={30} />
       </div>
-    );
-  }
+
+      {/* Board */}
+      <div className="flex gap-4 overflow-x-auto">
+
+        {[...Array(4)].map((_, col) => (
+          <div
+            key={col}
+            className="min-w-[280px] bg-white border rounded-lg p-3 space-y-3"
+          >
+            {/* Column Header */}
+            <Skeleton width={120} height={20} />
+
+            {/* Cards */}
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="p-3 border rounded-md space-y-2">
+                <Skeleton height={15} />
+                <Skeleton width={100} height={12} />
+                <Skeleton width={80} height={12} />
+              </div>
+            ))}
+          </div>
+        ))}
+
+      </div>
+
+    </main>
+  );
+}
+
+
 
   if (error) {
     return (
