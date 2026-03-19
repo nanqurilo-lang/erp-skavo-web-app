@@ -1477,7 +1477,7 @@ if (dealsLoading) {
                               <MoreVertical className="h-4 w-4" />
                             </Button>
                           </DropdownMenuTrigger>
-                          {deal?.dealStage === "Win" ? <DropdownMenuContent align="end">
+                          {deal?.dealStage.trim().toLowerCase() === "win" ? <DropdownMenuContent align="end">
                             <DropdownMenuItem asChild>
                               <Link href={`/deals/get/${deal.id}`}>View</Link>
                             </DropdownMenuItem>

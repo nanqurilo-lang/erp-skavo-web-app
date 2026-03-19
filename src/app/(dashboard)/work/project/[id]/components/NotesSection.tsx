@@ -13,6 +13,11 @@ import {
   X,
 } from "lucide-react";
 
+
+
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
 /* ================= TYPES ================= */
 export type ProjectNoteItem = {
   id: number;
@@ -244,17 +249,34 @@ export default function ProjectNotesTable({
   /* ================= UI ================= */
   return (
     <div className="bg-white rounded border">
-      <div className="p-4 flex justify-end border-b">
+      {/* <div className="p-4 flex justify-end border-b">
         <button
           onClick={() => setShowAddModal(true)}
           className="bg-blue-600 text-white px-3 py-2 text-sm rounded flex items-center gap-2"
         >
           <Plus size={16} /> Add Note
         </button>
-      </div>
+      </div> */}
+
+
+
+
+<div className="p-4 flex justify-end border-b">
+  {loading ? (
+    <Skeleton width={120} height={35} />
+  ) : (
+    <button
+      onClick={() => setShowAddModal(true)}
+      className="bg-blue-600 text-white px-3 py-2 text-sm rounded flex items-center gap-2"
+    >
+      <Plus size={16} /> Add Note
+    </button>
+  )}
+</div>
+
 
       <div className="p-4">
-        {loading && <p>Loading…</p>}
+        {/* {loading && <p>Loading…</p>} */}
         {error && <p className="text-red-600">{error}</p>}
 
         <table className="w-full text-sm">
@@ -265,8 +287,42 @@ export default function ProjectNotesTable({
               <th className="px-4 py-3 text-right">Action</th>
             </tr>
           </thead>
-          <tbody>
-            {notes.map((note) => (
+          {/* <tbody>
+            {notes.map((note) => ( */}
+
+
+
+<tbody>
+  {loading ? (
+    Array.from({ length: 5 }).map((_, i) => (
+      <tr key={i} className="border-t">
+        <td className="px-4 py-3">
+          <Skeleton height={15} width={150} />
+        </td>
+
+        <td className="px-4 py-3">
+          <div className="flex items-center gap-2">
+            <Skeleton circle width={14} height={14} />
+            <Skeleton width={60} height={12} />
+          </div>
+        </td>
+
+        <td className="px-4 py-3 text-right">
+          <Skeleton width={20} height={20} />
+        </td>
+      </tr>
+    ))
+  ) : notes.length === 0 ? (
+    <tr>
+      <td colSpan={3} className="text-center py-6 text-gray-500">
+        No notes found.
+      </td>
+    </tr>
+  ) : (
+    notes.map((note) => (
+      // EXISTING ROW CODE (UNCHANGED)
+
+
               <tr key={note.id} className="border-t">
                 <td className="px-4 py-3">{note.title}</td>
                 <td className="px-4 py-3">
@@ -324,8 +380,16 @@ export default function ProjectNotesTable({
                   )}
                 </td>
               </tr>
-            ))}
+            )))}
+          
           </tbody>
+
+
+          
+
+
+
+
         </table>
       </div>
 

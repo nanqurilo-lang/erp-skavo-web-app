@@ -8,6 +8,11 @@ import { MoreHorizontal, X, Trash2 } from "lucide-react";
 import PaymentViewDrawer from "./PaymentViewDrawer";
 import EditPaymentModal from "./EditPaymentModal";
 
+
+
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
 type PaymentClient = {
   clientId?: string;
   name?: string | null;
@@ -518,6 +523,18 @@ export default function PaymentsSection({
   return (
     <div className="w-full">
       <div className="bg-white rounded-lg border p-5">
+
+
+{loading ? (
+  <div className="flex items-center justify-between mb-4">
+    <Skeleton width={120} height={25} />
+    <div className="flex gap-3">
+      <Skeleton width={140} height={35} />
+      <Skeleton width={200} height={35} />
+    </div>
+  </div>
+) : (
+
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold">Payments</h3>
 
@@ -546,12 +563,19 @@ export default function PaymentsSection({
           </div>
         </div>
 
+)}
+
+
         {/* loading / error */}
-        {loading ? (
+        {/* {loading ? (
           <div className="py-6 text-center text-gray-600">Loading payments...</div>
-        ) : error ? (
+        ) */}
+        
+        
+        
+        {/* : error ? (
           <div className="py-6 text-center text-red-600">{error}</div>
-        ) : (
+        ) : ( */}
           <div className="rounded-lg border overflow-hidden">
             {/* header */}
             <div className="bg-[#e8f3ff] px-4 py-3 flex text-sm text-gray-700 font-medium">
@@ -567,12 +591,52 @@ export default function PaymentsSection({
               <div className="w-10 text-center">Action</div>
             </div>
 
-            <div className="px-4 py-4">
+            {/* <div className="px-4 py-4">
               {visible.length === 0 ? (
                 <div className="text-sm text-gray-500">No payments to display.</div>
               ) : (
                 <div className="space-y-3">
-                  {visible.map((p) => (
+                  {visible.map((p) => ( */}
+
+
+
+<div className="px-4 py-4">
+  {loading ? (
+    <div className="space-y-3">
+      {Array.from({ length: 6 }).map((_, i) => (
+        <div
+          key={i}
+          className="flex items-center border px-4 py-3 rounded-md"
+        >
+          <div className="w-1/12"><Skeleton height={15} /></div>
+          <div className="w-2/12"><Skeleton height={15} /></div>
+          <div className="w-1/12"><Skeleton height={15} /></div>
+
+          <div className="w-2/12 flex items-center gap-2">
+            <Skeleton circle width={28} height={28} />
+            <Skeleton width={80} height={12} />
+          </div>
+
+          <div className="w-1/12"><Skeleton height={15} /></div>
+          <div className="w-1/12"><Skeleton height={15} /></div>
+          <div className="w-1/12"><Skeleton height={15} /></div>
+          <div className="w-1/12"><Skeleton height={15} /></div>
+          <div className="w-1/12"><Skeleton height={15} /></div>
+          <div className="w-10"><Skeleton height={15} /></div>
+        </div>
+      ))}
+    </div>
+  ) : visible.length === 0 ? (
+    <div className="text-sm text-gray-500">No payments to display.</div>
+  ) : (
+    <div className="space-y-3">
+      {visible.map((p) => (
+        // EXISTING ROW CODE (UNCHANGED)
+
+
+
+
+
                     <div
                       key={p.id}
                       className="flex items-center rounded-md border px-4 py-3 bg-white"
@@ -710,7 +774,7 @@ export default function PaymentsSection({
               )}
             </div>
           </div>
-        )}
+        {/* )} */}
       </div>
 
 

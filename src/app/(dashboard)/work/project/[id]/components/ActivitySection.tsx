@@ -3,6 +3,10 @@
 
 import { useEffect, useState } from "react";
 
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
+
 /* ================= TYPES ================= */
 type ActivityItem = {
   id: number;
@@ -124,7 +128,7 @@ export default function ActivitySection({
     <div>
       <h3 className="text-lg font-medium mb-4">Activity</h3>
 
-      <div className="border rounded-md overflow-hidden">
+      {/* <div className="border rounded-md overflow-hidden">
         {loading && (
           <div className="p-6 text-center text-gray-400">
             Loading activity…
@@ -146,7 +150,6 @@ export default function ActivitySection({
                 key={item.id}
                 className="flex gap-4 p-4 border-b last:border-b-0"
               >
-                {/* DATE BOX */}
                 <div className="w-14 border rounded-md text-center overflow-hidden">
                   <div className="text-xs text-gray-500 border-b py-1">
                     {month}
@@ -156,7 +159,6 @@ export default function ActivitySection({
                   </div>
                 </div>
 
-                {/* CONTENT */}
                 <div className="flex-1">
                   <div className="text-sm text-gray-800">
                     {getActionText(item.action)}
@@ -168,7 +170,76 @@ export default function ActivitySection({
               </div>
             );
           })}
+      </div> */}
+
+
+
+
+<div className="border rounded-md overflow-hidden">
+  {loading ? (
+    Array.from({ length: 5 }).map((_, i) => (
+      <div
+        key={i}
+        className="flex gap-4 p-4 border-b last:border-b-0"
+      >
+        {/* DATE BOX SKELETON */}
+        <div className="w-14 border rounded-md text-center overflow-hidden">
+          <div className="border-b py-1">
+            <Skeleton height={10} width={30} />
+          </div>
+          <div className="py-2 flex justify-center">
+            <Skeleton height={20} width={20} />
+          </div>
+        </div>
+
+        {/* CONTENT SKELETON */}
+        <div className="flex-1 space-y-2">
+          <Skeleton height={14} width="80%" />
+          <Skeleton height={10} width="40%" />
+        </div>
       </div>
+    ))
+  ) : activities.length === 0 ? (
+    <div className="p-6 text-center text-gray-400">
+      No activity found
+    </div>
+  ) : (
+    activities.map((item) => {
+      const { day, month, time } = formatDateParts(item.createdAt);
+
+      return (
+        <div
+          key={item.id}
+          className="flex gap-4 p-4 border-b last:border-b-0"
+        >
+          {/* DATE BOX */}
+          <div className="w-14 border rounded-md text-center overflow-hidden">
+            <div className="text-xs text-gray-500 border-b py-1">
+              {month}
+            </div>
+            <div className="text-lg font-semibold py-2">
+              {day}
+            </div>
+          </div>
+
+          {/* CONTENT */}
+          <div className="flex-1">
+            <div className="text-sm text-gray-800">
+              {getActionText(item.action)}
+            </div>
+            <div className="text-xs text-gray-500 mt-1">
+              {time}
+            </div>
+          </div>
+        </div>
+      );
+    })
+  )}
+</div>
+
+
+
+
     </div>
   );
 }
