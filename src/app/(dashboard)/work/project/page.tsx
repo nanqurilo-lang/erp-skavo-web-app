@@ -54,6 +54,11 @@ import { format } from "date-fns";
 import ImportButton from "@/components/ImportButton";
 import ExportButton from "@/components/ExportButton";
 
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
+
+
 const MAIN = process.env.NEXT_PUBLIC_MAIN;
 const projectsFromApi = `${MAIN}/api/projects`;
 const STATUS_OPTIONS = [
@@ -2148,7 +2153,7 @@ const filteredProjects = useMemo(() => {
 
 
 
-  if (loading) return <p className="p-8 text-center">Loading projects...</p>;
+  // if (loading) return <p className="p-8 text-center">Loading projects...</p>;
 
   // Row component reused (same as your file) — uses clientOptions/departments/categories data loaded above
   const ProjectRow: React.FC<{ p: Project }> = ({ p }) => {
@@ -2767,7 +2772,7 @@ onChange={(e) => {
                         </TableRow>
                       </TableHeader>
 
-                      <TableBody>
+                      {/* <TableBody>
                         {filteredProjects.length === 0 ? (
                           <TableRow>
                             <TableCell
@@ -2782,7 +2787,57 @@ onChange={(e) => {
                             <ProjectRow key={p.id} p={p} />
                           ))
                         )}
-                      </TableBody>
+                      </TableBody> */}
+
+
+
+
+
+
+<TableBody>
+  {loading ? (
+    Array.from({ length: 6 }).map((_, i) => (
+      <TableRow key={i}>
+        <TableCell><Skeleton width={80} /></TableCell>
+        <TableCell><Skeleton width={150} /></TableCell>
+        <TableCell>
+          <div className="flex gap-1">
+            <Skeleton circle width={30} height={30} />
+            <Skeleton circle width={30} height={30} />
+            <Skeleton circle width={30} height={30} />
+          </div>
+        </TableCell>
+        <TableCell><Skeleton width={100} /></TableCell>
+        <TableCell><Skeleton width={100} /></TableCell>
+        <TableCell>
+          <div className="flex items-center gap-2">
+            <Skeleton circle width={35} height={35} />
+            <Skeleton width={100} />
+          </div>
+        </TableCell>
+        <TableCell>
+          <Skeleton height={12} width={120} />
+          <Skeleton height={20} width={80} className="mt-2" />
+        </TableCell>
+        <TableCell><Skeleton width={30} height={30} /></TableCell>
+      </TableRow>
+    ))
+  ) : filteredProjects.length === 0 ? (
+    <TableRow>
+      <TableCell colSpan={8} className="py-8 text-center text-gray-500">
+        No projects found
+      </TableCell>
+    </TableRow>
+  ) : (
+    filteredProjects.map((p) => (
+      <ProjectRow key={p.id} p={p} />
+    ))
+  )}
+</TableBody>
+
+
+
+
                     </Table>
                   </div>
                 )}

@@ -20,6 +20,11 @@ import ViewPaymentsModal from "@/app/(dashboard)/finance/invoices/components/Vie
 import CreateCreditNoteDrawer from "@/app/(dashboard)/finance/invoices/components/CreateCreditNoteDrawer";
 import ViewCreditNotesDrawer from "@/app/(dashboard)/finance/invoices/components/ViewCreditNotesDrawer";
 
+
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
+
 const BASE_URL = `${process.env.NEXT_PUBLIC_MAIN}`;
 
 export default function InvoicesSection({
@@ -113,21 +118,63 @@ console.log(invoices)
   return (
     <div className="mt-6">
       {/* HEADER */}
-      <div className="flex items-center justify-between mb-4">
+      {/* <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-medium">Invoices</h3>
 
         <Button onClick={() => setModal((m) => ({ ...m, create: true }))}>
           <Plus className="mr-2 h-4 w-4" />
           Create Invoice
         </Button>
-      </div>
+      </div> */}
+
+
+
+{loading ? (
+  <div className="flex items-center justify-between mb-4">
+    <Skeleton width={120} height={25} />
+    <Skeleton width={150} height={35} />
+  </div>
+) : (
+  <div className="flex items-center justify-between mb-4">
+    <h3 className="text-lg font-medium">Invoices</h3>
+
+    <Button onClick={() => setModal((m) => ({ ...m, create: true }))}>
+      <Plus className="mr-2 h-4 w-4" />
+      Create Invoice
+    </Button>
+  </div>
+)}
+
+
+
+
+
 
       {/* FILTERS */}
-      <InvoiceFilters
+      {/* <InvoiceFilters
         filters={filters}
         setFilters={setFilters}
         invoices={invoices}
-      />
+      /> */}
+
+
+
+{loading ? (
+  <div className="mb-4 flex gap-4">
+    <Skeleton width={200} height={35} />
+    <Skeleton width={150} height={35} />
+    <Skeleton width={150} height={35} />
+    <Skeleton width={120} height={35} />
+  </div>
+) : (
+  <InvoiceFilters
+    filters={filters}
+    setFilters={setFilters}
+    invoices={invoices}
+  />
+)}
+
+
 
       {/* TABLE */}
       <InvoiceTable

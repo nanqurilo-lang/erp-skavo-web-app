@@ -14,6 +14,11 @@ import MilestonesTable from "../../components/MilestonesTable";
 import axios from "axios";
 import { format } from "date-fns";
 
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
+
+
 interface Project {
   id: number;
   shortCode: string;
@@ -438,9 +443,11 @@ export default function ProjectDetailsPage() {
 
   }, [id]);
 
-  if (loading) return <p className="p-8 text-center">Loading project...</p>;
+  // if (loading) return <p className="p-8 text-center">Loading project...</p>;
   if (!project)
-    return <p className="p-8 text-center text-red-600">Project not found</p>;
+    return
+  
+  <p className="p-8 text-center text-red-600">Project not found</p>;
 
 
 
@@ -497,9 +504,20 @@ export default function ProjectDetailsPage() {
         <div className="px-6 py-6">
           {/* Header */}
           <div className="mb-2">
-            <h1 className="text-3xl font-semibold text-gray-800">
+            {/* <h1 className="text-3xl font-semibold text-gray-800">
               {project.name}
-            </h1>
+            </h1> */}
+
+
+{loading ? (
+  <Skeleton width={250} height={30} />
+) : (
+  <h1 className="text-3xl font-semibold text-gray-800">
+    {project.name}
+  </h1>
+)}
+
+
           </div>
 
 
@@ -509,7 +527,19 @@ export default function ProjectDetailsPage() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <div className="lg:col-span-2 bg-white rounded-xl border border-gray-200 p-6">
                 <div className="flex items-center justify-between gap-6">
+
+
+
+           {loading ? (
+  <div className="flex items-center gap-6">
+    <Skeleton width={140} height={80} />
+    <Skeleton width={100} height={40} />
+    <Skeleton width={100} height={40} />
+  </div>
+) : (    
+               
                   <div className="flex items-center gap-6">
+
                     <div className="w-36 h-20">
                       {/* <svg viewBox="0 0 100 50" className="w-full h-full">
                         <path
@@ -603,6 +633,8 @@ export default function ProjectDetailsPage() {
                     </div>
                   </div>
 
+                        )}
+
                   <div className="hidden lg:block max-w-xs text-gray-600">
                     {project.summary ? (
                       <p>{project.summary}</p>
@@ -614,6 +646,17 @@ export default function ProjectDetailsPage() {
                   </div>
                 </div>
               </div>
+
+
+{loading ? (
+  <div className="bg-white p-4 rounded-xl flex items-center gap-4">
+    <Skeleton circle width={60} height={60} />
+    <div>
+      <Skeleton width={120} height={15} />
+      <Skeleton width={80} height={12} />
+    </div>
+  </div>
+) : (
 
               <div className="bg-white rounded-xl border border-gray-200 p-4 flex items-center gap-4">
                 <div className="w-16 h-16 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
@@ -637,18 +680,38 @@ export default function ProjectDetailsPage() {
                   <p className="text-xs text-gray-400">Skavo</p>
                 </div>
               </div>
+
+                    )}
+
             </div>
 
             {/* Middle row: Task statistics + metrics */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <div className="lg:col-span-2 bg-white rounded-xl border border-gray-200 p-6">
-                <h3 className="text-lg font-medium mb-4">Task Statistics</h3>
-                <TaskStatistics projectId={project.id} />
+                {/* <h3 className="text-lg font-medium mb-4">Task Statistics</h3> */}
 
 
+{loading ? (
+  <Skeleton width={200} height={20} />
+) : (
+  <h3 className="text-lg font-medium mb-4">Task Statistics</h3>
+)}
+
+                {/* <TaskStatistics projectId={project.id} /> */}
+
+{loading ? (
+  <Skeleton height={200} />
+) : (
+  <TaskStatistics projectId={project.id} />
+)}
 
 
                 {/* Single Hours Logged chart placed immediately below TaskStatistics (only once) */}
+               
+              {loading ? (
+  <Skeleton height={200} />
+) : ( 
+               
                 <div className="mt-6 bg-white rounded border border-gray-200 p-4 shadow-sm">
                   <div className="flex items-center justify-between mb-3">
                     <h4 className="text-sm font-medium">Hours Logged</h4>
@@ -725,6 +788,8 @@ export default function ProjectDetailsPage() {
                     </div>
                   </div>
                 </div>
+
+                        )}
                 {/* end Hours Logged chart */}
 
 
@@ -733,6 +798,15 @@ export default function ProjectDetailsPage() {
 
 
               </div>
+
+
+{loading ? (
+  <div className="space-y-4">
+    <Skeleton height={80} />
+    <Skeleton height={80} />
+    <Skeleton height={100} />
+  </div>
+) : (
 
               <div className="space-y-4">
                 <div className="bg-white rounded-xl border border-gray-200 p-4">
@@ -792,6 +866,10 @@ export default function ProjectDetailsPage() {
 
 
               </div>
+
+                    )}
+
+
             </div>
 
             {/* Bottom row */}
@@ -800,6 +878,16 @@ export default function ProjectDetailsPage() {
                 <div className="mb-4">
                   <h4 className="text-lg font-medium">Assigned Employees</h4>
                 </div>
+
+{loading ? (
+  <div className="grid grid-cols-2 gap-3">
+    {Array.from({ length: 4 }).map((_, i) => (
+      <Skeleton key={i} height={60} />
+    ))}
+  </div>
+) : (
+
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {project.assignedEmployees &&
                     project.assignedEmployees.length ? (
@@ -835,6 +923,11 @@ export default function ProjectDetailsPage() {
                     </p>
                   )}
                 </div>
+
+                )}
+
+
+                
               </div>
 
               <div className="bg-white rounded-xl border border-gray-200 p-4">
@@ -874,17 +967,46 @@ export default function ProjectDetailsPage() {
           {/* Keep the tasks table below as before */}
           {project && (
             <div className="mt-6 overflow-x-auto">
-              <TasksTable projectId={project.id} />
+              {/* <TasksTable projectId={project.id} /> */}
+
+
+{loading ? (
+  <Skeleton height={300} />
+) : (
+  <TasksTable projectId={project.id} />
+)}
+
             </div>
           )}
 
           {/* other components shown for reference */}
           {/* <div className="mt-6 grid grid-cols-1 lg:grid-rows-2 gap-2"> */}
           <div className="mt-6 space-y-6 overflow-x-auto">
+           
+           {loading ? (
+  <Skeleton height={300} />
+) : (
+           
             <ProjectMembersTable projectId={project.id} />
+
+
+)}
+
+
+{loading ? (
+  <Skeleton height={300} />
+) : (
             <TimesheetsTableNew gatewayPath="https://6jnqmj85-80.inc1.devtunnels.ms/timesheets" projectId={project.id} />
+)}
+
+{loading ? (
+  <Skeleton height={300} />
+) : (
+         
             <MilestonesTable projectId={project.id} />
-          </div>
+         
+)}
+            </div>
         </div>
       </div>
     </main>

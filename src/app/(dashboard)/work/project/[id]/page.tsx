@@ -15,6 +15,11 @@ import NotesSection from "./components/NotesSection";
 import ActivitySection from "./components/ActivitySection";
 import DiscussionSection from "./components/DiscussionSection";
 
+
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
+
 const MAIN = process.env.NEXT_PUBLIC_MAIN || "";
 
 type TabKey =
@@ -67,9 +72,12 @@ export default function ProjectDetailsPage() {
     fetchAll();
   }, [projectId]);
 
-  if (loading) {
-    return <div className="p-8 text-center">Loading project...</div>;
-  }
+  // if (loading) {
+  //   return <div className="p-8 text-center">Loading project...</div>;
+  // }
+
+
+
 
 
 
@@ -77,9 +85,9 @@ export default function ProjectDetailsPage() {
 
   const nan = project?.client?.clientId
 
-  if (!project) {
-    return <div className="p-8 text-center text-red-500">Project not found</div>;
-  }
+  // if (!project) {
+  //   return <div className="p-8 text-center text-red-500">Project not found</div>;
+  // }
 
   // ---------------- UI ----------------
   return (
@@ -87,12 +95,23 @@ export default function ProjectDetailsPage() {
       <div className="max-w-7xl mx-auto px-6 py-6">
 
         {/* HEADER */}
-        <h1 className="text-3xl font-semibold text-gray-800 mb-4">
+        {/* <h1 className="text-3xl font-semibold text-gray-800 mb-4">
           {project.name}
-        </h1>
+        </h1> */}
+
+
+{loading ? (
+  <Skeleton width={250} height={30} />
+) : (
+  <h1 className="text-3xl font-semibold text-gray-800 mb-4">
+    {project.name}
+  </h1>
+)}
+
+
 
         {/* TABS */}
-        <div className="bg-white rounded-t-xl border">
+        {/* <div className="bg-white rounded-t-xl border">
           <nav className="flex gap-6 px-6 h-14 items-center">
             {[
               { key: "overview", label: "Overview" },
@@ -119,10 +138,53 @@ export default function ProjectDetailsPage() {
               );
             })}
           </nav>
-        </div>
+        </div> */}
+
+
+
+
+{loading ? (
+  <div className="bg-white p-4 rounded-t-xl border flex gap-6">
+    {Array.from({ length: 6 }).map((_, i) => (
+      <Skeleton key={i} width={80} height={20} />
+    ))}
+  </div>
+) : (
+  <div className="bg-white rounded-t-xl border">
+    <nav className="flex gap-6 px-6 h-14 items-center">
+      {[
+        { key: "overview", label: "Overview" },
+        { key: "invoices", label: "Invoices" },
+        { key: "payments", label: "Payments" },
+        { key: "files", label: "Files" },
+        { key: "notes", label: "Notes" },
+        { key: "activity", label: "Activity" },
+        { key: "discussion", label: "Discussion" },
+      ].map((tab) => {
+        const isActive = activeTab === tab.key;
+        return (
+          <button
+            key={tab.key}
+            onClick={() => setActiveTab(tab.key as TabKey)}
+            className={`relative text-sm font-medium py-3 ${
+              isActive ? "text-blue-600" : "text-gray-600"
+            }`}
+          >
+            {tab.label}
+            {isActive && (
+              <span className="absolute -bottom-3 left-0 w-full h-0.5 bg-blue-500 rounded" />
+            )}
+          </button>
+        );
+      })}
+    </nav>
+  </div>
+)}
+
+
 
         {/* TAB CONTENT */}
-        <div className="bg-white rounded-b-xl border border-t-0 p-6">
+        {/* <div className="bg-white rounded-b-xl border border-t-0 p-6">
           {activeTab === "overview" && (
             <OverviewSection project={project} metrics={metrics} />
           )}
@@ -147,7 +209,47 @@ export default function ProjectDetailsPage() {
           {activeTab === "discussion" && (
             <DiscussionSection projectId={project.id} />
           )}
-        </div>
+        </div> */}
+
+
+
+
+<div className="bg-white rounded-b-xl border border-t-0 p-6">
+  {loading ? (
+    <div className="space-y-4">
+      <Skeleton height={30} />
+      <Skeleton height={30} />
+      <Skeleton height={200} />
+      <Skeleton height={200} />
+    </div>
+  ) : (
+    <>
+      {activeTab === "overview" && (
+        <OverviewSection project={project} metrics={metrics} />
+      )}
+      {activeTab === "invoices" && (
+        <InvoicesSection projectId={project.id} project={project} />
+      )}
+      {activeTab === "payments" && (
+        <PaymentsSection projectId={project.id} client2={nan} />
+      )}
+      {activeTab === "files" && (
+        <FilesSection projectId={project.id} />
+      )}
+      {activeTab === "notes" && (
+        <NotesSection projectId={project.id} />
+      )}
+      {activeTab === "activity" && (
+        <ActivitySection projectId={project.id} />
+      )}
+      {activeTab === "discussion" && (
+        <DiscussionSection projectId={project.id} />
+      )}
+    </>
+  )}
+</div>
+
+
       </div>
     </div>
   );
