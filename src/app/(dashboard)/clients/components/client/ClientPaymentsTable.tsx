@@ -5,6 +5,10 @@ import React, { useEffect, useState, useMemo, useRef, use } from "react";
 import Image from "next/image";
 import { MoreHorizontal, X, Trash2 } from "lucide-react";
 
+
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
 type PaymentClient = {
   clientId?: string;
   projectIdk?: string | number | null;
@@ -375,7 +379,7 @@ export default function ClientPaymentsTable({
             </div>
 
             <div>
-              <input
+              {/* <input
                 type="search"
                 placeholder="Search"
                 value={query}
@@ -384,15 +388,113 @@ export default function ClientPaymentsTable({
                   if (onSearch) onSearch(e.target.value);
                 }}
                 className="border rounded px-3 py-2 text-sm w-56"
-              />
+              /> */}
+
+
+
+
+{loading ? (
+  <Skeleton height={35} width={220} />
+) : (
+  <input
+    type="search"
+    placeholder="Search"
+    value={query}
+    onChange={(e) => {
+      setQuery(e.target.value);
+      if (onSearch) onSearch(e.target.value);
+    }}
+    className="border rounded px-3 py-2 text-sm w-56"
+  />
+)}
+
+
+
+
             </div>
           </div>
         </div>
 
         {/* loading / error */}
-        {loading ? (
+        {/* {loading ? (
           <div className="py-6 text-center text-gray-600">Loading payments...</div>
-        ) : error ? (
+        )  */}
+        
+        {loading ? (
+  <div className="rounded-lg border overflow-hidden">
+    
+    {/* Header Skeleton */}
+    <div className="bg-[#e8f3ff] px-4 py-3 flex">
+      <div className="w-1/12"><Skeleton width={40} /></div>
+      <div className="w-2/12"><Skeleton width={100} /></div>
+      <div className="w-1/12"><Skeleton width={60} /></div>
+      <div className="w-2/12"><Skeleton width={120} /></div>
+      <div className="w-1/12"><Skeleton width={70} /></div>
+      <div className="w-1/12"><Skeleton width={80} /></div>
+      <div className="w-1/12"><Skeleton width={90} /></div>
+      <div className="w-1/12"><Skeleton width={100} /></div>
+      <div className="w-1/12"><Skeleton width={80} /></div>
+      <div className="w-10"><Skeleton width={30} /></div>
+    </div>
+
+    {/* Rows Skeleton */}
+    <div className="px-4 py-4 space-y-3">
+      {[...Array(5)].map((_, i) => (
+        <div key={i} className="flex items-center rounded-md border px-4 py-3">
+          
+          <div className="w-1/12">
+            <Skeleton width={30} />
+          </div>
+
+          <div className="w-2/12">
+            <Skeleton width={120} />
+          </div>
+
+          <div className="w-1/12">
+            <Skeleton width={80} />
+          </div>
+
+          <div className="w-2/12 flex items-center gap-3">
+            <Skeleton circle width={28} height={28} />
+            <div className="flex flex-col gap-1">
+              <Skeleton width={100} />
+              <Skeleton width={70} />
+            </div>
+          </div>
+
+          <div className="w-1/12">
+            <Skeleton width={70} />
+          </div>
+
+          <div className="w-1/12">
+            <Skeleton width={90} />
+          </div>
+
+          <div className="w-1/12">
+            <Skeleton width={100} />
+          </div>
+
+          <div className="w-1/12">
+            <Skeleton width={110} />
+          </div>
+
+          <div className="w-1/12">
+            <Skeleton width={80} />
+          </div>
+
+          <div className="w-10 flex justify-center">
+            <Skeleton circle width={30} height={30} />
+          </div>
+
+        </div>
+      ))}
+    </div>
+  </div>
+)
+        
+        
+        
+        : error ? (
           <div className="py-6 text-center text-red-600">{error}</div>
         ) : (
           <div className="rounded-lg border overflow-hidden">

@@ -3,6 +3,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { MoreVertical, Globe, Lock, Eye, Edit, Trash2, Plus, X } from "lucide-react";
 
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
+
 export type NoteItem = {
   id: number;
   clientId?: number;
@@ -379,17 +383,83 @@ export default function ClientNotesTable({
         <div className="p-4 flex items-center justify-between border-b">
           {/* <h3 className="text-lg font-semibold">Notes</h3> */}
 
-          <button
+          {/* <button
             type="button"
             className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm px-3 py-2 rounded"
             onClick={openAddModal}
           >
             <Plus size={16} /> Add Note
-          </button>
+          </button> */}
+
+
+{loading ? (
+  <Skeleton width={120} height={35} />
+) : (
+  <button
+    type="button"
+    className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm px-3 py-2 rounded"
+    onClick={openAddModal}
+  >
+    <Plus size={16} /> Add Note
+  </button>
+)}
+
+
+
         </div>
 
         <div className="p-4">
-          {loading && <div className="text-sm text-gray-600">Loading notes…</div>}
+          {/* {loading && <div className="text-sm text-gray-600">Loading notes…</div>} */}
+
+{loading && (
+  <div className="overflow-x-auto">
+    <table className="min-w-full text-sm">
+      
+      {/* Header Skeleton */}
+      <thead>
+        <tr className="bg-blue-50">
+          <th className="px-4 py-3 w-1/2">
+            <Skeleton width={120} />
+          </th>
+          <th className="px-4 py-3 w-1/4">
+            <Skeleton width={100} />
+          </th>
+          <th className="px-4 py-3 w-1/6 text-right">
+            <Skeleton width={60} />
+          </th>
+        </tr>
+      </thead>
+
+      {/* Rows Skeleton */}
+      <tbody>
+        {[...Array(5)].map((_, i) => (
+          <tr key={i} className="border-t">
+            
+            {/* Title */}
+            <td className="px-4 py-4">
+              <Skeleton width="80%" />
+            </td>
+
+            {/* Type */}
+            <td className="px-4 py-4 flex items-center gap-2">
+              <Skeleton circle width={14} height={14} />
+              <Skeleton width={60} />
+            </td>
+
+            {/* Action */}
+            <td className="px-4 py-4 text-right">
+              <Skeleton circle width={28} height={28} />
+            </td>
+
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+)}
+
+
+
           {error && <div className="text-sm text-red-600 mb-2">Error: {error}</div>}
 
           <div className="overflow-x-auto">
@@ -403,7 +473,10 @@ export default function ClientNotesTable({
               </thead>
 
               <tbody>
-                {notes.length === 0 && !loading ? (
+                {/* {notes.length === 0 && !loading ? ( */}
+  {loading ? null : notes.length === 0 ? (
+
+
                   <tr>
                     <td colSpan={3} className="px-4 py-6 text-center text-gray-500">No notes found.</td>
                   </tr>
