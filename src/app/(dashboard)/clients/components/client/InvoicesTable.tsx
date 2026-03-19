@@ -11,6 +11,8 @@ import ClientAddPaymentModal from "./ClientAddPaymentModal";
 import InvoicePaymentsDrawer from "./InvoicePaymentsDrawer";
 
 
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 import {
   Plus,
@@ -1671,7 +1673,7 @@ onClick={() => openViewPaymentsDrawer(inv)}
   return (
     <Card>
       <CardHeader className="flex items-center justify-between">
-        <CardTitle>Client Invoices </CardTitle>
+        <CardTitle>Client Invoices</CardTitle>
         <div className="flex items-center gap-3">
           <Button
             onClick={() => {
@@ -1705,15 +1707,35 @@ onClick={() => openViewPaymentsDrawer(inv)}
       <CardContent>
         <div className="mb-1 flex items-center justify-between overflow-hidden">
           <div>
-            <input
+            {/* <input
               placeholder="Search invoice number / project / client"
               className="w-60  px-2 py-2 border rounded"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-            />
+            /> */}
+
+
+
+{loading ? (
+  <Skeleton height={35} width={250} />
+) : (
+  <input
+    placeholder="Search invoice number / project / client"
+    className="w-60 px-2 py-2 border rounded"
+    value={search}
+    onChange={(e) => setSearch(e.target.value)}
+  />
+)}
+
+
+
+
           </div>
           <div className="text-sm text-gray-500">
-            {loading ? "Loading..." : `${invoices.length} invoices`}
+            {/* {loading ? "Loading..." : `${invoices.length} invoices`} */}
+
+{loading ? <Skeleton width={100} /> : `${invoices.length} invoices`}
+
           </div>
         </div>
 
@@ -1732,13 +1754,51 @@ onClick={() => openViewPaymentsDrawer(inv)}
               </tr>
             </thead>
             <tbody>
-              {loading ? (
+              {/* {loading ? (
                 <tr>
                   <td colSpan={8} className="text-center py-8">
                     Loading invoices...
                   </td>
                 </tr>
-              ) : error ? (
+              ) */}
+
+
+
+
+{loading ? (
+  [...Array(5)].map((_, i) => (
+    <tr key={i} className="border-t">
+      <td className="px-4 py-3">
+        <Skeleton width={80} />
+      </td>
+      <td className="px-4 py-3">
+        <Skeleton width={100} />
+      </td>
+      <td className="px-4 py-3">
+        <Skeleton width={120} />
+      </td>
+      <td className="px-4 py-3">
+        <Skeleton width={60} />
+      </td>
+      <td className="px-4 py-3">
+        <Skeleton width={90} />
+      </td>
+      <td className="px-4 py-3">
+        <Skeleton width={90} />
+      </td>
+      <td className="px-4 py-3">
+        <Skeleton width={80} height={20} />
+      </td>
+      <td className="px-4 py-3">
+        <Skeleton circle width={30} height={30} />
+      </td>
+    </tr>
+  ))
+)
+
+              
+              
+              : error ? (
                 <tr>
                   <td colSpan={8} className="text-center py-8 text-red-600">
                     {error}

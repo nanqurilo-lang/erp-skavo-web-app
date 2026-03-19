@@ -49,6 +49,12 @@ import ClientCreditNotesTable from "../components/client/ClientCreditNotesTable"
 import ClientPaymentsTable from "../components/client/ClientPaymentsTable";
 import ClientDocuments from "../components/client/ClientDocuments";
 import ClientNotesTable from "../components/client/ClientNotesTable";
+
+
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
+
 import { format } from "date-fns";
 
 const API_BASE = `${process.env.NEXT_PUBLIC_MAIN}`;
@@ -875,18 +881,81 @@ useEffect(() => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab, client]);
 
+  // if (loading) {
+  //   return (
+  //     <div className="flex min-h-screen items-center justify-center">
+  //       <div className="text-center">
+  //         <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent mx-auto mb-4" />
+  //         <p className="text-muted-foreground">Loading client details...</p>
+  //       </div>
+  //     </div>
+
+      
+  //   );
+  // }
+
+
+
+
   if (loading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="text-center">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent mx-auto mb-4" />
-          <p className="text-muted-foreground">Loading client details...</p>
+  return (
+    <div className="container mx-auto py-8 px-4 space-y-6">
+
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <Skeleton width={200} height={30} />
+        <Skeleton width={100} height={35} />
+      </div>
+
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        {[...Array(4)].map((_, i) => (
+          <div key={i} className="p-4 border rounded-lg bg-white space-y-2">
+            <Skeleton width={100} height={15} />
+            <Skeleton width={60} height={25} />
+          </div>
+        ))}
+      </div>
+
+      {/* Profile Section */}
+      <div className="p-6 border rounded-lg bg-white space-y-4">
+        <Skeleton width={150} height={20} />
+
+        <div className="grid grid-cols-2 gap-4">
+          {[...Array(6)].map((_, i) => (
+            <div key={i}>
+              <Skeleton width={120} height={12} />
+              <Skeleton height={30} />
+            </div>
+          ))}
         </div>
       </div>
 
-      
-    );
-  }
+      {/* Tabs */}
+      <div className="flex gap-4">
+        {[...Array(5)].map((_, i) => (
+          <Skeleton key={i} width={100} height={30} />
+        ))}
+      </div>
+
+      {/* Table / Content */}
+      <div className="bg-white border rounded-lg p-4 space-y-4">
+        <Skeleton width={180} height={20} />
+
+        {[...Array(5)].map((_, i) => (
+          <div key={i} className="grid grid-cols-6 gap-4">
+            {[...Array(6)].map((_, j) => (
+              <Skeleton key={j} height={15} />
+            ))}
+          </div>
+        ))}
+      </div>
+
+    </div>
+  );
+}
+
+
 
   if (error || !client) {
     return (

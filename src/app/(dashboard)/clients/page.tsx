@@ -33,6 +33,9 @@ import { Button } from "@/components/ui/button";
 
 import { MoreHorizontal, Eye, Edit, TrendingUp, Trash2, Calendar, CalendarIcon } from "lucide-react";
 
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -278,13 +281,68 @@ export default function ClientsPage() {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="h-screen flex  justify-center items-center">
-        Loading...
+  // if (loading) {
+  //   return (
+  //     <div className="h-screen flex  justify-center items-center">
+  //       Loading...
+  //     </div>
+  //   );
+  // }
+
+
+
+
+if (loading) {
+  return (
+    <div className="container mx-auto py-6 px-4 space-y-6">
+
+      {/* Top Filters */}
+      <div className="flex justify-between items-center">
+        <Skeleton width={200} height={30} />
+        <Skeleton width={120} height={30} />
       </div>
-    );
-  }
+
+      {/* Search + Button */}
+      <div className="flex justify-between items-center">
+        <Skeleton width={140} height={35} />
+        <Skeleton width={250} height={35} />
+      </div>
+
+      {/* Table Card */}
+      <div className="bg-white border rounded-xl p-4 space-y-4">
+
+        {/* Title */}
+        <Skeleton width={180} height={25} />
+
+        {/* Table Header */}
+        <div className="grid grid-cols-7 gap-4">
+          {[...Array(7)].map((_, i) => (
+            <Skeleton key={i} height={15} />
+          ))}
+        </div>
+
+        {/* Table Rows */}
+        {[...Array(6)].map((_, i) => (
+          <div key={i} className="grid grid-cols-7 gap-4 items-center">
+            <Skeleton height={15} />
+            <div className="flex items-center gap-2">
+              <Skeleton circle width={32} height={32} />
+              <Skeleton width={100} height={15} />
+            </div>
+            <Skeleton height={15} />
+            <Skeleton height={15} />
+            <Skeleton width={60} height={20} />
+            <Skeleton height={15} />
+            <Skeleton width={30} height={20} />
+          </div>
+        ))}
+
+      </div>
+    </div>
+  );
+}
+
+
 
   if (error) {
     return (

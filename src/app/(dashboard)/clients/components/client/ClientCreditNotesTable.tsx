@@ -5,6 +5,13 @@ import React, { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Eye, Loader } from "lucide-react";
+
+
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
+
+
 import {
   Table,
   TableBody,
@@ -195,15 +202,82 @@ export default function ClientCreditNotesTable({ clientId }: { clientId?: string
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold">Credit Notes</h3>
           <div className="text-sm text-muted-foreground">
-            {creditNotes.length} record{creditNotes.length !== 1 ? "s" : ""}
+            {/* {creditNotes.length} record{creditNotes.length !== 1 ? "s" : ""} */}
+
+
+{loading ? (
+  <Skeleton width={80} />
+) : (
+  `${creditNotes.length} record${creditNotes.length !== 1 ? "s" : ""}`
+)}
+
+
           </div>
         </div>
 
-        {loading ? (
+        {/* {loading ? (
           <div className="py-12 flex justify-center">
             <Loader className="animate-spin" />
           </div>
-        ) : error ? (
+        ) */}
+
+
+{loading ? (
+  <div className="rounded-lg border overflow-hidden">
+    {/* Header skeleton */}
+    <div className="bg-[#e8f3ff] px-6 py-3 flex">
+      <div className="w-1/6"><Skeleton width={100} /></div>
+      <div className="w-1/6"><Skeleton width={100} /></div>
+      <div className="w-2/6"><Skeleton width={150} /></div>
+      <div className="w-1/6"><Skeleton width={80} /></div>
+      <div className="w-1/6"><Skeleton width={100} /></div>
+      <div className="w-12"><Skeleton width={30} /></div>
+    </div>
+
+    {/* Rows skeleton */}
+    <div className="px-6 py-4 space-y-3">
+      {[...Array(4)].map((_, i) => (
+        <div key={i} className="flex items-center rounded-md border px-4 py-4">
+          
+          <div className="w-1/6">
+            <Skeleton width={80} />
+          </div>
+
+          <div className="w-1/6">
+            <Skeleton width={70} />
+          </div>
+
+          <div className="w-2/6 flex items-center gap-3">
+            <Skeleton circle width={32} height={32} />
+            <div className="flex flex-col gap-1">
+              <Skeleton width={120} />
+              <Skeleton width={80} />
+            </div>
+          </div>
+
+          <div className="w-1/6">
+            <Skeleton width={90} />
+            <Skeleton width={70} />
+          </div>
+
+          <div className="w-1/6">
+            <Skeleton width={100} />
+          </div>
+
+          <div className="w-12 flex justify-center">
+            <Skeleton circle width={30} height={30} />
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+)
+
+
+        
+        
+        
+        : error ? (
           <div className="py-6 text-center text-red-600">{error}</div>
         ) : creditNotes.length === 0 ? (
           <div className="py-8 text-center text-gray-600">No credit notes found for this client.</div>

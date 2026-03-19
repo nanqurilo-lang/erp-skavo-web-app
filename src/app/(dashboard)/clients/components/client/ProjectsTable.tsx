@@ -8,6 +8,9 @@ import { MoreHorizontal } from "lucide-react"
 import { format } from "date-fns"
 
 
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
 
 const placeholderImg = "/mnt/data/Screenshot 2025-11-25 124734.png"
 
@@ -51,10 +54,52 @@ export const ProjectsTable: React.FC<{
               </tr>
             </thead>
             <tbody>
-              {loading ? (
+              {/* {loading ? (
                 <tr>
                   <td colSpan={8} className="text-center py-8">Loading projects...</td>
-                </tr>
+                </tr> */}
+
+
+
+{loading ? (
+  [...Array(6)].map((_, i) => (
+    <tr key={i} className="border-t">
+      <td className="px-4 py-3"><Skeleton width={60} /></td>
+
+      <td className="px-4 py-3"><Skeleton width={120} /></td>
+
+      <td className="px-4 py-3">
+        <div className="flex -space-x-2">
+          <Skeleton circle width={28} height={28} />
+          <Skeleton circle width={28} height={28} />
+          <Skeleton circle width={28} height={28} />
+        </div>
+      </td>
+
+      <td className="px-4 py-3"><Skeleton width={90} /></td>
+
+      <td className="px-4 py-3"><Skeleton width={90} /></td>
+
+      <td className="px-4 py-3 flex items-center gap-2">
+        <Skeleton circle width={32} height={32} />
+        <Skeleton width={80} />
+      </td>
+
+      <td className="px-4 py-3">
+        <Skeleton height={10} />
+        <Skeleton width={40} height={15} style={{ marginTop: 6 }} />
+      </td>
+
+      <td className="px-4 py-3">
+        <Skeleton width={20} height={20} />
+      </td>
+    </tr>
+  ))
+
+
+
+
+
               ) : error ? (
                 <tr>
                   <td colSpan={8} className="text-center py-8 text-red-600">{error}</td>
