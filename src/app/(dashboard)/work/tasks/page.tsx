@@ -19,6 +19,11 @@ import EditTaskDrawer from "./components/EditTaskDrawer";
 import { DuplicateTaskModal } from "./components/DuplicateTaskModal";
 import { TaskFiltersDrawer } from "./components/TaskFiltersDrawer";
 
+
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
+
 /**
  * ---- Shared Types (baaki components inko import karke use kar sakte hain) ----
  */
@@ -468,7 +473,15 @@ const handlePinToggle = async (task: Task) => {
       <div className="flex min-h-screen flex-col bg-slate-50">
         {/* Top header */}
         <header className="flex items-center justify-between px-8 py-6">
-          <h1 className="text-2xl font-semibold text-slate-900">My Task</h1>
+          {/* <h1 className="text-2xl font-semibold text-slate-900">My Task</h1> */}
+
+
+{loading && !initialLoaded ? (
+  <Skeleton width={120} height={24} />
+) : (
+  <h1 className="text-2xl font-semibold text-slate-900">My Task</h1>
+)}
+
 
           {/* yaha future me notification icon, profile avatar etc aa sakta hai */}
           <div className="flex items-center gap-4 text-sm text-slate-500">
@@ -485,14 +498,33 @@ const handlePinToggle = async (task: Task) => {
           <Card className="border-none bg-white shadow-sm">
             <div className="p-4">
 
-              <FiltersBar
+              {/* <FiltersBar
                 status={statusFilter}
                 onStatusChange={setStatusFilter}
                 dateRange={dateRange}
                 onDateRangeChange={setDateRange}
                 onOpenFilters={() => setOpenFilters(true)}   // ✅ IMPORTANT
-              />
+              /> */}
 
+
+
+
+
+{loading && !initialLoaded ? (
+  <div className="flex gap-4">
+    <Skeleton width={120} height={35} />
+    <Skeleton width={150} height={35} />
+    <Skeleton width={100} height={35} />
+  </div>
+) : (
+  <FiltersBar
+    status={statusFilter}
+    onStatusChange={setStatusFilter}
+    dateRange={dateRange}
+    onDateRangeChange={setDateRange}
+    onOpenFilters={() => setOpenFilters(true)}
+  />
+)}
 
 
             </div>
@@ -501,7 +533,7 @@ const handlePinToggle = async (task: Task) => {
           {/* -------- Section 2: Action Buttons -------- */}
           <Card className="border-none bg-white shadow-sm">
             <div className="p-4">
-              <ActionsBar
+              {/* <ActionsBar
                 taskSource={taskSource}
                 onTaskSourceChange={setTaskSource}
                 viewMode={viewMode}
@@ -511,21 +543,71 @@ const handlePinToggle = async (task: Task) => {
                 onOpenStages={() => setShowStagesModal(true)}
                 onSearchChange={setSearchTerm}   // ✅ IMPORTANT
 
-              // ye special actions automatically filters se handle ho rahe hain:
-              // - Approval -> taskSource = "approval"
-              // - Pin -> taskSource = "pinned"
-              />
+             
+              /> */}
+
+
+
+{loading && !initialLoaded ? (
+  <div className="flex justify-between">
+    <Skeleton width={200} height={35} />
+    <Skeleton width={150} height={35} />
+  </div>
+) : (
+  <ActionsBar
+    taskSource={taskSource}
+    onTaskSourceChange={setTaskSource}
+    viewMode={viewMode}
+    onViewModeChange={setViewMode}
+    onAddTask={() => setShowAddTaskModal(true)}
+    onOpenCalendar={handleOpenCalendar}
+    onOpenStages={() => setShowStagesModal(true)}
+    onSearchChange={setSearchTerm}
+  />
+)}
+
+
+
             </div>
           </Card>
 
           {/* -------- Section 3: Render Area (Table / Kanban / etc.) -------- */}
           <Card className="border-none bg-white shadow-sm">
             <div className="p-0">
-              {loading && !initialLoaded ? (
+              {/* {loading && !initialLoaded ? (
                 <div className="flex h-64 items-center justify-center">
                   <Loader2 className="h-6 w-6 animate-spin text-slate-400" />
                 </div>
-              ) : error ? (
+              ) : error ? ( */}
+                
+                
+
+                {loading && !initialLoaded ? (
+  <div className="p-4 space-y-3">
+    {Array.from({ length: 6 }).map((_, i) => (
+      <div
+        key={i}
+        className="flex items-center justify-between border rounded p-3"
+      >
+        <div className="flex items-center gap-3">
+          <Skeleton circle width={35} height={35} />
+          <div className="space-y-2">
+            <Skeleton width={200} height={14} />
+            <Skeleton width={120} height={10} />
+          </div>
+        </div>
+
+        <div className="flex items-center gap-4">
+          <Skeleton width={60} height={12} />
+          <Skeleton width={80} height={12} />
+          <Skeleton width={30} height={20} />
+        </div>
+      </div>
+    ))}
+  </div>
+) : error ? (
+                
+                
                 <div className="flex h-64 flex-col items-center justify-center gap-2 text-sm text-red-500">
                   <p>{error}</p>
                   <button
@@ -556,6 +638,8 @@ const handlePinToggle = async (task: Task) => {
 
                 />
               ) : viewMode === "kanban" ? (
+
+                
                 <KanbanBoard tasks={sourceTasks} />
               ) : (
                 <div className="flex h-64 items-center justify-center text-sm text-slate-500">

@@ -11,6 +11,10 @@ import {
 } from "lucide-react";
 import DiscussionDetailPage from "./DiscussionDetailPage";
 
+
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
 const BASE_URL = `${process.env.NEXT_PUBLIC_MAIN}`;
 
 /* ================= TYPES ================= */
@@ -217,7 +221,7 @@ export default function DiscussionSection({
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-medium">Discussion</h3>
 
-        <div className="flex gap-2">
+        {/* <div className="flex gap-2">
           <button
             onClick={() => setShowDiscussionModal(true)}
             className="flex items-center gap-2 bg-blue-600 text-white px-3 py-1.5 rounded text-sm"
@@ -233,11 +237,77 @@ export default function DiscussionSection({
             <Settings size={16} />
             Discussion Category
           </button>
-        </div>
+        </div> */}
+
+
+
+<div className="flex gap-2">
+  {loading ? (
+    <>
+      <Skeleton width={150} height={30} />
+      <Skeleton width={180} height={30} />
+    </>
+  ) : (
+    <>
+      <button
+        onClick={() => setShowDiscussionModal(true)}
+        className="flex items-center gap-2 bg-blue-600 text-white px-3 py-1.5 rounded text-sm"
+      >
+        <Plus size={16} />
+        New Discussion
+      </button>
+
+      <button
+        onClick={() => setShowCategoryModal(true)}
+        className="flex items-center gap-2 border border-blue-500 text-blue-600 px-3 py-1.5 rounded text-sm"
+      >
+        <Settings size={16} />
+        Discussion Category
+      </button>
+    </>
+  )}
+</div>
+
+
+
+
       </div>
 
       {/* ================= DISCUSSION LIST ================= */}
-      {discussions.map((d) => {
+      {/* {discussions.map((d) => { */}
+
+
+{loading ? (
+  Array.from({ length: 5 }).map((_, i) => (
+    <div
+      key={i}
+      className="border rounded-md p-4 mb-3 flex justify-between items-center"
+    >
+      <div className="flex gap-3 items-start">
+        {/* Avatar */}
+        <Skeleton circle width={40} height={40} />
+
+        <div className="space-y-2">
+          <Skeleton width={200} height={14} />
+          <Skeleton width={150} height={10} />
+          <Skeleton width={250} height={12} />
+        </div>
+      </div>
+
+      <div className="flex items-center gap-4">
+        <Skeleton width={40} height={12} />
+        <Skeleton width={80} height={12} />
+        <Skeleton width={20} height={20} />
+      </div>
+    </div>
+  ))
+) : discussions.length === 0 ? (
+  <div className="border rounded-md p-4 text-gray-400 text-center">
+    Team discussion will appear here
+  </div>
+) : (
+  discussions.map((d) => {
+
         const repliedAt =
           d.lastMessage?.createdAt || d.updatedAt || d.createdAt;
 
@@ -259,12 +329,27 @@ export default function DiscussionSection({
                   {formatRepliedAt(repliedAt)}
                 </p>
 
-                {d.lastMessage?.messageType === "FILE" && (
+                {/* {d.lastMessage?.messageType === "FILE" && (
                   <img
                     src={d.lastMessage.fileUrl}
                     className="h-16 mt-2 rounded"
                   />
-                )}
+                )} */}
+
+
+
+{loading ? (
+  <Skeleton width={100} height={60} />
+) : (
+  d.lastMessage?.messageType === "FILE" && (
+    <img
+      src={d.lastMessage.fileUrl}
+      className="h-16 mt-2 rounded"
+    />
+  )
+)}
+
+
 
                 {d.lastMessage?.messageType === "TEXT" && (
                   <p className="text-sm text-gray-500">
@@ -299,7 +384,12 @@ export default function DiscussionSection({
             </div>
           </div>
         );
-      })}
+      }))}
+
+
+    
+
+
 
       {discussions.length === 0 && (
         <div className="border rounded-md p-4 text-gray-400 text-center">

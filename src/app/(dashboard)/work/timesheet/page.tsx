@@ -29,6 +29,11 @@ import WeeklyTimesheetModal from "./components/WeeklyTimesheetModal";
 import FullCalendarView from "./components/FullCalendarView";
 import TimesheetSummaryList from "./components/TimesheetSummaryList";
 
+
+
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
 const MAIN =
   process.env.NEXT_PUBLIC_MAIN;
 
@@ -822,13 +827,47 @@ export default function TimesheetPage() {
               </thead>
 
               <tbody>
-                {loading && (
+                {/* {loading && (
                   <tr>
                     <td colSpan={7} className="py-6 text-center text-gray-500">
                       Loading...
                     </td>
                   </tr>
-                )}
+                )} */}
+
+
+
+{loading && (
+  <>
+    {Array.from({ length: 6 }).map((_, i) => (
+      <tr key={i} className="border-b">
+        <td className="px-4 py-3">
+          <Skeleton width={60} />
+        </td>
+        <td className="px-4 py-3">
+          <Skeleton width={120} />
+        </td>
+        <td className="px-4 py-3">
+          <Skeleton width={140} />
+        </td>
+        <td className="px-4 py-3">
+          <Skeleton width={130} />
+        </td>
+        <td className="px-4 py-3">
+          <Skeleton width={130} />
+        </td>
+        <td className="px-4 py-3">
+          <Skeleton width={60} />
+        </td>
+        <td className="px-4 py-3">
+          <Skeleton width={30} height={20} />
+        </td>
+      </tr>
+    ))}
+  </>
+)}
+
+
 
                 {!loading && filtered.length === 0 && (
                   <tr>
@@ -892,7 +931,7 @@ export default function TimesheetPage() {
     <div className="min-h-screen bg-gray-50">
       <main className="w-full">
         <div className="max-w-[1180px] mx-auto ">
-
+{/* 
           <FiltersSection
             employeeFilter={employeeFilter}
             setEmployeeFilter={setEmployeeFilter}
@@ -905,13 +944,37 @@ export default function TimesheetPage() {
             setEndDate={setEndDate}
 
             onOpenFiltersDrawer={() => setShowFilters(true)}
-          />
+          /> */}
 
+
+
+
+
+
+{loading ? (
+  <div className="flex gap-4 p-4">
+    <Skeleton width={150} height={35} />
+    <Skeleton width={150} height={35} />
+    <Skeleton width={120} height={35} />
+  </div>
+) : (
+  <FiltersSection
+    employeeFilter={employeeFilter}
+    setEmployeeFilter={setEmployeeFilter}
+    employeeOptions={employeeOptions}
+    getEmployeeLabel={getEmployeeLabel}
+    startDate={startDate}
+    endDate={endDate}
+    setStartDate={setStartDate}
+    setEndDate={setEndDate}
+    onOpenFiltersDrawer={() => setShowFilters(true)}
+  />
+)}
 
 
 
           {/* PART 2: Action buttons */}
-          <ActionsSection
+          {/* <ActionsSection
             searchInput={searchInput}
             setSearchInput={setSearchInput}
             setSearchQuery={setSearchQuery}
@@ -921,7 +984,27 @@ export default function TimesheetPage() {
             showCalendarModal={showCalendarModal}
             setShowCalendarModal={setShowCalendarModal}
             openLogForm={() => openLogForm()}
-          />
+          /> */}
+
+
+          {loading ? (
+  <div className="flex justify-between p-4">
+    <Skeleton width={200} height={35} />
+    <Skeleton width={120} height={35} />
+  </div>
+) : (
+  <ActionsSection
+    searchInput={searchInput}
+    setSearchInput={setSearchInput}
+    setSearchQuery={setSearchQuery}
+    setCurrentPage={setCurrentPage}
+    viewMode={viewMode}
+    setViewMode={setViewMode}
+    showCalendarModal={showCalendarModal}
+    setShowCalendarModal={setShowCalendarModal}
+    openLogForm={() => openLogForm()}
+  />
+)}
 
           {/* PART 3: Render table / list (not in weekly mode) */}
           {renderMainSection()}
