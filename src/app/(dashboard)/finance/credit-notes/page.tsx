@@ -8,6 +8,9 @@ import Image from "next/image";
 import React, { useEffect, useMemo, useState, useRef } from "react";
 import { createPortal } from "react-dom";
 
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
 import { MoreHorizontal, Eye, Edit, Trash2, X } from "lucide-react";
 import {
   Table,
@@ -280,11 +283,29 @@ const menuRef = useRef<HTMLDivElement | null>(null);
     <div className="min-h-screen bg-slate-50 p-6">
       <div className="max-w-6xl mx-auto relative">
         <div className="mb-6">
-          <h2 className="text-2xl font-semibold text-slate-900">Credit Note</h2>
+          {/* <h2 className="text-2xl font-semibold text-slate-900">Credit Note</h2> */}
+
+{loading ? (
+  <Skeleton width={180} height={30} />
+) : (
+  <h2 className="text-2xl font-semibold text-slate-900">Credit Note</h2>
+)}
+
         </div>
 
         {/* Filter bar */}
         <div className="bg-white border rounded-md mb-4 p-4 flex items-center gap-4">
+
+  {loading ? (
+    <>
+      <Skeleton width={120} height={20} />
+      <Skeleton width={120} height={35} />
+      <Skeleton width={120} height={35} />
+      <Skeleton width={80} height={35} />
+    </>
+  ) : (
+    <>
+
           <div className="flex items-center gap-3">
             <div className="text-sm text-slate-600 font-medium">Duration</div>
             {/* <div className="text-sm text-slate-500">Start Date to End Date</div> */}
@@ -307,6 +328,10 @@ const menuRef = useRef<HTMLDivElement | null>(null);
 
 
           </div>
+
+
+
+
 
           <div>
             <Select
@@ -333,15 +358,40 @@ const menuRef = useRef<HTMLDivElement | null>(null);
               <span>Filters</span>
             </button>
           </div>
+
+
+
+</>
+)}
+
         </div>
 
         {/* Main table container */}
         <div className="bg-white border rounded-lg shadow-sm overflow-hidden">
-          {loading ? (
+          {/* {loading ? (
             <div className="p-8 text-center text-slate-600">
               Loading credit notes...
             </div>
-          ) : error ? (
+          ) : error ? ( */}
+
+
+
+{loading ? (
+  <div className="p-4 space-y-3">
+    {Array.from({ length: 7 }).map((_, i) => (
+      <div key={i} className="flex items-center gap-4 p-3 border rounded">
+        <Skeleton width={120} />
+        <Skeleton width={100} />
+        <Skeleton circle width={32} height={32} />
+        <Skeleton width={140} />
+        <Skeleton width={120} />
+        <Skeleton width={40} height={30} />
+      </div>
+    ))}
+  </div>
+) : error ? (
+
+
             <div className="p-8 text-center text-red-500">Error: {error}</div>
           ) : (
             <Table>

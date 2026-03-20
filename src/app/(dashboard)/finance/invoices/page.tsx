@@ -20,6 +20,9 @@ import CreateCreditNoteDrawer from "./components/CreateCreditNoteDrawer";
 import ViewCreditNotesDrawer from "./components/ViewCreditNotesDrawer";
 
 
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
 
 
 const BASE_URL = process.env.NEXT_PUBLIC_MAIN ;
@@ -90,14 +93,36 @@ export default function InvoiceList() {
       {/* HEADER */}
 
 
-<InvoiceFilters filters={filters} setFilters={setFilters} invoices={invoices} />
+{/* <InvoiceFilters filters={filters} setFilters={setFilters} invoices={invoices} /> */}
+
+
+{loading ? (
+  <div className="flex gap-4 mb-4">
+    <Skeleton width={200} height={40} />
+    <Skeleton width={200} height={40} />
+    <Skeleton width={150} height={40} />
+  </div>
+) : (
+  <InvoiceFilters filters={filters} setFilters={setFilters} invoices={invoices} />
+)}
 
 
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <Button onClick={() => setModal(m => ({ ...m, create: true }))}>
+          {/* <Button onClick={() => setModal(m => ({ ...m, create: true }))}>
             <Plus className=" h-4 w-4" /> Create Invoice 
-          </Button>
+          </Button> */}
+
+
+
+{loading ? (
+  <Skeleton width={160} height={40} />
+) : (
+  <Button onClick={() => setModal(m => ({ ...m, create: true }))}>
+    <Plus className="h-4 w-4" /> Create Invoice
+  </Button>
+)}
+
 
           {/* <div>
             <h1 className="text-3xl font-bold">Invoices</h1>

@@ -7,6 +7,10 @@ import { ArrowLeft, Eye, Download, Mail } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
+
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
 type Company = {
   companyName: string;
   website: string;
@@ -124,13 +128,13 @@ function InvoiceCreditNotesListInner() {
     window.open(fileUrl, "_blank");
   };
 
-  if (loading) {
-    return (
-      <div className="container mx-auto p-6">
-        <p className="text-center text-gray-600">Loading credit notes...</p>
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="container mx-auto p-6">
+  //       <p className="text-center text-gray-600">Loading credit notes...</p>
+  //     </div>
+  //   );
+  // }
 
   if (error) {
     return (
@@ -142,7 +146,7 @@ function InvoiceCreditNotesListInner() {
 
   return (
     <div className="container mx-auto p-6">
-      <div className="mb-6">
+      {/* <div className="mb-6">
         <Button
           variant="ghost"
           onClick={() => router.push(`/finance/invoices/${invoiceNumber}`)}
@@ -156,9 +160,46 @@ function InvoiceCreditNotesListInner() {
         <p className="text-gray-600 mt-1">
           Manage credit notes associated with invoice {invoiceNumber}
         </p>
-      </div>
+    
+    
+    
+    
+      </div> */}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+
+
+<div className="mb-6">
+  {loading ? (
+    <>
+      <Skeleton width={150} height={30} />
+      <Skeleton width={300} height={35} className="mt-2" />
+      <Skeleton width={250} height={20} className="mt-2" />
+    </>
+  ) : (
+    <>
+      <Button
+        variant="ghost"
+        onClick={() => router.push(`/finance/invoices/${invoiceNumber}`)}
+        className="mb-2"
+      >
+        <ArrowLeft className="h-4 w-4 mr-2" /> Back to Invoice
+      </Button>
+
+      <h1 className="text-3xl font-bold text-gray-900">
+        Credit Notes for Invoice {invoiceNumber}
+      </h1>
+
+      <p className="text-gray-600 mt-1">
+        Manage credit notes associated with invoice {invoiceNumber}
+      </p>
+    </>
+  )}
+</div>
+
+
+
+      {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {creditNotes.length === 0 ? (
           <p className="text-center text-gray-500 col-span-full">
             No credit notes found for this invoice
@@ -219,7 +260,105 @@ function InvoiceCreditNotesListInner() {
             </div>
           ))
         )}
+      </div> */}
+
+
+
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+  {loading ? (
+    Array.from({ length: 6 }).map((_, i) => (
+      <div key={i} className="bg-white border rounded-lg p-4 space-y-3">
+        
+        {/* TITLE + BADGE */}
+        <div className="flex justify-between">
+          <Skeleton width={120} />
+          <Skeleton width={60} height={25} />
+        </div>
+
+        {/* PROJECT */}
+        <Skeleton width="80%" />
+
+        {/* CLIENT */}
+        <div className="flex items-center gap-3">
+          <Skeleton circle width={32} height={32} />
+          <div>
+            <Skeleton width={100} />
+            <Skeleton width={80} height={10} />
+          </div>
+        </div>
+
+        {/* DATES + AMOUNT */}
+        <Skeleton width="70%" />
+        <Skeleton width="60%" />
+        <Skeleton width="50%" />
       </div>
+    ))
+  ) : creditNotes.length === 0 ? (
+    <p className="text-center text-gray-500 col-span-full">
+      No credit notes found for this invoice
+    </p>
+  ) : (
+    creditNotes.map((cn) => (
+      <div
+        key={cn.id}
+        className="bg-white border rounded-lg shadow-sm p-4 flex flex-col justify-between hover:shadow-md transition"
+      >
+        <div>
+          <div className="flex justify-between items-start mb-2">
+            <h2 className="text-lg font-semibold">{cn.creditNoteNumber}</h2>
+            {getAdjustmentBadge(cn.adjustmentPositive)}
+          </div>
+
+          <p className="text-sm text-gray-500 mb-1">
+            Project: {cn.project?.projectName || "N/A"} ({cn.project?.projectCode || "N/A"})
+          </p>
+
+          <div className="flex items-center gap-3 mb-2">
+            {cn.client?.company?.companyLogoUrl ? (
+              <Image
+                src={cn.client.company.companyLogoUrl}
+                alt={cn.client.company.companyName || "Company"}
+                width={32}
+                height={32}
+                className="rounded-full"
+              />
+            ) : (
+              <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
+                <span className="text-sm font-semibold text-gray-600">
+                  {cn.client?.name?.charAt(0)?.toUpperCase() || "?"}
+                </span>
+              </div>
+            )}
+
+            <div>
+              <p className="font-medium text-sm">{cn.client?.name || "N/A"}</p>
+              <p className="text-xs text-gray-500">
+                {cn.client?.company?.companyName || ""}
+              </p>
+            </div>
+          </div>
+
+          <p className="text-sm text-gray-500">
+            Credit Note Date: {formatDate(cn.creditNoteDate)}
+          </p>
+
+          <p className="text-sm text-gray-500 mt-1">
+            Total Amount: {cn.currency} {cn.totalAmount.toFixed(2)}
+          </p>
+
+          <p className="text-sm text-gray-500">
+            Adjustment: {cn.currency} {cn.adjustmentPositive ? "+" : "-"}
+            {cn.adjustment.toFixed(2)}
+          </p>
+        </div>
+      </div>
+    ))
+  )}
+</div>
+
+
+
     </div>
   );
 }
