@@ -6,6 +6,10 @@ import Link from "next/link";
 import { createPortal } from "react-dom";
 import { useRef } from "react";
 
+
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
 // interface Employee {
 //   employeeId: string;
 //   name: string;
@@ -234,9 +238,9 @@ export default function EmployeePage() {
   // const data = filtered.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
   const data = filtered;
 
-  console.log("Rendered with data:", data);
+  // console.log("Rendered with data:", data);
 
-  if (loading) return <div className="p-6">Loading...</div>;
+  // if (loading) return <div className="p-6">Loading...</div>;
 
   const deleteEmployee = async (id: string) => {
     // if (!confirm('Are you sure you want to delete this employee?')) return;
@@ -314,6 +318,18 @@ export default function EmployeePage() {
     <div className="p-6 space-y-6">
       {/* ================= FILTER ================= */}
       <div className="bg-white rounded-lg border p-4 flex gap-4">
+
+
+ {loading ? (
+    <>
+      <Skeleton width={250} height={40} />
+      <Skeleton width={150} height={40} />
+      <Skeleton width={120} height={40} />
+    </>
+  ) : (
+    <>
+
+
         <input
           placeholder="Search employee... "
           className="border px-3 py-2 rounded w-64"
@@ -346,6 +362,10 @@ export default function EmployeePage() {
           🔍 Filters
 
         </button>
+        </>
+  )}
+    
+    
       </div>
 
 
@@ -355,7 +375,24 @@ export default function EmployeePage() {
 
       {/* ================= ACTIONS ================= */}
       <div className="flex justify-between items-center">
-        <h1 className="text-xl font-semibold">Employees</h1>
+        {/* <h1 className="text-xl font-semibold">Employees</h1> */}
+
+        {loading ? (
+  <Skeleton width={150} height={25} />
+) : (
+  <h1 className="text-xl font-semibold">Employees</h1>
+)}
+
+
+
+
+{loading ? (
+  <div className="flex gap-3">
+    <Skeleton width={140} height={40} />
+    <Skeleton width={140} height={40} />
+  </div>
+) : (
+
 
         <div className="flex gap-3">
           <Link
@@ -372,6 +409,10 @@ export default function EmployeePage() {
             + Invite Employee
           </button>
         </div>
+    
+    
+)}   
+    
       </div>
 
       {/* ================= TABLE ================= */}
@@ -395,8 +436,51 @@ export default function EmployeePage() {
                 <th className="p-3 text-left">Action</th>
               </tr>
             </thead>
-            <tbody>
-              {data.map((e) => (
+
+
+
+
+
+            {/* <tbody>
+              {data.map((e) => ( */}
+
+              <tbody>
+  {loading
+    ? Array.from({ length: 8 }).map((_, i) => (
+        <tr key={i} className="border-t">
+          <td className="p-3"><Skeleton width={80} /></td>
+
+          <td className="p-3">
+            <div className="flex items-center gap-3">
+              <Skeleton circle width={36} height={36} />
+              <div>
+                <Skeleton width={120} />
+                <Skeleton width={80} />
+              </div>
+            </div>
+          </td>
+
+          <td className="p-3"><Skeleton width={150} /></td>
+          <td className="p-3"><Skeleton width={100} /></td>
+
+          <td className="p-3">
+            <Skeleton width={100} height={30} />
+          </td>
+
+          <td className="p-3">
+            <Skeleton width={70} height={20} />
+          </td>
+
+          <td className="p-3">
+            <Skeleton width={30} height={30} />
+          </td>
+        </tr>
+      ))
+    : data.map((e) => (
+        // 🔥 YOUR EXISTING ROW (NO CHANGE)
+
+
+
                 <tr key={e.employeeId} className="border-t">
                   <td className="p-3">{e.employeeId}</td>
                   {/* <td className="p-3">{e.name}</td> */}
@@ -608,6 +692,11 @@ export default function EmployeePage() {
                 </tr>
               ))}
             </tbody>
+         
+         
+         
+         
+         
           </table>
 
 
