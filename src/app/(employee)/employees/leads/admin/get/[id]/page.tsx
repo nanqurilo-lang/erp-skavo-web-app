@@ -10,6 +10,10 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { format } from "date-fns";
 
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
+
 type EmployeeMeta = {
   employeeId?: string;
   name?: string;
@@ -1510,9 +1514,43 @@ export default function LeadDetailPage() {
 
         {/* Card */}
         <Card className="p-6">
-          {isLoading ? (
+          {/* {isLoading ? (
             <div className="py-12 text-center text-muted-foreground">Loading lead details…</div>
-          ) : error ? (
+          ) : error ? ( */}
+
+
+{isLoading ? (
+  <div className="space-y-6">
+    <div className="rounded-lg border p-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        
+        {/* Labels */}
+        <div className="hidden md:block space-y-4">
+          {Array.from({ length: 12 }).map((_, i) => (
+            <Skeleton key={i} width={120} height={12} />
+          ))}
+        </div>
+
+        {/* Values */}
+        <div className="md:col-span-2 space-y-4">
+          {Array.from({ length: 12 }).map((_, i) => (
+            <Skeleton key={i} height={14} />
+          ))}
+        </div>
+
+      </div>
+    </div>
+
+    {/* Bottom Info */}
+    <div className="flex justify-between">
+      <Skeleton width={200} height={14} />
+      <Skeleton width={120} height={20} />
+    </div>
+  </div>
+): error ? (
+
+
+
             <div className="py-12 text-center">
               <p className="text-destructive">Failed to load lead details.</p>
               <p className="text-sm text-muted-foreground mt-2">{(error as Error)?.message}</p>

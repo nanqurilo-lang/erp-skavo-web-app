@@ -9,6 +9,11 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
+
 import {
   Table,
   TableBody,
@@ -1060,9 +1065,81 @@ export default function LeadsAdminPage() {
           </div>
         </div>
 
-        {isLoading ? (
+        {/* {isLoading ? (
           <div className="py-10 text-center text-muted-foreground">Loading leads…</div>
-        ) : error ? (
+        )
+         */}
+        
+        
+
+
+{isLoading ? (
+  <div className="mt-4 overflow-x-auto">
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead className="w-16">S.No.</TableHead>
+          <TableHead className="min-w-[220px]">Lead Name</TableHead>
+          <TableHead>Contact Details</TableHead>
+          <TableHead>Lead Owner</TableHead>
+          <TableHead>Added By</TableHead>
+          <TableHead>Created On</TableHead>
+          <TableHead className="text-right">Action</TableHead>
+        </TableRow>
+      </TableHeader>
+
+      <TableBody>
+        {Array.from({ length: 6 }).map((_, i) => (
+          <TableRow key={i}>
+            <TableCell><Skeleton width={20} /></TableCell>
+
+            <TableCell>
+              <Skeleton width={120} height={14} />
+              <Skeleton width={80} height={12} />
+            </TableCell>
+
+            <TableCell>
+              <Skeleton width={140} height={14} />
+              <Skeleton width={100} height={12} />
+            </TableCell>
+
+            <TableCell>
+              <div className="flex items-center gap-2">
+                <Skeleton circle width={32} height={32} />
+                <div>
+                  <Skeleton width={80} height={12} />
+                  <Skeleton width={60} height={10} />
+                </div>
+              </div>
+            </TableCell>
+
+            <TableCell>
+              <div className="flex items-center gap-2">
+                <Skeleton circle width={32} height={32} />
+                <div>
+                  <Skeleton width={80} height={12} />
+                  <Skeleton width={60} height={10} />
+                </div>
+              </div>
+            </TableCell>
+
+            <TableCell>
+              <Skeleton width={90} height={12} />
+            </TableCell>
+
+            <TableCell className="text-right">
+              <Skeleton width={24} height={24} />
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  </div>
+)
+
+
+
+        : error ? (
           <div className="py-10 text-center">
             <p className="text-destructive">Failed to load leads.</p>
             <p className="text-sm text-muted-foreground mt-1">{(error as Error).message}</p>
