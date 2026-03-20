@@ -129,6 +129,9 @@ export default function ClientsPage() {
       }
 
       const data = await response.json();
+// console.log("🔥 FULL CLIENTS API RESPONSE 👉", data); // ✅ ADD HERE
+
+
       setClients(Array.isArray(data) ? data : []);
       setFilteredClients(Array.isArray(data) ? data : []);
     } catch (err: any) {
@@ -138,10 +141,14 @@ export default function ClientsPage() {
     }
   }, []);
 
+
+
   // initial load
   useEffect(() => {
     fetchClients();
   }, [fetchClients]);
+
+  // console.log("first",clients)
 
   // Listen for refresh triggers:
   useEffect(() => {

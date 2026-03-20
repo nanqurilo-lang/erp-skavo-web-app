@@ -13,7 +13,7 @@ const STATUS_ORDER = [
 
 type StatusKey = (typeof STATUS_ORDER)[number]["key"]
 
-export const ProfileSection: React.FC<{ client: any; projects?: any[] }> = ({ client, projects = [] }) => {
+export const ProfileSection: React.FC<{ client: any; projects?: any[]; companyDetails:any }> = ({ client, projects = [],companyDetails}) => {
   // normalize and compute counts/pcts in the SAME order as STATUS_ORDER
   const statusStats = useMemo(() => {
     const total = Array.isArray(projects) ? projects.length : 0
@@ -74,6 +74,10 @@ export const ProfileSection: React.FC<{ client: any; projects?: any[] }> = ({ cl
     return segs.join(", ")
   }, [statusStats.items])
 
+
+// console.log("API RESPONSE 👉", nandini1); 
+// console.log(client)
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <div className="lg:col-span-2">
@@ -86,18 +90,23 @@ export const ProfileSection: React.FC<{ client: any; projects?: any[] }> = ({ cl
             <div className="grid grid-cols-1 gap-0">
               <Row label="Name" value={client.name} />
               <Row label="Email" value={client.email} />
-              <Row label="Gender" value={"—"} />
-              <Row label="Company Name" value={client.company?.companyName ?? "—"} />
-              <Row label="Company Logo" value={client.companyLogoUrl ? "Uploaded" : "—"} />
+              {/* <Row label="Gender" value={"—"} /> */}
+              <Row label="Gender" value={client.gender} />
+              {/* <Row label="Company Name" value={client.company?.companyName ?? "—"} /> */}
+              <Row label="Company Name" value={client.company} />
+              <Row label="Company Logo" value={companyDetails.companyLogoUrl ? "Uploaded" : "-"} />
               <Row label="Mobile" value={client.mobile ?? "—"} />
-              <Row label="Office Phone No." value={"—"} />
-              <Row label="Official Website" value={"—"} />
-              <Row label="Tax No." value={"—"} />
-              <Row label="Address" value={"—"} />
-              <Row label="State" value={client.company?.state ?? "—"} />
-              <Row label="Country" value={client.country ?? "usa"} />
-              <Row label="Postal Code" value={"—"} />
-              <Row label="Language" value={"English"} />
+              {/* <Row label="Office Phone No." value={"—"} /> */}
+              <Row label="Office Phone No." value={companyDetails?.company?.officePhone} />
+
+              <Row label="Official Website" value={companyDetails?.company?.website} />
+              <Row label="Tax No." value={companyDetails?.company?.taxName} />
+              <Row label="Address" value={companyDetails?.company?.address} />
+              <Row label="State" value={companyDetails?.company?.state ?? "—"} />
+              <Row label="Country" value={client?.country ?? "usa"} />
+              <Row label="Postal Code" value={companyDetails?.company?.postalCode
+} />
+              <Row label="Language" value={client.language} />
             </div>
           </CardContent>
         </Card>

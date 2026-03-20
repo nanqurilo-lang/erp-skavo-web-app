@@ -139,6 +139,7 @@ const [selectedInvoiceId, setSelectedInvoiceId] = useState<string | null>(null);
   const [client, setClient] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const[companyDetails, setcompanyDetails]= useState<ClientItem[]>([]);
 
   // stats
   const [projectCount, setProjectCount] = useState<number | null>(null);
@@ -192,6 +193,8 @@ const [selectedInvoiceId, setSelectedInvoiceId] = useState<string | null>(null);
       if (!res.ok) throw new Error(`Failed to fetch client (${res.status})`);
       const data = await res.json();
       setClient(normalizeClient(data));
+      setcompanyDetails(data)
+
     } catch (err: any) {
       setError(err?.message ?? "An error occurred");
       setClient(null);
@@ -199,6 +202,7 @@ const [selectedInvoiceId, setSelectedInvoiceId] = useState<string | null>(null);
       setLoading(false);
     }
   }, [id]);
+  console.log("jjjjjjj", client)
   const EMP_BASE = `${process.env.NEXT_PUBLIC_MAIN}`;
 
 const loadEmployees = useCallback(async () => {
@@ -1306,7 +1310,7 @@ progressTimeout.current = setTimeout(() => {
       )}
 
       {/* Main content by tab */}
-      {activeTab === "profile" && <ProfileSection client={client} projects={projects} />}
+      {activeTab === "profile" && <ProfileSection client={client} projects={projects} companyDetails={companyDetails} />}
       {/* <ProfileSection client={client} projects={projects} /> */}
 
 
