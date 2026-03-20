@@ -7,6 +7,8 @@ import { MoreHorizontal, Eye, Edit2, Upload, Trash, CheckCircle, DollarSign, Fil
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 
 const BASE_URL = process.env.NEXT_PUBLIC_MAIN;
@@ -170,7 +172,7 @@ export default function InvoiceTable({
     };
 
 
-    if (loading) return <p className="text-center py-10">Loading…</p>;
+    // if (loading) return <p className="text-center py-10">Loading…</p>;
 
     return (
         <div className="border rounded-lg bg-white shadow-sm">
@@ -187,8 +189,61 @@ export default function InvoiceTable({
                     </TableRow>
                 </TableHeader>
 
-                <TableBody>
-                    {filtered.length === 0 ? (
+                {/* <TableBody>
+                    {filtered.length === 0 ? ( */}
+
+
+
+<TableBody>
+  {loading ? (
+    Array.from({ length: 8 }).map((_, i) => (
+      <TableRow key={i}>
+        {/* Invoice */}
+        <TableCell>
+          <Skeleton width={100} />
+        </TableCell>
+
+        {/* Project */}
+        <TableCell>
+          <Skeleton width={120} />
+        </TableCell>
+
+        {/* Client */}
+        <TableCell>
+          <div className="flex items-center gap-2">
+            <Skeleton circle width={28} height={28} />
+            <Skeleton width={100} />
+          </div>
+        </TableCell>
+
+        {/* Total */}
+        <TableCell>
+          <div className="space-y-1">
+            <Skeleton width={120} />
+            <Skeleton width={100} />
+            <Skeleton width={90} />
+          </div>
+        </TableCell>
+
+        {/* Date */}
+        <TableCell>
+          <Skeleton width={90} />
+        </TableCell>
+
+        {/* Status */}
+        <TableCell>
+          <Skeleton width={70} height={25} />
+        </TableCell>
+
+        {/* Action */}
+        <TableCell className="text-right">
+          <Skeleton circle width={30} height={30} />
+        </TableCell>
+      </TableRow>
+    ))
+  ) : filtered.length === 0 ? (
+
+
                         <TableRow>
                             <TableCell colSpan={8} className="text-center py-10 text-gray-500">
                                 No invoices found

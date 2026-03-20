@@ -28,6 +28,11 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import EmergencyContactsSection from "./EmergencyContactsSection";
 
+
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
+
 const API_BASE =  `${process.env.NEXT_PUBLIC_MAIN}`;
 
 type ProfilePayload = {
@@ -528,16 +533,86 @@ export default function ProfileForm() {
     }
   };
 
+  // if (loading) {
+  //   return (
+  //     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center p-8">
+  //       <div className="text-center">
+  //         <Loader2 className="w-8 h-8 animate-spin text-blue-600 mx-auto mb-3" />
+  //         <p className="text-slate-600">Loading profile...</p>
+  //       </div>
+  //     </div>
+  //   );
+  // }
+
+
+
+
+
   if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center p-8">
-        <div className="text-center">
-          <Loader2 className="w-8 h-8 animate-spin text-blue-600 mx-auto mb-3" />
-          <p className="text-slate-600">Loading profile...</p>
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-8 px-4">
+      <div className="max-w-5xl mx-auto">
+
+        {/* HEADER */}
+        <div className="mb-6">
+          <Skeleton width={120} height={30} />
+          <Skeleton width={200} height={15} className="mt-2" />
         </div>
+
+        {/* FORM CARD */}
+        <div className="bg-white border rounded-xl p-6 shadow-sm">
+
+          {/* PROFILE IMAGE */}
+          <div className="mb-6">
+            <Skeleton height={140} />
+          </div>
+
+          {/* INPUT GRID */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div key={i}>
+                <Skeleton width={100} height={15} />
+                <Skeleton height={40} className="mt-1" />
+              </div>
+            ))}
+          </div>
+
+          {/* TEXTAREAS */}
+          <div className="mt-4">
+            <Skeleton width={100} height={15} />
+            <Skeleton height={80} className="mt-1" />
+          </div>
+
+          <div className="mt-4">
+            <Skeleton width={100} height={15} />
+            <Skeleton height={100} className="mt-1" />
+          </div>
+
+          {/* BUTTON */}
+          <div className="mt-6 flex justify-center">
+            <Skeleton width={120} height={40} />
+          </div>
+        </div>
+
+        {/* DOCUMENT SECTION */}
+        <div className="bg-white border rounded-xl p-6 shadow-sm mt-8">
+          <Skeleton width={150} height={20} />
+          <Skeleton height={120} className="mt-4" />
+
+          <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <Skeleton key={i} height={100} />
+            ))}
+          </div>
+        </div>
+
       </div>
-    );
-  }
+    </div>
+  );
+}
+
+
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-8 px-4">
