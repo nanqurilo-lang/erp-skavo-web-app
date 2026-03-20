@@ -12,6 +12,10 @@ import { ReactFlowProvider } from "reactflow"
 import { format } from "date-fns";
 
 
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
+
 interface Designation {
   id: number
   designationName: string
@@ -164,7 +168,7 @@ export default function DesignationsPage() {
   };
 
 
-  if (isLoading) return <div className="p-6">Loading…</div>
+  // if (isLoading) return <div className="p-6">Loading…</div>
   if (error) return <div className="p-6 text-red-500">{error.message}</div>
 
   return (
@@ -172,6 +176,19 @@ export default function DesignationsPage() {
 
       {/* HEADER */}
       <div className="flex justify-between items-center">
+
+{isLoading ? (
+    <>
+      <Skeleton width={180} height={35} />
+      <div className="flex gap-2">
+        <Skeleton width={200} height={35} />
+        <Skeleton width={40} height={40} />
+        <Skeleton width={40} height={40} />
+      </div>
+    </>
+  ) : (
+    <>
+
         {/* <h1 className="text-2xl font-bold">Designations</h1> */}
         <Button onClick={() => setShowAddModal(true)}>
           <Plus className="w-4 h-4 mr-2" /> Add Designation
@@ -183,12 +200,20 @@ export default function DesignationsPage() {
   {/* SEARCH */}
       <div className="relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+
+
+{isLoading ? (
+  <Skeleton width={200} height={35} />
+) : (
+
         <Input
           placeholder="Search designation…"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="pl-10"
         />
+
+)}
       </div>
 
 
@@ -209,9 +234,13 @@ export default function DesignationsPage() {
             <Network className="h-4 w-4" />
           </Button>
         </div>
-
+</>
+  )}
 
       </div>
+
+
+
 
 
 
@@ -228,8 +257,29 @@ export default function DesignationsPage() {
                 <th className="p-3 text-left">Actions</th>
               </tr>
             </thead>
-            <tbody>
-              {filtered.map((d) => (
+            {/* <tbody>
+              {filtered.map((d) => ( */}
+
+<tbody>
+  {isLoading
+    ? Array.from({ length: 6 }).map((_, i) => (
+        <tr key={i} className="border-t">
+          <td className="p-3">
+            <Skeleton width={140} />
+          </td>
+          <td className="p-3">
+            <Skeleton width={100} />
+          </td>
+          <td className="p-3">
+            <Skeleton width={80} />
+          </td>
+          <td className="p-3">
+            <Skeleton width={60} />
+          </td>
+        </tr>
+      ))
+    : filtered.map((d) => (
+
                 <tr key={d.id} className="border-t">
                   <td className="p-3">
                     {editingId === d.id ? (
@@ -292,14 +342,34 @@ export default function DesignationsPage() {
 
 
 
-      {view === "network" && (
+      {/* {view === "network" && (
         <ReactFlowProvider>
           <DesignationHierarchy
             data={data || []}
             onReorder={mutate}
           />
         </ReactFlowProvider>
-      )}
+      )} */}
+
+
+
+
+
+
+{view === "network" && (
+  isLoading ? (
+    <div className="h-[400px] flex items-center justify-center">
+      <Skeleton width="90%" height={350} />
+    </div>
+  ) : (
+    <ReactFlowProvider>
+      <DesignationHierarchy
+        data={data || []}
+        onReorder={mutate}
+      />
+    </ReactFlowProvider>
+  )
+)}
 
 
       {/* ================= ADD MODAL ================= */}

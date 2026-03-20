@@ -166,13 +166,13 @@ export default function DepartmentsPage() {
             </ReactFlowProvider>
           )}
 
-          <Separator />
+          {/* <Separator /> */}
 
           {/* Pagination Footer */}
-          <div className="flex items-center justify-between text-sm text-muted-foreground">
+          {/* <div className="flex items-center justify-between text-sm text-muted-foreground">
             <span>Result per page - 9</span>
             <span>Page 1 of 1</span>
-          </div>
+          </div> */}
         </CardContent>
       </Card>
     </main>

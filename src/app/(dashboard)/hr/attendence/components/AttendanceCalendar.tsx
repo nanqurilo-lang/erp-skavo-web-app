@@ -9,6 +9,9 @@ import AttendanceDetailModal from "./AttendanceDetailModal"
 import { Button } from "@/components/ui/button"
 import { List, User } from "lucide-react"
 
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
 
 const BASE_URL = process.env.NEXT_PUBLIC_MAIN
 
@@ -96,14 +99,27 @@ export default function AttendanceCalendar() {
 
     const daysInMonth = new Date(year, month, 0).getDate()
 
-    if (isLoading) {
-        return <div className="text-sm text-gray-500">Loading attendance…</div>
-    }
+    // if (isLoading) {
+    //     return <div className="text-sm text-gray-500">Loading attendance…</div>
+    // }
 
     return (
         <div className="bg-white border rounded-lg p-4 space-y-4">
             {/* ================= HEADER ================= */}
             <div className="flex items-center justify-between">
+
+
+ {isLoading ? (
+    <>
+      <Skeleton width={140} height={35} />
+      <div className="flex gap-2">
+        <Skeleton width={120} height={35} />
+        <Skeleton width={100} height={35} />
+      </div>
+    </>
+  ) : (
+    <>
+
                 <button
                     onClick={() => setOpen(true)}
                     className="px-4 py-2 bg-blue-600 text-white rounded text-sm"
@@ -135,10 +151,17 @@ export default function AttendanceCalendar() {
                     </select>
                 </div>
 
-
+</>
+  )}
             </div>
 
+
+
             {/* ================= LEGEND ================= */}
+           {isLoading ? (
+  <Skeleton width={300} height={15} />
+) : (
+           
             <div className="flex gap-4 text-xs text-gray-600">
                 <span>★ Holiday</span>
                 <span>✔ Present</span>
@@ -146,7 +169,7 @@ export default function AttendanceCalendar() {
                 <span>⏰ Late</span>
                 <span>½ Half Day</span>
             </div>
-
+)}
             {/* ================= TABLE ================= */}
             <div className="overflow-x-auto">
                 <table className="min-w-full border text-xs">
@@ -162,9 +185,36 @@ export default function AttendanceCalendar() {
                         </tr>
                     </thead>
 
-                    <tbody>
-                        {Object.entries(groupedAttendance).map(([empId, emp]) => (
-                            <tr key={empId} className="border-t">
+                  <tbody>
+  {isLoading
+    ? Array.from({ length: 5 }).map((_, row) => (
+        <tr key={row} className="border-t">
+          {/* Employee column */}
+          <td className="px-3 py-2 flex items-center gap-2">
+            <Skeleton circle width={24} height={24} />
+            <div>
+              <Skeleton width={100} />
+              <Skeleton width={60} />
+            </div>
+          </td>
+
+          {/* Days columns */}
+          {Array.from({ length: daysInMonth }).map((_, col) => (
+            <td key={col} className="px-2 py-2 text-center">
+              <Skeleton width={10} height={10} />
+            </td>
+          ))}
+
+          {/* Total */}
+          <td className="px-3 py-2">
+            <Skeleton width={40} />
+          </td>
+        </tr>
+      ))
+    : Object.entries(groupedAttendance).map(([empId, emp]) => (
+        // 🔥 your existing row (NO CHANGE)
+                         
+                         <tr key={empId} className="border-t">
                                 {/* EMPLOYEE */}
                                 <td className="px-3 py-2 font-medium flex items-center gap-2">
                                     {emp.profilePictureUrl && (
@@ -223,6 +273,12 @@ export default function AttendanceCalendar() {
                             </tr>
                         ))}
                     </tbody>
+
+
+
+
+
+
                 </table>
             </div>
 

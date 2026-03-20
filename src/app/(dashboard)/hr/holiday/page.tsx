@@ -8,6 +8,10 @@ import { useEffect, useState, useRef } from "react";
 import { createPortal } from "react-dom";
 import HolidayCalendar from "./HolidayCalendar";
 
+
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
 interface Holiday {
   id: number;
   date: string;
@@ -302,12 +306,21 @@ useEffect(() => {
 
 
 
-  if (loading) return <p className="p-6">Loading…</p>;
+  // if (loading) return <p className="p-6">Loading…</p>;
 
   return (
     <div className="p-6 max-w-7xl mx-auto bg-white rounded-lg border">
 
   <div className="flex gap-3 mb-4">
+
+
+      {loading ? (
+    <>
+      <Skeleton width={80} height={35} />
+      <Skeleton width={150} height={35} />
+    </>
+  ) : (
+    <>
         <input
           type="number"
           value={year}
@@ -327,13 +340,31 @@ useEffect(() => {
           ))}
         </select>
     
+
+    </>
+  )}
       </div>
+
+
 
 
 
 
       {/* HEADER */}
       <div className="flex justify-between items-center mb-6">
+
+  {loading ? (
+    <>
+      <Skeleton width={140} height={35} />
+      <div className="flex gap-2">
+        <Skeleton width={200} height={35} />
+        <Skeleton width={40} height={40} />
+        <Skeleton width={40} height={40} />
+      </div>
+    </>
+  ) : (
+    <>
+
         {/* <h1 className="text-xl font-semibold">Holiday Management</h1> */}
         <button
           onClick={() => {
@@ -344,12 +375,6 @@ useEffect(() => {
         >
           + Add Holiday
         </button>
-
-
-
-
-
-
 
 
 
@@ -403,7 +428,12 @@ useEffect(() => {
           </Button>
         </div>
 
+
+</>
+  )}
       </div>
+
+
 
       {/* FILTERS */}
  
@@ -425,8 +455,30 @@ useEffect(() => {
               <th className="px-4 py-2 text-left">Action </th>
             </tr>
           </thead>
-          <tbody>
-            {filteredHolidays.map((h) => (
+          {/* <tbody>
+            {filteredHolidays.map((h) => ( */}
+
+<tbody>
+  {loading
+    ? Array.from({ length: 5 }).map((_, i) => (
+        <tr key={i}>
+          <td className="px-4 py-2">
+            <Skeleton width={100} />
+          </td>
+          <td className="px-4 py-2">
+            <Skeleton width={60} />
+          </td>
+          <td className="px-4 py-2">
+            <Skeleton width={150} />
+          </td>
+          <td className="px-4 py-2">
+            <Skeleton width={40} />
+          </td>
+        </tr>
+      ))
+    : filteredHolidays.map((h) => (
+
+
               <tr key={h.id} className="border-t">
                 <td className="px-4 py-2">
                   {editingHoliday?.id === h.id ? (
@@ -628,9 +680,17 @@ useEffect(() => {
               </tr>
             ))}
           </tbody>
+
+
+
+
         </table>
       ) : (
         /* ================= CALENDAR VIEW ================= */
+
+
+
+        
         <HolidayCalendar holidays={filteredHolidays} year={year} month={month || new Date().getMonth() + 1} />
       )}
 
