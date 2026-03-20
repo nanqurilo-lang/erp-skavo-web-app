@@ -6,6 +6,9 @@ import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { MoreHorizontal } from "lucide-react";
 
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
 export type ProjectFile = {
     id: number | string;
     filename?: string | null;
@@ -189,9 +192,23 @@ export default function ProjectDocuments({
     ========================= */
     return (
         <div className="bg-white rounded-lg border p-5">
-            <h3 className="text-lg font-semibold mb-4">Upload file</h3>
+            {/* <h3 className="text-lg font-semibold mb-4">Upload file</h3> */}
+
+
+{loading ? (
+  <Skeleton width={150} height={20} className="mb-4" />
+) : (
+  <h3 className="text-lg font-semibold mb-4">Upload file</h3>
+)}
+
 
             {/* Upload Box */}
+
+{loading ? (
+  <Skeleton height={110} />
+) : (
+
+
             <div
                 onClick={() => fileInputRef.current?.click()}
                 className="border-2 border-dashed rounded-lg h-28 flex items-center justify-center cursor-pointer text-gray-500"
@@ -217,16 +234,35 @@ export default function ProjectDocuments({
                 />
             </div>
 
-            {loading && (
+)}
+            {/* {loading && (
                 <p className="text-sm mt-3 text-gray-500">Loading…</p>
-            )}
+            )} */}
             {error && (
                 <p className="text-sm mt-3 text-red-500">{error}</p>
             )}
 
             {/* Files Grid */}
-            <div className="mt-6 grid grid-cols-6 gap-4">
-                {files.map((f) => (
+            {/* <div className="mt-6 grid grid-cols-6 gap-4">
+                {files.map((f) => ( */}
+
+
+<div className="mt-6 grid grid-cols-6 gap-4">
+  {loading
+    ? Array.from({ length: 8 }).map((_, i) => (
+        <div key={i}>
+          {/* thumbnail */}
+          <Skeleton height={80} />
+
+          {/* filename */}
+          <div className="mt-2">
+            <Skeleton width={80} />
+          </div>
+        </div>
+      ))
+    : files.map((f) => (
+
+
                     <div key={String(f.id)}>
                         <div className="relative">
                             <div className="h-20 border rounded bg-gray-50 flex items-center justify-center overflow-hidden">
@@ -292,6 +328,12 @@ export default function ProjectDocuments({
                     </div>
                 ))}
             </div>
+
+
+
+
+
+
         </div>
     );
 }

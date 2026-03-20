@@ -23,6 +23,11 @@ import LeaveQuotaTable from "./components/LeaveQuotaTable"
 import EmployeeLeaveTable from "./components/EmployeeLeaveTable"
 import EmployeeWorkTab from "./work/page"
 
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
+
+
 const BASE_URL = process.env.NEXT_PUBLIC_MAIN
 
 type TabKey = "profile" | "work" | "documents" | "emergency" | "promotions"
@@ -51,15 +56,22 @@ export default function EmployeeViewPage() {
 
   //("gggggggggg", employee)
 
-  if (isLoading) return <div className="p-6">Loading employee…</div>
+  // if (isLoading) return <div className="p-6">Loading employee…</div>
   if (error) return <div className="p-6 text-red-600">Failed to load employee</div>
-  if (!employee) return <div className="p-6">Employee not found</div>
+  // if (!employee) return <div className="p-6">Employee not found</div>
 
   return (
     <div className="max-w-7xl mx-auto p-6 space-y-6">
 
       {/* 🔹 PAGE TITLE */}
-      <h1 className="text-2xl font-semibold">{employee.name}</h1>
+      {/* <h1 className="text-2xl font-semibold">{employee.name}</h1> */}
+
+
+      {isLoading ? (
+  <Skeleton width={200} height={30} />
+) : (
+  <h1 className="text-2xl font-semibold">{employee.name}</h1>
+)}
 
       {/* 🔹 TABS (ALWAYS FIXED) */}
       <EmployeeTabs activeTab={activeTab} onChange={setActiveTab} />
@@ -68,35 +80,111 @@ export default function EmployeeViewPage() {
       {activeTab === "profile" && (
         <>
           {/* 🔹 HEADER + STATS */}
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+          {/* <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
             <div className="lg:col-span-2 border ">
               <EmployeeHeader employee={employee} />
             </div>
             <div className="lg:col-span-3">
               <EmployeeStats employeeId={employee} />
             </div>
-          </div>
+          </div> */}
+
+
+<div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+  {isLoading ? (
+    <>
+      {/* Header */}
+      <div className="lg:col-span-2 border p-4 space-y-3">
+        <Skeleton circle width={60} height={60} />
+        <Skeleton width={150} />
+        <Skeleton width={100} />
+      </div>
+
+      {/* Stats */}
+      <div className="lg:col-span-3 space-y-3">
+        <Skeleton height={80} />
+      </div>
+    </>
+  ) : (
+    <>
+      <div className="lg:col-span-2 border">
+        <EmployeeHeader employee={employee} />
+      </div>
+      <div className="lg:col-span-3">
+        <EmployeeStats employeeId={employee} />
+      </div>
+    </>
+  )}
+</div>
+
+
 
           {/* 🔹 PROFILE MAIN CONTENT */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            {/* LEFT */}
+        
+          {/* <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             <div className="lg:col-span-2">
               <ProfileInfoCard employee={employee} />
             </div>
 
-            {/* RIGHT */}
             <div className="space-y-4">
               <AboutCard about={employee.about} />
               <AppreciationsTable employeeId={employee.employeeId} />
-              {/* Appreciations, Tasks chart later */}
             </div>
-          </div>
+          </div> */}
+
+
+
+<div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+  {isLoading ? (
+    <>
+      {/* LEFT */}
+      <div className="lg:col-span-2 space-y-3">
+        <Skeleton height={150} />
+      </div>
+
+      {/* RIGHT */}
+      <div className="space-y-4">
+        <Skeleton height={80} />
+        <Skeleton height={120} />
+      </div>
+    </>
+  ) : (
+    <>
+      <div className="lg:col-span-2">
+        <ProfileInfoCard employee={employee} />
+      </div>
+
+      <div className="space-y-4">
+        <AboutCard about={employee.about} />
+        <AppreciationsTable employeeId={employee.employeeId} />
+      </div>
+    </>
+  )}
+</div>
+
 
           {/* 🔹 ATTENDANCE (NEXT STEP) */}
 
-          <AttendanceCalendar employeeId={employee.employeeId} />
+          {/* <AttendanceCalendar employeeId={employee.employeeId} />
           <LeaveQuotaTable employeeId={employee.employeeId} />
-          <EmployeeLeaveTable employeeId={employee.employeeId} />
+          <EmployeeLeaveTable employeeId={employee.employeeId} /> */}
+
+
+{isLoading ? (
+  <div className="space-y-4">
+    <Skeleton height={200} />
+    <Skeleton height={120} />
+    <Skeleton height={150} />
+  </div>
+) : (
+  <>
+    <AttendanceCalendar employeeId={employee.employeeId} />
+    <LeaveQuotaTable employeeId={employee.employeeId} />
+    <EmployeeLeaveTable employeeId={employee.employeeId} />
+  </>
+)}
+
+
 
           {/* 🔹 LEAVES QUOTA */}
           {/* <LeaveQuota employeeId={employee.employeeId} /> */}
@@ -107,10 +195,26 @@ export default function EmployeeViewPage() {
       )}
 
       {/* ================= OTHER TABS ================= */}
-      {activeTab === "work" && <EmployeeWorkTab employeeId={employee.employeeId} />}
+      {/* {activeTab === "work" && <EmployeeWorkTab employeeId={employee.employeeId} />}
       {activeTab === "documents" && <DocumentsTab employeeId={employee.employeeId} />}
       {activeTab === "emergency" && <EmergencyTab employeeId={employee.employeeId} />}
-      {activeTab === "promotions" && <PromotionsTab employeeId={employee.employeeId} />}
+      {activeTab === "promotions" && <PromotionsTab employeeId={employee.employeeId} />} */}
+
+
+
+{activeTab === "work" &&
+  (isLoading ? <Skeleton height={200} /> : <EmployeeWorkTab employeeId={employee.employeeId} />)}
+
+{activeTab === "documents" &&
+  (isLoading ? <Skeleton height={200} /> : <DocumentsTab employeeId={employee.employeeId} />)}
+
+{activeTab === "emergency" &&
+  (isLoading ? <Skeleton height={200} /> : <EmergencyTab employeeId={employee.employeeId} />)}
+
+{activeTab === "promotions" &&
+  (isLoading ? <Skeleton height={200} /> : <PromotionsTab employeeId={employee.employeeId} />)}
+
+
     </div>
   )
 }

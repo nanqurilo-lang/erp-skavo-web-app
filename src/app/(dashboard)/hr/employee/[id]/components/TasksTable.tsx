@@ -9,6 +9,9 @@ import { deleteAPI, postAPI, putAPI } from "@/app/api/apiHelper";
 // import { getStorage } from "../../../../../lib/storage/storege";
 import EmployeeCreateTaskModal from "./EmployeeCreateTaskModal";
 
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
 
 import TaskViewModal, { TaskForView } from "@/app/(dashboard)/work/project/components/TaskViewModal"; // adjust path if needed
 import { format } from "date-fns";
@@ -384,9 +387,19 @@ const fetchProjectEmployees = async (pid: number) => {
 
     return (
         <div className="bg-white rounded-xl border border-gray-200 p-6">
-            <h2 className="text-xl font-semibold mb-4">Tasks</h2>
+            {/* <h2 className="text-xl font-semibold mb-4">Tasks</h2> */}
+
+
+            {loading ? (
+  <Skeleton width={120} height={25} className="mb-4" />
+) : (
+  <h2 className="text-xl font-semibold mb-4">Tasks</h2>
+)}
 
             {/* header */}
+
+
+{/* 
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-4">
                     <button
@@ -412,12 +425,117 @@ const fetchProjectEmployees = async (pid: number) => {
                         className="border px-3 py-2 rounded-md text-sm"
                     />
                 </div>
-            </div>
+            </div> */}
+
+
+
+<div className="flex items-center justify-between mb-4">
+  {loading ? (
+    <>
+      <Skeleton width={120} height={40} />
+      <Skeleton width={200} height={40} />
+    </>
+  ) : (
+    <>
+      <div className="flex items-center gap-4">
+        <button
+          onClick={() => {
+            setForm({ ...emptyForm, projectId });
+            setShowCreate(true);
+          }}
+          className="bg-blue-600 text-white px-4 py-2 rounded shadow-sm hover:bg-blue-700"
+        >
+          + Add Task
+        </button>
+      </div>
+
+      <div className="flex items-center gap-3">
+        <input
+          type="search"
+          placeholder="Search"
+          onChange={(e) => {
+            const q = e.target.value.toLowerCase();
+            if (!q) fetchTasks();
+            else
+              setTasks((prev) =>
+                prev.filter(
+                  (t) =>
+                    (t.title || "").toLowerCase().includes(q) ||
+                    (t.projectName || "").toLowerCase().includes(q)
+                )
+              );
+          }}
+          className="border px-3 py-2 rounded-md text-sm"
+        />
+      </div>
+    </>
+  )}
+</div>
+
+
 
             {/* table */}
-            {loading ? (
+            {/* {loading ? (
                 <div className="py-6 text-center text-gray-500">Loading tasks...</div>
-            ) : error ? (
+            ) : error ? ( */}
+
+
+
+{loading ? (
+  <div className="overflow-x-auto">
+    <table className="min-w-full text-sm">
+      <thead>
+        <tr className="bg-blue-50">
+          {Array.from({ length: 11 }).map((_, i) => (
+            <th key={i} className="px-4 py-3">
+              <Skeleton width={80} />
+            </th>
+          ))}
+        </tr>
+      </thead>
+
+      <tbody>
+        {Array.from({ length: 6 }).map((_, i) => (
+          <tr key={i} className="border-b">
+            <td className="px-4 py-4"><Skeleton width={60} /></td>
+
+            <td className="px-4 py-4">
+              <Skeleton width={120} />
+              <Skeleton width={80} />
+            </td>
+
+            <td className="px-4 py-4"><Skeleton width={80} /></td>
+            <td className="px-4 py-4"><Skeleton width={90} /></td>
+            <td className="px-4 py-4"><Skeleton width={90} /></td>
+            <td className="px-4 py-4"><Skeleton width={70} /></td>
+            <td className="px-4 py-4"><Skeleton width={70} /></td>
+            <td className="px-4 py-4"><Skeleton width={80} /></td>
+
+            {/* avatars */}
+            <td className="px-4 py-4">
+              <div className="flex gap-2">
+                <Skeleton circle width={24} height={24} />
+                <Skeleton circle width={24} height={24} />
+              </div>
+            </td>
+
+            {/* status */}
+            <td className="px-4 py-4">
+              <Skeleton width={80} height={25} />
+            </td>
+
+            {/* action */}
+            <td className="px-4 py-4">
+              <Skeleton width={30} height={30} />
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+) : error ? (
+
+
                 <div className="py-6 text-center text-red-500">{error}</div>
             ) : (
                 <div className="overflow-x-auto">
