@@ -11,6 +11,10 @@ import { Progress } from "@/components/ui/progress";
 import EmployeeLeaveQuotaTable from "./_components/EmployeeLeaveQuotaTable";
 import { format } from "date-fns";
 
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
+
 type Employee = {
   employeeId: string;
   name: string;
@@ -481,10 +485,115 @@ export default function Dashboard() {
     }
   };
 
-  if (loading)
-    return (
-      <div className="flex items-center justify-center h-56">Loading…</div>
-    );
+  // if (loading)
+  //   return (
+  //     <div className="flex items-center justify-center h-56">Loading…</div>
+  //   );
+
+
+
+
+  if (loading) {
+  return (
+    <div className="max-w-screen-xl p-6 space-y-6">
+
+      {/* HEADER */}
+      <div className="flex justify-between items-center">
+        <Skeleton width={200} height={30} />
+        <Skeleton width={120} height={35} />
+      </div>
+
+      {/* MAIN GRID */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+
+        {/* LEFT SIDE */}
+        <div className="lg:col-span-2 space-y-4">
+
+          {/* PROFILE CARD */}
+          <div className="flex items-center gap-4 p-6 border rounded-lg bg-white">
+            <Skeleton circle width={80} height={80} />
+            <div className="space-y-2 w-full">
+              <Skeleton width={200} height={20} />
+              <Skeleton width={150} height={15} />
+              <Skeleton width={120} height={12} />
+            </div>
+          </div>
+
+          {/* TASK TABLE */}
+          <div className="p-4 border rounded-lg bg-white">
+            <Skeleton width={120} height={20} className="mb-4" />
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="flex justify-between mb-3">
+                <Skeleton width="20%" />
+                <Skeleton width="30%" />
+                <Skeleton width="20%" />
+                <Skeleton width="20%" />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* RIGHT SIDE */}
+        <div className="space-y-4">
+
+          {/* SUMMARY CARDS */}
+          <div className="grid grid-cols-2 gap-4">
+            {Array.from({ length: 2 }).map((_, i) => (
+              <div key={i} className="p-4 border rounded bg-white">
+                <Skeleton width={80} height={15} />
+                <Skeleton width={40} height={25} className="mt-2" />
+              </div>
+            ))}
+          </div>
+
+          {/* WEEK LOG */}
+          <div className="p-4 border rounded bg-white">
+            <Skeleton width={120} height={20} />
+            <div className="flex gap-2 mt-4">
+              {Array.from({ length: 7 }).map((_, i) => (
+                <Skeleton key={i} circle width={30} height={30} />
+              ))}
+            </div>
+            <Skeleton height={10} className="mt-4" />
+          </div>
+
+          {/* BIRTHDAY */}
+          <div className="p-4 border rounded bg-white">
+            <Skeleton width={100} height={20} />
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="flex items-center gap-3 mt-3">
+                <Skeleton circle width={35} height={35} />
+                <div className="w-full">
+                  <Skeleton width="60%" />
+                  <Skeleton width="40%" />
+                </div>
+              </div>
+            ))}
+          </div>
+
+        </div>
+      </div>
+
+      {/* APPRECIATIONS */}
+      <div className="p-4 border rounded bg-white">
+        <Skeleton width={150} height={20} className="mb-4" />
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div key={i} className="flex justify-between mb-3">
+            <Skeleton width="30%" />
+            <Skeleton width="30%" />
+            <Skeleton width="20%" />
+          </div>
+        ))}
+      </div>
+
+    </div>
+  );
+}
+
+
+
+
+
   if (!employee)
     return <div className="p-6 text-muted-foreground">No profile found</div>;
 
