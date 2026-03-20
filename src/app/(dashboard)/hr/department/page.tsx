@@ -3,6 +3,9 @@
 import * as React from "react";
 import useSWR from "swr";
 
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ReactFlowProvider } from "reactflow";
@@ -73,6 +76,19 @@ export default function DepartmentsPage() {
     <main className="container mx-auto max-w-6xl p-4 md:p-6">
       {/* HEADER */}
       <header className="mb-4 flex items-center justify-between">
+
+  {isLoading ? (
+    <>
+      <Skeleton width={150} height={35} />
+      <div className="flex gap-2">
+        <Skeleton width={220} height={35} />
+        <Skeleton width={40} height={40} />
+        <Skeleton width={40} height={40} />
+      </div>
+    </>
+  ) : (
+    <>
+
         {/* Add Department Dialog */}
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
@@ -127,7 +143,13 @@ export default function DepartmentsPage() {
             <Network className="h-4 w-4" />
           </Button>
         </div>
+        </>
+  )}
       </header>
+
+
+
+
 
       {/* CONTENT */}
       <Card>
@@ -139,11 +161,11 @@ export default function DepartmentsPage() {
 
         <CardContent className="space-y-4">
           {/* Loading / Error States */}
-          {isLoading && (
+          {/* {isLoading && (
             <div className="text-sm text-muted-foreground">
               Loading departments...
             </div>
-          )}
+          )} */}
 
           {error && (
             <div className="text-sm text-destructive">
@@ -152,19 +174,62 @@ export default function DepartmentsPage() {
           )}
 
           {/* LIST VIEW */}
-          {!isLoading && !error && view === "list" && (
+          {/* {!isLoading && !error && view === "list" && (
             <DepartmentTable
               data={filteredList}
               onDeleted={async () => mutate()}
             />
-          )}
+          )} */}
+
+
+
+{view === "list" && (
+  isLoading ? (
+    <div className="space-y-2">
+      {Array.from({ length: 6 }).map((_, i) => (
+        <div key={i} className="flex gap-4 p-3 border rounded">
+          <Skeleton width={150} />
+          <Skeleton width={120} />
+          <Skeleton width={100} />
+          <Skeleton width={60} />
+        </div>
+      ))}
+    </div>
+  ) : !error ? (
+    <DepartmentTable
+      data={filteredList}
+      onDeleted={async () => mutate()}
+    />
+  ) : null
+)}
+
+
 
           {/* TREE (ORG-CHART) VIEW */}
-          {view === "tree" && (
+          {/* {view === "tree" && (
             <ReactFlowProvider>
               <DepartmentHierarchy data={data ?? []} onReorder={mutate} />
             </ReactFlowProvider>
-          )}
+          )} */}
+
+
+
+{view === "tree" && (
+  isLoading ? (
+    <div className="h-[400px] flex items-center justify-center">
+      <Skeleton width="90%" height={350} />
+    </div>
+  ) : (
+    <ReactFlowProvider>
+      <DepartmentHierarchy
+        data={data ?? []}
+        onReorder={mutate}
+      />
+    </ReactFlowProvider>
+  )
+)}
+
+
 
           {/* <Separator /> */}
 

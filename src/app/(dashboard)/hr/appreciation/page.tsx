@@ -12,6 +12,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
 import {
   Table,
   TableBody,
@@ -173,13 +177,13 @@ export default function AppreciationPage() {
       .toUpperCase()
       .slice(0, 2);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        Loading...
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="min-h-screen flex items-center justify-center">
+  //       Loading...
+  //     </div>
+  //   );
+  // }
 
   if (error) {
     return <div className="text-center mt-20">{error}</div>;
@@ -189,16 +193,8 @@ export default function AppreciationPage() {
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
         {/* HEADER */}
-        <div className="flex flex-col sm:flex-row justify-between gap-4 mb-6">
-          {/* <div> */}
-            {/* <h1 className="text-4xl font-bold flex items-center gap-3">
-              <Award className="h-10 w-10 text-primary" />
-              Employee Appreciations
-            </h1> */}
-            {/* <p className="text-muted-foreground">
-              Celebrating outstanding achievements
-            </p> */}
-          {/* </div> */}
+        {/* <div className="flex flex-col sm:flex-row justify-between gap-4 mb-6">
+         
 
           <Link href="/hr/appreciation/new">
             <Button >
@@ -206,12 +202,7 @@ export default function AppreciationPage() {
               Add Appreciation
             </Button>
           </Link>
-          {/* <Link href="/hr/awards">
-            <Button>
-              <Award className="h-4 w-4 mr-2" />
-
-            </Button>
-          </Link> */}
+         
           <div >
 
             <Link href="/hr/appreciation">
@@ -230,11 +221,63 @@ export default function AppreciationPage() {
             </Link>
           </div>
 
-        </div>
+        </div> */}
+
+
+
+
+
+<div className="flex flex-col sm:flex-row justify-between gap-4 mb-6">
+  {loading ? (
+    <>
+      <Skeleton width={160} height={40} />
+      <div className="flex gap-2">
+        <Skeleton width={40} height={40} />
+        <Skeleton width={40} height={40} />
+      </div>
+    </>
+  ) : (
+    <>
+      <Link href="/hr/appreciation/new">
+        <Button>
+          <Plus className="h-4 w-4" />
+          Add Appreciation
+        </Button>
+      </Link>
+
+      <div>
+        <Link href="/hr/appreciation">
+          <Button>
+            <Trophy className="h-4 w-4 mr-2" />
+          </Button>
+        </Link>
+
+        <Link href="/hr/awards " className="ml-2">
+          <Button>
+            <Award className="h-4 w-4 mr-2" />
+          </Button>
+        </Link>
+      </div>
+    </>
+  )}
+</div>
+
+
+
+
+
 
         {/* SEARCH + FILTERS */}
        
 <div className="flex justify-end mb-6">
+
+ {loading ? (
+    <div className="flex gap-4">
+      <Skeleton width={250} height={40} />
+      <Skeleton width={100} height={40} />
+    </div>
+  ) : (
+
   <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
 
     {/* SEARCH */}
@@ -361,6 +404,10 @@ export default function AppreciationPage() {
       </DropdownMenuContent>
     </DropdownMenu>
   </div>
+
+        )}
+
+
 </div>
 
 
@@ -379,8 +426,15 @@ export default function AppreciationPage() {
               </TableRow>
             </TableHeader>
 
-            <TableBody>
+            {/* <TableBody>
               {filteredAppreciations.map((a) => (
+
+
+
+
+
+
+              
                 <TableRow key={a.id}>
                   <TableCell>
                     <div className="flex items-center gap-3">
@@ -442,7 +496,110 @@ export default function AppreciationPage() {
                   </TableCell>
                 </TableRow>
               ))}
-            </TableBody>
+            </TableBody> */}
+
+
+
+<TableBody>
+  {loading ? (
+    Array.from({ length: 6 }).map((_, i) => (
+      <TableRow key={i}>
+        <TableCell>
+          <div className="flex items-center gap-3">
+            <Skeleton circle width={40} height={40} />
+            <div>
+              <Skeleton width={120} />
+              <Skeleton width={80} height={10} />
+            </div>
+          </div>
+        </TableCell>
+
+        <TableCell>
+          <Skeleton width={100} height={25} />
+        </TableCell>
+
+        <TableCell>
+          <Skeleton width={120} />
+        </TableCell>
+
+        <TableCell>
+          <Skeleton width={30} height={30} />
+        </TableCell>
+      </TableRow>
+    ))
+  ) : filteredAppreciations.length === 0 ? (
+    <TableRow>
+      <TableCell colSpan={4} className="text-center py-6 text-gray-500">
+        No appreciations found
+      </TableCell>
+    </TableRow>
+  ) : (
+    filteredAppreciations.map((a) => (
+      <TableRow key={a.id}>
+        <TableCell>
+          <div className="flex items-center gap-3">
+            <Avatar>
+              <AvatarImage src={a.photoUrl || undefined} />
+              <AvatarFallback>
+                {getInitials(a.givenToEmployeeName)}
+              </AvatarFallback>
+            </Avatar>
+            <div>
+              <div>{a.givenToEmployeeName}</div>
+              <div className="text-sm text-muted-foreground">
+                <User className="inline h-3 w-3 mr-1" />
+                {a.givenToEmployeeId}
+              </div>
+            </div>
+          </div>
+        </TableCell>
+
+        <TableCell>
+          <Badge variant="secondary">
+            <Award className="h-3 w-3 mr-1" />
+            {a.awardTitle}
+          </Badge>
+        </TableCell>
+
+        <TableCell>
+          <div className="flex items-center gap-1">
+            <Calendar className="h-4 w-4" />
+            {formatDate(a.date)}
+          </div>
+        </TableCell>
+
+        <TableCell>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <MoreVertical className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => handleView(a.id)}>
+                <Eye className="h-4 w-4 mr-2" /> View
+              </DropdownMenuItem>
+
+              <DropdownMenuItem onClick={() => handleEdit(a.id)}>
+                <Pencil className="h-4 w-4 mr-2" /> Edit
+              </DropdownMenuItem>
+
+              <DropdownMenuItem
+                onClick={() => handleDelete(a.id)}
+                className="text-red-600"
+              >
+                <Trash className="h-4 w-4 mr-2" /> Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </TableCell>
+      </TableRow>
+    ))
+  )}
+</TableBody>
+
+
           </Table>
         </Card>
       </div>
