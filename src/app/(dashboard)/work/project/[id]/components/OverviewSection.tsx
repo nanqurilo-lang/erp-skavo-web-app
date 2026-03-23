@@ -27,7 +27,12 @@ interface Project {
   deadline?: string;
   noDeadline?: boolean;
   category?: string;
-  client?: { name: string; profilePictureUrl?: string } | null;
+  client?: {
+    name: string;
+    clientId?: string;
+    companyName?: string;   // ✅ ADD THIS
+    profilePictureUrl?: string
+  } | null;
   summary?: string;
   currency: string;
   budget: number;
@@ -359,53 +364,91 @@ export default function ProjectDetailsPage() {
           : undefined,
       });
       if (!res.ok) throw new Error("Failed to fetch");
+      //     const data = await res.json();
+      //     setProject(Array.isArray(data) ? data[0] : data);
+      //   } catch (err) {
+      //     // fallback demo data
+      //     setProject({
+      //       id: Number(id || 1),
+      //       shortCode: "PRJ-001",
+      //       name: "Project Name",
+      //       category: "Website",
+      //       startDate: "2025-08-02",
+      //       deadline: "2025-09-12",
+      //       client: {
+      //         name: "John Doe",
+      //         profilePictureUrl: "https://i.pravatar.cc/80?img=5",
+      //       },
+      //       summary: "Short description of the project and goals.",
+      //       currency: "$",
+      //       budget: 0,
+      //       hoursEstimate: 40,
+      //       assignedEmployees: [
+      //         {
+      //           employeeId: "1",
+      //           name: "Aman Sharma",
+      //           designation: "Developer",
+      //           department: "Engineering",
+      //         },
+      //         {
+      //           employeeId: "2",
+      //           name: "Riya Singh",
+      //           designation: "Designer",
+      //           department: "Design",
+      //         },
+      //       ],
+      //       progressPercent: 76,
+      //       totalTimeLoggedMinutes: 300,
+      //       createdBy: "Admin",
+      //       createdAt: new Date().toISOString(),
+      //       pinned: false,
+      //       archived: false,
+      //     });
+      //   } finally {
+      //     setLoading(false);
+      //   }
+      // };
+
+
+
+
+
       const data = await res.json();
-      setProject(Array.isArray(data) ? data[0] : data);
-    } catch (err) {
-      // fallback demo data
+
+      console.log("FULL API RESPONSE 👉", data);
+
+      const projectData = Array.isArray(data) ? data[0] : data;
+
       setProject({
-        id: Number(id || 1),
-        shortCode: "PRJ-001",
-        name: "Project Name",
-        category: "Website",
-        startDate: "2025-08-02",
-        deadline: "2025-09-12",
+
+        ...projectData,
         client: {
-          name: "John Doe",
-          profilePictureUrl: "https://i.pravatar.cc/80?img=5",
+          name:
+            projectData.client?.name ||
+            projectData.clientName ||
+            "Unknown",
+
+
+          clientId:
+            projectData.client?.clientId ||
+            projectData.clientId || "",  // 👈 important fallback
+
+
+
+
+          profilePictureUrl:
+            projectData.client?.profilePictureUrl,
         },
-        summary: "Short description of the project and goals.",
-        currency: "$",
-        budget: 0,
-        hoursEstimate: 40,
-        assignedEmployees: [
-          {
-            employeeId: "1",
-            name: "Aman Sharma",
-            designation: "Developer",
-            department: "Engineering",
-          },
-          {
-            employeeId: "2",
-            name: "Riya Singh",
-            designation: "Designer",
-            department: "Design",
-          },
-        ],
-        progressPercent: 76,
-        totalTimeLoggedMinutes: 300,
-        createdBy: "Admin",
-        createdAt: new Date().toISOString(),
-        pinned: false,
-        archived: false,
       });
+
+
     } finally {
       setLoading(false);
     }
   };
 
 
-
+  // console.log("helloooo",project)
 
   // 👇 PASTE HERE
   const getProjectMetrics = async (accessToken: string) => {
@@ -446,7 +489,7 @@ export default function ProjectDetailsPage() {
   // if (loading) return <p className="p-8 text-center">Loading project...</p>;
   if (!project)
     return
-  
+
   <p className="p-8 text-center text-red-600">Project not found</p>;
 
 
@@ -509,13 +552,13 @@ export default function ProjectDetailsPage() {
             </h1> */}
 
 
-{loading ? (
-  <Skeleton width={250} height={30} />
-) : (
-  <h1 className="text-3xl font-semibold text-gray-800">
-    {project.name}
-  </h1>
-)}
+            {loading ? (
+              <Skeleton width={250} height={30} />
+            ) : (
+              <h1 className="text-3xl font-semibold text-gray-800">
+                {project.name}
+              </h1>
+            )}
 
 
           </div>
@@ -530,18 +573,18 @@ export default function ProjectDetailsPage() {
 
 
 
-           {loading ? (
-  <div className="flex items-center gap-6">
-    <Skeleton width={140} height={80} />
-    <Skeleton width={100} height={40} />
-    <Skeleton width={100} height={40} />
-  </div>
-) : (    
-               
-                  <div className="flex items-center gap-6">
+                  {loading ? (
+                    <div className="flex items-center gap-6">
+                      <Skeleton width={140} height={80} />
+                      <Skeleton width={100} height={40} />
+                      <Skeleton width={100} height={40} />
+                    </div>
+                  ) : (
 
-                    <div className="w-36 h-20">
-                      {/* <svg viewBox="0 0 100 50" className="w-full h-full">
+                    <div className="flex items-center gap-6">
+
+                      <div className="w-36 h-20">
+                        {/* <svg viewBox="0 0 100 50" className="w-full h-full">
                         <path
                           d="M5 50 A45 45 0 0 1 95 50"
                           fill="none"
@@ -570,70 +613,70 @@ export default function ProjectDetailsPage() {
 
 
 
-<div className="w-36 h-20">
-  <svg viewBox="0 0 100 50" className="w-full h-full">
-    {/* background arc */}
-    <path
-      d="M5 50 A45 45 0 0 1 95 50"
-      fill="none"
-      stroke="#e6e6e6"
-      strokeWidth="10"
-      strokeLinecap="round"
-      pathLength="100"
-    />
+                        <div className="w-36 h-20">
+                          <svg viewBox="0 0 100 50" className="w-full h-full">
+                            {/* background arc */}
+                            <path
+                              d="M5 50 A45 45 0 0 1 95 50"
+                              fill="none"
+                              stroke="#e6e6e6"
+                              strokeWidth="10"
+                              strokeLinecap="round"
+                              pathLength="100"
+                            />
 
-    {/* progress arc */}
-    <path
-      d="M5 50 A45 45 0 0 1 95 50"
-      fill="none"
-      stroke="#f5c518"
-      strokeWidth="10"
-      strokeLinecap="round"
-      pathLength="100"
-      strokeDasharray="100"
-      strokeDashoffset={100 - project.progressPercent}
-    />
+                            {/* progress arc */}
+                            <path
+                              d="M5 50 A45 45 0 0 1 95 50"
+                              fill="none"
+                              stroke="#f5c518"
+                              strokeWidth="10"
+                              strokeLinecap="round"
+                              pathLength="100"
+                              strokeDasharray="100"
+                              strokeDashoffset={100 - project.progressPercent}
+                            />
 
-    <text
-      x="50"
-      y="40"
-      fontSize="8"
-      textAnchor="middle"
-      fill="#374151"
-    >
-      {project.progressPercent}%
-    </text>
-  </svg>
-</div>
+                            <text
+                              x="50"
+                              y="40"
+                              fontSize="8"
+                              textAnchor="middle"
+                              fill="#374151"
+                            >
+                              {project.progressPercent}%
+                            </text>
+                          </svg>
+                        </div>
 
 
+                      </div>
+
+                      <div>
+                        <p className="text-sm text-gray-500">Start Date</p>
+                        <p className="font-medium">
+                          {
+                            // new Date(project.startDate).toLocaleDateString()
+                            format(new Date(project.startDate), "dd-MM-yyyy")
+                          }
+                        </p>
+                      </div>
+
+                      <div>
+                        <p className="text-sm text-gray-500">End Date</p>
+                        <p className="font-medium">
+                          {project.noDeadline
+                            ? "No Deadline"
+                            : project.deadline
+                              ?
+                              // new Date(project.deadline).toLocaleDateString()
+                              format(new Date(project.deadline), "dd-MM-yyyy")
+                              : "TBD"}
+                        </p>
+                      </div>
                     </div>
 
-                    <div>
-                      <p className="text-sm text-gray-500">Start Date</p>
-                      <p className="font-medium">
-                        {
-                          // new Date(project.startDate).toLocaleDateString()
-                          format(new Date(project.startDate), "dd-MM-yyyy")
-                        }
-                      </p>
-                    </div>
-
-                    <div>
-                      <p className="text-sm text-gray-500">End Date</p>
-                      <p className="font-medium">
-                        {project.noDeadline
-                          ? "No Deadline"
-                          : project.deadline
-                            ?
-                            // new Date(project.deadline).toLocaleDateString()
-                            format(new Date(project.deadline), "dd-MM-yyyy")
-                            : "TBD"}
-                      </p>
-                    </div>
-                  </div>
-
-                        )}
+                  )}
 
                   <div className="hidden lg:block max-w-xs text-gray-600">
                     {project.summary ? (
@@ -648,40 +691,49 @@ export default function ProjectDetailsPage() {
               </div>
 
 
-{loading ? (
-  <div className="bg-white p-4 rounded-xl flex items-center gap-4">
-    <Skeleton circle width={60} height={60} />
-    <div>
-      <Skeleton width={120} height={15} />
-      <Skeleton width={80} height={12} />
-    </div>
-  </div>
-) : (
-
-              <div className="bg-white rounded-xl border border-gray-200 p-4 flex items-center gap-4">
-                <div className="w-16 h-16 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
-                  {project.client?.profilePictureUrl ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={project.client.profilePictureUrl}
-                      alt="client"
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <UserIcon className="w-8 h-8 text-gray-400" />
-                  )}
+              {loading ? (
+                <div className="bg-white p-4 rounded-xl flex items-center gap-4">
+                  <Skeleton circle width={60} height={60} />
+                  <div>
+                    <Skeleton width={120} height={15} />
+                    <Skeleton width={80} height={12} />
+                  </div>
                 </div>
-                <div>
-                  <p className="text-sm text-gray-500">Client</p>
-                  <p className="font-medium">
-                    {project.client?.name ||
-                      `Client ID: ${project.client?.name ?? ""}`}
-                  </p>
-                  <p className="text-xs text-gray-400">Skavo</p>
-                </div>
-              </div>
+              ) : (
 
+                <div className="bg-white rounded-xl border border-gray-200 p-4 flex items-center gap-4">
+                  <div className="w-16 h-16 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
+                    {project.client?.profilePictureUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={project.client.profilePictureUrl}
+                        alt="client"
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <UserIcon className="w-8 h-8 text-gray-400" />
                     )}
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500">Client</p>
+
+
+
+
+                    <p className="font-medium">
+                      {project.client?.name || "Unknown Client"}
+                    </p>
+
+                    <p className="text-xs text-gray-400">
+                      {project.client?.clientId || "No Client ID"}
+                    </p>
+
+
+
+                  </div>
+                </div>
+
+              )}
 
             </div>
 
@@ -691,105 +743,105 @@ export default function ProjectDetailsPage() {
                 {/* <h3 className="text-lg font-medium mb-4">Task Statistics</h3> */}
 
 
-{loading ? (
-  <Skeleton width={200} height={20} />
-) : (
-  <h3 className="text-lg font-medium mb-4">Task Statistics</h3>
-)}
+                {loading ? (
+                  <Skeleton width={200} height={20} />
+                ) : (
+                  <h3 className="text-lg font-medium mb-4">Task Statistics</h3>
+                )}
 
                 {/* <TaskStatistics projectId={project.id} /> */}
 
-{loading ? (
-  <Skeleton height={200} />
-) : (
-  <TaskStatistics projectId={project.id} />
-)}
+                {loading ? (
+                  <Skeleton height={200} />
+                ) : (
+                  <TaskStatistics projectId={project.id} />
+                )}
 
 
                 {/* Single Hours Logged chart placed immediately below TaskStatistics (only once) */}
-               
-              {loading ? (
-  <Skeleton height={200} />
-) : ( 
-               
-                <div className="mt-6 bg-white rounded border border-gray-200 p-4 shadow-sm">
-                  <div className="flex items-center justify-between mb-3">
-                    <h4 className="text-sm font-medium">Hours Logged</h4>
-                    <div className="text-xs text-gray-500">
-                      {/* {metricsLoading ? "Loading..." : `${totalHours} hrs`} */}
-                      {metricsLoading
-                        ? "Loading..."
-                        : `${totalHours} hrs ${totalMinutesRemaining} min`}
-                    </div>
-                  </div>
 
-                  {/* Chart area: bar columns and horizontal progress line (visual match to your screenshot) */}
-                  <div className="h-40 mb-10">
-                    <div className="flex items-end gap-8 h-full">
-                      {/* Planned column */}
-                      <div className="flex-1 text-center">
-                        <div className="text-xs text-gray-500 mb-2">Planned</div>
-                        <div className="h-28 flex items-end justify-center">
-                          <div
-                            className="w-24 rounded-t-md"
-                            style={{
-                              height: `${Math.max(30, plannedBarWidth)}%`,
-                              background: "#16a34a",
-                            }}
-                          >
-                            <div className="text-xs text-white text-center py-1">
-                              {hoursEstimate} hrs
+                {loading ? (
+                  <Skeleton height={200} />
+                ) : (
+
+                  <div className="mt-6 bg-white rounded border border-gray-200 p-4 shadow-sm">
+                    <div className="flex items-center justify-between mb-3">
+                      <h4 className="text-sm font-medium">Hours Logged</h4>
+                      <div className="text-xs text-gray-500">
+                        {/* {metricsLoading ? "Loading..." : `${totalHours} hrs`} */}
+                        {metricsLoading
+                          ? "Loading..."
+                          : `${totalHours} hrs ${totalMinutesRemaining} min`}
+                      </div>
+                    </div>
+
+                    {/* Chart area: bar columns and horizontal progress line (visual match to your screenshot) */}
+                    <div className="h-40 mb-10">
+                      <div className="flex items-end gap-8 h-full">
+                        {/* Planned column */}
+                        <div className="flex-1 text-center">
+                          <div className="text-xs text-gray-500 mb-2">Planned</div>
+                          <div className="h-28 flex items-end justify-center">
+                            <div
+                              className="w-24 rounded-t-md"
+                              style={{
+                                height: `${Math.max(30, plannedBarWidth)}%`,
+                                background: "#16a34a",
+                              }}
+                            >
+                              <div className="text-xs text-white text-center py-1">
+                                {hoursEstimate} hrs
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Actual column */}
+                        <div className="flex-1 text-center">
+                          <div className="text-xs text-gray-500 mb-2">Actual</div>
+                          <div className="h-28 flex items-end justify-center">
+                            <div
+                              className="w-24 rounded-t-md"
+                              style={{
+                                height: `${Math.max(30, actualBarWidth)}%`,
+                                background: "#ef4444",
+                              }}
+                            >
+                              <div className="text-xs text-white text-center py-1">
+                                {totalHours} hrs
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
 
-                      {/* Actual column */}
-                      <div className="flex-1 text-center">
-                        <div className="text-xs text-gray-500 mb-2">Actual</div>
-                        <div className="h-28 flex items-end justify-center">
+                      {/* horizontal progress line */}
+                      <div className="mt-4">
+                        <div className="h-2 bg-gray-200 rounded overflow-hidden">
                           <div
-                            className="w-24 rounded-t-md"
+                            className="h-2 rounded"
                             style={{
-                              height: `${Math.max(30, actualBarWidth)}%`,
-                              background: "#ef4444",
+                              width: `${hoursProgressPct}%`,
+                              background:
+                                hoursProgressPct > 100 ? "#ef4444" : "#16a34a",
                             }}
-                          >
-                            <div className="text-xs text-white text-center py-1">
-                              {totalHours} hrs
-                            </div>
-                          </div>
+                          />
+                        </div>
+                        <div className="mt-2 text-xs text-gray-500 flex justify-between">
+                          <span>{hoursProgressPct}% of estimate</span>
+                          <span>
+                            {currency}
+                            {(earnings ?? 0).toLocaleString(undefined, {
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2,
+                            })}
+                          </span>
                         </div>
                       </div>
                     </div>
-
-                    {/* horizontal progress line */}
-                    <div className="mt-4">
-                      <div className="h-2 bg-gray-200 rounded overflow-hidden">
-                        <div
-                          className="h-2 rounded"
-                          style={{
-                            width: `${hoursProgressPct}%`,
-                            background:
-                              hoursProgressPct > 100 ? "#ef4444" : "#16a34a",
-                          }}
-                        />
-                      </div>
-                      <div className="mt-2 text-xs text-gray-500 flex justify-between">
-                        <span>{hoursProgressPct}% of estimate</span>
-                        <span>
-                          {currency}
-                          {(earnings ?? 0).toLocaleString(undefined, {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2,
-                          })}
-                        </span>
-                      </div>
-                    </div>
                   </div>
-                </div>
 
-                        )}
+                )}
                 {/* end Hours Logged chart */}
 
 
@@ -800,74 +852,74 @@ export default function ProjectDetailsPage() {
               </div>
 
 
-{loading ? (
-  <div className="space-y-4">
-    <Skeleton height={80} />
-    <Skeleton height={80} />
-    <Skeleton height={100} />
-  </div>
-) : (
-
-              <div className="space-y-4">
-                <div className="bg-white rounded-xl border border-gray-200 p-4">
-                  <p className="text-sm text-gray-500">Project Budget</p>
-                  <div className="text-2xl font-semibold text-blue-600 mt-2">
-                    {project.currency}
-                    {project.budget.toFixed(2)}
-                  </div>
+              {loading ? (
+                <div className="space-y-4">
+                  <Skeleton height={80} />
+                  <Skeleton height={80} />
+                  <Skeleton height={100} />
                 </div>
+              ) : (
 
-                <div className="bg-white rounded-xl border border-gray-200 p-4">
-                  <p className="text-sm text-gray-500">Hours Logged</p>
-                  <div className="text-2xl font-semibold text-blue-600 mt-2">
-
-                    {hoursEstimate} hrs {totalMinutesRemaining} min
-
-                  </div>
-                </div>
-
-
-
-                <div className="grid grid-cols-3 gap-3">
-                  <div className="bg-white rounded-xl border border-gray-200 p-3 text-center">
-                    <p className="text-sm text-gray-500">Earnings</p>
-                    <div className="text-lg font-semibold text-blue-600 mt-1">
-                      {currency}
-                      {earnings.toLocaleString(undefined, {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      })}
+                <div className="space-y-4">
+                  <div className="bg-white rounded-xl border border-gray-200 p-4">
+                    <p className="text-sm text-gray-500">Project Budget</p>
+                    <div className="text-2xl font-semibold text-blue-600 mt-2">
+                      {project.currency}
+                      {project.budget.toFixed(2)}
                     </div>
                   </div>
 
-                  <div className="bg-white rounded-xl border border-gray-200 p-3 text-center">
-                    <p className="text-sm text-gray-500">Expenses</p>
-                    <div className="text-lg font-semibold text-blue-600 mt-1">
-                      {currency}
-                      {expenses.toLocaleString(undefined, {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      })}
+                  <div className="bg-white rounded-xl border border-gray-200 p-4">
+                    <p className="text-sm text-gray-500">Hours Logged</p>
+                    <div className="text-2xl font-semibold text-blue-600 mt-2">
+
+                      {hoursEstimate} hrs {totalMinutesRemaining} min
+
                     </div>
                   </div>
 
-                  <div className="bg-white rounded-xl border border-gray-200 p-3 text-center">
-                    <p className="text-sm text-gray-500">Profit</p>
-                    <div className="text-lg font-semibold text-blue-600 mt-1">
-                      {currency}
-                      {profit.toLocaleString(undefined, {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      })}
+
+
+                  <div className="grid grid-cols-3 gap-3">
+                    <div className="bg-white rounded-xl border border-gray-200 p-3 text-center">
+                      <p className="text-sm text-gray-500">Earnings</p>
+                      <div className="text-lg font-semibold text-blue-600 mt-1">
+                        {currency}
+                        {earnings.toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })}
+                      </div>
+                    </div>
+
+                    <div className="bg-white rounded-xl border border-gray-200 p-3 text-center">
+                      <p className="text-sm text-gray-500">Expenses</p>
+                      <div className="text-lg font-semibold text-blue-600 mt-1">
+                        {currency}
+                        {expenses.toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })}
+                      </div>
+                    </div>
+
+                    <div className="bg-white rounded-xl border border-gray-200 p-3 text-center">
+                      <p className="text-sm text-gray-500">Profit</p>
+                      <div className="text-lg font-semibold text-blue-600 mt-1">
+                        {currency}
+                        {profit.toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })}
+                      </div>
                     </div>
                   </div>
+
+
+
                 </div>
 
-
-
-              </div>
-
-                    )}
+              )}
 
 
             </div>
@@ -879,55 +931,55 @@ export default function ProjectDetailsPage() {
                   <h4 className="text-lg font-medium">Assigned Employees</h4>
                 </div>
 
-{loading ? (
-  <div className="grid grid-cols-2 gap-3">
-    {Array.from({ length: 4 }).map((_, i) => (
-      <Skeleton key={i} height={60} />
-    ))}
-  </div>
-) : (
+                {loading ? (
+                  <div className="grid grid-cols-2 gap-3">
+                    {Array.from({ length: 4 }).map((_, i) => (
+                      <Skeleton key={i} height={60} />
+                    ))}
+                  </div>
+                ) : (
 
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {project.assignedEmployees &&
-                    project.assignedEmployees.length ? (
-                    project.assignedEmployees.map((emp) => (
-                      <div
-                        key={emp.employeeId}
-                        className="flex items-center gap-3 p-3 bg-gray-50 rounded"
-                      >
-                        <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden">
-                          {emp.profileUrl ? (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img
-                              src={emp.profileUrl}
-                              alt={emp.name}
-                              className="w-full h-full object-cover"
-                            />
-                          ) : (
-                            <UserIcon className="w-5 h-5 text-gray-400" />
-                          )}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {project.assignedEmployees &&
+                      project.assignedEmployees.length ? (
+                      project.assignedEmployees.map((emp) => (
+                        <div
+                          key={emp.employeeId}
+                          className="flex items-center gap-3 p-3 bg-gray-50 rounded"
+                        >
+                          <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden">
+                            {emp.profileUrl ? (
+                              // eslint-disable-next-line @next/next/no-img-element
+                              <img
+                                src={emp.profileUrl}
+                                alt={emp.name}
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <UserIcon className="w-5 h-5 text-gray-400" />
+                            )}
+                          </div>
+                          <div>
+                            <p className="font-medium text-sm">{emp.name}</p>
+                            <p className="text-xs text-gray-500">
+                              {emp.designation ? emp.designation + ", " : ""}
+                              {emp.department}
+                            </p>
+                          </div>
                         </div>
-                        <div>
-                          <p className="font-medium text-sm">{emp.name}</p>
-                          <p className="text-xs text-gray-500">
-                            {emp.designation ? emp.designation + ", " : ""}
-                            {emp.department}
-                          </p>
-                        </div>
-                      </div>
-                    ))
-                  ) : (
-                    <p className="text-gray-500 text-center py-6">
-                      No employees assigned
-                    </p>
-                  )}
-                </div>
+                      ))
+                    ) : (
+                      <p className="text-gray-500 text-center py-6">
+                        No employees assigned
+                      </p>
+                    )}
+                  </div>
 
                 )}
 
 
-                
+
               </div>
 
               <div className="bg-white rounded-xl border border-gray-200 p-4">
@@ -970,11 +1022,11 @@ export default function ProjectDetailsPage() {
               {/* <TasksTable projectId={project.id} /> */}
 
 
-{loading ? (
-  <Skeleton height={300} />
-) : (
-  <TasksTable projectId={project.id} />
-)}
+              {loading ? (
+                <Skeleton height={300} />
+              ) : (
+                <TasksTable projectId={project.id} />
+              )}
 
             </div>
           )}
@@ -982,31 +1034,31 @@ export default function ProjectDetailsPage() {
           {/* other components shown for reference */}
           {/* <div className="mt-6 grid grid-cols-1 lg:grid-rows-2 gap-2"> */}
           <div className="mt-6 space-y-6 overflow-x-auto">
-           
-           {loading ? (
-  <Skeleton height={300} />
-) : (
-           
-            <ProjectMembersTable projectId={project.id} />
+
+            {loading ? (
+              <Skeleton height={300} />
+            ) : (
+
+              <ProjectMembersTable projectId={project.id} />
 
 
-)}
+            )}
 
 
-{loading ? (
-  <Skeleton height={300} />
-) : (
-            <TimesheetsTableNew gatewayPath="https://6jnqmj85-80.inc1.devtunnels.ms/timesheets" projectId={project.id} />
-)}
+            {loading ? (
+              <Skeleton height={300} />
+            ) : (
+              <TimesheetsTableNew gatewayPath="https://6jnqmj85-80.inc1.devtunnels.ms/timesheets" projectId={project.id} />
+            )}
 
-{loading ? (
-  <Skeleton height={300} />
-) : (
-         
-            <MilestonesTable projectId={project.id} />
-         
-)}
-            </div>
+            {loading ? (
+              <Skeleton height={300} />
+            ) : (
+
+              <MilestonesTable projectId={project.id} />
+
+            )}
+          </div>
         </div>
       </div>
     </main>
