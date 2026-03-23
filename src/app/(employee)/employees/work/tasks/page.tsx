@@ -17,6 +17,9 @@ import EditTaskDrawer from "./components/EditTaskDrawer";
 import { DuplicateTaskModal } from "./components/DuplicateTaskModal";
 import { TaskFiltersDrawer } from "./components/TaskFiltersDrawer";
 
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
 
 /**
  * ---- Shared Types (baaki components inko import karke use kar sakte hain) ----
@@ -499,9 +502,60 @@ const handlePinToggle = async (task: Task) => {
           <Card className="border-none bg-white shadow-sm">
             <div className="p-0">
               {loading && !initialLoaded ? (
-                <div className="flex h-64 items-center justify-center">
-                  <Loader2 className="h-6 w-6 animate-spin text-slate-400" />
-                </div>
+                // <div className="flex h-64 items-center justify-center">
+                //   <Loader2 className="h-6 w-6 animate-spin text-slate-400" />
+                // </div>
+
+
+
+<div className="p-4">
+  <table className="w-full">
+    <thead>
+      <tr>
+        {Array.from({ length: 6 }).map((_, i) => (
+          <th key={i} className="p-3 text-left">
+            <Skeleton height={16} width={100} />
+          </th>
+        ))}
+      </tr>
+    </thead>
+
+    <tbody>
+      {Array.from({ length: 6 }).map((_, i) => (
+        <tr key={i} className="border-t">
+          <td className="p-3">
+            <Skeleton width={120} />
+          </td>
+
+          <td className="p-3">
+            <Skeleton width={100} />
+          </td>
+
+          <td className="p-3 flex gap-2">
+            <Skeleton circle width={28} height={28} />
+            <Skeleton circle width={28} height={28} />
+          </td>
+
+          <td className="p-3">
+            <Skeleton width={80} />
+          </td>
+
+          <td className="p-3">
+            <Skeleton width={90} />
+          </td>
+
+          <td className="p-3 text-right">
+            <Skeleton width={30} height={30} />
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
+
+
+
               ) : error ? (
                 <div className="flex h-64 flex-col items-center justify-center gap-2 text-sm text-red-500">
                   <p>{error}</p>
