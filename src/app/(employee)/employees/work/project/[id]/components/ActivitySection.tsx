@@ -127,11 +127,38 @@ export default function ActivitySection({
       <h3 className="text-lg font-medium mb-4">Activity</h3>
 
       <div className="border rounded-md overflow-hidden">
-        {loading && (
+        {/* {loading && (
           <div className="p-6 text-center text-gray-400">
             Loading activity…
           </div>
-        )}
+        )} */}
+
+
+
+
+{loading && (
+  <div>
+    {Array.from({ length: 5 }).map((_, i) => (
+      <div
+        key={i}
+        className="flex gap-4 p-4 border-b last:border-b-0 animate-pulse"
+      >
+        {/* DATE BOX */}
+        <div className="w-14 border rounded-md text-center overflow-hidden">
+          <div className="h-4 bg-gray-200 border-b" />
+          <div className="h-8 bg-gray-300" />
+        </div>
+
+        {/* CONTENT */}
+        <div className="flex-1 space-y-2">
+          <div className="h-4 w-3/4 bg-gray-200 rounded" />
+          <div className="h-3 w-1/4 bg-gray-200 rounded" />
+        </div>
+      </div>
+    ))}
+  </div>
+)}
+
 
         {!loading && activities.length === 0 && (
           <div className="p-6 text-center text-gray-400">
