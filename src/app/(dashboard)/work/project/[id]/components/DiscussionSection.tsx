@@ -391,11 +391,11 @@ export default function DiscussionSection({
 
 
 
-      {discussions.length === 0 && (
+      {/* {discussions.length === 0 && (
         <div className="border rounded-md p-4 text-gray-400 text-center">
           Team discussion will appear here
         </div>
-      )}
+      )} */}
 
       {/* ================= NEW DISCUSSION MODAL ================= */}
       {showDiscussionModal && (

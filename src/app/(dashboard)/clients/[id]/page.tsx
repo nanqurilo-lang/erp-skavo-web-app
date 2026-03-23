@@ -1037,7 +1037,7 @@ useEffect(() => {
 
     return (
       <TableRow key={p.id} className="bg-white hover:bg-gray-50">
-        <TableCell className="py-4 px-4 align-top w-28">
+        <TableCell className="py-4 px-4 align-top w-20">
           <div className="text-sm font-medium">{p.shortCode ?? p.id}</div>
         </TableCell>
         <TableCell className="py-4 px-4 align-top">
@@ -1084,7 +1084,7 @@ useEffect(() => {
         <TableCell className="py-4 px-4 align-top">
           <div className="flex flex-col gap-2">
             <div
-              className="w-44 cursor-pointer"
+              className="w-30 cursor-pointer"
               title="Click to filter by this progress bucket"
             >
               <div className="relative bg-gray-200 h-4 rounded-full overflow-hidden">
