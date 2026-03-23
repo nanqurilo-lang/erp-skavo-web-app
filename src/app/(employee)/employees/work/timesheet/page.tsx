@@ -845,13 +845,53 @@ export default function TimesheetPage() {
               </thead>
 
               <tbody>
-                {loading && (
+                {/* {loading && (
                   <tr>
                     <td colSpan={7} className="py-6 text-center text-gray-500">
                       Loading...
                     </td>
                   </tr>
-                )}
+                )} */}
+
+
+
+                {loading &&
+                  Array.from({ length: 6 }).map((_, i) => (
+                    <tr key={i} className="animate-pulse">
+                      <td className="py-3 px-4 border-r">
+                        <div className="h-4 w-20 bg-gray-200 rounded" />
+                      </td>
+
+                      <td className="py-3 px-4 border-r">
+                        <div className="h-4 w-40 bg-gray-200 rounded" />
+                      </td>
+
+                      <td className="py-3 px-4 border-r">
+                        <div className="flex gap-2">
+                          <div className="h-8 w-8 rounded-full bg-gray-200" />
+                          <div className="h-8 w-8 rounded-full bg-gray-200" />
+                        </div>
+                      </td>
+
+                      <td className="py-3 px-4 border-r">
+                        <div className="h-4 w-32 bg-gray-200 rounded" />
+                      </td>
+
+                      <td className="py-3 px-4 border-r">
+                        <div className="h-4 w-32 bg-gray-200 rounded" />
+                      </td>
+
+                      <td className="py-3 px-4 border-r">
+                        <div className="h-4 w-16 bg-gray-200 rounded" />
+                      </td>
+
+                      <td className="py-3 px-4">
+                        <div className="h-6 w-6 bg-gray-200 rounded-full ml-auto" />
+                      </td>
+                    </tr>
+                  ))}
+
+
 
                 {!loading && filtered.length === 0 && (
                   <tr>
@@ -926,39 +966,74 @@ export default function TimesheetPage() {
 
 
 
-          <FiltersSection
-            employeeFilter={employeeFilter}
-            setEmployeeFilter={setEmployeeFilter}
+          {loading ? (
 
-            startDate={startDate}
-            endDate={endDate}
-            setStartDate={setStartDate}
-            setEndDate={setEndDate}
+            <div className="space-y-4 mb-4 animate-pulse">
+              <div className="bg-white p-4 rounded border flex gap-4">
+                <div className="h-8 w-40 bg-gray-200 rounded" />
+                <div className="h-8 w-32 bg-gray-200 rounded" />
+                <div className="h-8 w-24 bg-gray-200 rounded" />
+              </div>
 
-            employeeOptions={employeeOptions}
-            getEmployeeLabel={getEmployeeLabel}
+              <div className="bg-white p-4 rounded border flex gap-3">
+                <div className="h-10 w-64 bg-gray-200 rounded" />
+                <div className="h-10 w-32 bg-gray-200 rounded" />
+                <div className="h-10 w-32 bg-gray-200 rounded" />
+              </div>
+            </div>
 
-            onOpenFiltersDrawer={() => setShowFilters(true)}
-          />
+
+          ) : (
+
+            <>
 
 
 
-          {/* PART 2: Action buttons */}
-          <ActionsSection
-            searchInput={searchInput}
-            setSearchInput={setSearchInput}
-            setSearchQuery={setSearchQuery}
-            setCurrentPage={setCurrentPage}
-            viewMode={viewMode}
-            setViewMode={setViewMode}
-            showCalendarModal={showCalendarModal}
-            setShowCalendarModal={setShowCalendarModal}
-            openLogForm={() => openLogForm()}
-          />
 
-          {/* PART 3: Render table / list (not in weekly mode) */}
-          {renderMainSection()}
+
+              <FiltersSection
+                employeeFilter={employeeFilter}
+                setEmployeeFilter={setEmployeeFilter}
+
+                startDate={startDate}
+                endDate={endDate}
+                setStartDate={setStartDate}
+                setEndDate={setEndDate}
+
+                employeeOptions={employeeOptions}
+                getEmployeeLabel={getEmployeeLabel}
+
+                onOpenFiltersDrawer={() => setShowFilters(true)}
+              />
+
+
+
+              {/* PART 2: Action buttons */}
+              <ActionsSection
+                searchInput={searchInput}
+                setSearchInput={setSearchInput}
+                setSearchQuery={setSearchQuery}
+                setCurrentPage={setCurrentPage}
+                viewMode={viewMode}
+                setViewMode={setViewMode}
+                showCalendarModal={showCalendarModal}
+                setShowCalendarModal={setShowCalendarModal}
+                openLogForm={() => openLogForm()}
+              />
+
+              {/* PART 3: Render table / list (not in weekly mode) */}
+              {renderMainSection()}
+
+            </>
+
+          )}
+
         </div>
+
+
+
+
+
       </main>
 
       {/* Filters drawer */}
