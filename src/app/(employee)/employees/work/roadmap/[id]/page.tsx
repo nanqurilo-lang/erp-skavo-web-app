@@ -242,61 +242,76 @@ function TaskStatistics({ projectId }: { projectId: number }) {
 
   return (
     <div>
-      {loading ? (
+      {/* {loading ? (
         <div className="py-6 text-center text-gray-500">
           Loading task statistics...
         </div>
-      ) : error ? (
-        <div className="py-6 text-center text-red-500">{error}</div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="flex items-center">
-            <svg
-              viewBox="0 0 100 100"
-              width="180"
-              height="180"
-              className="flex-shrink-0"
-            >
-              {/* background circle if no data */}
-              {slices.length === 0 && (
-                <circle cx="50" cy="50" r="40" fill="#e5e7eb" />
-              )}
-              {slices.map((s, idx) => (
-                <path
-                  key={idx}
-                  d={describeArc(50, 50, 40, s.start, s.end)}
-                  fill={s.color}
-                  stroke="#ffffff"
-                  strokeWidth="0.5"
-                />
-              ))}
-            </svg>
-          </div>
+      )  */}
 
-          <div className="flex flex-col justify-center">
-            <ul className="space-y-3 text-sm">
-              {counts.map((c, idx) => {
-                const color =
-                  normalizeLabelColor(c.status.labelColor) ||
-                  nameColorFallback(c.status.name);
-                return (
-                  <li key={idx} className="flex items-center gap-3">
-                    <span
-                      style={{ width: 18, height: 12, background: color }}
-                      className="rounded-sm inline-block"
-                    />
-                    <span className="flex-1">{c.status.name}</span>
-                    <span className="text-xs text-gray-500">{c.count}</span>
-                  </li>
-                );
-              })}
-            </ul>
-            <div className="mt-4 text-xs text-gray-500">
-              Total tasks: {total}
-            </div>
+      {loading ? (
+        <div className="animate-pulse flex gap-6">
+          <div className="w-40 h-40 bg-gray-200 rounded-full" />
+          <div className="flex-1 space-y-3">
+            <div className="h-4 w-40 bg-gray-200 rounded" />
+            <div className="h-4 w-32 bg-gray-200 rounded" />
+            <div className="h-4 w-36 bg-gray-200 rounded" />
           </div>
         </div>
-      )}
+      )
+
+
+
+        : error ? (
+          <div className="py-6 text-center text-red-500">{error}</div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="flex items-center">
+              <svg
+                viewBox="0 0 100 100"
+                width="180"
+                height="180"
+                className="flex-shrink-0"
+              >
+                {/* background circle if no data */}
+                {slices.length === 0 && (
+                  <circle cx="50" cy="50" r="40" fill="#e5e7eb" />
+                )}
+                {slices.map((s, idx) => (
+                  <path
+                    key={idx}
+                    d={describeArc(50, 50, 40, s.start, s.end)}
+                    fill={s.color}
+                    stroke="#ffffff"
+                    strokeWidth="0.5"
+                  />
+                ))}
+              </svg>
+            </div>
+
+            <div className="flex flex-col justify-center">
+              <ul className="space-y-3 text-sm">
+                {counts.map((c, idx) => {
+                  const color =
+                    normalizeLabelColor(c.status.labelColor) ||
+                    nameColorFallback(c.status.name);
+                  return (
+                    <li key={idx} className="flex items-center gap-3">
+                      <span
+                        style={{ width: 18, height: 12, background: color }}
+                        className="rounded-sm inline-block"
+                      />
+                      <span className="flex-1">{c.status.name}</span>
+                      <span className="text-xs text-gray-500">{c.count}</span>
+                    </li>
+                  );
+                })}
+              </ul>
+              <div className="mt-4 text-xs text-gray-500">
+                Total tasks: {total}
+              </div>
+            </div>
+          </div>
+        )}
     </div>
   );
 }
@@ -463,15 +478,25 @@ export default function ProjectDetailsPage() {
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-6 py-6">
         {/* Header */}
-        <div className="mb-4">
+        {/* <div className="mb-4">
           <h1 className="text-3xl font-semibold text-gray-800">
             {project.name}
           </h1>
-        </div>
+        </div> */}
+
+
+
+        {loading ? (
+          <div className="h-8 w-64 bg-gray-200 rounded animate-pulse" />
+        ) : (
+          <h1 className="text-3xl font-semibold text-gray-800">
+            {project.name}
+          </h1>
+        )}
 
         {/* Tabs container */}
         <div className="bg-white rounded-t-lg shadow-sm border border-b-0">
-          <div className="px-4">
+          {/* <div className="px-4">
             <nav className="flex items-center gap-6 h-14">
               {[
                 { key: "overview", label: "Overview" },
@@ -496,20 +521,34 @@ export default function ProjectDetailsPage() {
                 );
               })}
             </nav>
-          </div>
-          <div className="h-1">
+
+
+          </div> */}
+          {/* <div className="h-1">
             <div className="border-t-2 border-blue-300" />
-          </div>
+          </div> */}
         </div>
 
         {/* Content */}
         <div className="mt-6 space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 bg-white rounded-xl border border-gray-200 p-6">
-              <div className="flex items-center justify-between gap-6">
-                <div className="flex items-center gap-6">
-                  <div className="w-36 h-20">
-                    {/* <svg viewBox="0 0 100 50" className="w-full h-full">
+
+
+
+              {loading ? (
+                <div className="animate-pulse space-y-4">
+                  <div className="h-6 w-40 bg-gray-200 rounded" />
+                  <div className="h-4 w-60 bg-gray-200 rounded" />
+                  <div className="h-4 w-48 bg-gray-200 rounded" />
+                </div>
+              ) : (
+                <>
+
+                  <div className="flex items-center justify-between gap-6">
+                    <div className="flex items-center gap-6">
+                      <div className="w-36 h-20">
+                        {/* <svg viewBox="0 0 100 50" className="w-full h-full">
                       <path
                         d="M5 50 A45 45 0 0 1 95 50"
                         fill="none"
@@ -538,80 +577,85 @@ export default function ProjectDetailsPage() {
 
 
 
-<div className="w-36 h-20">
-  <svg viewBox="0 0 100 50" className="w-full h-full">
-    {/* background arc */}
-    <path
-      d="M5 50 A45 45 0 0 1 95 50"
-      fill="none"
-      stroke="#e6e6e6"
-      strokeWidth="10"
-      strokeLinecap="round"
-      pathLength="100"
-    />
+                        <div className="w-36 h-20">
+                          <svg viewBox="0 0 100 50" className="w-full h-full">
+                            {/* background arc */}
+                            <path
+                              d="M5 50 A45 45 0 0 1 95 50"
+                              fill="none"
+                              stroke="#e6e6e6"
+                              strokeWidth="10"
+                              strokeLinecap="round"
+                              pathLength="100"
+                            />
 
-    {/* progress arc */}
-    <path
-      d="M5 50 A45 45 0 0 1 95 50"
-      fill="none"
-      stroke="#f5c518"
-      strokeWidth="10"
-      strokeLinecap="round"
-      pathLength="100"
-      strokeDasharray="100"
-      strokeDashoffset={100 - project.progressPercent}
-    />
+                            {/* progress arc */}
+                            <path
+                              d="M5 50 A45 45 0 0 1 95 50"
+                              fill="none"
+                              stroke="#f5c518"
+                              strokeWidth="10"
+                              strokeLinecap="round"
+                              pathLength="100"
+                              strokeDasharray="100"
+                              strokeDashoffset={100 - project.progressPercent}
+                            />
 
-    <text
-      x="50"
-      y="40"
-      fontSize="8"
-      textAnchor="middle"
-      fill="#374151"
-    >
-      {project.progressPercent}%
-    </text>
-  </svg>
-</div>
+                            <text
+                              x="50"
+                              y="40"
+                              fontSize="8"
+                              textAnchor="middle"
+                              fill="#374151"
+                            >
+                              {project.progressPercent}%
+                            </text>
+                          </svg>
+                        </div>
 
 
 
+                      </div>
+
+                      <div>
+                        <p className="text-sm text-gray-500">Start Date</p>
+                        <p className="font-medium">
+                          {
+                            // new Date(project.startDate).toLocaleDateString()
+                            format(new Date(project.startDate), "dd-MM-yyyy")
+                          }
+                        </p>
+                      </div>
+
+                      <div>
+                        <p className="text-sm text-gray-500">End Date</p>
+                        <p className="font-medium">
+                          {project.noDeadline
+                            ? "No Deadline"
+                            : project.deadline
+                              ?
+                              //  new Date(project.deadline).toLocaleDateString()
+                              format(new Date(project.deadline), "dd-MM-yyyy")
+                              : "TBD"}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="hidden lg:block max-w-xs text-gray-600">
+                      {project.summary ? (
+                        <p>{project.summary}</p>
+                      ) : (
+                        <p className="text-sm text-gray-400">
+                          No summary available
+                        </p>
+                      )}
+                    </div>
                   </div>
+                </>
+              )}
 
-                  <div>
-                    <p className="text-sm text-gray-500">Start Date</p>
-                    <p className="font-medium">
-                      {
-                        // new Date(project.startDate).toLocaleDateString()
-                        format(new Date(project.startDate), "dd-MM-yyyy")
-                      }
-                    </p>
-                  </div>
 
-                  <div>
-                    <p className="text-sm text-gray-500">End Date</p>
-                    <p className="font-medium">
-                      {project.noDeadline
-                        ? "No Deadline"
-                        : project.deadline
-                          ?
-                          //  new Date(project.deadline).toLocaleDateString()
-                          format(new Date(project.deadline), "dd-MM-yyyy")
-                          : "TBD"}
-                    </p>
-                  </div>
-                </div>
 
-                <div className="hidden lg:block max-w-xs text-gray-600">
-                  {project.summary ? (
-                    <p>{project.summary}</p>
-                  ) : (
-                    <p className="text-sm text-gray-400">
-                      No summary available
-                    </p>
-                  )}
-                </div>
-              </div>
             </div>
 
             <div className="bg-white rounded-xl border border-gray-200 p-4 flex items-center gap-4">
@@ -651,16 +695,30 @@ export default function ProjectDetailsPage() {
 
             {/* Single Hours Logged chart placed immediately below TaskStatistics (only once) */}
             <div className="mt-6 bg-white rounded border border-gray-200 p-4 shadow-sm">
-              <div className="flex items-center justify-between mb-3">
-                <h4 className="text-sm font-medium">Hours Logged</h4>
-                <div className="text-xs text-gray-500">
-                  {/* {metricsLoading ? "Loading..." : `${totalHours} hrs`} */}
-                  {metricsLoading
-                    ? "Loading..."
-                    : `${totalHours} hrs ${totalMinutesRemaining} min`}
-                </div>
-              </div>
 
+              {metricsLoading ? (
+                <div className="animate-pulse space-y-4">
+                  <div className="h-4 w-32 bg-gray-200 rounded" />
+                  <div className="h-24 bg-gray-200 rounded" />
+                </div>
+              ) : (
+                <>
+
+
+                  <div className="flex items-center justify-between mb-3">
+                    <h4 className="text-sm font-medium">Hours Logged</h4>
+                    <div className="text-xs text-gray-500">
+                      {/* {metricsLoading ? "Loading..." : `${totalHours} hrs`} */}
+                      {metricsLoading
+                        ? "Loading..."
+                        : `${totalHours} hrs ${totalMinutesRemaining} min`}
+                    </div>
+
+
+
+                  </div>
+                </>
+              )}
               {/* Chart area: bar columns and horizontal progress line (visual match to your screenshot) */}
               <div className="h-40">
                 <div className="flex items-end gap-8 h-full">
