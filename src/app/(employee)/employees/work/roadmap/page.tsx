@@ -1333,7 +1333,7 @@ export default function AllProjectsPage() {
 
 
 
-  if (loading) return <p className="p-8 text-center">Loading projects...</p>;
+  // if (loading) return <p className="p-8 text-center">Loading projects...</p>;
 
   // Row component reused (same as your file) — uses clientOptions/departments/categories data loaded above
   const ProjectRow: React.FC<{ p: Project }> = ({ p }) => {
@@ -1488,68 +1488,98 @@ export default function AllProjectsPage() {
       <main className="w-full">
         <div className="max-w-[1200px] mx-auto p-6  overflow-y-auto overflow-x-hidden">
           {/* TOP FILTER BAR */}
-          <div className="bg-white rounded-lg border p-3 mb-4 flex items-center gap-4 overflow-y-auto overflow-x-hidden">
-            {/* Duration Filter */}
-            <div className="flex items-center gap-3">
-              <span className="text-sm text-gray-600">Duration</span>
+          {/* <div className="bg-white rounded-lg border p-3 mb-4 flex items-center gap-4 overflow-y-auto overflow-x-hidden"> */}
 
-              <Input
-                type="date"
-                value={durationFrom ?? ""}
-                onChange={(e) => {
-                  setDurationFrom(e.target.value || null);
-                  setCurrentPage(1);
-                }}
-                className="w-40"
-              />
 
-              <span className="text-gray-400 text-sm">to</span>
 
-              <Input
-                type="date"
-                value={durationTo ?? ""}
-                onChange={(e) => {
-                  setDurationTo(e.target.value || null);
-                  setCurrentPage(1);
-                }}
-                className="w-40"
-              />
+          {loading ? (
+            <div className="space-y-4 mb-4 animate-pulse">
+
+              {/* Filter bar skeleton */}
+              <div className="bg-white p-4 rounded border flex gap-4">
+                <div className="h-8 w-40 bg-gray-200 rounded" />
+                <div className="h-8 w-32 bg-gray-200 rounded" />
+                <div className="h-8 w-32 bg-gray-200 rounded" />
+              </div>
+
+              {/* Header skeleton */}
+              <div className="bg-white p-4 rounded border flex justify-between items-center">
+                <div className="h-6 w-48 bg-gray-200 rounded" />
+                <div className="h-6 w-32 bg-gray-200 rounded" />
+              </div>
+
             </div>
+          ) : (
+            <>
+              {/* TOP FILTER BAR */}
+              <div className="bg-white rounded-lg border p-3 mb-4 flex items-center gap-4">
 
 
-            <div className="flex items-center gap-3">
-              <span className="text-sm text-gray-600">Status</span>
-              <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v); setCurrentPage(1); }}>
-                <SelectTrigger className="w-40"><SelectValue placeholder="All" /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All</SelectItem>
-                  <SelectItem value="IN_PROGRESS">In Progress</SelectItem>
-                  <SelectItem value="NOT_STARTED">Not Started</SelectItem>
-                  <SelectItem value="ON_HOLD">On Hold</SelectItem>
-                  <SelectItem value="CANCELLED">Cancelled</SelectItem>
-                  <SelectItem value="FINISHED">Finished</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
 
-            <div className="flex items-center gap-3">
-              <span className="text-sm text-gray-600">Progress</span>
-              <Select value={progressFilter} onValueChange={(v) => { setProgressFilter(v); setCurrentPage(1); }}>
-                <SelectTrigger className="w-40"><SelectValue placeholder="All" /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All</SelectItem>
-                  <SelectItem value="0-33">0 - 33%</SelectItem>
-                  <SelectItem value="34-66">34 - 66%</SelectItem>
-                  <SelectItem value="67-100">67 - 100%</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+                {/* Duration Filter */}
+                <div className="flex items-center gap-3">
+                  <span className="text-sm text-gray-600">Duration</span>
 
-            {/* <div className="ml-auto flex items-center gap-4">
+                  <Input
+                    type="date"
+                    value={durationFrom ?? ""}
+                    onChange={(e) => {
+                      setDurationFrom(e.target.value || null);
+                      setCurrentPage(1);
+                    }}
+                    className="w-40"
+                  />
+
+                  <span className="text-gray-400 text-sm">to</span>
+
+                  <Input
+                    type="date"
+                    value={durationTo ?? ""}
+                    onChange={(e) => {
+                      setDurationTo(e.target.value || null);
+                      setCurrentPage(1);
+                    }}
+                    className="w-40"
+                  />
+
+
+                </div>
+
+
+                <div className="flex items-center gap-3">
+                  <span className="text-sm text-gray-600">Status</span>
+                  <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v); setCurrentPage(1); }}>
+                    <SelectTrigger className="w-40"><SelectValue placeholder="All" /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All</SelectItem>
+                      <SelectItem value="IN_PROGRESS">In Progress</SelectItem>
+                      <SelectItem value="NOT_STARTED">Not Started</SelectItem>
+                      <SelectItem value="ON_HOLD">On Hold</SelectItem>
+                      <SelectItem value="CANCELLED">Cancelled</SelectItem>
+                      <SelectItem value="FINISHED">Finished</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <span className="text-sm text-gray-600">Progress</span>
+                  <Select value={progressFilter} onValueChange={(v) => { setProgressFilter(v); setCurrentPage(1); }}>
+                    <SelectTrigger className="w-40"><SelectValue placeholder="All" /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All</SelectItem>
+                      <SelectItem value="0-33">0 - 33%</SelectItem>
+                      <SelectItem value="34-66">34 - 66%</SelectItem>
+                      <SelectItem value="67-100">67 - 100%</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* <div className="ml-auto flex items-center gap-4">
               <button onClick={openFilters} className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-800"><Filter className="w-5 h-5" /> Filters</button>
             </div> */}
-          </div>
-
+              </div>
+            </>
+          )}
           {/* ROW: Add Project + Search + Top-right icons */}
 
 
@@ -1611,13 +1641,45 @@ export default function AllProjectsPage() {
                       </TableRow>
                     </TableHeader>
 
-                    <TableBody>
+                    {/* <TableBody>
                       {filteredProjects.length === 0 ? (
                         <TableRow><TableCell colSpan={8} className="py-8 text-center text-gray-500">No projects found</TableCell></TableRow>
                       ) : (
                         filteredProjects.map((p) => <ProjectRow key={p.id} p={p} />)
                       )}
+                    </TableBody> */}
+
+
+
+                    <TableBody>
+                      {loading ? (
+                        [...Array(6)].map((_, i) => (
+                          <TableRow key={i}>
+                            <TableCell colSpan={8}>
+                              <div className="animate-pulse flex gap-4 py-3">
+                                <div className="h-4 w-20 bg-gray-200 rounded" />
+                                <div className="h-4 w-40 bg-gray-200 rounded" />
+                                <div className="h-4 w-24 bg-gray-200 rounded" />
+                                <div className="h-4 w-24 bg-gray-200 rounded" />
+                                <div className="h-4 w-24 bg-gray-200 rounded" />
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      ) : filteredProjects.length === 0 ? (
+                        <TableRow>
+                          <TableCell colSpan={8} className="py-8 text-center text-gray-500">
+                            No projects found
+                          </TableCell>
+                        </TableRow>
+                      ) : (
+                        filteredProjects.map((p) => <ProjectRow key={p.id} p={p} />)
+                      )}
                     </TableBody>
+
+
+
+
                   </Table>
                 </div>
               )}
