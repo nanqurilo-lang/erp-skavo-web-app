@@ -1401,11 +1401,11 @@ export default function AllProjectsPage() {
 
               <div className="relative">
                 <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
+                  {/* <DropdownMenuTrigger asChild>
                     <button className="inline-flex items-center gap-1 px-2 py-1 border rounded text-sm bg-white hover:bg-gray-50"><span className="text-xs text-gray-500">▾</span></button>
-                  </DropdownMenuTrigger>
+                  </DropdownMenuTrigger> */}
 
-                  <DropdownMenuContent align="start" className="w-64 p-2">
+                  {/* <DropdownMenuContent align="start" className="w-64 p-2">
                     <div className="text-xs text-gray-500 mb-1">Change status</div>
                     <div className="space-y-1">
                       {STATUS_OPTIONS.map((s) => (
@@ -1425,7 +1425,7 @@ export default function AllProjectsPage() {
                     </div>
 
                     <div className="flex justify-end mt-2"><Button size="sm" variant="ghost" onClick={() => getProjects(token ?? null)}>Refresh</Button></div>
-                  </DropdownMenuContent>
+                  </DropdownMenuContent> */}
                 </DropdownMenu>
               </div>
             </div>

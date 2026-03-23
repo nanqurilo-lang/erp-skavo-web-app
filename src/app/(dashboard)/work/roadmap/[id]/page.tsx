@@ -401,7 +401,7 @@ export default function ProjectDetailsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  // if (loading) return <p className="p-8 text-center">Loading project...</p>;
+  if (loading) return <p className="p-8 text-center">Loading project...</p>;
   if (!project)
     return <p className="p-8 text-center text-red-600">Project not found</p>;
 
