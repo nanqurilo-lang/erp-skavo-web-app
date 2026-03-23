@@ -1474,7 +1474,7 @@ export default function TimesheetPage() {
             <div className="p-6">
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="lg:col-span-2 relative bg-white rounded-xl border p-6">
-                  <div className="absolute top-4 right-4 text-gray-500">⋮</div>
+                  {/* <div className="absolute top-4 right-4 text-gray-500">⋮</div> */}
 
                   <h4 className="text-lg font-medium mb-4">TimeLog Details</h4>
 
