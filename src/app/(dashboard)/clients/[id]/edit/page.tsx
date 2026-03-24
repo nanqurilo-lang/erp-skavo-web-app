@@ -488,7 +488,10 @@ export default function EditClientDetails() {
                     <select value={language} onChange={(e) => setLanguage(e.target.value)} className={inputClass()}>
                       <option value="English">English</option>
                       <option value="French">French</option>
-                      <option value="Spanish">Spanish</option>
+                      <option value="Spanish">Dutch</option>
+                      <option value="Spanish">Polski</option>
+                      <option value="Spanish">Russian</option>
+                      <option value="Spanish">German</option>
                     </select>
                   </div>
 
