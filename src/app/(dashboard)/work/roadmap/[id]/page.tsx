@@ -622,7 +622,12 @@ export default function ProjectDetailsPage() {
                   {project.client?.name ||
                     `Client ID: ${project.client?.name ?? ""}`}
                 </p>
-                <p className="text-xs text-gray-400">Skavo</p>
+
+   <p className="text-xs text-gray-400">
+                      {project.client?.clientId || "No Client ID"}
+                    </p>
+
+                {/* <p className="text-xs text-gray-400">Skavo</p> */}
               </div>
             </div>
           </div>
