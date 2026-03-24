@@ -463,7 +463,7 @@ export default function ProjectDetailsPage() {
         {/* Tabs container */}
         <div className="bg-white rounded-t-lg shadow-sm border border-b-0">
           <div className="px-4">
-            <nav className="flex items-center gap-6 h-14">
+            {/* <nav className="flex items-center gap-6 h-14">
               {[
                 { key: "overview", label: "Overview" },
 
@@ -486,7 +486,7 @@ export default function ProjectDetailsPage() {
                   </button>
                 );
               })}
-            </nav>
+            </nav> */}
           </div>
           <div className="h-1">
             <div className="border-t-2 border-blue-300" />
