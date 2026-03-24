@@ -903,6 +903,10 @@ useEffect(() => {
 
   if (loading) {
   return (
+
+//  <main className="container mx-auto max-w-6xl px-4 py-8"></main>
+
+
     <div className="container mx-auto py-8 px-4 space-y-6">
 
       {/* Header */}
@@ -953,12 +957,22 @@ useEffect(() => {
             ))}
           </div>
         ))}
+
+        
       </div>
 
+   
+   
+   
     </div>
-  );
-}
 
+
+
+  );
+
+
+
+}
 
 
   if (error || !client) {
@@ -1284,6 +1298,9 @@ progressTimeout.current = setTimeout(() => {
   }
 
   return (
+
+ <main className="container mx-auto max-w-6xl px-4 py-8">
+
     <div className="container mx-auto py-8 px-4">
       {/* Header */}
       <ClientHeader
@@ -1962,6 +1979,10 @@ progressTimeout.current = setTimeout(() => {
         </div>
       )}
     </div>
+
+
+</main>
+
   );
 }
 

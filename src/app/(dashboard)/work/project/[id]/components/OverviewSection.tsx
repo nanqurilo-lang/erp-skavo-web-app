@@ -52,6 +52,8 @@ interface Project {
   pinnedAt?: string | null;
   archived?: boolean;
   archivedAt?: string | null;
+    addedBy?: string;
+
 }
 
 
@@ -1064,5 +1066,9 @@ export default function ProjectDetailsPage() {
         </div>
       </div>
     </main>
-  );
+  
+
+
+
+);
 }

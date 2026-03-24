@@ -43,6 +43,7 @@ interface Project {
   pinnedAt?: string | null;
   archived?: boolean;
   archivedAt?: string | null;
+  addedBy?: string;
 }
 
 type StatusItem = {
@@ -916,7 +917,7 @@ if (!project) {
             <div className="bg-white rounded-xl border border-gray-200 p-4">
               <h4 className="text-lg font-medium mb-2">Project Summary</h4>
               <div className="text-xs text-gray-500 space-y-2">
-                <div>Created by: {project.summary}</div>
+                <div>Created by: {project.addedBy}</div>
                 <div>
                   Created on:{" "}
                   {
