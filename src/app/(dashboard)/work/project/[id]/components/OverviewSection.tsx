@@ -426,6 +426,7 @@ export default function ProjectDetailsPage() {
           name:
             projectData.client?.name ||
             projectData.clientName ||
+            
             "Unknown",
 
 
@@ -722,6 +723,7 @@ export default function ProjectDetailsPage() {
 
                     <p className="font-medium">
                       {project.client?.name || "Unknown Client"}
+                      
                     </p>
 
                     <p className="text-xs text-gray-400">

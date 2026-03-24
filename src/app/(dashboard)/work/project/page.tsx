@@ -354,6 +354,12 @@ export default function AllProjectsPage() {
   }, []);
 
 
+const clientMap = useMemo(() => {
+  return new Map(
+    clients.map((c) => [String(c.id), c])
+  );
+}, [clients]);
+
 
   // fetch projects
   const getProjects = useCallback(
@@ -422,6 +428,28 @@ export default function AllProjectsPage() {
           );
         }
 
+
+
+// ✅ 👉 PASTE HERE (IMPORTANT POSITION)
+fetched = fetched.map((p: any) => {
+  if (!p.client && p.clientId) {
+    const mapped = clientMap.get(String(p.clientId));
+
+    if (mapped) {
+      return {
+        ...p,
+        client: {
+          clientId: mapped.clientId,
+          name: mapped.name,
+        },
+      };
+    }
+  }
+
+  return p;
+});
+
+
         // apply local overrides
         const overrides = readProgressOverrides();
         if (Object.keys(overrides).length > 0) {
@@ -446,10 +474,12 @@ export default function AllProjectsPage() {
       searchQuery,
       statusFilter,
       progressFilter,
-      filterProject,
+      filterProject,  
       filterMember,
       filterClient,
       token,
+        clientMap // ✅ ADD THIS
+
     ]
   );
 
@@ -742,6 +772,7 @@ export default function AllProjectsPage() {
     filterProject,
     filterMember,
     filterClient,
+    clientMap // ✅ ADD THIS
   ]);
 
   // UPDATES (status/progress/pin/delete/archive)
@@ -1095,6 +1126,8 @@ export default function AllProjectsPage() {
       try {
         await res.json();
       } catch { }
+      await loadClients(resolvedToken); // ✅ important
+
       await getProjects(resolvedToken);
       setShowAddModal(false);
       resetAddForm();
@@ -1414,7 +1447,7 @@ export default function AllProjectsPage() {
               <>
                 {/* Project Details */}
                 <div className="rounded-lg border p-4">
-                  <h4 className="font-medium mb-3">Project Details </h4>
+                  <h4 className="font-medium mb-3">Project Details</h4>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="text-sm text-gray-600">
