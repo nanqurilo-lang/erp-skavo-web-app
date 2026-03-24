@@ -21,7 +21,10 @@ interface Project {
   deadline?: string;
   noDeadline?: boolean;
   category?: string;
-  client?: { name: string; profilePictureUrl?: string } | null;
+  client?: { name: string;
+      clientId?: string;
+
+    profilePictureUrl?: string } | null;
   summary?: string;
   currency: string;
   budget: number;
@@ -339,58 +342,104 @@ export default function ProjectDetailsPage() {
   >("overview");
 
   // Fetch project; fallback demo so UI always matches preview
-  const getProjectDetails = async (accessToken: string) => {
-    try {
-      const res = await fetch(`/api/work/project/${id}`, {
-        headers: accessToken
-          ? { Authorization: `Bearer ${accessToken}` }
-          : undefined,
-      });
-      if (!res.ok) throw new Error("Failed to fetch");
-      const data = await res.json();
-      setProject(Array.isArray(data) ? data[0] : data);
-    } catch (err) {
-      // fallback demo data
-      setProject({
-        id: Number(id || 1),
-        shortCode: "PRJ-001",
-        name: "Project Name",
-        category: "Website",
-        startDate: "2025-08-02",
-        deadline: "2025-09-12",
-        client: {
-          name: "John Doe",
-          profilePictureUrl: "https://i.pravatar.cc/80?img=5",
-        },
-        summary: "Short description of the project and goals.",
-        currency: "$",
-        budget: 0,
-        hoursEstimate: 40,
-        assignedEmployees: [
-          {
-            employeeId: "1",
-            name: "Aman Sharma",
-            designation: "Developer",
-            department: "Engineering",
-          },
-          {
-            employeeId: "2",
-            name: "Riya Singh",
-            designation: "Designer",
-            department: "Design",
-          },
-        ],
-        progressPercent: 76,
-        totalTimeLoggedMinutes: 300,
-        createdBy: "Admin",
-        createdAt: new Date().toISOString(),
-        pinned: false,
-        archived: false,
-      });
-    } finally {
-      setLoading(false);
+  // const getProjectDetails = async (accessToken: string) => {
+  //   try {
+  //     const res = await fetch(`/api/work/project/${id}`, {
+  //       headers: accessToken
+  //         ? { Authorization: `Bearer ${accessToken}` }
+  //         : undefined,
+  //     });
+  //     if (!res.ok) throw new Error("Failed to fetch");
+  //     const data = await res.json();
+  //     setProject(Array.isArray(data) ? data[0] : data);
+  //   } catch (err) {
+  //     // fallback demo data
+  //     setProject({
+  //       id: Number(id || 1),
+  //       shortCode: "PRJ-001",
+  //       name: "Project Name",
+  //       category: "Website",
+  //       startDate: "2025-08-02",
+  //       deadline: "2025-09-12",
+  //       client: {
+  //         name: "John Doe",
+  //         profilePictureUrl: "https://i.pravatar.cc/80?img=5",
+  //       },
+  //       summary: "Short description of the project and goals.",
+  //       currency: "$",
+  //       budget: 0,
+  //       hoursEstimate: 40,
+  //       assignedEmployees: [
+  //         {
+  //           employeeId: "1",
+  //           name: "Aman Sharma",
+  //           designation: "Developer",
+  //           department: "Engineering",
+  //         },
+  //         {
+  //           employeeId: "2",
+  //           name: "Riya Singh",
+  //           designation: "Designer",
+  //           department: "Design",
+  //         },
+  //       ],
+  //       progressPercent: 76,
+  //       totalTimeLoggedMinutes: 300,
+  //       createdBy: "Admin",
+  //       createdAt: new Date().toISOString(),
+  //       pinned: false,
+  //       archived: false,
+  //     });
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+
+
+
+const getProjectDetails = async (accessToken: string) => {
+  try {
+    const res = await fetch(`/api/work/project/${id}`, {
+      headers: accessToken
+        ? { Authorization: `Bearer ${accessToken}` }
+        : undefined,
+    });
+
+    if (!res.ok) {
+      console.error("API FAILED:", res.status);
+      setProject(null);
+      return;
     }
-  };
+
+    const data = await res.json();
+    console.log("PROJECT API DATA 👉", data);
+
+    const projectData = Array.isArray(data) ? data[0] : data;
+
+    // ✅ NORMALIZE CLIENT DATA
+    setProject({
+      ...projectData,
+      client: projectData.client
+        ? {
+            name: projectData.client.name,
+            clientId:
+              projectData.client.clientId ||
+              projectData.clientId ||
+              "",
+            profilePictureUrl:
+              projectData.client.profilePictureUrl || null,
+          }
+        : null,
+    });
+
+  } catch (err) {
+    console.error("PROJECT FETCH ERROR:", err);
+    setProject(null); // ❗ no fake data
+  } finally {
+    setLoading(false);
+  }
+};
 
 
 
@@ -694,14 +743,17 @@ const actualBarHeight = (totalHours / maxHours) * 100;
                   <UserIcon className="w-8 h-8 text-gray-400" />
                 )}
               </div>
-              <div>
-                <p className="text-sm text-gray-500">Client</p>
-                <p className="font-medium">
-                  {project.client?.name ||
-                    `Client ID: ${project.client?.name ?? ""}`}
-                </p>
-                <p className="text-xs text-gray-400">skavo</p>
-              </div>
+            <div>
+  <p className="text-sm text-gray-500">Client</p>
+
+  <p className="font-medium">
+    {project.client?.name || "Unknown Client"}
+  </p>
+
+  <p className="text-xs text-gray-400">
+    {project.client?.clientId || "No Client ID"}
+  </p>
+</div>
             </div>
           </div>
 
