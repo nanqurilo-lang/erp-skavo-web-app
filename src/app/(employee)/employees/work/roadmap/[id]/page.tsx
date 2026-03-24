@@ -20,7 +20,10 @@ interface Project {
   deadline?: string;
   noDeadline?: boolean;
   category?: string;
-  client?: { name: string; profilePictureUrl?: string } | null;
+  client?: {
+    name: string;
+    clientId?: string;
+    profilePictureUrl?: string } | null;
   summary?: string;
   currency: string;
   budget: number;
@@ -351,58 +354,122 @@ export default function ProjectDetailsPage() {
   const [metricsLoading, setMetricsLoading] = useState(false);
 
   // Fetch project; fallback demo so UI always matches preview
-  const getProjectDetails = async (accessToken: string) => {
-    try {
-      const res = await fetch(`/api/work/project/${id}`, {
-        headers: accessToken
-          ? { Authorization: `Bearer ${accessToken}` }
-          : undefined,
-      });
-      if (!res.ok) throw new Error("Failed to fetch");
-      const data = await res.json();
-      setProject(Array.isArray(data) ? data[0] : data);
-    } catch (err) {
-      // fallback demo data
-      setProject({
-        id: Number(id || 1),
-        shortCode: "PRJ-001",
-        name: "Project Name",
-        category: "Website",
-        startDate: "2025-08-02",
-        deadline: "2025-09-12",
-        client: {
-          name: "John Doe",
-          profilePictureUrl: "https://i.pravatar.cc/80?img=5",
-        },
-        summary: "Short description of the project and goals.",
-        currency: "$",
-        budget: 0,
-        hoursEstimate: 40,
-        assignedEmployees: [
-          {
-            employeeId: "1",
-            name: "Aman Sharma",
-            designation: "Developer",
-            department: "Engineering",
-          },
-          {
-            employeeId: "2",
-            name: "Riya Singh",
-            designation: "Designer",
-            department: "Design",
-          },
-        ],
-        progressPercent: 76,
-        totalTimeLoggedMinutes: 300,
-        createdBy: "Admin",
-        createdAt: new Date().toISOString(),
-        pinned: false,
-        archived: false,
-      });
-    } finally {
-      setLoading(false);
+//   const getProjectDetails = async (accessToken: string) => {
+//     try {
+//       const res = await fetch(`/api/work/project/${id}`, {
+//         headers: accessToken
+//           ? { Authorization: `Bearer ${accessToken}` }
+//           : undefined,
+//       });
+//       if (!res.ok) throw new Error("Failed to fetch");
+//       const data = await res.json();
+//       setProject(Array.isArray(data) ? data[0] : data);
+//     } catch (err) {
+//       // fallback demo data
+//       setProject({
+//         id: Number(id || 1),
+//         shortCode: "PRJ-001",
+//         name: "Project Name",
+//         category: "Website",
+//         startDate: "2025-08-02",
+//         deadline: "2025-09-12",
+//         client: {
+//           name: "John Doe",
+//           profilePictureUrl: "https://i.pravatar.cc/80?img=5",
+//         },
+//         summary: "Short description of the project and goals.",
+//         currency: "$",
+//         budget: 0,
+//         hoursEstimate: 40,
+//         assignedEmployees: [
+//           {
+//             employeeId: "1",
+//             name: "Aman Sharma",
+//             designation: "Developer",
+//             department: "Engineering",
+//           },
+//           {
+//             employeeId: "2",
+//             name: "Riya Singh",
+//             designation: "Designer",
+//             department: "Design",
+//           },
+//         ],
+//         progressPercent: 76,
+//         totalTimeLoggedMinutes: 300,
+//         createdBy: "Admin",
+//         createdAt: new Date().toISOString(),
+//         pinned: false,
+//         archived: false,
+//       });
+
+
+
+// const projectData = Array.isArray(data) ? data[0] : data;
+
+// setProject({
+//   ...projectData,
+//   client: {
+//     name: projectData.client?.name || "Unknown",
+//     clientId:
+//       projectData.client?.clientId ||   // ✅ correct source
+//       projectData.clientId ||           // fallback
+//       "",
+//     profilePictureUrl: projectData.client?.profilePictureUrl,
+//   },
+// });
+
+
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+
+const getProjectDetails = async (accessToken: string) => {
+  try {
+const res = await fetch(`${process.env.NEXT_PUBLIC_MAIN}/projects/${id}`, {  
+      headers: accessToken
+        ? { Authorization: `Bearer ${accessToken}` }
+        : undefined,
+    });
+
+    if (!res.ok) {
+      console.error("API FAILED:", res.status);
+      throw new Error("Failed to fetch");
     }
-  };
+
+    const data = await res.json();
+
+    // console.log("API DATA 👉", data);
+
+    const projectData = Array.isArray(data) ? data[0] : data;
+
+    setProject({
+      ...projectData,
+      client: {
+        name: projectData.client?.name || "Unknown",
+        clientId:
+          projectData.client?.clientId ||
+          projectData.clientId ||
+          "",
+        profilePictureUrl: projectData.client?.profilePictureUrl,
+      },
+    });
+
+  } catch (err) {
+    console.error("PROJECT FETCH ERROR:", err);
+    setProject(null);
+  } finally {
+    setLoading(false);
+  }
+};
+
+
+
+
+// console.log("hellooooo",project?.client);
+
 
   // Fetch metrics (new)
   const fetchMetrics = async (accessToken: string) => {
@@ -431,8 +498,18 @@ export default function ProjectDetailsPage() {
   }, [id]);
 
   if (loading) return <p className="p-8 text-center">Loading project...</p>;
-  if (!project)
-    return <p className="p-8 text-center text-red-600">Project not found</p>;
+  // if (!project)
+  //   return <p className="p-8 text-center text-red-600">Project not found</p>;
+
+
+if (!project) {
+  return (
+    <p className="p-8 text-center text-red-600">
+      Project not found
+    </p>
+  );
+}
+
 
   // derive totals: prefer metrics if available, otherwise fall back to project
   const totalMinutes =
@@ -671,14 +748,17 @@ export default function ProjectDetailsPage() {
                   <UserIcon className="w-8 h-8 text-gray-400" />
                 )}
               </div>
-              <div>
-                <p className="text-sm text-gray-500">Client</p>
-                <p className="font-medium">
-                  {project.client?.name ||
-                    `Client ID: ${project.client?.name ?? ""}`}
-                </p>
-                <p className="text-xs text-gray-400">Skavo</p>
-              </div>
+             <div>
+  <p className="text-sm text-gray-500">Client</p>
+
+  <p className="font-medium">
+    {project.client?.name || "Unknown Client"}
+  </p>
+
+  <p className="text-xs text-gray-400">
+    {project.client?.clientId || "No Client ID"}
+  </p>
+</div>
             </div>
           </div>
 

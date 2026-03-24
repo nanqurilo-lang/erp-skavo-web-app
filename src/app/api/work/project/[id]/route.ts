@@ -10,6 +10,7 @@ export async function GET(request: NextRequest, context: { params: Promise<{ id:
 
     const accessToken = authHeader.split(" ")[1];
 
+    // const res = await fetch(`${process.env.NEXT_PUBLIC_MAIN}/api/projects/${id}`, {
     const res = await fetch(`${process.env.NEXT_PUBLIC_MAIN}/api/projects/${id}`, {
       method: "GET",
       cache: "no-store",
