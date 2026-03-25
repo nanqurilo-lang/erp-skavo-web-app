@@ -870,12 +870,12 @@ function LeadRow({
     <TableRow ref={rowRef}>
       <TableCell>{idx + 1}</TableCell>
       <TableCell>
-        {/* <Link href={`/leads/${lead.id}`}> */}
+        <Link href={`/leads/admin/get/${lead.id}`}>
         <div className="flex flex-col">
           <span className="font-medium">{lead.name}</span>
           <span className="text-xs text-muted-foreground">{lead.companyName || "—"}</span>
         </div>
-        {/* </Link> */}
+        </Link>
       </TableCell>
       <TableCell>
         <div className="flex flex-col">
