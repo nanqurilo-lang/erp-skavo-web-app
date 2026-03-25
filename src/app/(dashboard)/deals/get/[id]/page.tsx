@@ -1422,7 +1422,7 @@ if (loading) {
             <div className="flex items-start justify-between">
               <div>
                 <div className="text-sm text-gray-500 mb-2">
-                  <span className="font-medium">Sales Pipeline</span> →{" "}
+                  <span className="font-medium">{deal.pipeline}</span> →{" "}
                   <span className="font-semibold">{deal.dealStage || "—"}</span>
                 </div>
                 <h2 className="text-lg font-semibold">{deal.title ||  "—"} </h2>

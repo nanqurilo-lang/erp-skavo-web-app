@@ -50,7 +50,7 @@ export default function CreateDealPage() {
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [newCategoryInput, setNewCategoryInput] = useState("");
 
-  const API_BASE =  `${process.env.NEXT_PUBLIC_MAIN}`;
+  const API_BASE = `${process.env.NEXT_PUBLIC_MAIN}`;
 
   // Fetch employees, stages and leads
   useEffect(() => {
@@ -78,10 +78,10 @@ export default function CreateDealPage() {
 
 
         if (!stageRes.ok) {
-  const text = await stageRes.text();
-  console.error("Stages API error:", stageRes.status, text);
-  throw new Error(`Failed to fetch deal stages (${stageRes.status})`);
-}
+          const text = await stageRes.text();
+          console.error("Stages API error:", stageRes.status, text);
+          throw new Error(`Failed to fetch deal stages (${stageRes.status})`);
+        }
 
 
 
@@ -203,54 +203,54 @@ export default function CreateDealPage() {
 
 
 
-if (stagesLoading) {
-  return (
-    <div className="min-h-screen bg-gray-50 flex items-start justify-center py-10 px-4">
-      <div className="w-full max-w-4xl space-y-6">
+  if (stagesLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-start justify-center py-10 px-4">
+        <div className="w-full max-w-4xl space-y-6">
 
-        {/* Header */}
-        <div className="flex justify-between items-center">
-          <Skeleton width={220} height={30} />
-          <Skeleton width={30} height={30} />
-        </div>
-
-        {/* Form Card */}
-        <div className="bg-white border rounded-2xl p-6 space-y-6">
-
-          {/* Title */}
-          <Skeleton width={150} height={20} />
-
-          {/* Grid Fields */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {[...Array(9)].map((_, i) => (
-              <div key={i} className="space-y-2">
-                <Skeleton width={100} height={12} />
-                <Skeleton height={35} />
-              </div>
-            ))}
+          {/* Header */}
+          <div className="flex justify-between items-center">
+            <Skeleton width={220} height={30} />
+            <Skeleton width={30} height={30} />
           </div>
 
-          {/* Watchers Section */}
-          <div className="space-y-2">
-            <Skeleton width={150} height={15} />
-            <div className="grid grid-cols-3 gap-2">
-              {[...Array(6)].map((_, i) => (
-                <Skeleton key={i} height={15} />
+          {/* Form Card */}
+          <div className="bg-white border rounded-2xl p-6 space-y-6">
+
+            {/* Title */}
+            <Skeleton width={150} height={20} />
+
+            {/* Grid Fields */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {[...Array(9)].map((_, i) => (
+                <div key={i} className="space-y-2">
+                  <Skeleton width={100} height={12} />
+                  <Skeleton height={35} />
+                </div>
               ))}
             </div>
-          </div>
 
-          {/* Buttons */}
-          <div className="flex justify-center gap-4">
-            <Skeleton width={100} height={35} />
-            <Skeleton width={100} height={35} />
-          </div>
+            {/* Watchers Section */}
+            <div className="space-y-2">
+              <Skeleton width={150} height={15} />
+              <div className="grid grid-cols-3 gap-2">
+                {[...Array(6)].map((_, i) => (
+                  <Skeleton key={i} height={15} />
+                ))}
+              </div>
+            </div>
 
+            {/* Buttons */}
+            <div className="flex justify-center gap-4">
+              <Skeleton width={100} height={35} />
+              <Skeleton width={100} height={35} />
+            </div>
+
+          </div>
         </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
 
 
 
@@ -317,7 +317,7 @@ if (stagesLoading) {
 
 
 
-{/* Deal Name */}
+              {/* Deal Name */}
               <div>
                 <label className="block text-xs text-gray-500 mb-2">Deal Title *</label>
                 <input
@@ -352,7 +352,7 @@ if (stagesLoading) {
                 </select>
               </div>
 
-              
+
 
               {/* Pipeline */}
               <div>
@@ -365,7 +365,12 @@ if (stagesLoading) {
                 >
                   <option value="">--</option>
                   <option value="Default Pipeline">Default Pipeline</option>
-                  <option value="Sales">Sales</option>
+                  <option value="Default Pipeline">Default Pipeline</option>
+                  <option value="Sales Pipeline">Sales Pipeline</option>
+                  <option value="Enterprise Pipeline">Enterprise Pipeline</option>
+                  <option value="Client Success Pipeline">Client Success Pipeline</option>
+                  <option value="Finance Pipeline">Finance Pipeline</option>
+                  <option value="Marketing Pipeline">Marketing Pipeline</option>
                 </select>
               </div>
 
@@ -516,7 +521,7 @@ if (stagesLoading) {
               disabled={loading}
               className={`px-6 py-2 rounded-full text-white ${loading ? "bg-blue-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"}`}
             >
-              {loading ? "Creating..." : "Update"}
+              {loading ? "Creating..." : "Create"}
             </button>
           </div>
         </form>
