@@ -202,7 +202,7 @@ export default function ClientDetailPage() {
       setLoading(false);
     }
   }, [id]);
-  console.log("jjjjjjj", client)
+  // console.log("jjjjjjj", client)
   const EMP_BASE = `${process.env.NEXT_PUBLIC_MAIN}`;
 
   const loadEmployees = useCallback(async () => {

@@ -831,7 +831,6 @@ export default function ProjectDetailsPage() {
                       {project.client?.name || "Unknown Client"}
                     </p>
 
-
                     <p className="text-xs text-gray-400">
                       {project.client?.clientId || "No Client ID"}
                     </p>
