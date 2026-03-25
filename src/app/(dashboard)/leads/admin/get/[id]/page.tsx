@@ -2475,7 +2475,7 @@ const filteredDeals = dealsData?.filter((deal) => {
                                         }}
                                         className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
                                       >
-                                        View
+                                        View 
                                       </button>
 
                                       {/* EDIT */}
@@ -2490,7 +2490,7 @@ const filteredDeals = dealsData?.filter((deal) => {
                                         Edit
                                       </button>
 
-                                      <div className="border-t" />
+                                      {/* <div className="border-t" /> */}
 
                                       {/* DELETE */}
                                       <button
