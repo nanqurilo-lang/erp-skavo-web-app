@@ -16,6 +16,7 @@ import { format } from "date-fns";
 
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import { Client } from "@stomp/stompjs";
 
 
 
@@ -52,7 +53,7 @@ interface Project {
   pinnedAt?: string | null;
   archived?: boolean;
   archivedAt?: string | null;
-    addedBy?: string;
+  addedBy?: string;
 
 }
 
@@ -347,6 +348,40 @@ export default function ProjectDetailsPage() {
 
   const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
+
+
+  const [clients, setClients] = useState<any[]>([]);
+
+
+  const clientMap = useMemo(() => {
+    const map = new Map();
+
+    clients.forEach((c) => {
+      // map by BOTH keys
+      if (c.clientId) map.set(String(c.clientId), c);
+      if (c.id) map.set(String(c.id), c);
+    });
+
+    return map;
+  }, [clients]);
+
+
+  useEffect(() => {
+    const loadClients = async () => {
+      const token = localStorage.getItem("accessToken") || "";
+
+      const res = await fetch(`${MAIN}/clients`, {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+
+      const data = await res.json();
+      setClients(Array.isArray(data) ? data : data.items || []);
+    };
+
+    loadClients();
+  }, []);
+
+
   const [activeTab, setActiveTab] = useState<
     | "overview"
     | "invoices"
@@ -421,34 +456,72 @@ export default function ProjectDetailsPage() {
 
       const projectData = Array.isArray(data) ? data[0] : data;
 
-      setProject({
+      // setProject({
 
+      //   ...projectData,
+      //   client: {
+      //     name:
+      //       projectData.client?.name ||
+      //       projectData.clientName ||
+
+      //       "Unknown",
+
+
+      //     clientId:
+      //       projectData.client?.clientId ||
+      //       projectData.clientId || "",  // 👈 important fallback
+
+
+
+
+      //     profilePictureUrl:
+      //       projectData.client?.profilePictureUrl,
+      //   },
+      // });
+
+
+      const mappedClient =
+        projectData.client ||
+        clientMap.get(String(projectData.clientId));
+
+      setProject({
         ...projectData,
+
         client: {
+          clientId:
+            mappedClient?.clientId || projectData.clientId || "",
+
           name:
+            mappedClient?.name ||
             projectData.client?.name ||
             projectData.clientName ||
-            
             "Unknown",
 
-
-          clientId:
-            projectData.client?.clientId ||
-            projectData.clientId || "",  // 👈 important fallback
-
-
-
+          companyName:
+            mappedClient?.companyName ||
+            projectData.client?.companyName ||
+            "",
 
           profilePictureUrl:
-            projectData.client?.profilePictureUrl,
+            mappedClient?.profilePictureUrl ||
+            projectData.client?.profilePictureUrl ||
+            "",
         },
       });
+
+
+
 
 
     } finally {
       setLoading(false);
     }
   };
+
+
+
+  console.log("clientMap:", clientMap);
+
 
 
   // console.log("helloooo",project)
@@ -482,12 +555,29 @@ export default function ProjectDetailsPage() {
 
 
 
+  // useEffect(() => {
+  //   const token = localStorage.getItem("accessToken") || "";
+  //   getProjectDetails(token);
+  //   getProjectMetrics(token);
+
+  // }, [id]);
+
+
+
+
+
   useEffect(() => {
     const token = localStorage.getItem("accessToken") || "";
-    getProjectDetails(token);
-    getProjectMetrics(token);
 
-  }, [id]);
+    // ✅ wait until clients are loaded
+    if (clients.length > 0) {
+      getProjectDetails(token);
+    }
+
+    getProjectMetrics(token);
+  }, [id, clients]);
+
+
 
   // if (loading) return <p className="p-8 text-center">Loading project...</p>;
   if (!project)
@@ -721,12 +811,26 @@ export default function ProjectDetailsPage() {
                     <p className="text-sm text-gray-500">Client</p>
 
 
-
-
-                    <p className="font-medium">
+                    {/* <p className="font-medium">
                       {project.client?.name || "Unknown Client"}
                       
                     </p>
+
+                    <p className="text-xs text-gray-400">
+                      {project.client?.clientId || "No Client ID"}
+                    </p> */}
+
+
+
+
+
+                    <p className="font-medium">
+
+
+
+                      {project.client?.name || "Unknown Client"}
+                    </p>
+
 
                     <p className="text-xs text-gray-400">
                       {project.client?.clientId || "No Client ID"}
@@ -1066,9 +1170,9 @@ export default function ProjectDetailsPage() {
         </div>
       </div>
     </main>
-  
 
 
 
-);
+
+  );
 }
