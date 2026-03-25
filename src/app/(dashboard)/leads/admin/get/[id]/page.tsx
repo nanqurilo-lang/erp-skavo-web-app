@@ -2221,8 +2221,12 @@ const filteredDeals = dealsData?.filter((deal) => {
   className="border rounded p-2 text-sm"
 >
   <option value="All">All</option>
-  <option value="Default Pipeline">Default Pipeline</option>
-  <option value="Sales">Sales</option>
+    <option value="Default Pipeline">Default Pipeline</option>
+    <option value="Sales Pipeline">Sales Pipeline</option>
+    <option value="Enterprise Pipeline">Enterprise Pipeline</option>
+    <option value="Client Success Pipeline">Client Success Pipeline</option>
+    <option value="Finance Pipeline">Finance Pipeline</option>
+    <option value="Marketing Pipeline">Marketing Pipeline</option>
 </select>
 
                       </div>
