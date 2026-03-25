@@ -2620,8 +2620,8 @@ onChange={(e) => {
               </Button>
 
  
-
-            </div>
+</div>
+           
 
 
 <ImportButton
@@ -2636,8 +2636,10 @@ onChange={(e) => {
   fileName="projects.csv"
 />
 
+
+ 
             <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2 border rounded px-2 py-1 bg-white">
+              {/* <div className="flex items-center gap-2 border rounded px-2 py-1 bg-white">
                 <Search className="w-4 h-4 text-gray-400" />
                 <Input
                   placeholder="Search"
@@ -2651,7 +2653,7 @@ onChange={(e) => {
                   }}
                   className="border-0 bg-transparent focus-visible:ring-0"
                 />
-              </div>
+              </div> */}
 
               <div className="flex items-center bg-white border rounded-lg overflow-hidden">
                 {/* List */}
@@ -2877,7 +2879,7 @@ onChange={(e) => {
           </div>
 
           {/* PAGINATION */}
-          <div className="flex items-center justify-between mt-4">
+          {/* <div className="flex items-center justify-between mt-4">
             <div className="text-sm text-gray-600">
               Result per page -
               {filteredProjects.length ? filteredProjects.length : 0}
@@ -2907,7 +2909,7 @@ onChange={(e) => {
                 Next <ChevronRight />
               </Button>
             </div>
-          </div>
+          </div> */}
         </div>
       </main>
 

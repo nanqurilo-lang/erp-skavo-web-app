@@ -281,16 +281,16 @@ export default function CompanySettingsFormPage() {
 
           {/* Buttons */}
           <div className="mt-6 flex justify-center gap-4">
-            <Button variant="outline" onClick={() => router.push("/settings/company-settings")}>Cancel</Button>
+            {/* <Button variant="outline" onClick={() => router.push("/settings/company-settings")}>Cancel</Button> */}
             <Button type="submit" onClick={handleSubmit} disabled={saving}>
               {saving ? "Saving..." : "Save"}
             </Button>
           </div>
         </form>
 
-        <div className="mt-6 text-center text-sm text-slate-500">
+        {/* <div className="mt-6 text-center text-sm text-slate-500">
           <Link href="/settings/company-settings" className="underline">Back to company list</Link>
-        </div>
+        </div> */}
       </div>
     </div>
   );

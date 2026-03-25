@@ -769,7 +769,7 @@ export default function ProfileForm() {
 
           {/* Save button */}
           <div className="mt-6 flex justify-center gap-4">
-            <Button variant="outline" onClick={() => { window.location.href = "/settings"; }}>Cancel</Button>
+            {/* <Button variant="outline" onClick={() => { window.location.href = "/settings/profile-settings"; }}>Cancel</Button> */}
             <Button type="submit" onClick={handleSubmit} disabled={saving}>
               {saving ? (
                 <>
@@ -778,7 +778,7 @@ export default function ProfileForm() {
                 </>
               ) : (
                 <>
-                  <Save className="w-4 h-4 mr-2" />
+                  <Save className="w-4 h-4 " />
                   Save
                 </>
               )}
@@ -901,9 +901,9 @@ export default function ProfileForm() {
           </div>
         </div>
 
-        <div className="mt-6 text-center text-sm text-slate-500">
+        {/* <div className="mt-6 text-center text-sm text-slate-500">
           <Link href="/settings" className="underline">Back to settings</Link>
-        </div>
+        </div> */}
       </div>
 
 

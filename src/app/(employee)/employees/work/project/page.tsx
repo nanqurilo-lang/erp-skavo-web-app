@@ -2258,7 +2258,7 @@ export default function AllProjectsPage() {
           {/* ROW: Add Project + Search + Top-right icons */}
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2 border rounded px-2 py-1 bg-white">
+              {/* <div className="flex items-center gap-2 border rounded px-2 py-1 bg-white">
                 <Search className="w-4 h-4 text-gray-400" />
                 <Input
                   placeholder="Search"
@@ -2272,9 +2272,9 @@ export default function AllProjectsPage() {
                   }}
                   className="border-0 bg-transparent focus-visible:ring-0"
                 />
-              </div>
+              </div> */}
 
-              <div className="flex items-center bg-white border rounded-lg overflow-hidden">
+              <div className="flex items-center  bg-white border rounded-lg overflow-hidden">
                 {/* List */}
 
 
@@ -2425,7 +2425,7 @@ export default function AllProjectsPage() {
           </div>
 
           {/* PAGINATION */}
-          <div className="flex items-center justify-between mt-4">
+          {/* <div className="flex items-center justify-between mt-4">
             <div className="text-sm text-gray-600">
               Result per page -
               {filteredProjects.length ? filteredProjects.length : 0}
@@ -2455,7 +2455,7 @@ export default function AllProjectsPage() {
                 Next <ChevronRight />
               </Button>
             </div>
-          </div>
+          </div> */}
         </div>
       </main>
 

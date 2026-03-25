@@ -694,7 +694,7 @@ export default function ProfileForm() {
 
           {/* Save button */}
           <div className="mt-6 flex justify-center gap-4">
-            <Button variant="outline" onClick={() => { window.location.href = "/employees/settings"; }}>Cancel</Button>
+            {/* <Button variant="outline" onClick={() => { window.location.href = "/employees/settings"; }}>Cancel</Button> */}
             <Button type="submit" onClick={handleSubmit} disabled={saving}>
               {saving ? (
                 <>
@@ -720,9 +720,9 @@ export default function ProfileForm() {
 
         {/* Documents Section (ADDED) */}
 
-        <div className="mt-6 text-center text-sm text-slate-500">
+        {/* <div className="mt-6 text-center text-sm text-slate-500">
           <Link href="/settings" className="underline">Back to settings</Link>
-        </div>
+        </div> */}
       </div>
 
 

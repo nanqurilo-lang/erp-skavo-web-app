@@ -288,9 +288,9 @@ export default function CompanySettingsFormPage() {
           </div>
         </form>
 
-        <div className="mt-6 text-center text-sm text-slate-500">
+        {/* <div className="mt-6 text-center text-sm text-slate-500">
           <Link href="/settings/company-settings" className="underline">Back to company list</Link>
-        </div>
+        </div> */}
       </div>
     </div>
   );
