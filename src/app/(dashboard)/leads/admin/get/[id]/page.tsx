@@ -333,9 +333,9 @@ function DealCategoryModal({
           className="max-w-3xl w-full bg-white rounded-lg shadow-lg border overflow-auto"
           style={{ maxHeight: "80vh" }}
         > */}
- <div
-    className="w-[83%] h-full bg-white shadow-xl overflow-y-auto flex flex-col"
-  >
+        <div
+          className="w-[83%] h-full bg-white shadow-xl overflow-y-auto flex flex-col"
+        >
 
           <div className="flex items-center justify-between p-4 border-b">
             <h3 className="text-lg font-semibold">Deal Category</h3>
@@ -666,9 +666,9 @@ function AddDealModal({
           style={{ maxHeight: "92vh" }}
         > */}
 
-<div
-  className="w-[83%] h-full bg-white shadow-xl overflow-y-auto flex flex-col"
->
+        <div
+          className="w-[83%] h-full bg-white shadow-xl overflow-y-auto flex flex-col"
+        >
 
           <div className="flex items-center justify-between p-4 border-b">
             <h3 className="text-lg font-semibold">Add Deal Information</h3>
@@ -737,8 +737,12 @@ function AddDealModal({
                     onChange={(e) => update("pipeline", e.target.value)}
                   >
                     <option value="">--</option>
-                    <option>Default Pipeline</option>
-                    <option>Sales</option>
+                    <option value="Default Pipeline">Default Pipeline</option>
+                    <option value="Sales Pipeline">Sales Pipeline</option>
+                    <option value="Enterprise Pipeline">Enterprise Pipeline</option>
+                    <option value="Client Success Pipeline">Client Success Pipeline</option>
+                    <option value="Finance Pipeline">Finance Pipeline</option>
+                    <option value="Marketing Pipeline">Marketing Pipeline</option>
                   </select>
                 </div>
 
@@ -794,7 +798,7 @@ function AddDealModal({
                   <label className="block text-xs text-muted-foreground mb-2">
                     Deal Agent
                   </label>
-                 
+
                   <select
                     className="w-full p-2 border rounded-md bg-white text-sm"
                     value={form.dealAgent}
@@ -851,8 +855,8 @@ function AddDealModal({
                     Deal Watcher
                   </label>
 
-                
-             {/* Dropdown button */}
+
+                  {/* Dropdown button */}
                   <button
                     type="button"
                     onClick={() => setWatchersOpen((s) => !s)}
@@ -1073,9 +1077,9 @@ function EditModal({
           style={{ maxHeight: "92vh" }}
         > */}
 
-<div
-  className="w-[83%] h-full bg-white shadow-xl overflow-y-auto flex flex-col"
->
+        <div
+          className="w-[83%] h-full bg-white shadow-xl overflow-y-auto flex flex-col"
+        >
 
           <div className="flex items-center justify-between p-4 border-b">
             <h3 className="text-lg font-semibold">Update Lead Contact</h3>
@@ -1370,9 +1374,9 @@ function AddEditNoteModal({
           style={{ maxHeight: "90vh" }}
         > */}
 
-<div
-  className="w-[83%] h-full bg-white shadow-xl overflow-y-auto flex flex-col"
->
+        <div
+          className="w-[83%] h-full bg-white shadow-xl overflow-y-auto flex flex-col"
+        >
 
           <div className="flex items-center justify-between p-4 border-b">
             <h3 className="text-lg font-semibold">
@@ -1493,9 +1497,9 @@ function ViewNoteModal({ note, onClose }: { note: Note; onClose: () => void }) {
           style={{ maxHeight: "90vh" }}
         > */}
 
- <div
-    className="w-[83%] h-full bg-white shadow-xl overflow-y-auto flex flex-col"
-  >
+        <div
+          className="w-[83%] h-full bg-white shadow-xl overflow-y-auto flex flex-col"
+        >
 
           <div className="flex items-center justify-between p-4 border-b">
             <h3 className="text-lg font-semibold">
@@ -1664,12 +1668,12 @@ export default function LeadDetailPage() {
 
 
 
-const [selectedPipeline, setSelectedPipeline] = useState<string>("All");
+  const [selectedPipeline, setSelectedPipeline] = useState<string>("All");
 
-const filteredDeals = dealsData?.filter((deal) => {
-  if (selectedPipeline === "All") return true;
-  return deal.pipeline === selectedPipeline;
-});
+  const filteredDeals = dealsData?.filter((deal) => {
+    if (selectedPipeline === "All") return true;
+    return deal.pipeline === selectedPipeline;
+  });
 
 
   const { data: empResp } = useSWR(EMP_API, fetcher, { refreshInterval: 0 });
@@ -1705,7 +1709,7 @@ const filteredDeals = dealsData?.filter((deal) => {
     router.push(`/leads/admin/edit/${params.id}`);
   };
 
- 
+
 
   const convertToClient = async () => {
     setMenuOpen(false);
@@ -1901,7 +1905,7 @@ const filteredDeals = dealsData?.filter((deal) => {
           >
           </Button>
           <div>
-           
+
           </div>
         </div>
 
@@ -1939,27 +1943,27 @@ const filteredDeals = dealsData?.filter((deal) => {
 
 
 
-{isLoading ? (
-  <div className="space-y-6">
+          {isLoading ? (
+            <div className="space-y-6">
 
-    {/* Title */}
-    <Skeleton height={25} width={200} />
+              {/* Title */}
+              <Skeleton height={25} width={200} />
 
-    {/* Profile Grid */}
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      {[...Array(12)].map((_, i) => (
-        <Skeleton key={i} height={20} />
-      ))}
-    </div>
+              {/* Profile Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {[...Array(12)].map((_, i) => (
+                  <Skeleton key={i} height={20} />
+                ))}
+              </div>
 
-    {/* Bottom Info */}
-    <div className="flex justify-between">
-      <Skeleton width={200} />
-      <Skeleton width={120} />
-    </div>
+              {/* Bottom Info */}
+              <div className="flex justify-between">
+                <Skeleton width={200} />
+                <Skeleton width={120} />
+              </div>
 
-  </div>
-) : error ? (
+            </div>
+          ) : error ? (
 
 
 
@@ -2215,19 +2219,19 @@ const filteredDeals = dealsData?.filter((deal) => {
 
 
 
-<select
-  value={selectedPipeline}
-  onChange={(e) => setSelectedPipeline(e.target.value)}
-  className="border rounded p-2 text-sm"
->
-  <option value="All">All</option>
-    <option value="Default Pipeline">Default Pipeline</option>
-    <option value="Sales Pipeline">Sales Pipeline</option>
-    <option value="Enterprise Pipeline">Enterprise Pipeline</option>
-    <option value="Client Success Pipeline">Client Success Pipeline</option>
-    <option value="Finance Pipeline">Finance Pipeline</option>
-    <option value="Marketing Pipeline">Marketing Pipeline</option>
-</select>
+                        <select
+                          value={selectedPipeline}
+                          onChange={(e) => setSelectedPipeline(e.target.value)}
+                          className="border rounded p-2 text-sm"
+                        >
+                          <option value="All">All</option>
+                          <option value="Default Pipeline">Default Pipeline</option>
+                          <option value="Sales Pipeline">Sales Pipeline</option>
+                          <option value="Enterprise Pipeline">Enterprise Pipeline</option>
+                          <option value="Client Success Pipeline">Client Success Pipeline</option>
+                          <option value="Finance Pipeline">Finance Pipeline</option>
+                          <option value="Marketing Pipeline">Marketing Pipeline</option>
+                        </select>
 
                       </div>
                     </div>
@@ -2267,16 +2271,16 @@ const filteredDeals = dealsData?.filter((deal) => {
 
 
 
-{dealsLoading ? (
-  [...Array(5)].map((_, i) => (
-    <tr key={i}>
-      {[...Array(10)].map((_, j) => (
-        <td key={j} className="px-4 py-3">
-          <Skeleton height={15} />
-        </td>
-      ))}
-    </tr>
-  ))
+                        {dealsLoading ? (
+                          [...Array(5)].map((_, i) => (
+                            <tr key={i}>
+                              {[...Array(10)].map((_, j) => (
+                                <td key={j} className="px-4 py-3">
+                                  <Skeleton height={15} />
+                                </td>
+                              ))}
+                            </tr>
+                          ))
 
 
 
@@ -2393,43 +2397,43 @@ const filteredDeals = dealsData?.filter((deal) => {
 
 
 
-<td className="px-4 py-3">
-  <select
-    value={d.dealStage ?? "Generated"}
-    onChange={async (e) => {
-      const newStage = e.target.value;
+                              <td className="px-4 py-3">
+                                <select
+                                  value={d.dealStage ?? "Generated"}
+                                  onChange={async (e) => {
+                                    const newStage = e.target.value;
 
-      try {
-        const token = localStorage.getItem("accessToken");
-        if (!token) throw new Error("No access token.");
+                                    try {
+                                      const token = localStorage.getItem("accessToken");
+                                      if (!token) throw new Error("No access token.");
 
-        const res = await fetch(`${BASE}/deals/${d.id}`, {
-          method: "PUT", // or PATCH if your API supports it
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            dealStage: newStage,
-          }),
-        });
+                                      const res = await fetch(`${BASE}/deals/${d.id}`, {
+                                        method: "PUT", // or PATCH if your API supports it
+                                        headers: {
+                                          Authorization: `Bearer ${token}`,
+                                          "Content-Type": "application/json",
+                                        },
+                                        body: JSON.stringify({
+                                          dealStage: newStage,
+                                        }),
+                                      });
 
-        if (!res.ok) throw new Error(await res.text());
+                                      if (!res.ok) throw new Error(await res.text());
 
-        await mutateDeals(); // refresh deals list
-      } catch (err: any) {
-        alert("Failed to update stage: " + (err?.message ?? err));
-      }
-    }}
-    className="border rounded p-1 text-sm"
-  >
-    <option value="Generated">Generated</option>
-    <option value="Qualified">Qualified</option>
-    <option value="Proposal">Proposal</option>
-    <option value="Won">Won</option>
-    <option value="Lost">Lost</option>
-  </select>
-</td>
+                                      await mutateDeals(); // refresh deals list
+                                    } catch (err: any) {
+                                      alert("Failed to update stage: " + (err?.message ?? err));
+                                    }
+                                  }}
+                                  className="border rounded p-1 text-sm"
+                                >
+                                  <option value="Generated">Generated</option>
+                                  <option value="Qualified">Qualified</option>
+                                  <option value="Proposal">Proposal</option>
+                                  <option value="Won">Won</option>
+                                  <option value="Lost">Lost</option>
+                                </select>
+                              </td>
 
 
 
@@ -2479,7 +2483,7 @@ const filteredDeals = dealsData?.filter((deal) => {
                                         }}
                                         className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
                                       >
-                                        View 
+                                        View
                                       </button>
 
                                       {/* EDIT */}
@@ -2602,16 +2606,16 @@ const filteredDeals = dealsData?.filter((deal) => {
                           </tr> */}
 
 
-{notesLoading ? (
-  [...Array(5)].map((_, i) => (
-    <tr key={i}>
-      {[...Array(4)].map((_, j) => (
-        <td key={j} className="px-4 py-3">
-          <Skeleton height={15} />
-        </td>
-      ))}
-    </tr>
-  ))
+                        {notesLoading ? (
+                          [...Array(5)].map((_, i) => (
+                            <tr key={i}>
+                              {[...Array(4)].map((_, j) => (
+                                <td key={j} className="px-4 py-3">
+                                  <Skeleton height={15} />
+                                </td>
+                              ))}
+                            </tr>
+                          ))
 
 
 

@@ -191,7 +191,7 @@ setTimeout(() => {
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6">Edit Deal</h1>
+      <h1 className="text-2xl font-bold mb-6">Edit Deal</h1>
 
       <form onSubmit={handleSubmit} className="bg-white p-6 border rounded-2xl shadow-sm">
         {error && <div className="mb-4 text-red-600 text-sm font-semibold">{error}</div>}
@@ -221,7 +221,7 @@ setTimeout(() => {
               className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-600"
             />
           </div>
-
+{/* 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Pipeline *</label>
             <input
@@ -232,7 +232,28 @@ setTimeout(() => {
               required
               className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-600"
             />
-          </div>
+          </div> */}
+
+
+
+<div>
+  <label className="block text-sm font-medium text-gray-700 mb-1">Pipeline *</label>
+  <select
+    name="pipeline"
+    value={formData.pipeline}
+    onChange={handleInputChange}
+    required
+    className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-600 bg-white"
+  >
+    <option value="Default Pipeline">Default Pipeline</option>
+    <option value="Sales Pipeline">Sales Pipeline</option>
+    <option value="Enterprise Pipeline">Enterprise Pipeline</option>
+    <option value="Client Success Pipeline">Client Success Pipeline</option>
+    <option value="Finance Pipeline">Finance Pipeline</option>
+    <option value="Marketing Pipeline">Marketing Pipeline</option>
+  </select>
+</div>
+
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Deal Stage *</label>
