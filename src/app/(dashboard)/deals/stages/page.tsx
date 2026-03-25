@@ -330,9 +330,18 @@ if (loading) {
                 ))
               ) : (
                 <>
-                  <SelectItem value="Sales">Sales</SelectItem>
+                  {/* <SelectItem value="Sales">Sales</SelectItem>
                   <SelectItem value="Marketing">Marketing</SelectItem>
-                  <SelectItem value="Partnerships">Partnerships</SelectItem>
+                  <SelectItem value="Partnerships">Partnerships</SelectItem> */}
+
+    <SelectItem value="Default Pipeline">Default Pipeline</SelectItem>
+    <SelectItem value="Sales Pipeline">Sales Pipeline</SelectItem>
+    <SelectItem value="Enterprise Pipeline">Enterprise Pipeline</SelectItem>
+    <SelectItem value="Client Success Pipeline">Client Success Pipeline</SelectItem>
+    <SelectItem value="Finance Pipeline">Finance Pipeline</SelectItem>
+    <SelectItem value="Marketing Pipeline">Marketing Pipeline</SelectItem>
+
+
                 </>
               )}
             </SelectContent>
