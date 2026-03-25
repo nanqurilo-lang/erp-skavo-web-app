@@ -4,6 +4,9 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 
 type Props = {
+  clientName?: string | null
+  clientId?: string | number | null
+   clientImage?: string | null
   projectCount?: number | null
   totalEarning?: number | null
   unpaidInvoiceCount?: number | null
@@ -12,11 +15,11 @@ type Props = {
 
 const placeholderImg = "/mnt/data/Screenshot 2025-11-25 124734.png"
 
-export const ClientStats: React.FC<Props> = ({ projectCount, totalEarning, unpaidInvoiceCount, totalUnpaidAmount }) => (
+export const ClientStats: React.FC<Props> = ({clientName, clientId,clientImage, projectCount, totalEarning, unpaidInvoiceCount, totalUnpaidAmount }) => (
   <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-6">
     <div className="col-span-1">
       <Card>
-        <CardContent className="flex items-center gap-4">
+        {/* <CardContent className="flex items-center gap-4">
           <Avatar className="h-16 w-16">
             <AvatarImage src={placeholderImg} alt="client" />
             <AvatarFallback>NA</AvatarFallback>
@@ -25,7 +28,33 @@ export const ClientStats: React.FC<Props> = ({ projectCount, totalEarning, unpai
             <div className="font-medium">Client</div>
             <div className="text-sm text-muted-foreground" />
           </div>
-        </CardContent>
+        </CardContent> */}
+
+<CardContent className="flex items-center gap-4">
+  <Avatar className="h-16 w-16">
+    <AvatarImage
+      src={clientImage || placeholderImg}
+      alt={clientName || "client"}
+    />
+    <AvatarFallback>
+      {clientName
+        ? clientName.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase()
+        : "NA"}
+    </AvatarFallback>
+  </Avatar>
+
+  <div>
+    <div className="font-medium">
+      {clientName || "Unknown Client"}
+    </div>
+    <div className="text-sm text-muted-foreground">
+      {clientId ? `ID: ${clientId}` : "—"}
+    </div>
+  </div>
+</CardContent>
+
+
+
       </Card>
     </div>
 

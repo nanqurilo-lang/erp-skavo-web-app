@@ -73,7 +73,7 @@ const safeParseText = (text: string) => {
       ) {
         return JSON.parse(t.slice(1, -1));
       }
-    } catch {}
+    } catch { }
     return null;
   }
 };
@@ -114,7 +114,7 @@ type Category = { id: string | number; name: string };
 type ClientItem = { id: number; clientId?: string; name?: string };
 type DepartmentItem = { id: number; departmentName: string };
 
-  type EmployeeItem = {
+type EmployeeItem = {
   employeeId: string
   name: string
   profilePictureUrl?: string | null
@@ -125,21 +125,21 @@ export default function ClientDetailPage() {
   const router = useRouter();
 
 
-const [employees, setEmployees] = useState<EmployeeItem[]>([]);
-const [employeeLoading, setEmployeeLoading] = useState(false);
-const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
-const [selectedInvoiceId, setSelectedInvoiceId] = useState<string | null>(null);
+  const [employees, setEmployees] = useState<EmployeeItem[]>([]);
+  const [employeeLoading, setEmployeeLoading] = useState(false);
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
+  const [selectedInvoiceId, setSelectedInvoiceId] = useState<string | null>(null);
 
 
-// members already hai
-// const [members, setMembers] = useState<string[] | string>("")
+  // members already hai
+  // const [members, setMembers] = useState<string[] | string>("")
 
 
   // ---- client
   const [client, setClient] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const[companyDetails, setcompanyDetails]= useState<ClientItem[]>([]);
+  const [companyDetails, setcompanyDetails] = useState<ClientItem[]>([]);
 
   // stats
   const [projectCount, setProjectCount] = useState<number | null>(null);
@@ -167,18 +167,18 @@ const [selectedInvoiceId, setSelectedInvoiceId] = useState<string | null>(null);
 
   const [clients, setClients] = useState<ClientItem[]>([]);
   const [clientLoading, setClientLoading] = useState(false);
-  
+
 
   const [departments, setDepartments] = useState<DepartmentItem[]>([]);
   const [deptLoading, setDeptLoading] = useState(false);
 
   // tabs
   const [activeTab, setActiveTab] = useState<
-    "profile" | "projects" | "invoices" |"creditnotes"| "payments"| "documents"|"notes"| string
+    "profile" | "projects" | "invoices" | "creditnotes" | "payments" | "documents" | "notes" | string
   >("profile");
 
-  
-      const token = typeof window !== "undefined" ? localStorage.getItem("accessToken") || "" : "";
+
+  const token = typeof window !== "undefined" ? localStorage.getItem("accessToken") || "" : "";
 
   // ---------- fetch client ----------
   const fetchClient = useCallback(async () => {
@@ -205,44 +205,44 @@ const [selectedInvoiceId, setSelectedInvoiceId] = useState<string | null>(null);
   console.log("jjjjjjj", client)
   const EMP_BASE = `${process.env.NEXT_PUBLIC_MAIN}`;
 
-const loadEmployees = useCallback(async () => {
-  setEmployeeLoading(true);
-  try {
-    const token =
-      typeof window !== "undefined"
-        ? localStorage.getItem("accessToken")
-        : null;
+  const loadEmployees = useCallback(async () => {
+    setEmployeeLoading(true);
+    try {
+      const token =
+        typeof window !== "undefined"
+          ? localStorage.getItem("accessToken")
+          : null;
 
-    const res = await fetch(`${EMP_BASE}/employee/all`, {
-      headers: token ? { Authorization: `Bearer ${token}` } : undefined,
-      cache: "no-store",
-    });
+      const res = await fetch(`${EMP_BASE}/employee/all`, {
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+        cache: "no-store",
+      });
 
-    if (!res.ok) {
-      console.error("Failed to load employees", res.status);
+      if (!res.ok) {
+        console.error("Failed to load employees", res.status);
+        setEmployees([]);
+        return;
+      }
+
+      const data = await res.json();
+      if (Array.isArray(data)) {
+        setEmployees(
+          data.map((e: any) => ({
+            employeeId: e.employeeId,
+            name: e.name,
+            profilePictureUrl: e.profilePictureUrl ?? null,
+          }))
+        );
+      } else {
+        setEmployees([]);
+      }
+    } catch (err) {
+      console.error("Employee load error", err);
       setEmployees([]);
-      return;
+    } finally {
+      setEmployeeLoading(false);
     }
-
-    const data = await res.json();
-    if (Array.isArray(data)) {
-      setEmployees(
-        data.map((e: any) => ({
-          employeeId: e.employeeId,
-          name: e.name,
-          profilePictureUrl: e.profilePictureUrl ?? null,
-        }))
-      );
-    } else {
-      setEmployees([]);
-    }
-  } catch (err) {
-    console.error("Employee load error", err);
-    setEmployees([]);
-  } finally {
-    setEmployeeLoading(false);
-  }
-}, []);
+  }, []);
 
 
   // ---------- helpers to load selects ----------
@@ -350,12 +350,12 @@ const loadEmployees = useCallback(async () => {
         safeParseText(text) ?? (res.ok ? JSON.parse(text || "{}") : null);
       const obj =
         parsed &&
-        typeof parsed === "object" &&
-        (parsed.projectCount !== undefined || parsed.totalEarning !== undefined)
+          typeof parsed === "object" &&
+          (parsed.projectCount !== undefined || parsed.totalEarning !== undefined)
           ? parsed
           : parsed && typeof parsed === "object" && parsed["Response Body"]
-          ? safeParseText(parsed["Response Body"])
-          : parsed;
+            ? safeParseText(parsed["Response Body"])
+            : parsed;
 
       setProjectCount(Number(obj?.projectCount ?? 0));
       setTotalEarning(Number(obj?.totalEarning ?? 0));
@@ -374,13 +374,13 @@ const loadEmployees = useCallback(async () => {
         safeParseText(text2) ?? (res2.ok ? JSON.parse(text2 || "{}") : null);
       const obj2 =
         parsed2 &&
-        typeof parsed2 === "object" &&
-        (parsed2.unpaidInvoiceCount !== undefined ||
-          parsed2.totalUnpaidAmount !== undefined)
+          typeof parsed2 === "object" &&
+          (parsed2.unpaidInvoiceCount !== undefined ||
+            parsed2.totalUnpaidAmount !== undefined)
           ? parsed2
           : parsed2 && typeof parsed2 === "object" && parsed2["Response Body"]
-          ? safeParseText(parsed2["Response Body"])
-          : parsed2;
+            ? safeParseText(parsed2["Response Body"])
+            : parsed2;
 
       setUnpaidInvoiceCount(Number(obj2?.unpaidInvoiceCount ?? 0));
       setTotalUnpaidAmount(Number(obj2?.totalUnpaidAmount ?? 0));
@@ -417,35 +417,35 @@ const loadEmployees = useCallback(async () => {
         id: p.id ?? p.projectId ?? p._id ?? String(Math.random()),
         shortCode:
           p.shortCode ?? p.code ?? p.projectCode ?? p.project_code ?? p.id,
-          
+
         name: p.name ?? p.projectName ?? p.title ?? "Project Name",
         members:
           Array.isArray(p.assignedEmployees) && p.assignedEmployees.length
             ? p.assignedEmployees.map((m: any) => ({
-                id: m.employeeId ?? m.id,
-                name: m.name ?? m.fullName,
-                avatarUrl: m.profileUrl ?? m.profilePictureUrl,
-              }))
+              id: m.employeeId ?? m.id,
+              name: m.name ?? m.fullName,
+              avatarUrl: m.profileUrl ?? m.profilePictureUrl,
+            }))
             : Array.isArray(p.members)
-            ? p.members
-            : [],
+              ? p.members
+              : [],
         startDate: p.startDate ?? p.start_date ?? p.start,
         deadline: p.deadline ?? p.endDate ?? p.end_date,
         client:
           p.client ??
           (p.clientId
             ? {
-                clientId: p.clientId,
-                name: client?.name,
-                profilePictureUrl: client?.profilePictureUrl,
-              }
+              clientId: p.clientId,
+              name: client?.name,
+              profilePictureUrl: client?.profilePictureUrl,
+            }
             : undefined),
         progressPercent:
           typeof p.progressPercent === "number"
             ? p.progressPercent
             : typeof p.progress === "number"
-            ? p.progress
-            : p.progress ?? 0,
+              ? p.progress
+              : p.progress ?? 0,
         projectStatus: (p.projectStatus ??
           p.status ??
           "NOT_STARTED") as StatusOption,
@@ -484,7 +484,7 @@ const loadEmployees = useCallback(async () => {
         const inner = safeParseText(parsed.ResponseBody);
         if (Array.isArray(inner)) list = inner;
       }
-//a============bc
+      //a============bc
       const mapped = list.map((inv: any) => ({
         id: inv.id ?? inv.invoiceId,
         invoiceNumber: inv.invoiceNumber,
@@ -717,10 +717,10 @@ const loadEmployees = useCallback(async () => {
   const [allowManualTimeLogs, setAllowManualTimeLogs] = useState(false)
   const [addedBy, setAddedBy] = useState<string>("you")
   const [submitting, setSubmitting] = useState(false)
-  
-   const clientId=client?.clientId
-   const clientNumericId = client?.id
-   
+
+  const clientId = client?.clientId
+  const clientNumericId = client?.id
+
 
   const resetAddForm = () => {
     setShortCode("");
@@ -778,10 +778,10 @@ const loadEmployees = useCallback(async () => {
       // fd.append("category", category === "none" ? "" : String(category));
 
 
-fd.append(
-  "projectCategory",
-  category !== "none" ? String(category) : ""
-)
+      fd.append(
+        "projectCategory",
+        category !== "none" ? String(category) : ""
+      )
 
 
       fd.append("department", department === "none" ? "" : String(department));
@@ -790,7 +790,7 @@ fd.append(
         clientField === "none" ? client?.clientId ?? "" : String(clientField)
       );
       // fd.append("summary", summary || "");
-fd.append("projectSummary", summary || "")
+      fd.append("projectSummary", summary || "")
 
 
       fd.append("tasksNeedAdminApproval", String(Boolean(needsApproval)));
@@ -798,18 +798,18 @@ fd.append("projectSummary", summary || "")
       const assignedArray = Array.isArray(members)
         ? members
         : String(members || "")
-            .split(",")
-            .map((s) => s.trim())
-            .filter(Boolean);
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean);
 
       fd.append("assignedEmployeeIds", JSON.stringify(assignedArray));
       if (file) fd.append("companyFile", file);
       fd.append("currency", currency || "");
       // fd.append("budget", budget !== "" ? String(budget) : "0");
-fd.append(
-  "projectBudget",
-  budget !== "" ? String(budget) : "0"
-)
+      fd.append(
+        "projectBudget",
+        budget !== "" ? String(budget) : "0"
+      )
 
 
       fd.append(
@@ -831,14 +831,14 @@ fd.append(
         try {
           const json = JSON.parse(text || "{}");
           if (json && json.message) message = json.message;
-        } catch {}
+        } catch { }
         alert(message);
         setSubmitting(false);
         return;
       }
       try {
         await res.json();
-      } catch {}
+      } catch { }
       // refresh projects list
       if (client?.clientId) await fetchProjectsForClient(client.clientId);
       setShowAddModal(false);
@@ -867,12 +867,12 @@ fd.append(
   }, [client]);
 
   // when user activates Projects tab, load projects
- // Fetch projects AS SOON as client loads (so ProfileSection gets data)
-useEffect(() => {
-  if (client?.clientId) {
-    fetchProjectsForClient(client.clientId)
-  }
-}, [client])
+  // Fetch projects AS SOON as client loads (so ProfileSection gets data)
+  useEffect(() => {
+    if (client?.clientId) {
+      fetchProjectsForClient(client.clientId)
+    }
+  }, [client])
 
 
   // when user activates Invoices tab, load invoices
@@ -881,7 +881,7 @@ useEffect(() => {
       fetchInvoicesForClient(client.clientId);
     }
 
-    
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab, client]);
 
@@ -894,7 +894,7 @@ useEffect(() => {
   //       </div>
   //     </div>
 
-      
+
   //   );
   // }
 
@@ -902,77 +902,77 @@ useEffect(() => {
 
 
   if (loading) {
-  return (
+    return (
 
-//  <main className="container mx-auto max-w-6xl px-4 py-8"></main>
+      //  <main className="container mx-auto max-w-6xl px-4 py-8"></main>
 
 
-    <div className="container mx-auto py-8 px-4 space-y-6">
+      <div className="container mx-auto py-8 px-4 space-y-6">
 
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <Skeleton width={200} height={30} />
-        <Skeleton width={100} height={35} />
-      </div>
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <Skeleton width={200} height={30} />
+          <Skeleton width={100} height={35} />
+        </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        {[...Array(4)].map((_, i) => (
-          <div key={i} className="p-4 border rounded-lg bg-white space-y-2">
-            <Skeleton width={100} height={15} />
-            <Skeleton width={60} height={25} />
-          </div>
-        ))}
-      </div>
-
-      {/* Profile Section */}
-      <div className="p-6 border rounded-lg bg-white space-y-4">
-        <Skeleton width={150} height={20} />
-
-        <div className="grid grid-cols-2 gap-4">
-          {[...Array(6)].map((_, i) => (
-            <div key={i}>
-              <Skeleton width={120} height={12} />
-              <Skeleton height={30} />
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="p-4 border rounded-lg bg-white space-y-2">
+              <Skeleton width={100} height={15} />
+              <Skeleton width={60} height={25} />
             </div>
           ))}
         </div>
-      </div>
 
-      {/* Tabs */}
-      <div className="flex gap-4">
-        {[...Array(5)].map((_, i) => (
-          <Skeleton key={i} width={100} height={30} />
-        ))}
-      </div>
+        {/* Profile Section */}
+        <div className="p-6 border rounded-lg bg-white space-y-4">
+          <Skeleton width={150} height={20} />
 
-      {/* Table / Content */}
-      <div className="bg-white border rounded-lg p-4 space-y-4">
-        <Skeleton width={180} height={20} />
-
-        {[...Array(5)].map((_, i) => (
-          <div key={i} className="grid grid-cols-6 gap-4">
-            {[...Array(6)].map((_, j) => (
-              <Skeleton key={j} height={15} />
+          <div className="grid grid-cols-2 gap-4">
+            {[...Array(6)].map((_, i) => (
+              <div key={i}>
+                <Skeleton width={120} height={12} />
+                <Skeleton height={30} />
+              </div>
             ))}
           </div>
-        ))}
+        </div>
 
-        
+        {/* Tabs */}
+        <div className="flex gap-4">
+          {[...Array(5)].map((_, i) => (
+            <Skeleton key={i} width={100} height={30} />
+          ))}
+        </div>
+
+        {/* Table / Content */}
+        <div className="bg-white border rounded-lg p-4 space-y-4">
+          <Skeleton width={180} height={20} />
+
+          {[...Array(5)].map((_, i) => (
+            <div key={i} className="grid grid-cols-6 gap-4">
+              {[...Array(6)].map((_, j) => (
+                <Skeleton key={j} height={15} />
+              ))}
+            </div>
+          ))}
+
+
+        </div>
+
+
+
+
       </div>
 
-   
-   
-   
-    </div>
+
+
+    );
 
 
 
-  );
-
-
-
-}
+  }
 
 
   if (error || !client) {
@@ -998,17 +998,17 @@ useEffect(() => {
   function ProjectRow({ p }: { p: any }) {
     const progressTimeout = useRef<NodeJS.Timeout | null>(null);
     const start = p.startDate
-      ? 
+      ?
       // new Date(p.startDate).toLocaleDateString()
       format(new Date(p.startDate), "dd-MM-yyyy")
       : "-";
     const dl = p.noDeadline
       ? "No Deadline"
       : p.deadline
-      ? 
-      // new Date(p.deadline).toLocaleDateString()
-      format(new Date(p.deadline), "dd-MM-yyyy")
-      : "-";
+        ?
+        // new Date(p.deadline).toLocaleDateString()
+        format(new Date(p.deadline), "dd-MM-yyyy")
+        : "-";
     const progress = Math.max(0, Math.min(100, Number(p.progressPercent ?? 0)));
     const getProgressColor = (n?: number | null) => {
       if (n === undefined || n === null) return "bg-gray-300";
@@ -1061,9 +1061,9 @@ useEffect(() => {
           <div className="text-sm">
             {Array.isArray(p.members) && p.members.length
               ? p.members
-                  .map((m: any) => m.name ?? m)
-                  .slice(0, 3)
-                  .join(", ")
+                .map((m: any) => m.name ?? m)
+                .slice(0, 3)
+                .join(", ")
               : "-"}
           </div>
         </TableCell>
@@ -1137,16 +1137,15 @@ useEffect(() => {
 
                 <DropdownMenuContent align="start" className="w-64 p-2">
                   <div className="text-xs text-gray-500 mb-1">
-                    Change status 
+                    Change status
                   </div>
                   <div className="space-y-1">
                     {STATUS_OPTIONS.map((s) => (
                       <button
                         key={s}
                         onClick={() => patchStatus(p.id, s as StatusOption)}
-                        className={`w-full text-left px-3 py-2 rounded text-sm hover:bg-gray-50 ${
-                          s === p.projectStatus ? "font-medium" : ""
-                        }`}
+                        className={`w-full text-left px-3 py-2 rounded text-sm hover:bg-gray-50 ${s === p.projectStatus ? "font-medium" : ""
+                          }`}
                       >
                         {s}
                       </button>
@@ -1184,46 +1183,46 @@ useEffect(() => {
 
 
 
-<input
-  type="range"
-  min={0}
-  max={100}
-  value={p.progressPercent ?? 0}
-  onChange={(e) => {
-    const v = Number(e.target.value);
+                    <input
+                      type="range"
+                      min={0}
+                      max={100}
+                      value={p.progressPercent ?? 0}
+                      onChange={(e) => {
+                        const v = Number(e.target.value);
 
-    // instant UI update
-    setProjects((prev) =>
-      prev.map((pr) =>
-        pr.id === p.id ? { ...pr, progressPercent: v } : pr
-      )
-    );
+                        // instant UI update
+                        setProjects((prev) =>
+                          prev.map((pr) =>
+                            pr.id === p.id ? { ...pr, progressPercent: v } : pr
+                          )
+                        );
 
-    // debounce API call
-    if (progressTimeout.current) {
-      clearTimeout(progressTimeout.current);
-    }
+                        // debounce API call
+                        if (progressTimeout.current) {
+                          clearTimeout(progressTimeout.current);
+                        }
 
-    // progressTimeout.current = setTimeout(() => {
-    //   patchProgress(p.id, v);
-    // }, 400);
+                        // progressTimeout.current = setTimeout(() => {
+                        //   patchProgress(p.id, v);
+                        // }, 400);
 
-progressTimeout.current = setTimeout(() => {
+                        progressTimeout.current = setTimeout(() => {
 
-  if (v === 100) {
-    patchStatus(p.id, "FINISHED");
-  } else if (v > 0 && p.projectStatus === "NOT_STARTED") {
-    patchStatus(p.id, "IN_PROGRESS");
-  }
+                          if (v === 100) {
+                            patchStatus(p.id, "FINISHED");
+                          } else if (v > 0 && p.projectStatus === "NOT_STARTED") {
+                            patchStatus(p.id, "IN_PROGRESS");
+                          }
 
-  patchProgress(p.id, v);
+                          patchProgress(p.id, v);
 
-}, 400);
+                        }, 400);
 
 
-  }}
-  className="w-full"
-/>
+                      }}
+                      className="w-full"
+                    />
 
 
                     <div className="flex justify-between text-xs text-gray-500 mt-1">
@@ -1299,264 +1298,270 @@ progressTimeout.current = setTimeout(() => {
 
   return (
 
- <main className="container mx-auto max-w-6xl px-4 py-8">
+    <main className="container mx-auto max-w-6xl px-4 py-8">
 
-    <div className="container mx-auto py-8 px-4">
-      {/* Header */}
-      <ClientHeader
-        clientName={client.name}
-        clientId={client.clientId}
-        onBack={() => router.push("/clients")}
-        onOpenTab={(t) => setActiveTab(t)}
-        activeTab={activeTab}
-      />
-
-      {/* Stats (only on profile tab) */}
-      {activeTab === "profile" && (
-        <ClientStats
-          projectCount={projectCount}
-          totalEarning={totalEarning}
-          unpaidInvoiceCount={unpaidInvoiceCount}
-          totalUnpaidAmount={totalUnpaidAmount}
+      <div className="container mx-auto py-8 px-4">
+        {/* Header */}
+        <ClientHeader
+          clientName={client.name}
+          clientId={client.clientId}
+          onBack={() => router.push("/clients")}
+          onOpenTab={(t) => setActiveTab(t)}
+          activeTab={activeTab}
         />
-      )}
+
+        {/* Stats (only on profile tab) */}
+        {activeTab === "profile" && (
+          <ClientStats
 
 
- {activeTab === "creditnotes" && (
-        <ClientCreditNotesTable clientId={client.clientId} />
-      )}
+            clientName={client?.companyName || client?.name}
+            clientId={client?.clientId}
+            clientImage={client?.profileImage || client?.image || client?.avatar}
 
-      {/* Main content by tab */}
-      {activeTab === "profile" && <ProfileSection client={client} projects={projects} companyDetails={companyDetails} />}
-      {/* <ProfileSection client={client} projects={projects} /> */}
-
-
-      {activeTab === "projects" && (
-        <div className="mt-6">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="text-lg font-semibold">
-              Projects for {client.name}
-            </h3>
-            <div className="flex items-center gap-2">
-              <div className="flex items-center gap-2 border rounded px-2 py-1 bg-white">
-                <Search className="w-4 h-4 text-gray-400" />
-                <Input
-                  placeholder="Search projects"
-                  onChange={() => {
-                    /* implement search if needed */
-                  }}
+            projectCount={projectCount}
+            totalEarning={totalEarning}
+            unpaidInvoiceCount={unpaidInvoiceCount}
+            totalUnpaidAmount={totalUnpaidAmount}
+          />
+        )}
 
 
-                  className="border-0 bg-transparent focus-visible:ring-0"
-                />
-              </div>
-              <Button
-                className="bg-blue-600 text-white"
-                onClick={() => {
-                  setShowAddModal(true);
+        {activeTab === "creditnotes" && (
+          <ClientCreditNotesTable clientId={client.clientId} />
+        )}
+
+        {/* Main content by tab */}
+        {activeTab === "profile" && <ProfileSection client={client} projects={projects} companyDetails={companyDetails} />}
+        {/* <ProfileSection client={client} projects={projects} /> */}
+
+
+        {activeTab === "projects" && (
+          <div className="mt-6">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-lg font-semibold">
+                Projects for {client.name}
+              </h3>
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 border rounded px-2 py-1 bg-white">
+                  <Search className="w-4 h-4 text-gray-400" />
+                  <Input
+                    placeholder="Search projects"
+                    onChange={() => {
+                      /* implement search if needed */
+                    }}
+
+
+                    className="border-0 bg-transparent focus-visible:ring-0"
+                  />
+                </div>
+                <Button
+                  className="bg-blue-600 text-white"
+                  onClick={() => {
+                    setShowAddModal(true);
                   /* preselect client */ setClientField(
-                    client?.clientId ? String(client.clientId) : "none"
-                  );
-                }}
-              >
-                + Add Project
-              </Button>
+                      client?.clientId ? String(client.clientId) : "none"
+                    );
+                  }}
+                >
+                  + Add Project
+                </Button>
+              </div>
+            </div>
+
+
+            <div className="bg-white rounded-lg border overflow-hidden">
+              <div className="overflow-auto p-4">
+                {projectsLoading ? (
+                  <div className="p-8 text-center text-gray-500">
+                    Loading projects...
+                  </div>
+                ) : projects.length === 0 ? (
+                  <div className="p-8 text-center text-gray-500">
+                    No projects found
+                  </div>
+                ) : (
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="bg-blue-50">
+                        <TableHead className="px-4 py-3">Code</TableHead>
+                        <TableHead className="px-4 py-3">Project Name</TableHead>
+                        <TableHead className="px-4 py-3">Member</TableHead>
+                        <TableHead className="px-4 py-3">Start Date</TableHead>
+                        <TableHead className="px-4 py-3">Deadline</TableHead>
+                        <TableHead className="px-4 py-3">Client</TableHead>
+                        <TableHead className="px-4 py-3">Status</TableHead>
+                        <TableHead className="px-4 py-3 text-right">
+                          Action
+                        </TableHead>
+                      </TableRow>
+                    </TableHeader>
+
+                    <TableBody>
+                      {projects.map((p) => (
+                        <ProjectRow key={p.id} p={p} />
+                      ))}
+                    </TableBody>
+                  </Table>
+                )}
+              </div>
             </div>
           </div>
 
+        )}
 
-          <div className="bg-white rounded-lg border overflow-hidden">
-            <div className="overflow-auto p-4">
-              {projectsLoading ? (
-                <div className="p-8 text-center text-gray-500">
-                  Loading projects...
-                </div>
-              ) : projects.length === 0 ? (
-                <div className="p-8 text-center text-gray-500">
-                  No projects found
-                </div>
-              ) : (
-                <Table>
-                  <TableHeader>
-                    <TableRow className="bg-blue-50">
-                      <TableHead className="px-4 py-3">Code</TableHead>
-                      <TableHead className="px-4 py-3">Project Name</TableHead>
-                      <TableHead className="px-4 py-3">Member</TableHead>
-                      <TableHead className="px-4 py-3">Start Date</TableHead>
-                      <TableHead className="px-4 py-3">Deadline</TableHead>
-                      <TableHead className="px-4 py-3">Client</TableHead>
-                      <TableHead className="px-4 py-3">Status</TableHead>
-                      <TableHead className="px-4 py-3 text-right">
-                        Action
-                      </TableHead>
-                    </TableRow>
-                  </TableHeader>
+        {activeTab === "invoices" && (
 
-                  <TableBody>
-                    {projects.map((p) => (
-                      <ProjectRow key={p.id} p={p} />
-                    ))}
-                  </TableBody>
-                </Table>
-              )}
-            </div>
+          <InvoicesTable clientId={`${clientId}`} />
+          // <InvoicesTable clientId="CLI005" />
+
+        )}
+
+
+        {/* NEW: Payments tab rendering */}
+        {(activeTab === "payments" || activeTab === "Payments") && (
+          <div className="mt-6">
+            <ClientPaymentsTable
+              projectIdk={client.clientId}
+              clientId={client.clientId}
+              onAdd={() => {
+                /* open add payment modal if you have one */
+                //console.log("Open add payment");
+              }}
+              onSearch={(q) => {
+                //console.log("search payments:", q);
+              }}
+              onAction={(p) => {
+                // You can open a payment details modal here if you want
+                //console.log("payment row action", p);
+              }}
+            />
           </div>
-        </div>
-        
-      )}
+        )}
 
-      {activeTab === "invoices" && (
-    
-       <InvoicesTable clientId={`${clientId}`} />
-      // <InvoicesTable clientId="CLI005" />
-
-      )}
-
-
-{/* NEW: Payments tab rendering */}
-      {(activeTab === "payments" || activeTab === "Payments") && (
-        <div className="mt-6">
-          <ClientPaymentsTable
-          projectIdk={client.clientId}
-            clientId={client.clientId}
-            onAdd={() => {
-              /* open add payment modal if you have one */
-              //console.log("Open add payment");
+        {activeTab === "notes" && (
+          <ClientNotesTable
+            clientId={clientNumericId} // string | number or object with .id
+            authToken={token}
+            onView={(note) => {
+              // open view modal or navigate
+              //console.log("view", note);
             }}
-            onSearch={(q) => {
-              //console.log("search payments:", q);
+            onEdit={(note) => {
+              // navigate to edit page or open form component
+              // e.g. router.push(`/clients/${clientId}/notes/${note.id}/edit`);
+              //console.log("edit", note);
             }}
-            onAction={(p) => {
-              // You can open a payment details modal here if you want
-              //console.log("payment row action", p);
+            onDelete={(note) => {
+              // optional: already optimistic remove happens inside component
+              //console.log("deleted", note);
             }}
           />
-        </div>
-      )}
 
-     {activeTab === "notes" && (
- <ClientNotesTable
-  clientId={clientNumericId} // string | number or object with .id
-  authToken={token}
-  onView={(note) => {
-    // open view modal or navigate
-    //console.log("view", note);
-  }}
-  onEdit={(note) => {
-    // navigate to edit page or open form component
-    // e.g. router.push(`/clients/${clientId}/notes/${note.id}/edit`);
-    //console.log("edit", note);
-  }}
-  onDelete={(note) => {
-    // optional: already optimistic remove happens inside component
-    //console.log("deleted", note);
-  }}
-/>
-
-)}
+        )}
 
 
 
- {activeTab === "documents" && (
-  <ClientDocuments clientId={client} authToken={token} />
+        {activeTab === "documents" && (
+          <ClientDocuments clientId={client} authToken={token} />
 
-)}
-  
+        )}
 
-      {/* ADD PROJECT MODAL */}
-      {showAddModal && (
-        // <div className="fixed inset-0 z-[10000] flex items-start justify-center pt-12 px-4 overflow-y-auto">
-        <div className="fixed inset-0 z-[10000] flex justify-end">
-          <div
-            className="fixed inset-0 bg-black/40"
-            onClick={() => {
-              setShowAddModal(false);
-              resetAddForm();
-            }}
-          />
-          {/* <div className="relative w-full max-w-4xl bg-white rounded-xl shadow-2xl overflow-y-auto z-10"> */}
-          <div className="relative w-[83%] h-full bg-white shadow-2xl overflow-y-auto z-10 flex flex-col">
-            <div className="flex items-center justify-between p-4 border-b">
-              <h3 className="text-lg font-semibold">Add Project </h3>
-              <button
-                onClick={() => {
-                  setShowAddModal(false);
-                  resetAddForm();
-                }}
-                className="p-2 rounded hover:bg-gray-100"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
 
-            <div className="p-6 space-y-6">
-              {/* Project Details */}
-              <div className="rounded-lg border p-4">
-                <h4 className="font-medium mb-3">Project Details </h4>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-sm text-gray-600">
-                      Short Code *
-                    </label>
-                    <Input
-                      value={shortCode}
-                      onChange={(e) => setShortCode(e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <label className="text-sm text-gray-600">
-                      Project Name *
-                    </label>
-                    <Input
-                      value={projectName}
-                      onChange={(e) => setProjectName(e.target.value)}
-                    />
-                  </div>
+        {/* ADD PROJECT MODAL */}
+        {showAddModal && (
+          // <div className="fixed inset-0 z-[10000] flex items-start justify-center pt-12 px-4 overflow-y-auto">
+          <div className="fixed inset-0 z-[10000] flex justify-end">
+            <div
+              className="fixed inset-0 bg-black/40"
+              onClick={() => {
+                setShowAddModal(false);
+                resetAddForm();
+              }}
+            />
+            {/* <div className="relative w-full max-w-4xl bg-white rounded-xl shadow-2xl overflow-y-auto z-10"> */}
+            <div className="relative w-[83%] h-full bg-white shadow-2xl overflow-y-auto z-10 flex flex-col">
+              <div className="flex items-center justify-between p-4 border-b">
+                <h3 className="text-lg font-semibold">Add Project </h3>
+                <button
+                  onClick={() => {
+                    setShowAddModal(false);
+                    resetAddForm();
+                  }}
+                  className="p-2 rounded hover:bg-gray-100"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
 
-                  <div>
-                    <label className="text-sm text-gray-600">
-                      Start Date *
-                    </label>
-                    <Input
-                      type="date"
-                      value={startDate}
-                      onChange={(e) => setStartDate(e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-3">
-                      <div className="flex-1">
-                        <label className="text-sm text-gray-600">
-                          Deadline *
-                        </label>
-                        <Input
-                          type="date"
-                          value={deadline}
-                          onChange={(e) => setDeadline(e.target.value)}
-                          disabled={noDeadline}
-                        />
-                      </div>
-                      <div className="pt-6">
-                        <label className="inline-flex items-center gap-2 text-sm text-gray-600">
-                          <input
-                            type="checkbox"
-                            checked={noDeadline}
-                            onChange={(e) => setNoDeadline(e.target.checked)}
+              <div className="p-6 space-y-6">
+                {/* Project Details */}
+                <div className="rounded-lg border p-4">
+                  <h4 className="font-medium mb-3">Project Details </h4>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-sm text-gray-600">
+                        Short Code *
+                      </label>
+                      <Input
+                        value={shortCode}
+                        onChange={(e) => setShortCode(e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm text-gray-600">
+                        Project Name *
+                      </label>
+                      <Input
+                        value={projectName}
+                        onChange={(e) => setProjectName(e.target.value)}
+                      />
+                    </div>
+
+                    <div>
+                      <label className="text-sm text-gray-600">
+                        Start Date *
+                      </label>
+                      <Input
+                        type="date"
+                        value={startDate}
+                        onChange={(e) => setStartDate(e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-3">
+                        <div className="flex-1">
+                          <label className="text-sm text-gray-600">
+                            Deadline *
+                          </label>
+                          <Input
+                            type="date"
+                            value={deadline}
+                            onChange={(e) => setDeadline(e.target.value)}
+                            disabled={noDeadline}
                           />
-                          <span className="text-xs">
-                            There is no project deadline
-                          </span>
-                        </label>
+                        </div>
+                        <div className="pt-6">
+                          <label className="inline-flex items-center gap-2 text-sm text-gray-600">
+                            <input
+                              type="checkbox"
+                              checked={noDeadline}
+                              onChange={(e) => setNoDeadline(e.target.checked)}
+                            />
+                            <span className="text-xs">
+                              There is no project deadline
+                            </span>
+                          </label>
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  <div>
-                    <label className="text-sm text-gray-600">
-                      Project Category *
-                    </label>
-                    <div className="flex gap-2">
-                      {/* <Select
+                    <div>
+                      <label className="text-sm text-gray-600">
+                        Project Category *
+                      </label>
+                      <div className="flex gap-2">
+                        {/* <Select
                         value={category}
                         onValueChange={(v) => setCategory(v)}
                       >
@@ -1575,35 +1580,35 @@ progressTimeout.current = setTimeout(() => {
 
 
 
-<Select
-  modal={false}
-  value={category}
-  onValueChange={setCategory}
->
-  <SelectTrigger className="w-full">
-    <SelectValue placeholder="--" />
-  </SelectTrigger>
+                        <Select
+                          modal={false}
+                          value={category}
+                          onValueChange={setCategory}
+                        >
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="--" />
+                          </SelectTrigger>
 
-  <SelectContent className="z-[99999] pointer-events-auto">
-    <SelectItem value="none">--</SelectItem>
-    {categories.map((c) => (
-      <SelectItem key={c.id} value={String(c.id)}>
-        {c.name}
-      </SelectItem>
-    ))}
-  </SelectContent>
-</Select>
+                          <SelectContent className="z-[99999] pointer-events-auto">
+                            <SelectItem value="none">--</SelectItem>
+                            {categories.map((c) => (
+                              <SelectItem key={c.id} value={String(c.id)}>
+                                {c.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
 
 
 
+                      </div>
                     </div>
-                  </div>
 
-                  <div>
-                    <label className="text-sm text-gray-600">
-                      Department *
-                    </label>
-                    {/* <Select
+                    <div>
+                      <label className="text-sm text-gray-600">
+                        Department *
+                      </label>
+                      {/* <Select
                       value={department}
                       onValueChange={(v) => setDepartment(v)}
                     >
@@ -1621,32 +1626,32 @@ progressTimeout.current = setTimeout(() => {
                     </Select> */}
 
 
-<Select
-  modal={false}
-  value={department}
-  onValueChange={setDepartment}
->
-  <SelectTrigger className="w-full">
-    <SelectValue placeholder="--" />
-  </SelectTrigger>
+                      <Select
+                        modal={false}
+                        value={department}
+                        onValueChange={setDepartment}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="--" />
+                        </SelectTrigger>
 
-  <SelectContent className="z-[99999] pointer-events-auto">
-    <SelectItem value="none">--</SelectItem>
-    {departments.map((d) => (
-      <SelectItem key={d.id} value={String(d.id)}>
-        {d.departmentName}
-      </SelectItem>
-    ))}
-  </SelectContent>
-</Select>
+                        <SelectContent className="z-[99999] pointer-events-auto">
+                          <SelectItem value="none">--</SelectItem>
+                          {departments.map((d) => (
+                            <SelectItem key={d.id} value={String(d.id)}>
+                              {d.departmentName}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
 
 
 
-                  </div>
+                    </div>
 
-                  <div>
-                    <label className="text-sm text-gray-600">Client *</label>
-                    {/* <Select
+                    <div>
+                      <label className="text-sm text-gray-600">Client *</label>
+                      {/* <Select
                       value={clientField}
                       onValueChange={(v) => setClientField(v)}
                     >
@@ -1666,195 +1671,195 @@ progressTimeout.current = setTimeout(() => {
                       </SelectContent>
                     </Select> */}
 
-<Select
-  modal={false}
-  value={clientField}
-  onValueChange={setClientField}
->
-  <SelectTrigger className="w-full">
-    <SelectValue placeholder="--" />
-  </SelectTrigger>
+                      <Select
+                        modal={false}
+                        value={clientField}
+                        onValueChange={setClientField}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="--" />
+                        </SelectTrigger>
 
-  <SelectContent className="z-[99999] pointer-events-auto">
-    <SelectItem value="none">--</SelectItem>
-    {clients.map((c) => (
-      <SelectItem
-        key={c.id}
-        value={String(c.clientId ?? c.id)}
-      >
-        {c.name}
-      </SelectItem>
-    ))}
-  </SelectContent>
-</Select>
+                        <SelectContent className="z-[99999] pointer-events-auto">
+                          <SelectItem value="none">--</SelectItem>
+                          {clients.map((c) => (
+                            <SelectItem
+                              key={c.id}
+                              value={String(c.clientId ?? c.id)}
+                            >
+                              {c.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
 
 
 
-                  </div>
-
-                  <div className="col-span-2">
-                    <label className="text-sm text-gray-600">
-                      Project Summary
-                    </label>
-                    <textarea
-                      rows={4}
-                      value={summary}
-                      onChange={(e) => setSummary(e.target.value)}
-                      className="w-full p-2 border rounded"
-                    />
-                  </div>
-
-                  <div>
-                    <div className="text-sm text-gray-600 mb-1">
-                      Tasks needs approval by Admin
                     </div>
-                    <div className="flex items-center gap-4">
-                      <label className="inline-flex items-center gap-2">
-                        <input
-                          type="radio"
-                          name="approval"
-                          checked={needsApproval === true}
-                          onChange={() => setNeedsApproval(true)}
-                        />
-                        <span className="text-sm">Yes</span>
+
+                    <div className="col-span-2">
+                      <label className="text-sm text-gray-600">
+                        Project Summary
                       </label>
-                      <label className="inline-flex items-center gap-2">
-                        <input
-                          type="radio"
-                          name="approval"
-                          checked={needsApproval === false}
-                          onChange={() => setNeedsApproval(false)}
-                        />
-                        <span className="text-sm">No</span>
+                      <textarea
+                        rows={4}
+                        value={summary}
+                        onChange={(e) => setSummary(e.target.value)}
+                        className="w-full p-2 border rounded"
+                      />
+                    </div>
+
+                    <div>
+                      <div className="text-sm text-gray-600 mb-1">
+                        Tasks needs approval by Admin
+                      </div>
+                      <div className="flex items-center gap-4">
+                        <label className="inline-flex items-center gap-2">
+                          <input
+                            type="radio"
+                            name="approval"
+                            checked={needsApproval === true}
+                            onChange={() => setNeedsApproval(true)}
+                          />
+                          <span className="text-sm">Yes</span>
+                        </label>
+                        <label className="inline-flex items-center gap-2">
+                          <input
+                            type="radio"
+                            name="approval"
+                            checked={needsApproval === false}
+                            onChange={() => setNeedsApproval(false)}
+                          />
+                          <span className="text-sm">No</span>
+                        </label>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="text-sm text-gray-600">
+                        Add Project Members *
                       </label>
+                      <div>
+
+
+                        <Select
+                          modal={false}
+                          value=""
+                          onValueChange={(val) => {
+                            setMembers((prev) => {
+                              const arr = Array.isArray(prev) ? prev : [];
+                              if (arr.includes(val)) return arr;
+                              return [...arr, val];
+                            });
+                          }}
+                        >
+                          <SelectTrigger className="w-full">
+                            <SelectValue
+                              placeholder={
+                                Array.isArray(members) && members.length > 0
+                                  ? `${members.length} members selected`
+                                  : "Select members"
+                              }
+                            />
+                          </SelectTrigger>
+
+                          <SelectContent className="z-[99999] pointer-events-auto max-h-72 overflow-auto">
+                            {employeeLoading ? (
+                              <div className="px-3 py-2 text-sm text-gray-500">
+                                Loading...
+                              </div>
+                            ) : employees.length === 0 ? (
+                              <div className="px-3 py-2 text-sm text-gray-500">
+                                No employees found
+                              </div>
+                            ) : (
+                              employees.map((emp) => (
+                                <SelectItem
+                                  key={emp.employeeId}
+                                  value={emp.employeeId}
+                                >
+                                  <div className="flex items-center gap-2">
+                                    {emp.profilePictureUrl ? (
+                                      <img
+                                        src={emp.profilePictureUrl}
+                                        className="w-6 h-6 rounded-full"
+                                        alt={emp.name}
+                                      />
+                                    ) : (
+                                      <div className="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center text-xs text-white">
+                                        {emp.name.charAt(0)}
+                                      </div>
+                                    )}
+                                    <span className="text-sm">
+                                      {emp.name} ({emp.employeeId})
+                                    </span>
+                                  </div>
+                                </SelectItem>
+                              ))
+                            )}
+                          </SelectContent>
+                        </Select>
+
+                        {/* Selected members chips */}
+                        {Array.isArray(members) && members.length > 0 && (
+                          <div className="mt-2 flex flex-wrap gap-2">
+                            {members.map((id) => {
+                              const emp = employees.find((e) => e.employeeId === id);
+                              return (
+                                <span
+                                  key={id}
+                                  className="flex items-center gap-1 bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs"
+                                >
+                                  {emp?.name ?? id}
+                                  <button
+                                    className="ml-1 text-red-500"
+                                    onClick={() =>
+                                      setMembers((prev) =>
+                                        Array.isArray(prev)
+                                          ? prev.filter((x) => x !== id)
+                                          : prev
+                                      )
+                                    }
+                                  >
+                                    ×
+                                  </button>
+                                </span>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+
+                {/* Company Details — SINGLE (below Project Details) */}
+                <div className="rounded-lg border p-4">
+                  <h4 className="font-medium mb-3">Company Details</h4>
+
+                  <div className="mb-4">
+                    <label className="text-sm text-gray-600 mb-2 block">
+                      Add File
+                    </label>
+                    <div
+                      onClick={handleChooseFileClick}
+                      className="border-2 border-dashed rounded-lg h-28 flex items-center justify-center cursor-pointer text-gray-500"
+                    >
+                      {file ? <div>{file.name}</div> : <div>Choose File</div>}
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        className="hidden"
+                        onChange={handleFileInputChange}
+                      />
                     </div>
                   </div>
 
-                  <div>
-                    <label className="text-sm text-gray-600">
-                      Add Project Members *
-                    </label>
-                   <div>
-  
-
-  <Select
-    modal={false}
-    value=""
-    onValueChange={(val) => {
-      setMembers((prev) => {
-        const arr = Array.isArray(prev) ? prev : [];
-        if (arr.includes(val)) return arr;
-        return [...arr, val];
-      });
-    }}
-  >
-    <SelectTrigger className="w-full">
-      <SelectValue
-        placeholder={
-          Array.isArray(members) && members.length > 0
-            ? `${members.length} members selected`
-            : "Select members"
-        }
-      />
-    </SelectTrigger>
-
-    <SelectContent className="z-[99999] pointer-events-auto max-h-72 overflow-auto">
-      {employeeLoading ? (
-        <div className="px-3 py-2 text-sm text-gray-500">
-          Loading...
-        </div>
-      ) : employees.length === 0 ? (
-        <div className="px-3 py-2 text-sm text-gray-500">
-          No employees found
-        </div>
-      ) : (
-        employees.map((emp) => (
-          <SelectItem
-            key={emp.employeeId}
-            value={emp.employeeId}
-          >
-            <div className="flex items-center gap-2">
-              {emp.profilePictureUrl ? (
-                <img
-                  src={emp.profilePictureUrl}
-                  className="w-6 h-6 rounded-full"
-                  alt={emp.name}
-                />
-              ) : (
-                <div className="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center text-xs text-white">
-                  {emp.name.charAt(0)}
-                </div>
-              )}
-              <span className="text-sm">
-                {emp.name} ({emp.employeeId})
-              </span>
-            </div>
-          </SelectItem>
-        ))
-      )}
-    </SelectContent>
-  </Select>
-
-  {/* Selected members chips */}
-  {Array.isArray(members) && members.length > 0 && (
-    <div className="mt-2 flex flex-wrap gap-2">
-      {members.map((id) => {
-        const emp = employees.find((e) => e.employeeId === id);
-        return (
-          <span
-            key={id}
-            className="flex items-center gap-1 bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs"
-          >
-            {emp?.name ?? id}
-            <button
-              className="ml-1 text-red-500"
-              onClick={() =>
-                setMembers((prev) =>
-                  Array.isArray(prev)
-                    ? prev.filter((x) => x !== id)
-                    : prev
-                )
-              }
-            >
-              ×
-            </button>
-          </span>
-        );
-      })}
-    </div>
-  )}
-</div>
-
-                  </div>
-                </div>
-              </div>
-
-              {/* Company Details — SINGLE (below Project Details) */}
-              <div className="rounded-lg border p-4">
-                <h4 className="font-medium mb-3">Company Details</h4>
-
-                <div className="mb-4">
-                  <label className="text-sm text-gray-600 mb-2 block">
-                    Add File
-                  </label>
-                  <div
-                    onClick={handleChooseFileClick}
-                    className="border-2 border-dashed rounded-lg h-28 flex items-center justify-center cursor-pointer text-gray-500"
-                  >
-                    {file ? <div>{file.name}</div> : <div>Choose File</div>}
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      className="hidden"
-                      onChange={handleFileInputChange}
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-3 gap-4">
-                  <div>
-                    <label className="text-sm text-gray-600">Currency</label>
-                    {/* <Select
+                  <div className="grid grid-cols-3 gap-4">
+                    <div>
+                      <label className="text-sm text-gray-600">Currency</label>
+                      {/* <Select
                       value={currency}
                       onValueChange={(v) => setCurrency(v)}
                     >
@@ -1870,117 +1875,117 @@ progressTimeout.current = setTimeout(() => {
 
 
 
-                                            <Select
-                                                modal={false}
-                                                value={currency}
-                                                onValueChange={(v) => setCurrency(v)}
-                                            >
-                                                <SelectTrigger className="w-full">
-                                                    <SelectValue placeholder="USD" />
-                                                </SelectTrigger>
+                      <Select
+                        modal={false}
+                        value={currency}
+                        onValueChange={(v) => setCurrency(v)}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="USD" />
+                        </SelectTrigger>
 
-                                                <SelectContent className="z-[99999] pointer-events-auto">
-                                                    <SelectItem value="USD">USD $ (US Dollar)</SelectItem>
-                                                    <SelectItem value="EUR">EUR € (Euro)</SelectItem>
-                                                    <SelectItem value="GBP">GBP £ (British Pound)</SelectItem>
-                                                    <SelectItem value="CHF">CHF ₣ (Swiss Franc)</SelectItem>
-                                                    <SelectItem value="SEK">SEK kr</SelectItem>
-                                                    <SelectItem value="NOK">NOK kr</SelectItem>
-                                                    <SelectItem value="DKK">DKK kr</SelectItem>
-                                                    <SelectItem value="PLN">PLN zł</SelectItem>
-                                                    <SelectItem value="CZK">CZK Kč</SelectItem>
-                                                    <SelectItem value="HUF">HUF Ft</SelectItem>
-                                                    <SelectItem value="RON">RON lei</SelectItem>
-                                                </SelectContent>
-                                            </Select>
+                        <SelectContent className="z-[99999] pointer-events-auto">
+                          <SelectItem value="USD">USD $ (US Dollar)</SelectItem>
+                          <SelectItem value="EUR">EUR € (Euro)</SelectItem>
+                          <SelectItem value="GBP">GBP £ (British Pound)</SelectItem>
+                          <SelectItem value="CHF">CHF ₣ (Swiss Franc)</SelectItem>
+                          <SelectItem value="SEK">SEK kr</SelectItem>
+                          <SelectItem value="NOK">NOK kr</SelectItem>
+                          <SelectItem value="DKK">DKK kr</SelectItem>
+                          <SelectItem value="PLN">PLN zł</SelectItem>
+                          <SelectItem value="CZK">CZK Kč</SelectItem>
+                          <SelectItem value="HUF">HUF Ft</SelectItem>
+                          <SelectItem value="RON">RON lei</SelectItem>
+                        </SelectContent>
+                      </Select>
 
 
-                  </div>
+                    </div>
 
-                  <div>
-                    <label className="text-sm text-gray-600">
-                      Project Budget
-                    </label>
-                    <Input
-                      value={budget}
-                      onChange={(e) => setBudget(e.target.value)}
-                    />
-                  </div>
-
-                  <div>
-                    <label className="text-sm text-gray-600">
-                      Hours Estimate (In Hours)
-                    </label>
-                    <Input
-                      value={hoursEstimate}
-                      onChange={(e) => setHoursEstimate(e.target.value)}
-                    />
-                  </div>
-                </div>
-
-                <div className="mt-3 flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <label className="inline-flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        checked={allowManualTimeLogs}
-                        onChange={(e) =>
-                          setAllowManualTimeLogs(e.target.checked)
-                        }
+                    <div>
+                      <label className="text-sm text-gray-600">
+                        Project Budget
+                      </label>
+                      <Input
+                        value={budget}
+                        onChange={(e) => setBudget(e.target.value)}
                       />
-                      <span className="text-sm text-gray-600">
-                        Allow manual time logs
-                      </span>
-                    </label>
+                    </div>
+
+                    <div>
+                      <label className="text-sm text-gray-600">
+                        Hours Estimate (In Hours)
+                      </label>
+                      <Input
+                        value={hoursEstimate}
+                        onChange={(e) => setHoursEstimate(e.target.value)}
+                      />
+                    </div>
                   </div>
 
-                  <div className="flex items-center gap-2">
-                    <label className="text-sm text-gray-600 mr-2">
-                      Added by*
-                    </label>
-                    <Select
-                      value={addedBy}
-                      onValueChange={(v) => setAddedBy(v)}
-                    >
-                      <SelectTrigger className="w-44">
-                        <SelectValue placeholder="You" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="you">You</SelectItem>
-                        {/* optionally fill with members from projects if available */}
-                      </SelectContent>
-                    </Select>
+                  <div className="mt-3 flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <label className="inline-flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          checked={allowManualTimeLogs}
+                          onChange={(e) =>
+                            setAllowManualTimeLogs(e.target.checked)
+                          }
+                        />
+                        <span className="text-sm text-gray-600">
+                          Allow manual time logs
+                        </span>
+                      </label>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <label className="text-sm text-gray-600 mr-2">
+                        Added by*
+                      </label>
+                      <Select
+                        value={addedBy}
+                        onValueChange={(v) => setAddedBy(v)}
+                      >
+                        <SelectTrigger className="w-44">
+                          <SelectValue placeholder="You" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="you">You</SelectItem>
+                          {/* optionally fill with members from projects if available */}
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* ACTIONS */}
-              <div className="flex items-center justify-end gap-3">
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setShowAddModal(false);
-                    resetAddForm();
-                  }}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  className="bg-blue-600 text-white"
-                  onClick={createProject}
-                  disabled={submitting}
-                >
-                  {submitting ? "Saving..." : "Save"}
-                </Button>
+                {/* ACTIONS */}
+                <div className="flex items-center justify-end gap-3">
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setShowAddModal(false);
+                      resetAddForm();
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    className="bg-blue-600 text-white"
+                    onClick={createProject}
+                    disabled={submitting}
+                  >
+                    {submitting ? "Saving..." : "Save"}
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
 
 
-</main>
+    </main>
 
   );
 }
