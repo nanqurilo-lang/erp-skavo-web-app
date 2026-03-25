@@ -240,7 +240,6 @@ if (initialLoading) {
         {success && <div className="mb-4 text-green-600 text-sm font-semibold">{success}</div>}
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Basic Info */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Name *</label>
             <input
@@ -264,7 +263,7 @@ if (initialLoading) {
             />
           </div>
 
-          <div>
+          {/* <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Pipeline *</label>
             <input
               type="text"
@@ -274,7 +273,27 @@ if (initialLoading) {
               required
               className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-600"
             />
-          </div>
+          </div> */}
+
+<div>
+  <label className="block text-sm font-medium text-gray-700 mb-1">Pipeline *</label>
+  <select
+    name="pipeline"
+    value={formData.pipeline}
+    onChange={handleInputChange}
+    required
+    className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-600 bg-white"
+  >
+    <option value="">--</option>
+    <option value="Default Pipeline">Default Pipeline</option>
+    <option value="Sales Pipeline">Sales Pipeline</option>
+    <option value="Enterprise Pipeline">Enterprise Pipeline</option>
+    <option value="Client Success Pipeline">Client Success Pipeline</option>
+    <option value="Finance Pipeline">Finance Pipeline</option>
+    <option value="Marketing Pipeline">Marketing Pipeline</option>
+  </select>
+</div>
+
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Deal Stage *</label>
