@@ -97,7 +97,7 @@ type Note = {
 
 const BASE = `${process.env.NEXT_PUBLIC_MAIN}`; // change if needed
 const CREATE_URL = `${BASE}/deals`; // adjust if your create endpoint differs
-const EMP_API = `${BASE}/employee/all?page=0&size=20`;
+const EMP_API = `${BASE}/employee/all?page=0&size=2000`;
 const CAT_API = `${BASE}/deals/dealCategory`;
 
 const fetcher = async (url: string) => {

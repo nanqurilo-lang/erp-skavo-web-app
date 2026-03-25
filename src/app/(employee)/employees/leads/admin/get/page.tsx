@@ -781,7 +781,7 @@ export default function LeadsAdminPage() {
     revalidateOnFocus: true,
   });
 
-  const { data: employeesData } = useSWR<{ content?: Employee[] }>(`${BASE}/employee/all?page=0&size=20`, fetcher, {
+  const { data: employeesData } = useSWR<{ content?: Employee[] }>(`${BASE}/employee/all?page=0&size=2000`, fetcher, {
     revalidateOnFocus: false,
   });
   const employees = (employeesData && (employeesData as any).content) ? (employeesData as any).content : (employeesData as unknown as Employee[]) || [];

@@ -354,7 +354,7 @@ export default function DealTabs({ dealId, deal, onDealUpdated }: DealTabsProps)
                 }
             }
 
-            const empRes = await fetch(`${BASE_URL}/employee/all?page=0&size=200`, {
+            const empRes = await fetch(`${BASE_URL}/employee/all?page=0&size=2000`, {
                 headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
             });
 

@@ -521,7 +521,7 @@ export default function EditProjectPage() {
 
     const fetchEmployees = async () => {
       try {
-        const res = await fetch(`${GATEWAY}/employee/all?page=0&size=20`, { headers: { Authorization: `Bearer ${token}` } })
+        const res = await fetch(`${GATEWAY}/employee/all?page=0&size=2000`, { headers: { Authorization: `Bearer ${token}` } })
         let data: any = await res.json().catch(() => null)
         // server returns object with content array
         if (typeof data === "string") {
