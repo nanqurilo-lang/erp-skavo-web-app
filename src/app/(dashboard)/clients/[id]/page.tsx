@@ -1881,7 +1881,6 @@ progressTimeout.current = setTimeout(() => {
 
                                                 <SelectContent className="z-[99999] pointer-events-auto">
                                                     <SelectItem value="USD">USD $ (US Dollar)</SelectItem>
-                                                    <SelectItem value="INR">INR ₹ (Indian Rupee)</SelectItem>
                                                     <SelectItem value="EUR">EUR € (Euro)</SelectItem>
                                                     <SelectItem value="GBP">GBP £ (British Pound)</SelectItem>
                                                     <SelectItem value="CHF">CHF ₣ (Swiss Franc)</SelectItem>
