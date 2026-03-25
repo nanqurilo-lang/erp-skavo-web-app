@@ -48,12 +48,12 @@ export default function DuplicateInvoiceModal({
 
   return (
     // <div className="fixed inset-0 z-50 flex items-start justify-center overflow-auto p-6">
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
 
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
 
       {/* <div className="relative z-10 w-full max-w-4xl bg-white rounded-lg shadow-lg"> */}
-          <div className="relative z-10 w-full max-w-3xl bg-white rounded-lg shadow-xl flex flex-col max-h-[90vh]">
+      <div className="relative z-10 w-full max-w-3xl bg-white rounded-lg shadow-xl flex flex-col max-h-[90vh]">
 
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b shrink-0">
@@ -110,9 +110,25 @@ export default function DuplicateInvoiceModal({
                     setForm((p) => ({ ...p, currency: e.target.value }))
                   }
                 >
-                  <option value="USD">USD $</option>
+                  {/* <option value="USD">USD $</option>
                   <option value="INR">INR ₹</option>
-                  <option value="EUR">EUR €</option>
+                  <option value="EUR">EUR €</option> */}
+
+
+
+                  <option value="USD">USD $ (US Dollar)</option>
+                  <option value="EUR">EUR € (Euro)</option>
+                  <option value="GBP">GBP £ (British Pound)</option>
+                  <option value="CHF">CHF ₣ (Swiss Franc)</option>
+                  <option value="SEK">SEK kr</option>
+                  <option value="NOK">NOK kr</option>
+                  <option value="DKK">DKK kr</option>
+                  <option value="PLN">PLN zł</option>
+                  <option value="CZK">CZK Kč</option>
+                  <option value="HUF">HUF Ft</option>
+                  <option value="RON">RON lei</option>
+
+
                 </select>
               </div>
             </div>

@@ -237,9 +237,24 @@ export default function ClientAddPaymentModal({
                     value={currency}
                     onChange={(e) => setCurrency(e.target.value)}
                   >
-                    <option value="USD">USD $</option>
+                    {/* <option value="USD">USD $</option>
                     <option value="INR">INR ₹</option>
-                    <option value="EUR">EUR €</option>
+                    <option value="EUR">EUR €</option> */}
+
+
+                                                    <option value="USD">USD $ (US Dollar)</option>
+                                                    <option value="EUR">EUR € (Euro)</option>
+                                                    <option value="GBP">GBP £ (British Pound)</option>
+                                                    <option value="CHF">CHF ₣ (Swiss Franc)</option>
+                                                    <option value="SEK">SEK kr</option>
+                                                    <option value="NOK">NOK kr</option>
+                                                    <option value="DKK">DKK kr</option>
+                                                    <option value="PLN">PLN zł</option>
+                                                    <option value="CZK">CZK Kč</option>
+                                                    <option value="HUF">HUF Ft</option>
+                                                    <option value="RON">RON lei</option>
+
+
                   </select>
                 </div>
 

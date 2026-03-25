@@ -76,7 +76,7 @@ export default function ClientPaymentsTable({
   // Action dropdown + View/Edit modal state
   const [openActionId, setOpenActionId] = useState<number | string | null>(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
-  const [nan,setNan] =useState(false);
+  const [nan, setNan] = useState(false);
   const [activePayment, setActivePayment] = useState<Payment | null>(null);
   const [detailsMode, setDetailsMode] = useState<"view" | "edit">("view");
 
@@ -85,8 +85,8 @@ export default function ClientPaymentsTable({
   // Add Payment modal state + form fields
   const [showAddModal, setShowAddModal] = useState(false);
   const [projectField, setProjectField] = useState<string>(() =>
-    projectIdk ? String(projectIdk) 
-    :"pre filled");
+    projectIdk ? String(projectIdk)
+      : "pre filled");
   const [clientField, setClientField] = useState<string>(() =>
     clientId ? String(clientId) : "pre filled"
   );
@@ -393,20 +393,20 @@ export default function ClientPaymentsTable({
 
 
 
-{loading ? (
-  <Skeleton height={35} width={220} />
-) : (
-  <input
-    type="search"
-    placeholder="Search"
-    value={query}
-    onChange={(e) => {
-      setQuery(e.target.value);
-      if (onSearch) onSearch(e.target.value);
-    }}
-    className="border rounded px-3 py-2 text-sm w-56"
-  />
-)}
+              {loading ? (
+                <Skeleton height={35} width={220} />
+              ) : (
+                <input
+                  type="search"
+                  placeholder="Search"
+                  value={query}
+                  onChange={(e) => {
+                    setQuery(e.target.value);
+                    if (onSearch) onSearch(e.target.value);
+                  }}
+                  className="border rounded px-3 py-2 text-sm w-56"
+                />
+              )}
 
 
 
@@ -419,221 +419,221 @@ export default function ClientPaymentsTable({
         {/* {loading ? (
           <div className="py-6 text-center text-gray-600">Loading payments...</div>
         )  */}
-        
+
         {loading ? (
-  <div className="rounded-lg border overflow-hidden">
-    
-    {/* Header Skeleton */}
-    <div className="bg-[#e8f3ff] px-4 py-3 flex">
-      <div className="w-1/12"><Skeleton width={40} /></div>
-      <div className="w-2/12"><Skeleton width={100} /></div>
-      <div className="w-1/12"><Skeleton width={60} /></div>
-      <div className="w-2/12"><Skeleton width={120} /></div>
-      <div className="w-1/12"><Skeleton width={70} /></div>
-      <div className="w-1/12"><Skeleton width={80} /></div>
-      <div className="w-1/12"><Skeleton width={90} /></div>
-      <div className="w-1/12"><Skeleton width={100} /></div>
-      <div className="w-1/12"><Skeleton width={80} /></div>
-      <div className="w-10"><Skeleton width={30} /></div>
-    </div>
-
-    {/* Rows Skeleton */}
-    <div className="px-4 py-4 space-y-3">
-      {[...Array(5)].map((_, i) => (
-        <div key={i} className="flex items-center rounded-md border px-4 py-3">
-          
-          <div className="w-1/12">
-            <Skeleton width={30} />
-          </div>
-
-          <div className="w-2/12">
-            <Skeleton width={120} />
-          </div>
-
-          <div className="w-1/12">
-            <Skeleton width={80} />
-          </div>
-
-          <div className="w-2/12 flex items-center gap-3">
-            <Skeleton circle width={28} height={28} />
-            <div className="flex flex-col gap-1">
-              <Skeleton width={100} />
-              <Skeleton width={70} />
-            </div>
-          </div>
-
-          <div className="w-1/12">
-            <Skeleton width={70} />
-          </div>
-
-          <div className="w-1/12">
-            <Skeleton width={90} />
-          </div>
-
-          <div className="w-1/12">
-            <Skeleton width={100} />
-          </div>
-
-          <div className="w-1/12">
-            <Skeleton width={110} />
-          </div>
-
-          <div className="w-1/12">
-            <Skeleton width={80} />
-          </div>
-
-          <div className="w-10 flex justify-center">
-            <Skeleton circle width={30} height={30} />
-          </div>
-
-        </div>
-      ))}
-    </div>
-  </div>
-)
-        
-        
-        
-        : error ? (
-          <div className="py-6 text-center text-red-600">{error}</div>
-        ) : (
           <div className="rounded-lg border overflow-hidden">
-            {/* header */}
-            <div className="bg-[#e8f3ff] px-4 py-3 flex text-sm text-gray-700 font-medium">
-              <div className="w-1/12">Code</div>
-              <div className="w-2/12">Project</div>
-              <div className="w-1/12">Invoice</div>
-              <div className="w-2/12">Client</div>
-              <div className="w-1/12">Order#</div>
-              <div className="w-1/12">Amount</div>
-              <div className="w-1/12">Paid On</div>
-              <div className="w-1/12">Payment Gateway</div>
-              <div className="w-1/12">Status</div>
-              <div className="w-10 text-center">Action</div>
+
+            {/* Header Skeleton */}
+            <div className="bg-[#e8f3ff] px-4 py-3 flex">
+              <div className="w-1/12"><Skeleton width={40} /></div>
+              <div className="w-2/12"><Skeleton width={100} /></div>
+              <div className="w-1/12"><Skeleton width={60} /></div>
+              <div className="w-2/12"><Skeleton width={120} /></div>
+              <div className="w-1/12"><Skeleton width={70} /></div>
+              <div className="w-1/12"><Skeleton width={80} /></div>
+              <div className="w-1/12"><Skeleton width={90} /></div>
+              <div className="w-1/12"><Skeleton width={100} /></div>
+              <div className="w-1/12"><Skeleton width={80} /></div>
+              <div className="w-10"><Skeleton width={30} /></div>
             </div>
 
-            <div className="px-4 py-4">
-              {visible.length === 0 ? (
-                <div className="text-sm text-gray-500">No payments to display.</div>
-              ) : (
-                <div className="space-y-3">
-                  {visible.map((p) => (
-                    <div
-                      key={p.id}
-                      className="flex items-center rounded-md border px-4 py-3 bg-white"
-                      style={{ boxShadow: "0 0 0 1px rgba(0,0,0,0.02) inset" }}
-                    >
-                      <div className="w-1/12 text-sm">{p.code ?? "--"}</div>
+            {/* Rows Skeleton */}
+            <div className="px-4 py-4 space-y-3">
+              {[...Array(5)].map((_, i) => (
+                <div key={i} className="flex items-center rounded-md border px-4 py-3">
 
-                      <div className="w-2/12 text-sm">{p.project ?? "--"}</div>
+                  <div className="w-1/12">
+                    <Skeleton width={30} />
+                  </div>
 
-                      <div className="w-1/12 text-sm">{p.invoice ?? "--"}</div>
+                  <div className="w-2/12">
+                    <Skeleton width={120} />
+                  </div>
 
-                      <div className="w-2/12 flex items-center gap-3 text-sm">
-                        <div className="h-7 w-7 rounded-full overflow-hidden bg-gray-100 relative flex-shrink-0">
-                          {p.client?.profilePictureUrl ? (
-                            <Image
-                              src={p.client.profilePictureUrl}
-                              alt={p.client?.name ?? "client"}
-                              fill
-                              sizes="28px"
-                              style={{ objectFit: "cover" }}
-                              unoptimized
-                            />
+                  <div className="w-1/12">
+                    <Skeleton width={80} />
+                  </div>
+
+                  <div className="w-2/12 flex items-center gap-3">
+                    <Skeleton circle width={28} height={28} />
+                    <div className="flex flex-col gap-1">
+                      <Skeleton width={100} />
+                      <Skeleton width={70} />
+                    </div>
+                  </div>
+
+                  <div className="w-1/12">
+                    <Skeleton width={70} />
+                  </div>
+
+                  <div className="w-1/12">
+                    <Skeleton width={90} />
+                  </div>
+
+                  <div className="w-1/12">
+                    <Skeleton width={100} />
+                  </div>
+
+                  <div className="w-1/12">
+                    <Skeleton width={110} />
+                  </div>
+
+                  <div className="w-1/12">
+                    <Skeleton width={80} />
+                  </div>
+
+                  <div className="w-10 flex justify-center">
+                    <Skeleton circle width={30} height={30} />
+                  </div>
+
+                </div>
+              ))}
+            </div>
+          </div>
+        )
+
+
+
+          : error ? (
+            <div className="py-6 text-center text-red-600">{error}</div>
+          ) : (
+            <div className="rounded-lg border overflow-hidden">
+              {/* header */}
+              <div className="bg-[#e8f3ff] px-4 py-3 flex text-sm text-gray-700 font-medium">
+                <div className="w-1/12">Code</div>
+                <div className="w-2/12">Project</div>
+                <div className="w-1/12">Invoice</div>
+                <div className="w-2/12">Client</div>
+                <div className="w-1/12">Order#</div>
+                <div className="w-1/12">Amount</div>
+                <div className="w-1/12">Paid On</div>
+                <div className="w-1/12">Payment Gateway</div>
+                <div className="w-1/12">Status</div>
+                <div className="w-10 text-center">Action</div>
+              </div>
+
+              <div className="px-4 py-4">
+                {visible.length === 0 ? (
+                  <div className="text-sm text-gray-500">No payments to display.</div>
+                ) : (
+                  <div className="space-y-3">
+                    {visible.map((p) => (
+                      <div
+                        key={p.id}
+                        className="flex items-center rounded-md border px-4 py-3 bg-white"
+                        style={{ boxShadow: "0 0 0 1px rgba(0,0,0,0.02) inset" }}
+                      >
+                        <div className="w-1/12 text-sm">{p.code ?? "--"}</div>
+
+                        <div className="w-2/12 text-sm">{p.project ?? "--"}</div>
+
+                        <div className="w-1/12 text-sm">{p.invoice ?? "--"}</div>
+
+                        <div className="w-2/12 flex items-center gap-3 text-sm">
+                          <div className="h-7 w-7 rounded-full overflow-hidden bg-gray-100 relative flex-shrink-0">
+                            {p.client?.profilePictureUrl ? (
+                              <Image
+                                src={p.client.profilePictureUrl}
+                                alt={p.client?.name ?? "client"}
+                                fill
+                                sizes="28px"
+                                style={{ objectFit: "cover" }}
+                                unoptimized
+                              />
+                            ) : (
+                              <div className="flex items-center justify-center h-full text-xs text-gray-500">
+                                {p.client?.name?.charAt(0) ?? "U"}
+                              </div>
+                            )}
+                          </div>
+
+                          <div className="flex flex-col">
+                            <span className="text-sm font-medium">{p.client?.name ?? "--"}</span>
+                            <span className="text-xs text-gray-500">{p.client?.companyName ?? ""}</span>
+                          </div>
+                        </div>
+
+                        <div className="w-1/12 text-sm">{p.orderNumber ?? "--"}</div>
+
+                        <div className="w-1/12 text-sm">{formatAmount(p.amount, p.currency)}</div>
+
+                        <div className="w-1/12 text-sm">{formatDate(p.paidOn)}</div>
+
+                        <div className="w-1/12 text-sm">{p.paymentGateway ?? "--"}</div>
+
+                        <div className="w-1/12 text-sm">
+                          {p.status === "Complete" ? (
+                            <div className="inline-flex items-center gap-2">
+                              <span className="h-2 w-2 rounded-full bg-emerald-600 block" />
+                              <span>Complete</span>
+                            </div>
+                          ) : p.status === "Pending" ? (
+                            <div className="inline-flex items-center gap-2">
+                              <span className="h-2 w-2 rounded-full bg-yellow-500 block" />
+                              <span>Pending</span>
+                            </div>
                           ) : (
-                            <div className="flex items-center justify-center h-full text-xs text-gray-500">
-                              {p.client?.name?.charAt(0) ?? "U"}
+                            <div className="inline-flex items-center gap-2">
+                              <span className="h-2 w-2 rounded-full bg-red-500 block" />
+                              <span>{p.status ?? "--"}</span>
                             </div>
                           )}
                         </div>
 
-                        <div className="flex flex-col">
-                          <span className="text-sm font-medium">{p.client?.name ?? "--"}</span>
-                          <span className="text-xs text-gray-500">{p.client?.companyName ?? ""}</span>
+                        <div className="w-10 text-center relative">
+                          <button
+                            onClick={() =>
+                              setOpenActionId(openActionId === p.id ? null : p.id)
+                            }
+                            className="p-2 rounded hover:bg-gray-100 inline-flex items-center justify-center"
+                            title="Actions"
+                          >
+                            <MoreHorizontal size={16} />
+                          </button>
+
+                          {openActionId === p.id && (
+                            <div className="absolute right-0 top-9 bg-white border rounded-md shadow-lg w-32 z-20">
+                              <button
+                                onClick={() => {
+                                  setActivePayment(p);
+                                  setDetailsMode("view");
+                                  setShowDetailsModal(true);
+                                  setOpenActionId(null);
+                                }}
+                                className="w-full px-3 py-2 text-left text-sm hover:bg-gray-100"
+                              >
+                                View
+                              </button>
+
+                              <button
+                                onClick={() => {
+                                  setActivePayment(p);
+                                  setDetailsMode("edit"); // future use
+                                  setNan(true);
+                                  setOpenActionId(null);
+                                }}
+                                className="w-full px-3 py-2 text-left text-sm hover:bg-gray-100"
+                              >
+                                Edit
+                              </button>
+                            </div>
+                          )}
                         </div>
+
+
                       </div>
-
-                      <div className="w-1/12 text-sm">{p.orderNumber ?? "--"}</div>
-
-                      <div className="w-1/12 text-sm">{formatAmount(p.amount, p.currency)}</div>
-
-                      <div className="w-1/12 text-sm">{formatDate(p.paidOn)}</div>
-
-                      <div className="w-1/12 text-sm">{p.paymentGateway ?? "--"}</div>
-
-                      <div className="w-1/12 text-sm">
-                        {p.status === "Complete" ? (
-                          <div className="inline-flex items-center gap-2">
-                            <span className="h-2 w-2 rounded-full bg-emerald-600 block" />
-                            <span>Complete</span>
-                          </div>
-                        ) : p.status === "Pending" ? (
-                          <div className="inline-flex items-center gap-2">
-                            <span className="h-2 w-2 rounded-full bg-yellow-500 block" />
-                            <span>Pending</span>
-                          </div>
-                        ) : (
-                          <div className="inline-flex items-center gap-2">
-                            <span className="h-2 w-2 rounded-full bg-red-500 block" />
-                            <span>{p.status ?? "--"}</span>
-                          </div>
-                        )}
-                      </div>
-
-                      <div className="w-10 text-center relative">
-                        <button
-                          onClick={() =>
-                            setOpenActionId(openActionId === p.id ? null : p.id)
-                          }
-                          className="p-2 rounded hover:bg-gray-100 inline-flex items-center justify-center"
-                          title="Actions"
-                        >
-                          <MoreHorizontal size={16} />
-                        </button>
-
-                        {openActionId === p.id && (
-                          <div className="absolute right-0 top-9 bg-white border rounded-md shadow-lg w-32 z-20">
-                            <button
-                              onClick={() => {
-                                setActivePayment(p);
-                                setDetailsMode("view");
-                                setShowDetailsModal(true);
-                                setOpenActionId(null);
-                              }}
-                              className="w-full px-3 py-2 text-left text-sm hover:bg-gray-100"
-                            >
-                              View
-                            </button>
-
-                            <button
-                              onClick={() => {
-                                setActivePayment(p);
-                                setDetailsMode("edit"); // future use
-                                setNan(true);
-                                setOpenActionId(null);
-                              }}
-                              className="w-full px-3 py-2 text-left text-sm hover:bg-gray-100"
-                            >
-                              Edit
-                            </button>
-                          </div>
-                        )}
-                      </div>
-
-
-                    </div>
-                  ))}
-                </div>
-              )}
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        )}
+          )}
       </div>
 
       {/* Add Payment Modal (UI exact like screenshot) */}
       {showAddModal && (
         // <div className="fixed inset-0 z-[10000] flex items-start justify-center pt-8 px-4 overflow-y-auto">
-<div className="fixed inset-0 z-[10000] flex justify-end">
+        <div className="fixed inset-0 z-[10000] flex justify-end">
 
           <div
             className="fixed inset-0 bg-black/40"
@@ -701,9 +701,24 @@ export default function ClientPaymentsTable({
                       onChange={(e) => setCurrencyField(e.target.value)}
                       className="w-full border rounded px-3 py-2"
                     >
-                      <option value="USD">USD $</option>
+                      {/* <option value="USD">USD $</option>
                       <option value="USD">USD ₹</option>
-                      <option value="EUR">EUR €</option>
+                      <option value="EUR">EUR €</option> */}
+
+
+                      <option value="USD">USD $ (US Dollar)</option>
+                      <option value="EUR">EUR € (Euro)</option>
+                      <option value="GBP">GBP £ (British Pound)</option>
+                      <option value="CHF">CHF ₣ (Swiss Franc)</option>
+                      <option value="SEK">SEK kr</option>
+                      <option value="NOK">NOK kr</option>
+                      <option value="DKK">DKK kr</option>
+                      <option value="PLN">PLN zł</option>
+                      <option value="CZK">CZK Kč</option>
+                      <option value="HUF">HUF Ft</option>
+                      <option value="RON">RON lei</option>
+
+
                     </select>
                   </div>
 
@@ -802,7 +817,7 @@ export default function ClientPaymentsTable({
 
 
 
- {nan && (
+      {nan && (
         // <div className="fixed inset-0 z-[10000] flex items-start justify-center pt-8 px-4 overflow-y-auto">
         <div className="fixed inset-0 z-[10000] flex justify-end">
           <div
@@ -810,13 +825,13 @@ export default function ClientPaymentsTable({
             onClick={() => setNan(false)}
           />
           {/* <div className="relative w-full max-w-4xl bg-white rounded-xl shadow-2xl overflow-y-auto z-10"> */}
-          
+
 
           <div className="relative w-[83%] h-full bg-white shadow-xl flex flex-col overflow-y-auto z-10">
             <div className="flex items-center justify-between p-4 border-b">
               <h3 className="text-lg font-semibold">Edit Payment Details</h3>
               <button
-                onClick={() =>  setNan(false)}
+                onClick={() => setNan(false)}
                 className="p-2 rounded hover:bg-gray-100"
                 aria-label="Close"
               >
@@ -873,9 +888,24 @@ export default function ClientPaymentsTable({
                       onChange={(e) => setCurrencyField(e.target.value)}
                       className="w-full border rounded px-3 py-2"
                     >
-                      <option value="USD">USD $</option>
+                      {/* <option value="USD">USD $</option>
                       <option value="USD">USD ₹</option>
-                      <option value="EUR">EUR €</option>
+                      <option value="EUR">EUR €</option> */}
+
+
+                      <option value="USD">USD $ (US Dollar)</option>
+                      <option value="EUR">EUR € (Euro)</option>
+                      <option value="GBP">GBP £ (British Pound)</option>
+                      <option value="CHF">CHF ₣ (Swiss Franc)</option>
+                      <option value="SEK">SEK kr</option>
+                      <option value="NOK">NOK kr</option>
+                      <option value="DKK">DKK kr</option>
+                      <option value="PLN">PLN zł</option>
+                      <option value="CZK">CZK Kč</option>
+                      <option value="HUF">HUF Ft</option>
+                      <option value="RON">RON lei</option>
+
+
                     </select>
                   </div>
 

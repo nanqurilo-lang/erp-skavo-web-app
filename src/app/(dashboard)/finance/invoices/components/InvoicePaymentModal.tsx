@@ -100,7 +100,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { X, Trash2 } from "lucide-react";
 
-const BASE_URL = process.env.NEXT_PUBLIC_MAIN ||  `${process.env.NEXT_PUBLIC_MAIN}`;
+const BASE_URL = process.env.NEXT_PUBLIC_MAIN || `${process.env.NEXT_PUBLIC_MAIN}`;
 
 // export default function AddPaymentModal({
 //     open,
@@ -117,31 +117,28 @@ const BASE_URL = process.env.NEXT_PUBLIC_MAIN ||  `${process.env.NEXT_PUBLIC_MAI
 
 
 export default function InvoicePaymentModal({
-  open,
-  onClose,
-  projectId,
-  clientId,
-  invoiceNumber,
-  onSaved,
+    open,
+    onClose,
+    projectId,
+    clientId,
+    invoiceNumber,
+    onSaved,
 }: {
-  open: boolean;
-  onClose: () => void;
-  projectId?: string | number | null;
-  clientId?: string | number | null;
-  invoiceNumber?: string | null;
-  onSaved?: () => void;
-})
-
-
- {
+    open: boolean;
+    onClose: () => void;
+    projectId?: string | number | null;
+    clientId?: string | number | null;
+    invoiceNumber?: string | null;
+    onSaved?: () => void;
+}) {
     // const [project, setProject] = useState("pre filled");
     // const [client, setClient] = useState(clientId ? String(clientId) : "pre filled");
     // const [invoice, setInvoice] = useState("pre filled");
 
 
-const [project, setProject] = useState("");
-const [client, setClient] = useState("");
-const [invoice, setInvoice] = useState("");
+    const [project, setProject] = useState("");
+    const [client, setClient] = useState("");
+    const [invoice, setInvoice] = useState("");
 
     const [amount, setAmount] = useState("");
     const [currency, setCurrency] = useState("USD");
@@ -164,13 +161,13 @@ const [invoice, setInvoice] = useState("");
 
 
 
-useEffect(() => {
-  if (open) {
-    setProject(projectId ? String(projectId) : "");
-    setClient(clientId ? String(clientId) : "");
-    setInvoice(invoiceNumber ? String(invoiceNumber) : "");
-  }
-}, [open, projectId, clientId, invoiceNumber]);
+    useEffect(() => {
+        if (open) {
+            setProject(projectId ? String(projectId) : "");
+            setClient(clientId ? String(clientId) : "");
+            setInvoice(invoiceNumber ? String(invoiceNumber) : "");
+        }
+    }, [open, projectId, clientId, invoiceNumber]);
 
 
 
@@ -221,16 +218,16 @@ useEffect(() => {
 
     const savePayment = () => {
         //console.log("PAYMENT SAVED:", {
-            // project,
-            // client,
-            // invoice,
-            // amount,
-            // currency,
-            // transactionId,
-            // paymentGateway,
-            // remark,
-            // receiptName: receiptFile?.name,
-    //    });//
+        // project,
+        // client,
+        // invoice,
+        // amount,
+        // currency,
+        // transactionId,
+        // paymentGateway,
+        // remark,
+        // receiptName: receiptFile?.name,
+        //    });//
 
         onSaved?.();
         onClose();
@@ -269,23 +266,23 @@ useEffect(() => {
                                 <Input label="Invoice *" value={invoice} setValue={setInvoice} /> */}
 
 
-<input
-  className="w-full border rounded px-3 py-2 bg-gray-50"
-  value={project}
-  readOnly
-/>
+                                <input
+                                    className="w-full border rounded px-3 py-2 bg-gray-50"
+                                    value={project}
+                                    readOnly
+                                />
 
-<input
-  className="w-full border rounded px-3 py-2 bg-gray-50"
-  value={client}
-  readOnly
-/>
+                                <input
+                                    className="w-full border rounded px-3 py-2 bg-gray-50"
+                                    value={client}
+                                    readOnly
+                                />
 
-<input
-  className="w-full border rounded px-3 py-2 bg-gray-50"
-  value={invoice}
-  readOnly
-/>
+                                <input
+                                    className="w-full border rounded px-3 py-2 bg-gray-50"
+                                    value={invoice}
+                                    readOnly
+                                />
 
 
 
@@ -299,9 +296,24 @@ useEffect(() => {
                                         value={currency}
                                         onChange={(e) => setCurrency(e.target.value)}
                                     >
-                                        <option value="USD">USD $</option>
+                                        {/* <option value="USD">USD $</option>
                                         <option value="USD">USD ₹</option>
-                                        <option value="EUR">EUR €</option>
+                                        <option value="EUR">EUR €</option> */}
+
+
+                                        <option value="USD">USD $ (US Dollar)</option>
+                                        <option value="EUR">EUR € (Euro)</option>
+                                        <option value="GBP">GBP £ (British Pound)</option>
+                                        <option value="CHF">CHF ₣ (Swiss Franc)</option>
+                                        <option value="SEK">SEK kr</option>
+                                        <option value="NOK">NOK kr</option>
+                                        <option value="DKK">DKK kr</option>
+                                        <option value="PLN">PLN zł</option>
+                                        <option value="CZK">CZK Kč</option>
+                                        <option value="HUF">HUF Ft</option>
+                                        <option value="RON">RON lei</option>
+
+
                                     </select>
                                 </div>
 

@@ -231,28 +231,28 @@ export default function AllProjectsPage() {
     name: c.name,
   }));
 
- 
 
 
-// const clientOptions = clients.map((c) => ({
-//   id: String(c.clientId),
-//   name: c.name,
-// }));
+
+  // const clientOptions = clients.map((c) => ({
+  //   id: String(c.clientId),
+  //   name: c.name,
+  // }));
 
 
-const clientOptions = Array.from(
-  new Map(
-    projects
-      .filter((p) => p.client?.clientId)
-      .map((p) => [
-        p.client!.clientId,
-        {
-          id: String(p.client!.clientId),
-          name: p.client!.name || "Client",
-        },
-      ])
-  ).values()
-);
+  const clientOptions = Array.from(
+    new Map(
+      projects
+        .filter((p) => p.client?.clientId)
+        .map((p) => [
+          p.client!.clientId,
+          {
+            id: String(p.client!.clientId),
+            name: p.client!.name || "Client",
+          },
+        ])
+    ).values()
+  );
 
 
   // departmentOptions from departments state
@@ -576,54 +576,54 @@ const clientOptions = Array.from(
   // );
 
 
-const loadClients = useCallback(async (accessToken?: string | null) => {
-  setClientLoading(true);
+  const loadClients = useCallback(async (accessToken?: string | null) => {
+    setClientLoading(true);
 
-  try {
-    const resolvedToken =
-      accessToken ||
-      token ||
-      (typeof window !== "undefined"
-        ? localStorage.getItem("accessToken")
-        : null);
+    try {
+      const resolvedToken =
+        accessToken ||
+        token ||
+        (typeof window !== "undefined"
+          ? localStorage.getItem("accessToken")
+          : null);
 
-    const res = await fetch(`${MAIN}/api/clients`, {
-      headers: resolvedToken
-        ? { Authorization: `Bearer ${resolvedToken}` }
-        : undefined,
-      cache: "no-store",
-    });
+      const res = await fetch(`${MAIN}/api/clients`, {
+        headers: resolvedToken
+          ? { Authorization: `Bearer ${resolvedToken}` }
+          : undefined,
+        cache: "no-store",
+      });
 
-    if (!res.ok) {
-      console.warn("Failed to load clients:", res.status);
+      if (!res.ok) {
+        console.warn("Failed to load clients:", res.status);
+        setClients([]);
+        return;
+      }
+
+      const data = await res.json();
+
+      console.log("CLIENT API RESPONSE:", data);
+
+      let clientList: ClientItem[] = [];
+
+      if (Array.isArray(data)) {
+        clientList = data;
+      } else if (Array.isArray(data.data)) {
+        clientList = data.data;
+      } else if (Array.isArray(data.clients)) {
+        clientList = data.clients;
+      } else if (Array.isArray(data.content)) {
+        clientList = data.content;
+      }
+
+      setClients(clientList);
+    } catch (err) {
+      console.error("Error loading clients:", err);
       setClients([]);
-      return;
+    } finally {
+      setClientLoading(false);
     }
-
-   const data = await res.json();
-
-console.log("CLIENT API RESPONSE:", data);
-
-let clientList: ClientItem[] = [];
-
-if (Array.isArray(data)) {
-  clientList = data;
-} else if (Array.isArray(data.data)) {
-  clientList = data.data;
-} else if (Array.isArray(data.clients)) {
-  clientList = data.clients;
-} else if (Array.isArray(data.content)) {
-  clientList = data.content;
-}
-
-setClients(clientList);
-  } catch (err) {
-    console.error("Error loading clients:", err);
-    setClients([]);
-  } finally {
-    setClientLoading(false);
-  }
-}, [token]);
+  }, [token]);
 
 
   // DEPARTMENTS loader
@@ -1650,9 +1650,26 @@ setClients(clientList);
                           <SelectValue placeholder="USD" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="USD">USD $</SelectItem>
+                          {/* <SelectItem value="USD">USD $</SelectItem>
                           <SelectItem value="USD">USD ₹</SelectItem>
-                          <SelectItem value="EUR">EUR €</SelectItem>
+                          <SelectItem value="EUR">EUR €</SelectItem> */}
+
+
+
+                          <SelectItem value="USD">USD $ (US Dollar)</SelectItem>
+                          <SelectItem value="EUR">EUR € (Euro)</SelectItem>
+                          <SelectItem value="GBP">GBP £ (British Pound)</SelectItem>
+                          <SelectItem value="CHF">CHF ₣ (Swiss Franc)</SelectItem>
+                          <SelectItem value="SEK">SEK kr</SelectItem>
+                          <SelectItem value="NOK">NOK kr</SelectItem>
+                          <SelectItem value="DKK">DKK kr</SelectItem>
+                          <SelectItem value="PLN">PLN zł</SelectItem>
+                          <SelectItem value="CZK">CZK Kč</SelectItem>
+                          <SelectItem value="HUF">HUF Ft</SelectItem>
+                          <SelectItem value="RON">RON lei</SelectItem>
+
+
+
                         </SelectContent>
                       </Select>
                     </div>
@@ -1827,129 +1844,129 @@ setClients(clientList);
     setCurrentPage(1);
   };
 
-//   const filteredProjects = useMemo(() => {
-//     return projects.filter((p) => {
-//       /* -------- STATUS -------- */
-//       if (statusFilter !== "all") {
-//         if (!p.projectStatus) return false;
-//         if (p.projectStatus !== statusFilter) return false;
-//       }
+  //   const filteredProjects = useMemo(() => {
+  //     return projects.filter((p) => {
+  //       /* -------- STATUS -------- */
+  //       if (statusFilter !== "all") {
+  //         if (!p.projectStatus) return false;
+  //         if (p.projectStatus !== statusFilter) return false;
+  //       }
 
-//  /* -------- PINNED ONLY -------- */
-//     if (showPinnedOnly && !p.pinned) {
-//       return false;
-//     }
+  //  /* -------- PINNED ONLY -------- */
+  //     if (showPinnedOnly && !p.pinned) {
+  //       return false;
+  //     }
 
-//       /* -------- PROGRESS -------- */
-//       if (progressFilter !== "all") {
-//         if (typeof p.progressPercent !== "number") return false;
+  //       /* -------- PROGRESS -------- */
+  //       if (progressFilter !== "all") {
+  //         if (typeof p.progressPercent !== "number") return false;
 
-//         const v = p.progressPercent;
-//         if (progressFilter === "0-33" && !(v >= 0 && v <= 33)) return false;
-//         if (progressFilter === "34-66" && !(v >= 34 && v <= 66)) return false;
-//         if (progressFilter === "67-100" && !(v >= 67 && v <= 100)) return false;
-//       }
+  //         const v = p.progressPercent;
+  //         if (progressFilter === "0-33" && !(v >= 0 && v <= 33)) return false;
+  //         if (progressFilter === "34-66" && !(v >= 34 && v <= 66)) return false;
+  //         if (progressFilter === "67-100" && !(v >= 67 && v <= 100)) return false;
+  //       }
 
-//       /* -------- DURATION (CALENDAR) -------- */
-//       if (durationFrom || durationTo) {
-//         const start = p.startDate ? new Date(p.startDate) : null;
-//         const end = p.deadline ? new Date(p.deadline) : null;
+  //       /* -------- DURATION (CALENDAR) -------- */
+  //       if (durationFrom || durationTo) {
+  //         const start = p.startDate ? new Date(p.startDate) : null;
+  //         const end = p.deadline ? new Date(p.deadline) : null;
 
-//         if (!start || !end) return false;
+  //         if (!start || !end) return false;
 
-//         if (durationFrom) {
-//           const from = new Date(durationFrom);
-//           if (start < from) return false;
-//         }
+  //         if (durationFrom) {
+  //           const from = new Date(durationFrom);
+  //           if (start < from) return false;
+  //         }
 
-//         if (durationTo) {
-//           const to = new Date(durationTo);
-//           if (end > to) return false;
-//         }
-//       }
+  //         if (durationTo) {
+  //           const to = new Date(durationTo);
+  //           if (end > to) return false;
+  //         }
+  //       }
 
-//       return true;
-//     });
-//   }, [projects, statusFilter, progressFilter, durationFrom, durationTo ,showPinnedOnly,
-//   showArchivedOnly,]);
+  //       return true;
+  //     });
+  //   }, [projects, statusFilter, progressFilter, durationFrom, durationTo ,showPinnedOnly,
+  //   showArchivedOnly,]);
 
 
 
-const filteredProjects = useMemo(() => {
-  return projects.filter((p) => {
+  const filteredProjects = useMemo(() => {
+    return projects.filter((p) => {
 
-    /* -------- PROJECT FILTER -------- */
-    if (filterProject !== "all") {
-      if (p.name !== filterProject) return false;
-    }
-
-    /* -------- MEMBER FILTER -------- */
-    if (filterMember !== "all") {
-      const hasMember = (p.assignedEmployees || []).some(
-        (emp) => emp.name === filterMember
-      );
-      if (!hasMember) return false;
-    }
-
-    /* -------- CLIENT FILTER -------- */
-    if (filterClient !== "all") {
-      if (!p.client?.clientId) return false;
-      if (String(p.client.clientId) !== String(filterClient)) return false;
-    }
-
-    /* -------- STATUS -------- */
-    if (statusFilter !== "all") {
-      if (!p.projectStatus) return false;
-      if (p.projectStatus !== statusFilter) return false;
-    }
-
-    /* -------- PINNED -------- */
-    if (showPinnedOnly && !p.pinned) {
-      return false;
-    }
-
-    /* -------- PROGRESS -------- */
-    if (progressFilter !== "all") {
-      if (typeof p.progressPercent !== "number") return false;
-
-      const v = p.progressPercent;
-
-      if (progressFilter === "0-33" && !(v >= 0 && v <= 33)) return false;
-      if (progressFilter === "34-66" && !(v >= 34 && v <= 66)) return false;
-      if (progressFilter === "67-100" && !(v >= 67 && v <= 100)) return false;
-    }
-
-    /* -------- DURATION -------- */
-    if (durationFrom || durationTo) {
-      const start = p.startDate ? new Date(p.startDate) : null;
-      const end = p.deadline ? new Date(p.deadline) : null;
-
-      if (!start || !end) return false;
-
-      if (durationFrom) {
-        const from = new Date(durationFrom);
-        if (start < from) return false;
+      /* -------- PROJECT FILTER -------- */
+      if (filterProject !== "all") {
+        if (p.name !== filterProject) return false;
       }
 
-      if (durationTo) {
-        const to = new Date(durationTo);
-        if (end > to) return false;
+      /* -------- MEMBER FILTER -------- */
+      if (filterMember !== "all") {
+        const hasMember = (p.assignedEmployees || []).some(
+          (emp) => emp.name === filterMember
+        );
+        if (!hasMember) return false;
       }
-    }
 
-    return true;
-  });
-}, [
-  projects,
-  statusFilter,
-  progressFilter,
-  durationFrom,
-  durationTo,
-  showPinnedOnly,
-  filterProject,
-  filterMember,
-  filterClient,
-]);
+      /* -------- CLIENT FILTER -------- */
+      if (filterClient !== "all") {
+        if (!p.client?.clientId) return false;
+        if (String(p.client.clientId) !== String(filterClient)) return false;
+      }
+
+      /* -------- STATUS -------- */
+      if (statusFilter !== "all") {
+        if (!p.projectStatus) return false;
+        if (p.projectStatus !== statusFilter) return false;
+      }
+
+      /* -------- PINNED -------- */
+      if (showPinnedOnly && !p.pinned) {
+        return false;
+      }
+
+      /* -------- PROGRESS -------- */
+      if (progressFilter !== "all") {
+        if (typeof p.progressPercent !== "number") return false;
+
+        const v = p.progressPercent;
+
+        if (progressFilter === "0-33" && !(v >= 0 && v <= 33)) return false;
+        if (progressFilter === "34-66" && !(v >= 34 && v <= 66)) return false;
+        if (progressFilter === "67-100" && !(v >= 67 && v <= 100)) return false;
+      }
+
+      /* -------- DURATION -------- */
+      if (durationFrom || durationTo) {
+        const start = p.startDate ? new Date(p.startDate) : null;
+        const end = p.deadline ? new Date(p.deadline) : null;
+
+        if (!start || !end) return false;
+
+        if (durationFrom) {
+          const from = new Date(durationFrom);
+          if (start < from) return false;
+        }
+
+        if (durationTo) {
+          const to = new Date(durationTo);
+          if (end > to) return false;
+        }
+      }
+
+      return true;
+    });
+  }, [
+    projects,
+    statusFilter,
+    progressFilter,
+    durationFrom,
+    durationTo,
+    showPinnedOnly,
+    filterProject,
+    filterMember,
+    filterClient,
+  ]);
 
 
 
@@ -2073,7 +2090,7 @@ const filteredProjects = useMemo(() => {
               </button>
 
               <div className="relative">
-               
+
               </div>
             </div>
           </div>
@@ -2096,14 +2113,14 @@ const filteredProjects = useMemo(() => {
                 <Eye className="h-4 w-4 mr-2" /> View
               </DropdownMenuItem>
 
-            
+
 
               <DropdownMenuItem onClick={() => handlePin(p.id)}>
                 <Pin className="h-4 w-4 mr-2" /> {p.pinned ? "Unpin" : "Pin"}{" "}
                 Project
               </DropdownMenuItem>
 
-           
+
 
               <DropdownMenuSeparator />
 
@@ -2223,7 +2240,7 @@ const filteredProjects = useMemo(() => {
             </div> */}
 
 
- <div className="ml-auto">
+            <div className="ml-auto">
               <Button
                 type="button"
                 variant="outline"
@@ -2259,7 +2276,7 @@ const filteredProjects = useMemo(() => {
 
               <div className="flex items-center bg-white border rounded-lg overflow-hidden">
                 {/* List */}
-               
+
 
                 {/* Grid / Table (default) */}
                 <button
@@ -2270,7 +2287,7 @@ const filteredProjects = useMemo(() => {
                   <List className="w-4 h-4" />
                 </button>
 
-               
+
 
                 {/* Pin toggle */}
                 <button

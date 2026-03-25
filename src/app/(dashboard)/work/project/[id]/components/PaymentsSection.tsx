@@ -525,73 +525,73 @@ export default function PaymentsSection({
       <div className="bg-white rounded-lg border p-5">
 
 
-{loading ? (
-  <div className="flex items-center justify-between mb-4">
-    <Skeleton width={120} height={25} />
-    <div className="flex gap-3">
-      <Skeleton width={140} height={35} />
-      <Skeleton width={200} height={35} />
-    </div>
-  </div>
-) : (
-
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold">Payments</h3>
-
-          <div className="flex items-center gap-3">
-            <div>
-              <button
-                onClick={handleOpenAdd}
-                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-              >
-                + Add Payment
-              </button>
-            </div>
-
-            <div>
-              <input
-                type="search"
-                placeholder="Search"
-                value={query}
-                onChange={(e) => {
-                  setQuery(e.target.value);
-                  if (onSearch) onSearch(e.target.value);
-                }}
-                className="border rounded px-3 py-2 text-sm w-56"
-              />
+        {loading ? (
+          <div className="flex items-center justify-between mb-4">
+            <Skeleton width={120} height={25} />
+            <div className="flex gap-3">
+              <Skeleton width={140} height={35} />
+              <Skeleton width={200} height={35} />
             </div>
           </div>
-        </div>
+        ) : (
 
-)}
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold">Payments</h3>
+
+            <div className="flex items-center gap-3">
+              <div>
+                <button
+                  onClick={handleOpenAdd}
+                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                >
+                  + Add Payment
+                </button>
+              </div>
+
+              <div>
+                <input
+                  type="search"
+                  placeholder="Search"
+                  value={query}
+                  onChange={(e) => {
+                    setQuery(e.target.value);
+                    if (onSearch) onSearch(e.target.value);
+                  }}
+                  className="border rounded px-3 py-2 text-sm w-56"
+                />
+              </div>
+            </div>
+          </div>
+
+        )}
 
 
         {/* loading / error */}
         {/* {loading ? (
           <div className="py-6 text-center text-gray-600">Loading payments...</div>
         ) */}
-        
-        
-        
+
+
+
         {/* : error ? (
           <div className="py-6 text-center text-red-600">{error}</div>
         ) : ( */}
-          <div className="rounded-lg border overflow-hidden">
-            {/* header */}
-            <div className="bg-[#e8f3ff] px-4 py-3 flex text-sm text-gray-700 font-medium">
-              <div className="w-1/12">Code</div>
-              <div className="w-2/12">Project</div>
-              <div className="w-1/12">Invoice</div>
-              <div className="w-2/12">Client</div>
-              <div className="w-1/12">Order#</div>
-              <div className="w-1/12">Amount</div>
-              <div className="w-1/12">Paid On</div>
-              <div className="w-1/12">Payment Gateway</div>
-              <div className="w-1/12">Status</div>
-              <div className="w-10 text-center">Action</div>
-            </div>
+        <div className="rounded-lg border overflow-hidden">
+          {/* header */}
+          <div className="bg-[#e8f3ff] px-4 py-3 flex text-sm text-gray-700 font-medium">
+            <div className="w-1/12">Code</div>
+            <div className="w-2/12">Project</div>
+            <div className="w-1/12">Invoice</div>
+            <div className="w-2/12">Client</div>
+            <div className="w-1/12">Order#</div>
+            <div className="w-1/12">Amount</div>
+            <div className="w-1/12">Paid On</div>
+            <div className="w-1/12">Payment Gateway</div>
+            <div className="w-1/12">Status</div>
+            <div className="w-10 text-center">Action</div>
+          </div>
 
-            {/* <div className="px-4 py-4">
+          {/* <div className="px-4 py-4">
               {visible.length === 0 ? (
                 <div className="text-sm text-gray-500">No payments to display.</div>
               ) : (
@@ -600,180 +600,180 @@ export default function PaymentsSection({
 
 
 
-<div className="px-4 py-4">
-  {loading ? (
-    <div className="space-y-3">
-      {Array.from({ length: 6 }).map((_, i) => (
-        <div
-          key={i}
-          className="flex items-center border px-4 py-3 rounded-md"
-        >
-          <div className="w-1/12"><Skeleton height={15} /></div>
-          <div className="w-2/12"><Skeleton height={15} /></div>
-          <div className="w-1/12"><Skeleton height={15} /></div>
+          <div className="px-4 py-4">
+            {loading ? (
+              <div className="space-y-3">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="flex items-center border px-4 py-3 rounded-md"
+                  >
+                    <div className="w-1/12"><Skeleton height={15} /></div>
+                    <div className="w-2/12"><Skeleton height={15} /></div>
+                    <div className="w-1/12"><Skeleton height={15} /></div>
 
-          <div className="w-2/12 flex items-center gap-2">
-            <Skeleton circle width={28} height={28} />
-            <Skeleton width={80} height={12} />
-          </div>
+                    <div className="w-2/12 flex items-center gap-2">
+                      <Skeleton circle width={28} height={28} />
+                      <Skeleton width={80} height={12} />
+                    </div>
 
-          <div className="w-1/12"><Skeleton height={15} /></div>
-          <div className="w-1/12"><Skeleton height={15} /></div>
-          <div className="w-1/12"><Skeleton height={15} /></div>
-          <div className="w-1/12"><Skeleton height={15} /></div>
-          <div className="w-1/12"><Skeleton height={15} /></div>
-          <div className="w-10"><Skeleton height={15} /></div>
-        </div>
-      ))}
-    </div>
-  ) : visible.length === 0 ? (
-    <div className="text-sm text-gray-500">No payments to display.</div>
-  ) : (
-    <div className="space-y-3">
-      {visible.map((p) => (
-        // EXISTING ROW CODE (UNCHANGED)
-
-
+                    <div className="w-1/12"><Skeleton height={15} /></div>
+                    <div className="w-1/12"><Skeleton height={15} /></div>
+                    <div className="w-1/12"><Skeleton height={15} /></div>
+                    <div className="w-1/12"><Skeleton height={15} /></div>
+                    <div className="w-1/12"><Skeleton height={15} /></div>
+                    <div className="w-10"><Skeleton height={15} /></div>
+                  </div>
+                ))}
+              </div>
+            ) : visible.length === 0 ? (
+              <div className="text-sm text-gray-500">No payments to display.</div>
+            ) : (
+              <div className="space-y-3">
+                {visible.map((p) => (
+                  // EXISTING ROW CODE (UNCHANGED)
 
 
 
-                    <div
-                      key={p.id}
-                      className="flex items-center rounded-md border px-4 py-3 bg-white"
-                      style={{ boxShadow: "0 0 0 1px rgba(0,0,0,0.02) inset" }}
-                    >
-                      <div className="w-1/12 text-sm">{p.code ?? "--"}</div>
 
-                      <div className="w-2/12 text-sm">{p.project ?? "--"}</div>
 
-                      <div className="w-1/12 text-sm">{p.invoice ?? "--"}</div>
+                  <div
+                    key={p.id}
+                    className="flex items-center rounded-md border px-4 py-3 bg-white"
+                    style={{ boxShadow: "0 0 0 1px rgba(0,0,0,0.02) inset" }}
+                  >
+                    <div className="w-1/12 text-sm">{p.code ?? "--"}</div>
 
-                      <div className="w-2/12 flex items-center gap-3 text-sm">
-                        <div className="h-7 w-7 rounded-full overflow-hidden bg-gray-100 relative flex-shrink-0">
-                          {p.client?.profilePictureUrl ? (
-                            <Image
-                              src={p.client.profilePictureUrl}
-                              alt={p.client?.name ?? "client"}
-                              fill
-                              sizes="28px"
-                              style={{ objectFit: "cover" }}
-                              unoptimized
-                            />
-                          ) : (
-                            <div className="flex items-center justify-center h-full text-xs text-gray-500">
-                              {p.client?.name?.charAt(0) ?? "U"}
-                            </div>
-                          )}
-                        </div>
+                    <div className="w-2/12 text-sm">{p.project ?? "--"}</div>
 
-                        <div className="flex flex-col">
-                          <span className="text-sm font-medium">{p.client?.name ?? "--"}</span>
-                          <span className="text-xs text-gray-500">{p.client?.companyName ?? ""}</span>
-                        </div>
-                      </div>
+                    <div className="w-1/12 text-sm">{p.invoice ?? "--"}</div>
 
-                      <div className="w-1/12 text-sm">{p.orderNumber ?? "--"}</div>
-
-                      <div className="w-1/12 text-sm">{formatAmount(p.amount, p.currency)}</div>
-
-                      <div className="w-1/12 text-sm">{formatDate(p.paidOn)}</div>
-
-                      <div className="w-1/12 text-sm">{p.paymentGateway ?? "--"}</div>
-
-                      <div className="w-1/12 text-sm">
-                        {p.status === "Complete" ? (
-                          <div className="inline-flex items-center gap-2">
-                            <span className="h-2 w-2 rounded-full bg-emerald-600 block" />
-                            <span>Complete</span>
-                          </div>
-                        ) : p.status === "Pending" ? (
-                          <div className="inline-flex items-center gap-2">
-                            <span className="h-2 w-2 rounded-full bg-yellow-500 block" />
-                            <span>Pending</span>
-                          </div>
+                    <div className="w-2/12 flex items-center gap-3 text-sm">
+                      <div className="h-7 w-7 rounded-full overflow-hidden bg-gray-100 relative flex-shrink-0">
+                        {p.client?.profilePictureUrl ? (
+                          <Image
+                            src={p.client.profilePictureUrl}
+                            alt={p.client?.name ?? "client"}
+                            fill
+                            sizes="28px"
+                            style={{ objectFit: "cover" }}
+                            unoptimized
+                          />
                         ) : (
-                          <div className="inline-flex items-center gap-2">
-                            <span className="h-2 w-2 rounded-full bg-red-500 block" />
-                            <span>{p.status ?? "--"}</span>
+                          <div className="flex items-center justify-center h-full text-xs text-gray-500">
+                            {p.client?.name?.charAt(0) ?? "U"}
                           </div>
                         )}
                       </div>
 
-                      <div className="w-10 text-center">
+                      <div className="flex flex-col">
+                        <span className="text-sm font-medium">{p.client?.name ?? "--"}</span>
+                        <span className="text-xs text-gray-500">{p.client?.companyName ?? ""}</span>
+                      </div>
+                    </div>
 
-                        <div className="relative">
-                          <button
+                    <div className="w-1/12 text-sm">{p.orderNumber ?? "--"}</div>
 
-                            onClick={(e) => {
-                              if (activeMenu === p.id) {
-                                setActiveMenu(null);
-                                setMenuPosition(null);
-                              } else {
-                                const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-                                setMenuPosition({
-                                  top: rect.bottom + window.scrollY,
-                                  left: rect.right + window.scrollX - 140, // width adjust
-                                });
-                                setActiveMenu(p.id);
-                              }
-                            }}
+                    <div className="w-1/12 text-sm">{formatAmount(p.amount, p.currency)}</div>
 
+                    <div className="w-1/12 text-sm">{formatDate(p.paidOn)}</div>
 
+                    <div className="w-1/12 text-sm">{p.paymentGateway ?? "--"}</div>
 
-                            className="p-2 rounded hover:bg-gray-100"
-                          >
-                            <MoreHorizontal size={16} />
-                          </button>
-
-                          {activeMenu === p.id &&
-                            menuPosition &&
-                            createPortal(
-                              <div
-                                style={{
-                                  position: "absolute",
-                                  top: menuPosition.top,
-                                  left: menuPosition.left,
-                                }}
-                                className="w-36 bg-white border rounded-lg shadow-xl z-[99999]"
-                              >
-                                <button
-                                  onClick={() => {
-                                    setViewPayment(p);
-                                    setActiveMenu(null);
-                                    setMenuPosition(null);
-                                  }}
-                                  className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
-                                >
-                                  View
-                                </button>
-
-                                <button
-                                  onClick={() => {
-                                    setEditPayment(p);
-                                    setActiveMenu(null);
-                                    setMenuPosition(null);
-                                  }}
-                                  className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
-                                >
-                                  Edit
-                                </button>
-                              </div>,
-                              document.body
-                            )}
-
-
-
+                    <div className="w-1/12 text-sm">
+                      {p.status === "Complete" ? (
+                        <div className="inline-flex items-center gap-2">
+                          <span className="h-2 w-2 rounded-full bg-emerald-600 block" />
+                          <span>Complete</span>
                         </div>
+                      ) : p.status === "Pending" ? (
+                        <div className="inline-flex items-center gap-2">
+                          <span className="h-2 w-2 rounded-full bg-yellow-500 block" />
+                          <span>Pending</span>
+                        </div>
+                      ) : (
+                        <div className="inline-flex items-center gap-2">
+                          <span className="h-2 w-2 rounded-full bg-red-500 block" />
+                          <span>{p.status ?? "--"}</span>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="w-10 text-center">
+
+                      <div className="relative">
+                        <button
+
+                          onClick={(e) => {
+                            if (activeMenu === p.id) {
+                              setActiveMenu(null);
+                              setMenuPosition(null);
+                            } else {
+                              const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+                              setMenuPosition({
+                                top: rect.bottom + window.scrollY,
+                                left: rect.right + window.scrollX - 140, // width adjust
+                              });
+                              setActiveMenu(p.id);
+                            }
+                          }}
+
+
+
+                          className="p-2 rounded hover:bg-gray-100"
+                        >
+                          <MoreHorizontal size={16} />
+                        </button>
+
+                        {activeMenu === p.id &&
+                          menuPosition &&
+                          createPortal(
+                            <div
+                              style={{
+                                position: "absolute",
+                                top: menuPosition.top,
+                                left: menuPosition.left,
+                              }}
+                              className="w-36 bg-white border rounded-lg shadow-xl z-[99999]"
+                            >
+                              <button
+                                onClick={() => {
+                                  setViewPayment(p);
+                                  setActiveMenu(null);
+                                  setMenuPosition(null);
+                                }}
+                                className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
+                              >
+                                View
+                              </button>
+
+                              <button
+                                onClick={() => {
+                                  setEditPayment(p);
+                                  setActiveMenu(null);
+                                  setMenuPosition(null);
+                                }}
+                                className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
+                              >
+                                Edit
+                              </button>
+                            </div>,
+                            document.body
+                          )}
 
 
 
                       </div>
+
+
+
                     </div>
-                  ))}
-                </div>
-              )}
-            </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
+        </div>
         {/* )} */}
       </div>
 
@@ -875,9 +875,24 @@ export default function PaymentsSection({
                       onChange={(e) => setCurrencyField(e.target.value)}
                       className="w-full border rounded px-3 py-2"
                     >
-                      <option value="USD">USD $</option>
+                      {/* <option value="USD">USD $</option>
                       <option value="USD">USD ₹</option>
-                      <option value="EUR">EUR €</option>
+                      <option value="EUR">EUR €</option> */}
+
+
+                      <option value="USD">USD $ (US Dollar)</option>
+                      <option value="EUR">EUR € (Euro)</option>
+                      <option value="GBP">GBP £ (British Pound)</option>
+                      <option value="CHF">CHF ₣ (Swiss Franc)</option>
+                      <option value="SEK">SEK kr</option>
+                      <option value="NOK">NOK kr</option>
+                      <option value="DKK">DKK kr</option>
+                      <option value="PLN">PLN zł</option>
+                      <option value="CZK">CZK Kč</option>
+                      <option value="HUF">HUF Ft</option>
+                      <option value="RON">RON lei</option>
+
+
                     </select>
                   </div>
 

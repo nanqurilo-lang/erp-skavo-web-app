@@ -2264,8 +2264,21 @@ export default function AllProjectsPage({ employeeId, }: { employeeId: string })
                                                 <SelectItem value="EUR">EUR € (Euro)</SelectItem>
                                                 <SelectItem value="GBP">GBP £ (British Pound)</SelectItem>
                                                 <SelectItem value="CHF">CHF ₣ (Swiss Franc)</SelectItem>
+                                                <SelectItem value="SEK">SEK kr</SelectItem>
+                                                <SelectItem value="NOK">NOK kr</SelectItem>
+                                                <SelectItem value="DKK">DKK kr</SelectItem>
+                                                <SelectItem value="PLN">PLN zł</SelectItem>
+                                                <SelectItem value="CZK">CZK Kč</SelectItem>
+                                                <SelectItem value="HUF">HUF Ft</SelectItem>
+                                                <SelectItem value="RON">RON lei</SelectItem>
                                             </SelectContent>
                                         </Select>
+
+
+
+
+
+
 
 
                                     </div>

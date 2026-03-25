@@ -37,7 +37,7 @@ type ProjectData = {
   addedBy?: string | null
 }
 
-const GATEWAY =  `${process.env.NEXT_PUBLIC_MAIN}`
+const GATEWAY = `${process.env.NEXT_PUBLIC_MAIN}`
 
 /* -------------------------
    ProjectCategoryModal (unchanged)
@@ -137,7 +137,7 @@ function ProjectCategoryModal({
         try {
           const newId = typeof data === "object" && data?.id ? String(data.id) : String((categories.find((c) => c.name === name) || {}).id || "")
           if (newId) onAdded?.(newId)
-        } catch {}
+        } catch { }
       }
     } catch (err) {
       console.error(err)
@@ -478,7 +478,7 @@ export default function EditProjectPage() {
         if (typeof data === "string") {
           try {
             data = JSON.parse(data)
-          } catch {}
+          } catch { }
         }
         const list = Array.isArray(data) ? data.map((d: any) => ({ id: Number(d.id), name: String(d.name) })) : []
         setCategories(list)
@@ -494,7 +494,7 @@ export default function EditProjectPage() {
         if (typeof data === "string") {
           try {
             data = JSON.parse(data)
-          } catch {}
+          } catch { }
         }
         const list = Array.isArray(data) ? data.map((d: any) => ({ id: Number(d.id), departmentName: d.departmentName })) : []
         setDepartments(list)
@@ -510,7 +510,7 @@ export default function EditProjectPage() {
         if (typeof data === "string") {
           try {
             data = JSON.parse(data)
-          } catch {}
+          } catch { }
         }
         const list = Array.isArray(data) ? data.map((c: any) => ({ id: Number(c.id), name: c.name || c.company?.companyName || `Client ${c.id}` })) : []
         setClients(list)
@@ -527,15 +527,15 @@ export default function EditProjectPage() {
         if (typeof data === "string") {
           try {
             data = JSON.parse(data)
-          } catch {}
+          } catch { }
         }
         const content = data?.content ?? data
         const list = Array.isArray(content)
           ? content.map((e: any) => ({
-              employeeId: e.employeeId,
-              name: e.name || e.employeeId,
-              profilePictureUrl: e.profilePictureUrl || "",
-            }))
+            employeeId: e.employeeId,
+            name: e.name || e.employeeId,
+            profilePictureUrl: e.profilePictureUrl || "",
+          }))
           : []
         setEmployees(list)
       } catch (err) {
@@ -579,18 +579,18 @@ export default function EditProjectPage() {
     // write assignedEmployeeIds from selectedEmployeeIds array (comma-separated)
     fd.set("assignedEmployeeIds", selectedEmployeeIds.join(","))
     // write assignedEmployeeIds from selectedEmployeeIds array
-fd.set("assignedEmployeeIds", selectedEmployeeIds.join(","))
+    fd.set("assignedEmployeeIds", selectedEmployeeIds.join(","))
 
-// 🔥 ADD THIS BLOCK
-const budget = fd.get("projectBudget")
-if (!budget || String(budget).trim() === "") {
-  fd.set("projectBudget", "0")
-}
+    // 🔥 ADD THIS BLOCK
+    const budget = fd.get("projectBudget")
+    if (!budget || String(budget).trim() === "") {
+      fd.set("projectBudget", "0")
+    }
 
-const hours = fd.get("hoursEstimate")
-if (!hours || String(hours).trim() === "") {
-  fd.set("hoursEstimate", "0")
-}
+    const hours = fd.get("hoursEstimate")
+    if (!hours || String(hours).trim() === "") {
+      fd.set("hoursEstimate", "0")
+    }
 
 
 
@@ -846,13 +846,29 @@ if (!hours || String(hours).trim() === "") {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
                   <div>
                     <label className="block text-sm text-gray-700 mb-2">Currency</label>
-                    <Select value={projectData.currency ?? "USD"} onValueChange={() => {}}>
+                    <Select value={projectData.currency ?? "USD"} onValueChange={() => { }}>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="USD $" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="USD">USD $</SelectItem>
-                        <SelectItem value="EUR">EUR €</SelectItem>
+                        {/* <SelectItem value="USD">USD $</SelectItem>
+                        <SelectItem value="EUR">EUR €</SelectItem> */}
+
+
+
+                        <SelectItem value="USD">USD $ (US Dollar)</SelectItem>
+                        <SelectItem value="EUR">EUR € (Euro)</SelectItem>
+                        <SelectItem value="GBP">GBP £ (British Pound)</SelectItem>
+                        <SelectItem value="CHF">CHF ₣ (Swiss Franc)</SelectItem>
+                        <SelectItem value="SEK">SEK kr</SelectItem>
+                        <SelectItem value="NOK">NOK kr</SelectItem>
+                        <SelectItem value="DKK">DKK kr</SelectItem>
+                        <SelectItem value="PLN">PLN zł</SelectItem>
+                        <SelectItem value="CZK">CZK Kč</SelectItem>
+                        <SelectItem value="HUF">HUF Ft</SelectItem>
+                        <SelectItem value="RON">RON lei</SelectItem>
+
+
                       </SelectContent>
                     </Select>
                   </div>
@@ -913,7 +929,7 @@ if (!hours || String(hours).trim() === "") {
           open={showCategoryModal}
           onClose={() => setShowCategoryModal(false)}
           onAdded={(newId) => {
-            ;(async () => {
+            ; (async () => {
               if (!token) return
               try {
                 const res = await fetch(`${GATEWAY}/api/projects/category`, { headers: { Authorization: `Bearer ${token}` } })
@@ -921,7 +937,7 @@ if (!hours || String(hours).trim() === "") {
                 if (typeof data === "string") {
                   try {
                     data = JSON.parse(data)
-                  } catch {}
+                  } catch { }
                 }
                 const list = Array.isArray(data) ? data.map((d: any) => ({ id: Number(d.id), name: String(d.name) })) : []
                 setCategories(list)

@@ -1182,9 +1182,26 @@ export default function AllProjectsPage() {
                       <Select value={ucCurrency} onValueChange={(v) => setUcCurrency(v)}>
                         <SelectTrigger className="w-full"><SelectValue placeholder="USD" /></SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="USD">USD $</SelectItem>
+                          {/* <SelectItem value="USD">USD $</SelectItem>
                           <SelectItem value="USD">USD ₹</SelectItem>
-                          <SelectItem value="EUR">EUR €</SelectItem>
+                          <SelectItem value="EUR">EUR €</SelectItem> */}
+
+
+
+                          <SelectItem value="USD">USD $ (US Dollar)</SelectItem>
+                          <SelectItem value="EUR">EUR € (Euro)</SelectItem>
+                          <SelectItem value="GBP">GBP £ (British Pound)</SelectItem>
+                          <SelectItem value="CHF">CHF ₣ (Swiss Franc)</SelectItem>
+                          <SelectItem value="SEK">SEK kr</SelectItem>
+                          <SelectItem value="NOK">NOK kr</SelectItem>
+                          <SelectItem value="DKK">DKK kr</SelectItem>
+                          <SelectItem value="PLN">PLN zł</SelectItem>
+                          <SelectItem value="CZK">CZK Kč</SelectItem>
+                          <SelectItem value="HUF">HUF Ft</SelectItem>
+                          <SelectItem value="RON">RON lei</SelectItem>
+
+
+
                         </SelectContent>
                       </Select>
                     </div>
@@ -1543,13 +1560,13 @@ export default function AllProjectsPage() {
             <div className="bg-blue-50 px-6 py-3 border-b flex items-center justify-between">
               {/* <h2 className="font-semibold text-gray-900">Projects ({filteredProjects.length})</h2> */}
 
-{loading ? (
-  <Skeleton width={200} height={20} />
-) : (
-  <h2 className="font-semibold text-gray-900">
-    Projects ({filteredProjects.length})
-  </h2>
-)}
+              {loading ? (
+                <Skeleton width={200} height={20} />
+              ) : (
+                <h2 className="font-semibold text-gray-900">
+                  Projects ({filteredProjects.length})
+                </h2>
+              )}
 
 
               <div className="text-sm text-gray-600">{showArchivedOnly ? "Viewing: Archived" : showPinnedOnly ? "Viewing: Pinned" : "All active"}</div>
@@ -1614,37 +1631,37 @@ export default function AllProjectsPage() {
 
 
 
-<TableBody>
-  {loading ? (
-    <>
-      {Array.from({ length: 6 }).map((_, i) => (
-        <TableRow key={i}>
-          <TableCell><Skeleton width={60} /></TableCell>
-          <TableCell><Skeleton width={150} /></TableCell>
-          <TableCell>
-            <div className="flex gap-2">
-              <Skeleton circle width={30} height={30} />
-              <Skeleton circle width={30} height={30} />
-            </div>
-          </TableCell>
-          <TableCell><Skeleton width={100} /></TableCell>
-          <TableCell><Skeleton width={100} /></TableCell>
-          <TableCell><Skeleton width={120} /></TableCell>
-          <TableCell><Skeleton width={120} height={20} /></TableCell>
-          <TableCell><Skeleton width={40} height={30} /></TableCell>
-        </TableRow>
-      ))}
-    </>
-  ) : filteredProjects.length === 0 ? (
-    <TableRow>
-      <TableCell colSpan={8} className="py-8 text-center text-gray-500">
-        No projects found
-      </TableCell>
-    </TableRow>
-  ) : (
-    filteredProjects.map((p) => <ProjectRow key={p.id} p={p} />)
-  )}
-</TableBody>
+                    <TableBody>
+                      {loading ? (
+                        <>
+                          {Array.from({ length: 6 }).map((_, i) => (
+                            <TableRow key={i}>
+                              <TableCell><Skeleton width={60} /></TableCell>
+                              <TableCell><Skeleton width={150} /></TableCell>
+                              <TableCell>
+                                <div className="flex gap-2">
+                                  <Skeleton circle width={30} height={30} />
+                                  <Skeleton circle width={30} height={30} />
+                                </div>
+                              </TableCell>
+                              <TableCell><Skeleton width={100} /></TableCell>
+                              <TableCell><Skeleton width={100} /></TableCell>
+                              <TableCell><Skeleton width={120} /></TableCell>
+                              <TableCell><Skeleton width={120} height={20} /></TableCell>
+                              <TableCell><Skeleton width={40} height={30} /></TableCell>
+                            </TableRow>
+                          ))}
+                        </>
+                      ) : filteredProjects.length === 0 ? (
+                        <TableRow>
+                          <TableCell colSpan={8} className="py-8 text-center text-gray-500">
+                            No projects found
+                          </TableCell>
+                        </TableRow>
+                      ) : (
+                        filteredProjects.map((p) => <ProjectRow key={p.id} p={p} />)
+                      )}
+                    </TableBody>
 
 
 
@@ -1657,22 +1674,22 @@ export default function AllProjectsPage() {
           {/* PAGINATION */}
 
 
-{loading ? (
-  <div className="flex justify-between mt-4">
-    <Skeleton width={150} />
-    <Skeleton width={200} />
-  </div>
-) : (
-
-          <div className="flex items-center justify-between mt-4">
-            <div className="text-sm text-gray-600">Result per page -{filteredProjects.length ? filteredProjects.length : 0}</div>
-            <div className="flex items-center gap-3">
-              <Button variant="outline" size="sm" onClick={() => { setCurrentPage((c) => Math.max(1, c - 1)); }} disabled={currentPage === 1}><ChevronLeft /> Prev</Button>
-              <div className="text-sm text-gray-600">Page {currentPage} of {totalPages}</div>
-              <Button variant="outline" size="sm" onClick={() => { setCurrentPage((c) => Math.min(totalPages, c + 1)); }} disabled={currentPage === totalPages}>Next <ChevronRight /></Button>
+          {loading ? (
+            <div className="flex justify-between mt-4">
+              <Skeleton width={150} />
+              <Skeleton width={200} />
             </div>
-          </div>
-)}
+          ) : (
+
+            <div className="flex items-center justify-between mt-4">
+              <div className="text-sm text-gray-600">Result per page -{filteredProjects.length ? filteredProjects.length : 0}</div>
+              <div className="flex items-center gap-3">
+                <Button variant="outline" size="sm" onClick={() => { setCurrentPage((c) => Math.max(1, c - 1)); }} disabled={currentPage === 1}><ChevronLeft /> Prev</Button>
+                <div className="text-sm text-gray-600">Page {currentPage} of {totalPages}</div>
+                <Button variant="outline" size="sm" onClick={() => { setCurrentPage((c) => Math.min(totalPages, c + 1)); }} disabled={currentPage === totalPages}>Next <ChevronRight /></Button>
+              </div>
+            </div>
+          )}
 
 
         </div>
@@ -1855,9 +1872,26 @@ export default function AllProjectsPage() {
                     <Select value={currency} onValueChange={(v) => setCurrency(v)}>
                       <SelectTrigger className="w-full"><SelectValue placeholder="USD" /></SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="USD">USD $</SelectItem>
+                        {/* <SelectItem value="USD">USD $</SelectItem>
                         <SelectItem value="USD">USD ₹</SelectItem>
-                        <SelectItem value="EUR">EUR €</SelectItem>
+                        <SelectItem value="EUR">EUR €</SelectItem> */}
+
+
+
+                        <SelectItem value="USD">USD $ (US Dollar)</SelectItem>
+                        <SelectItem value="EUR">EUR € (Euro)</SelectItem>
+                        <SelectItem value="GBP">GBP £ (British Pound)</SelectItem>
+                        <SelectItem value="CHF">CHF ₣ (Swiss Franc)</SelectItem>
+                        <SelectItem value="SEK">SEK kr</SelectItem>
+                        <SelectItem value="NOK">NOK kr</SelectItem>
+                        <SelectItem value="DKK">DKK kr</SelectItem>
+                        <SelectItem value="PLN">PLN zł</SelectItem>
+                        <SelectItem value="CZK">CZK Kč</SelectItem>
+                        <SelectItem value="HUF">HUF Ft</SelectItem>
+                        <SelectItem value="RON">RON lei</SelectItem>
+
+
+
                       </SelectContent>
                     </Select>
                   </div>
