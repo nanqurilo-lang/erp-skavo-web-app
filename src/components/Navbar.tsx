@@ -14,6 +14,7 @@ const NAV_ITEMS: Record<string, string> = {
   "/leads/admin/get": "Leads",
   "/employees/leads/admin/get": "Leads",
   "/deals/get": "Deals",
+  "/deals/stages":"Kanban",
   "/clients": "Client",
   "/work/project": "Project",
   "/employees/work/project": "Project",
