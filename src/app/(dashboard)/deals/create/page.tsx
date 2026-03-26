@@ -365,7 +365,6 @@ export default function CreateDealPage() {
                 >
                   <option value="">--</option>
                   <option value="Default Pipeline">Default Pipeline</option>
-                  <option value="Default Pipeline">Default Pipeline</option>
                   <option value="Sales Pipeline">Sales Pipeline</option>
                   <option value="Enterprise Pipeline">Enterprise Pipeline</option>
                   <option value="Client Success Pipeline">Client Success Pipeline</option>
