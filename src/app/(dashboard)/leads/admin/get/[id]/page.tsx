@@ -1994,7 +1994,7 @@ export default function LeadDetailPage() {
                       : "Notes"}
                 </h3>
 
-                <div className="relative" ref={menuRef}>
+                {/* <div className="relative" ref={menuRef}>
                   <button
                     onClick={() => setMenuOpen((s) => !s)}
                     className="p-2 rounded hover:bg-slate-100"
@@ -2046,7 +2046,7 @@ export default function LeadDetailPage() {
                       </ul>
                     </div>
                   )}
-                </div>
+                </div> */}
               </div>
 
               {/* PROFILE TAB */}
