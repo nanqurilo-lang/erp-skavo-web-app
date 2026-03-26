@@ -159,7 +159,21 @@ export function AddLeadModal({
   onCreated: () => void;
   employees: Employee[];
 }) {
-  const defaultPipelines = ["Default Pipeline", "Sales Pipeline", "Enterprise Pipeline"];
+
+
+  const PIPELINES = [
+  "Default Pipeline",
+  "Sales Pipeline",
+  "Enterprise Pipeline",
+  "Client Success Pipeline",
+  "Finance Pipeline",
+  "Marketing Pipeline",
+];
+
+
+
+const defaultPipelines = PIPELINES;
+  // const defaultPipelines = ["Default Pipeline", "Sales Pipeline", "Enterprise Pipeline"];
   const defaultDealStages = ["Generated", "Qualification", "Proposal", "Lost"];
 
   const [dealCategories, setDealCategories] = useState<DealCategoryItem[]>([]);
@@ -538,9 +552,29 @@ Auto Convert lead to client when the deal stage is set to "WIN".</label>
 
             <div>
               <label className="block text-xs text-left text-muted-foreground mb-1">Pipeline *</label>
-              <select className="w-full border rounded-md px-3 py-2 text-sm" value={payload.deal!.pipeline} onChange={(e) => updateDeal("pipeline", e.target.value)}>
+              {/* <select 
+              className="w-full border rounded-md px-3 py-2 text-sm" 
+              value={payload.deal!.pipeline} 
+              onChange={(e) => updateDeal("pipeline", e.target.value)}>
                 {defaultPipelines.map((p) => <option key={p} value={p}>{p}</option>)}
-              </select>
+              </select> */}
+
+
+<select
+  className="w-full border rounded-md px-3 py-2 text-sm bg-white"
+  value={payload.deal!.pipeline}
+  onChange={(e) => updateDeal("pipeline", e.target.value)}
+>
+  <option value="">--</option>
+  {PIPELINES.map((p) => (
+    <option key={p} value={p}>
+      {p}
+    </option>
+  ))}
+</select>
+
+
+
             </div>
 
             <div>
