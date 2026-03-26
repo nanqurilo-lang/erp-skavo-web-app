@@ -22,11 +22,15 @@ const NAV_ITEMS: Record<string, string> = {
   "/hr/leave/admin": "Leave",
   "/hr/holiday": "Holiday",
   "/hr/designation": "Designation",
+  "/hr/department": "Department",
   "/hr/appreciation": "Appreciation",
   "/finance/invoices": "Invoices",
   "/finance/credit-notes": "Credit Notes",
   "/messages": "Messages",
   "/settings": "Settings",
+  "/settings/company-settings": "Company-settings",
+  "/settings/profile-settings": "Profile-settings",
+  
 };
 
 interface EmployeeProfile {
