@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import {
   Sidebar,
@@ -41,12 +42,30 @@ export function EAppSidebar() {
     settings: false,
   });
 
+
+  const pathname = usePathname();
+  const isActive = (path: string) => pathname.startsWith(path);
+
+
   const toggleGroup = (key: string) =>
     setOpenGroups((prev) => ({ ...prev, [key]: !prev[key] }));
 
   const Chevron = ({ open }: { open: boolean }) => (
     <span className="ml-2  text-sidebar-foreground/60">{open ? "▾" : ">"}</span>
   );
+
+
+  useEffect(() => {
+    setOpenGroups({
+      leads: pathname.startsWith("/employees/leads"),
+      client: false,
+      work: pathname.startsWith("/employees/work"),
+      hr: pathname.startsWith("/employees/hr"),
+      finance: false,
+      settings: pathname.startsWith("/employees/settings"),
+    });
+  }, [pathname]);
+
 
   return (
     <div className="min-h-screen bg-[#15173a]  text-white">
@@ -63,7 +82,16 @@ export function EAppSidebar() {
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <Link href="/employees/employee">
+                  {/* <Link href="/employees/employee"> */}
+
+                  <Link
+                    href="/employees/employee"
+                    className={`flex items-center gap-2 px-2 py-1 rounded-md ${isActive("/employees/employee")
+                        ? "bg-white text-black font-semibold"
+                        : "text-white"
+                      }`}
+                  >
+
                     <LayoutDashboard className="size-5" />
                     <span>Dashboard</span>
                   </Link>
@@ -76,7 +104,17 @@ export function EAppSidebar() {
           {/* <SidebarMenu> */}
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
-              <Link href="/employees/leads/admin/get">
+              {/* <Link href="/employees/leads/admin/get"> */}
+
+              <Link
+                href="/employees/leads/admin/get"
+                className={`flex items-center gap-2 px-2 py-1 rounded-md ${isActive("/employees/leads/admin/get")
+                    ? "bg-white text-black font-semibold"
+                    : "text-white"
+                  }`}
+              >
+
+
                 <Users className="size-5" />
                 <span>Leads</span>
               </Link>
@@ -106,7 +144,17 @@ export function EAppSidebar() {
               <SidebarMenu>
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild>
-                    <Link href="/employees/work/project">
+                    {/* <Link href="/employees/work/project"> */}
+
+
+                    <Link
+                      href="/employees/work/project"
+                      className={`flex items-center gap-2 px-2 py-1 rounded-md ${isActive("/employees/work/project")
+                          ? "bg-white text-black font-semibold"
+                          : "text-white"
+                        }`}
+                    >
+
                       <ClipboardList className="size-5" />
                       <span>Project</span>
                     </Link>
@@ -114,7 +162,16 @@ export function EAppSidebar() {
                 </SidebarMenuItem>
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild>
-                    <Link href="/employees/work/tasks">
+                    {/* <Link href="/employees/work/tasks"> */}
+
+                    <Link
+                      href="/employees/work/tasks"
+                      className={`flex items-center gap-2 px-2 py-1 rounded-md ${isActive("/employees/work/tasks")
+                          ? "bg-white text-black font-semibold"
+                          : "text-white"
+                        }`}
+                    >
+
                       <ClipboardList className="size-5" />
                       <span>Task</span>
                     </Link>
@@ -122,7 +179,16 @@ export function EAppSidebar() {
                 </SidebarMenuItem>
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild>
-                    <Link href="/employees/work/timesheet">
+                    {/* <Link href="/employees/work/timesheet"> */}
+
+                    <Link
+                      href="/employees/work/timesheet"
+                      className={`flex items-center gap-2 px-2 py-1 rounded-md ${isActive("/employees/work/timesheet")
+                          ? "bg-white text-black font-semibold"
+                          : "text-white"
+                        }`}
+                    >
+
                       <Clock className="size-5" />
                       <span>Timesheet</span>
                     </Link>
@@ -130,7 +196,15 @@ export function EAppSidebar() {
                 </SidebarMenuItem>
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild>
-                    <Link href="/employees/work/roadmap">
+                    {/* <Link href="/employees/work/roadmap"> */}
+                    <Link
+                      href="/employees/work/roadmap"
+                      className={`flex items-center gap-2 px-2 py-1 rounded-md ${isActive("/employees/work/roadmap")
+                          ? "bg-white text-black font-semibold"
+                          : "text-white"
+                        }`}
+                    >
+
                       <Map className="size-5" />
                       <span>Project Roadmap</span>
                     </Link>
@@ -160,7 +234,17 @@ export function EAppSidebar() {
               <SidebarMenu>
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild>
-                    <Link href="/employees/hr/attendence">
+                    {/* <Link href="/employees/hr/attendence"> */}
+
+
+                    <Link
+                      href="/employees/hr/attendence"
+                      className={`flex items-center gap-2 px-2 py-1 rounded-md ${isActive("/employees/hr/attendence")
+                          ? "bg-white text-black font-semibold"
+                          : "text-white"
+                        }`}
+                    >
+
                       <Notebook className="size-5" />
                       <span>Attendance</span>
                     </Link>
@@ -169,7 +253,16 @@ export function EAppSidebar() {
 
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild>
-                    <Link href="/employees/hr/leave/admin">
+                    {/* <Link href="/employees/hr/leave/admin"> */}
+
+                    <Link
+                      href="/employees/hr/leave/admin"
+                      className={`flex items-center gap-2 px-2 py-1 rounded-md ${isActive("/employees/hr/leave/admin")
+                          ? "bg-white text-black font-semibold"
+                          : "text-white"
+                        }`}
+                    >
+
                       <CalendarX className="size-5" />
                       <span>Leave</span>
                     </Link>
@@ -178,7 +271,17 @@ export function EAppSidebar() {
 
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild>
-                    <Link href="/employees/hr/holiday">
+                    {/* <Link href="/employees/hr/holiday"> */}
+
+
+                    <Link
+                      href="/employees/hr/holiday"
+                      className={`flex items-center gap-2 px-2 py-1 rounded-md ${isActive("/employees/hr/holiday")
+                          ? "bg-white text-black font-semibold"
+                          : "text-white"
+                        }`}
+                    >
+
                       <CalendarDays className="size-5" />
                       <span>Holiday</span>
                     </Link>
@@ -186,7 +289,15 @@ export function EAppSidebar() {
                 </SidebarMenuItem>
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild>
-                    <Link href="/employees/hr/appreciation">
+                    {/* <Link href="/employees/hr/appreciation"> */}
+                    <Link
+                      href="/employees/hr/appreciation"
+                      className={`flex items-center gap-2 px-2 py-1 rounded-md ${isActive("/employees/hr/appreciation")
+                          ? "bg-white text-black font-semibold"
+                          : "text-white"
+                        }`}
+                    >
+
                       <Award className="size-5" />
                       <span>Appreciation</span>
                     </Link>
@@ -203,7 +314,16 @@ export function EAppSidebar() {
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <Link href="/employees/messages">
+                  {/* <Link href="/employees/messages"> */}
+
+                  <Link
+                    href="/employees/messages"
+                    className={`flex items-center gap-2 px-2 py-1 rounded-md ${isActive("/employees/messages")
+                        ? "bg-white text-black font-semibold"
+                        : "text-white"
+                      }`}
+                  >
+
                     <MessageSquare className="size-5" />
                     <span>Message</span>
                   </Link>
@@ -214,7 +334,15 @@ export function EAppSidebar() {
 
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
-              <Link href="/employees/settings/profile-settings">
+              {/* <Link href="/employees/settings/profile-settings"> */}
+              <Link
+                href="/employees/settings/profile-settings"
+                className={`flex items-center gap-2 px-2 py-1 rounded-md ${isActive("/employees/settings/profile-settings")
+                    ? "bg-white text-black font-semibold"
+                    : "text-white"
+                  }`}
+              >
+
                 <CalendarX className="size-5" />
                 <span>Profile Settings</span>
               </Link>
