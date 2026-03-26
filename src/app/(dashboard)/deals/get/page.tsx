@@ -51,6 +51,17 @@ import {
 import ImportButton from "@/components/ImportButton";
 import ExportButton from "@/components/ExportButton";
 
+
+
+const DEFAULT_STAGES = [
+  "generated",
+  "qualifications",
+  "proposal",
+  "Win",
+  "Lost",
+];
+
+
 type Followup = {
   id: number;
   nextDate?: string;
@@ -204,6 +215,10 @@ export const FiltersDrawer = ({
     // const [tagFilter, setTagFilter] = useState("all");
     // const [priorityFilter, setPriorityFilter] = useState("all");
 
+
+
+
+
   return (
   <div className="fixed inset-0 z-50 flex">
     {/* overlay */}
@@ -269,7 +284,7 @@ export const FiltersDrawer = ({
               </SelectItem>
             ))} */}
 
-
+{/* 
 {stages?.length ? (
   stages.map((stage) => (
     <SelectItem key={stage} value={stage}>
@@ -278,7 +293,16 @@ export const FiltersDrawer = ({
   ))
 ) : (
   <SelectItem value="Qualified">Qualified</SelectItem>
-)}
+)} */}
+
+
+
+{stages.map((stage) => (
+  <SelectItem key={stage} value={stage}>
+    {stage}
+  </SelectItem>
+))}
+
 
           </SelectContent>
         </Select>
@@ -547,14 +571,30 @@ export default function DealsPage() {
     return m;
   }, [priorities]);
 
-  const stages = useMemo(() => {
-    const s = new Set<string>();
-    for (const d of deals as Deal[]) {
-      if (d.dealStage) s.add(d.dealStage);
-    }
-    return Array.from(s.values()).sort();
-  }, [deals]);
+  // const stages = useMemo(() => {
+  //   const s = new Set<string>();
+  //   for (const d of deals as Deal[]) {
+  //     if (d.dealStage) s.add(d.dealStage);
+  //   }
+  //   return Array.from(s.values()).sort();
+  // }, [deals]);
 
+ 
+ const stages = useMemo(() => {
+  const apiStages = new Set<string>();
+
+  for (const d of deals as Deal[]) {
+    if (d.dealStage) apiStages.add(d.dealStage);
+  }
+
+  // 🔥 merge default + api
+  return Array.from(
+    new Set([...DEFAULT_STAGES, ...Array.from(apiStages)])
+  );
+}, [deals]);
+ 
+ 
+ 
   // derive pipeline values for the top nav dropdown (UI only)
   const pipelines = useMemo(() => {
     const s = new Set<string>();
@@ -1360,7 +1400,7 @@ if (dealsLoading) {
                           />
                         </SelectTrigger>
                         <SelectContent>
-                          {stages.length ? (
+                          {/* {stages.length ? (
                             stages.map((s) => (
                               <SelectItem key={s} value={s}>
                                 {s}
@@ -1374,7 +1414,18 @@ if (dealsLoading) {
                               <SelectItem value="Win">Win</SelectItem>
                               <SelectItem value="Lost">Lost</SelectItem>
                             </>
-                          )}
+                          )} */}
+
+
+
+
+{stages.map((s) => (
+  <SelectItem key={s} value={s}>
+    {s}
+  </SelectItem>
+))}
+
+
                         </SelectContent>
                       </Select>
                     </TableCell>
