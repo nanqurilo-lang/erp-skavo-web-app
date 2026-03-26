@@ -738,7 +738,8 @@ const matchesStage =
   }, [
     deals,
     query,
-    stageFilter,
+    // stageFilter,
+    dealStageFilter,
     pipelineFilter, // 👈 add this
 
     dateFrom,
