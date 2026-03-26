@@ -490,7 +490,7 @@ export default function Dashboard() {
 
 
 
-if (loading) return <DashboardSkeleton />;
+  if (loading) return <DashboardSkeleton />;
 
 
   if (!employee)
@@ -1008,7 +1008,7 @@ if (loading) return <DashboardSkeleton />;
               <div className="rounded border p-4">
                 <div className="text-sm mb-2">
                   Date -{" "}
-                
+
 
                   {format(new Date(selectedDay), "EEEE, dd-MM-yyyy")}
 

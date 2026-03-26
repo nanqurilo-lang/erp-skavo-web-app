@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import type { Stage } from "@/types/stages";
 import type { Deal } from "@/types/deals";
-import { Calendar, Phone, MoreHorizontal, Trash2, Check ,X } from "lucide-react";
+import { Calendar, Phone, MoreHorizontal, Trash2, Check, X } from "lucide-react";
 
 
 import { ExternalLink } from "lucide-react";
@@ -57,11 +57,11 @@ export default function KanbanBoard({
 
   const [dealsState, setDealsState] = useState<Deal[]>(deals);
 
-useEffect(() => {
-  setDealsState(deals);
-}, [deals]);
+  useEffect(() => {
+    setDealsState(deals);
+  }, [deals]);
 
-console.log("KanbanBoard render", { stages, dealsState, filters, search });
+  console.log("KanbanBoard render", { stages, dealsState, filters, search });
 
   // const filteredDeals = deals.filter((d) => {
   const filteredDeals = dealsState.filter((d) => {
@@ -90,47 +90,47 @@ console.log("KanbanBoard render", { stages, dealsState, filters, search });
 
 
 
-function getDealFollowupDate(deal: Deal): Date | null {
-  const parseDateSafe = (s: string) => {
-    try {
-      const d = new Date(s);
-      return isNaN(d.getTime()) ? null : d;
-    } catch {
-      return null;
+  function getDealFollowupDate(deal: Deal): Date | null {
+    const parseDateSafe = (s: string) => {
+      try {
+        const d = new Date(s);
+        return isNaN(d.getTime()) ? null : d;
+      } catch {
+        return null;
+      }
+    };
+
+    const followupsArray = Array.isArray((deal as any).followups)
+      ? (deal as any).followups
+      : [];
+
+    // 1️⃣ latest nextDate from followups
+    let latestNext: Date | null = null;
+
+    for (const f of followupsArray) {
+      const raw =
+        f?.nextDate || f?.next_date || f?.next_followup_date;
+
+      if (!raw) continue;
+
+      const d = parseDateSafe(String(raw));
+      if (!d) continue;
+
+      if (!latestNext || d.getTime() > latestNext.getTime()) {
+        latestNext = d;
+      }
     }
-  };
 
-  const followupsArray = Array.isArray((deal as any).followups)
-    ? (deal as any).followups
-    : [];
+    // 2️⃣ explicit nextFollowup field
+    const explicitRaw =
+      (deal as any).nextFollowupDate ||
+      (deal as any).nextFollowup ||
+      (deal as any).next_followup;
 
-  // 1️⃣ latest nextDate from followups
-  let latestNext: Date | null = null;
+    const explicit = explicitRaw ? parseDateSafe(String(explicitRaw)) : null;
 
-  for (const f of followupsArray) {
-    const raw =
-      f?.nextDate || f?.next_date || f?.next_followup_date;
-
-    if (!raw) continue;
-
-    const d = parseDateSafe(String(raw));
-    if (!d) continue;
-
-    if (!latestNext || d.getTime() > latestNext.getTime()) {
-      latestNext = d;
-    }
+    return latestNext || explicit;
   }
-
-  // 2️⃣ explicit nextFollowup field
-  const explicitRaw =
-    (deal as any).nextFollowupDate ||
-    (deal as any).nextFollowup ||
-    (deal as any).next_followup;
-
-  const explicit = explicitRaw ? parseDateSafe(String(explicitRaw)) : null;
-
-  return latestNext || explicit;
-}
 
 
 
@@ -408,32 +408,32 @@ function getDealFollowupDate(deal: Deal): Date | null {
 
 
 
-const deleteGlobalPriority = async (priorityId: number) => {
-  try {
-    const headers: Record<string, string> = {
-      "Content-Type": "application/json",
-    };
+  const deleteGlobalPriority = async (priorityId: number) => {
+    try {
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+      };
 
-    if (token) headers["Authorization"] = `Bearer ${token}`;
+      if (token) headers["Authorization"] = `Bearer ${token}`;
 
-    const res = await fetch(`${PRIORITIES_ADMIN_ENDPOINT}/${priorityId}`, {
-      method: "DELETE",
-      headers,
-    });
+      const res = await fetch(`${PRIORITIES_ADMIN_ENDPOINT}/${priorityId}`, {
+        method: "DELETE",
+        headers,
+      });
 
-    if (!res.ok) {
-      const txt = await res.text();
-      throw new Error(`Delete priority failed ${res.status} ${txt}`);
+      if (!res.ok) {
+        const txt = await res.text();
+        throw new Error(`Delete priority failed ${res.status} ${txt}`);
+      }
+
+      // remove from palette instantly
+      setGlobalPalette((prev) =>
+        prev.filter((p) => p.id !== priorityId)
+      );
+    } catch (err) {
+      console.error("Failed to delete priority", err);
     }
-
-    // remove from palette instantly
-    setGlobalPalette((prev) =>
-      prev.filter((p) => p.id !== priorityId)
-    );
-  } catch (err) {
-    console.error("Failed to delete priority", err);
-  }
-};
+  };
 
 
 
@@ -448,7 +448,7 @@ const deleteGlobalPriority = async (priorityId: number) => {
   const deleteStage = async (stageId: string | number) => {
 
 
-    
+
     try {
       const headers: Record<string, string> = {
         "Content-Type": "application/json",
@@ -475,66 +475,66 @@ const deleteGlobalPriority = async (priorityId: number) => {
 
 
 
-//
-//   dealId: string | number,
-//   newStage: string
-// ) => {
-//   try {
-//     const headers: Record<string, string> = {
-//       "Content-Type": "application/json",
-//     };
-//     if (token) headers["Authorization"] = `Bearer ${token}`;
+  //
+  //   dealId: string | number,
+  //   newStage: string
+  // ) => {
+  //   try {
+  //     const headers: Record<string, string> = {
+  //       "Content-Type": "application/json",
+  //     };
+  //     if (token) headers["Authorization"] = `Bearer ${token}`;
 
-//     const res = await fetch(
-//       (dealId), {
-//       method: "PUT",
-//       headers,
-//       body: JSON.stringify({ dealStage: newStage }),
-//     });
+  //     const res = await fetch(
+  //       (dealId), {
+  //       method: "PUT",
+  //       headers,
+  //       body: JSON.stringify({ dealStage: newStage }),
+  //     });
 
-//     if (!res.ok) {
-//       const t = await safeReadResponseText(res);
-//       throw new Error(`Stage update failed: ${res.status} ${t}`);
-//     }
+  //     if (!res.ok) {
+  //       const t = await safeReadResponseText(res);
+  //       throw new Error(`Stage update failed: ${res.status} ${t}`);
+  //     }
 
-//     // setDealsState((prev) =>
-//     //   prev.map((d) =>
-//     //     String(d.id) === String(dealId)
-//     //       ? { ...d, dealStage: newStage }
-//     //       : d
-//     //   )
-//     // );
-
-
+  //     // setDealsState((prev) =>
+  //     //   prev.map((d) =>
+  //     //     String(d.id) === String(dealId)
+  //     //       ? { ...d, dealStage: newStage }
+  //     //       : d
+  //     //   )
+  //     // );
 
 
 
 
-// const stageDeals = filteredDeals
-//   .filter(
-//     (deal) =>
-//       deal.dealStage?.trim().toLowerCase() ===
-//       stage.name?.trim().toLowerCase()
-//   )
-//   .sort((a, b) => {
-//     const dateA = getDealFollowupDate(a);
-//     const dateB = getDealFollowupDate(b);
-
-//     if (!dateA && !dateB) return 0;
-//     if (!dateA) return 1;
-//     if (!dateB) return -1;
-
-//     return dateA.getTime() - dateB.getTime();
-//   });
 
 
+  // const stageDeals = filteredDeals
+  //   .filter(
+  //     (deal) =>
+  //       deal.dealStage?.trim().toLowerCase() ===
+  //       stage.name?.trim().toLowerCase()
+  //   )
+  //   .sort((a, b) => {
+  //     const dateA = getDealFollowupDate(a);
+  //     const dateB = getDealFollowupDate(b);
 
-//   } catch (err) {
-//     console.error("Stage update error:", err);
-//   }
-// };
+  //     if (!dateA && !dateB) return 0;
+  //     if (!dateA) return 1;
+  //     if (!dateB) return -1;
 
-const updateDealStage = async (
+  //     return dateA.getTime() - dateB.getTime();
+  //   });
+
+
+
+  //   } catch (err) {
+  //     console.error("Stage update error:", err);
+  //   }
+  // };
+
+  const updateDealStage = async (
     dealId: number | string,
     newStage: string,
   ) => {
@@ -561,7 +561,7 @@ const updateDealStage = async (
   };
 
 
-  
+
   return (
     <div className="relative w-full h-full flex flex-col min-h-0">
       <div className="flex gap-6 flex-1 min-h-0 overflow-x-auto pb-4 px-1">
@@ -572,29 +572,29 @@ const updateDealStage = async (
 
 
 
-const stageDeals = filteredDeals
-  // .filter((deal) => deal.dealStage === stage.name)
+          const stageDeals = filteredDeals
+            // .filter((deal) => deal.dealStage === stage.name)
 
-.filter(
-  (deal) =>
-    deal.dealStage?.trim().toLowerCase() ===
-    stage.name?.trim().toLowerCase()
-)
+            .filter(
+              (deal) =>
+                deal.dealStage?.trim().toLowerCase() ===
+                stage.name?.trim().toLowerCase()
+            )
 
-  .sort((a, b) => {
-    const dateA = getDealFollowupDate(a);
-    const dateB = getDealFollowupDate(b);
+            .sort((a, b) => {
+              const dateA = getDealFollowupDate(a);
+              const dateB = getDealFollowupDate(b);
 
-    // If both null
-    if (!dateA && !dateB) return 0;
+              // If both null
+              if (!dateA && !dateB) return 0;
 
-    // Null ko bottom me bhejna hai
-    if (!dateA) return 1;
-    if (!dateB) return -1;
+              // Null ko bottom me bhejna hai
+              if (!dateA) return 1;
+              if (!dateB) return -1;
 
-    // Ascending order (earliest first)
-    return dateA.getTime() - dateB.getTime();
-  });
+              // Ascending order (earliest first)
+              return dateA.getTime() - dateB.getTime();
+            });
 
 
 
@@ -640,7 +640,7 @@ const stageDeals = filteredDeals
                         >
                           <Trash2 className="w-4 h-4 text-red-600" />
                           <span className="text-sm text-red-600 font-medium">
-                            Delete 
+                            Delete
                           </span>
                         </button>
                       </div>
@@ -658,31 +658,31 @@ const stageDeals = filteredDeals
                   </div>
                 ) : (
                   stageDeals.map((deal) => (
-  //                   <DealCard
-  //                     key={deal.id}
-  //                     deal={deal}
-  //                       stages={stagesState}
-  // onStageChange={updateDealStage}
+                    //                   <DealCard
+                    //                     key={deal.id}
+                    //                     deal={deal}
+                    //                       stages={stagesState}
+                    // onStageChange={updateDealStage}
 
-  //                     palette={globalPalette}
-  //                     paletteLoading={paletteLoading}
-  //                     addPriorityAndAssignFlow={addPriorityAndAssignFlow}
-  //                     token={token}
-  //                   />
+                    //                     palette={globalPalette}
+                    //                     paletteLoading={paletteLoading}
+                    //                     addPriorityAndAssignFlow={addPriorityAndAssignFlow}
+                    //                     token={token}
+                    //                   />
 
 
 
-<DealCard
-  key={deal.id}
-  deal={deal}
-  stages={stagesState}
-  onStageChange={updateDealStage}
-  palette={globalPalette}
-  paletteLoading={paletteLoading}
-  addPriorityAndAssignFlow={addPriorityAndAssignFlow}
-  deleteGlobalPriority={deleteGlobalPriority}
-  token={token}
-/>
+                    <DealCard
+                      key={deal.id}
+                      deal={deal}
+                      stages={stagesState}
+                      onStageChange={updateDealStage}
+                      palette={globalPalette}
+                      paletteLoading={paletteLoading}
+                      addPriorityAndAssignFlow={addPriorityAndAssignFlow}
+                      deleteGlobalPriority={deleteGlobalPriority}
+                      token={token}
+                    />
 
 
 
@@ -743,16 +743,16 @@ function DealCard({
   palette,
   paletteLoading,
   addPriorityAndAssignFlow,
-    deleteGlobalPriority,
+  deleteGlobalPriority,
 
   token,
 }: {
   deal: Deal;
-    stages: Stage[];
-onStageChange: (
-  dealId: string | number,
-  stage: string
-) => Promise<void>;
+  stages: Stage[];
+  onStageChange: (
+    dealId: string | number,
+    stage: string
+  ) => Promise<void>;
 
   palette: Array<{ id?: number; name: string; color: string }>;
   paletteLoading: boolean;
@@ -1125,39 +1125,39 @@ onStageChange: (
 
 
 
-// const applyPalettePriority = async (p: {
-//   id?: number;
-//   name: string;
-//   color: string;
-// }) => {
+      // const applyPalettePriority = async (p: {
+      //   id?: number;
+      //   name: string;
+      //   color: string;
+      // }) => {
 
-//   setPriorities([{ name: p.name, color: p.color }]);
+      //   setPriorities([{ name: p.name, color: p.color }]);
 
-//   try {
+      //   try {
 
-//     let assigned;
+      //     let assigned;
 
-//     // if priority already exists → update
-//     if (priorities.length > 0) {
-//       assigned = await updatePriorityForDealFallback(
-//         (deal as any).id,
-//         p.id as number
-//       );
-//     } 
-//     // if no priority → assign
-//     else {
-//       assigned = await assignPriorityToDeal(
-//         (deal as any).id,
-//         p.id as number
-//       );
-//     }
+      //     // if priority already exists → update
+      //     if (priorities.length > 0) {
+      //       assigned = await updatePriorityForDealFallback(
+      //         (deal as any).id,
+      //         p.id as number
+      //       );
+      //     } 
+      //     // if no priority → assign
+      //     else {
+      //       assigned = await assignPriorityToDeal(
+      //         (deal as any).id,
+      //         p.id as number
+      //       );
+      //     }
 
-//     setPriorities([{ name: assigned.name, color: assigned.color }]);
+      //     setPriorities([{ name: assigned.name, color: assigned.color }]);
 
-//   } catch (err) {
-//     console.error("Failed to persist selected priority:", err);
-//   }
-// };
+      //   } catch (err) {
+      //     console.error("Failed to persist selected priority:", err);
+      //   }
+      // };
 
 
 
@@ -1201,36 +1201,36 @@ onStageChange: (
 
 
 
-const removePriority = async () => {
-  try {
-    // console.log("fgc", deal.id);
+  const removePriority = async () => {
+    try {
+      // console.log("fgc", deal.id);
 
-    const res = await fetch(`${API_BASE}/deals/${deal.id}/priority`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
-    });
+      const res = await fetch(`${API_BASE}/deals/${deal.id}/priority`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      });
 
-    if (!res.ok) {
-      const errText = await res.text();
-      throw new Error(`Delete failed ${res.status} ${errText}`);
+      if (!res.ok) {
+        const errText = await res.text();
+        throw new Error(`Delete failed ${res.status} ${errText}`);
+      }
+
+      const text = await res.text();
+      const data = text ? JSON.parse(text) : null;
+
+      // console.log("response", data);
+
+      // remove priority from UI
+      setPriorities([]);
+      setOpenPopover(false);
+
+
+    } catch (err) {
+      console.error("Could not remove priority", err);
     }
-
-    const text = await res.text();
-    const data = text ? JSON.parse(text) : null;
-
-    // console.log("response", data);
-
-    // remove priority from UI
-    setPriorities([]);
-        setOpenPopover(false);
-
-
-  } catch (err) {
-    console.error("Could not remove priority", err);
-  }
-};
+  };
 
 
 
@@ -1436,42 +1436,42 @@ const removePriority = async () => {
 
   return (
     // <div className="group rounded-lg border border-border bg-card hover:border-primary/50 hover:shadow-md transition-all duration-200 cursor-default">
-     
-     
-     <div
-//  className="group rounded-xl border border-gray-200 bg-white hover:shadow-xl hover:-translate-y-[2px] transition-all duration-200 cursor-default relative overflow-hidden"
-     className="group rounded-lg border border-border bg-card hover:border-primary/50 hover:shadow-md transition-all duration-200 cursor-default relative"
-  style={
-    priorities.length > 0
-      ? {
-          borderLeft: `3px solid ${priorities[0].color}`,
-          background: `linear-gradient(90deg, ${priorities[0].color}35 0%, white 40%)`,
-        }
-      : {}
-  }
->
-     
-     
-     
-     <div className="p-4 flex flex-col gap-3 relative">
+
+
+    <div
+      //  className="group rounded-xl border border-gray-200 bg-white hover:shadow-xl hover:-translate-y-[2px] transition-all duration-200 cursor-default relative overflow-hidden"
+      className="group rounded-lg border border-border bg-card hover:border-primary/50 hover:shadow-md transition-all duration-200 cursor-default relative"
+      style={
+        priorities.length > 0
+          ? {
+            borderLeft: `3px solid ${priorities[0].color}`,
+            background: `linear-gradient(90deg, ${priorities[0].color}35 0%, white 40%)`,
+          }
+          : {}
+      }
+    >
+
+
+
+      <div className="p-4 flex flex-col gap-3 relative">
         {/* <div className="absolute right-3 top-3"> */}
 
-<div className="absolute right-3 top-3 flex items-center gap-2">
+        <div className="absolute right-3 top-3 flex items-center gap-2">
 
 
 
 
-<button
-  type="button"
-  onClick={() => {
-    window.location.href = `/deals/get/${deal.id}`;
-  }}
- className="h-7 w-7 rounded-full bg-gray-300 border border-gray-200 flex items-center justify-center shadow-sm hover:bg-gray-500 transition-all  duration-200"
-  // className="opacity-1 group-hover:opacity-100 transition-all duration-200 h-7 w-7 rounded-full bg-gray-800 border border-gray-200 flex items-center justify-center shadow-sm hover:bg-gray-50"
-  title="Open deal"
->
-  <ExternalLink className="w-3.5 h-3.5 text-gray-600" />
-</button>
+          <button
+            type="button"
+            onClick={() => {
+              window.location.href = `/deals/get/${deal.id}`;
+            }}
+            className="h-7 w-7 rounded-full bg-gray-300 border border-gray-200 flex items-center justify-center shadow-sm hover:bg-gray-500 transition-all  duration-200"
+            // className="opacity-1 group-hover:opacity-100 transition-all duration-200 h-7 w-7 rounded-full bg-gray-800 border border-gray-200 flex items-center justify-center shadow-sm hover:bg-gray-50"
+            title="Open deal"
+          >
+            <ExternalLink className="w-3.5 h-3.5 text-gray-600" />
+          </button>
 
 
 
@@ -1496,16 +1496,16 @@ const removePriority = async () => {
                 type="button"
                 // onClick={() => setOpenPopover(true)}
 
-onClick={(e) => {
-  const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+                onClick={(e) => {
+                  const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
 
-  setPopoverPos({
-    top: rect.bottom + 6,
-    right: window.innerWidth - rect.right,
-  });
+                  setPopoverPos({
+                    top: rect.bottom + 6,
+                    right: window.innerWidth - rect.right,
+                  });
 
-  setOpenPopover(true);
-}}
+                  setOpenPopover(true);
+                }}
 
 
                 className="h-6 w-6 rounded-full flex items-center justify-center"
@@ -1543,14 +1543,14 @@ onClick={(e) => {
 
 
 
-<div
-  ref={popRef}
-  className="fixed w-44 rounded-lg bg-white border border-border shadow-xl p-3 text-sm z-[9999]"
-  style={{
-    top: popoverPos.top,
-    right: popoverPos.right,
-  }}
->
+            <div
+              ref={popRef}
+              className="fixed w-44 rounded-lg bg-white border border-border shadow-xl p-3 text-sm z-[9999]"
+              style={{
+                top: popoverPos.top,
+                right: popoverPos.right,
+              }}
+            >
 
 
               <div className="flex flex-col gap-2">
@@ -1578,68 +1578,68 @@ onClick={(e) => {
 
 
 
-palette.map((pp) => {
-  const isAssigned =
-    priorities[0]?.name?.toLowerCase() === pp.name.toLowerCase();
+                  palette.map((pp) => {
+                    const isAssigned =
+                      priorities[0]?.name?.toLowerCase() === pp.name.toLowerCase();
 
-  return (
-    <div
-      key={pp.id ?? pp.name}
-      className="flex items-center justify-between px-2 py-2 rounded-md hover:bg-muted/20"
-    >
-      <button
-        type="button"
-        onClick={() => applyPalettePriority(pp)}
-        className="flex items-center gap-3 flex-1 text-left"
-      >
-        <span
-          className="h-3 w-3 rounded-full"
-          style={{ backgroundColor: pp.color }}
-        />
-        <span className="font-medium" style={{ color: pp.color }}>
-          {pp.name}
-        </span>
-      </button>
+                    return (
+                      <div
+                        key={pp.id ?? pp.name}
+                        className="flex items-center justify-between px-2 py-2 rounded-md hover:bg-muted/20"
+                      >
+                        <button
+                          type="button"
+                          onClick={() => applyPalettePriority(pp)}
+                          className="flex items-center gap-3 flex-1 text-left"
+                        >
+                          <span
+                            className="h-3 w-3 rounded-full"
+                            style={{ backgroundColor: pp.color }}
+                          />
+                          <span className="font-medium" style={{ color: pp.color }}>
+                            {pp.name}
+                          </span>
+                        </button>
 
-      {isAssigned ? (
-        <Check className="w-4 h-4 text-green-600" />
-      ) : (
-        // <button
-        //   onClick={removePriority}
-        //   className="p-1 rounded hover:bg-red-50"
-        // >
-        //   <X className="w-4 h-4 text-red-500" />
-        // </button>
-
-
-
-// <button
-//   onClick={() => {
-//     if (pp.id) deleteGlobalPriority(pp.id);
-//   }}
-//   className="p-1 rounded hover:bg-red-50"
-// >
-//   <X className="w-4 h-4 text-red-500" />
-// </button>
-
-
- !isAssigned &&
-  pp.id && (
-    <button
-      onClick={() => deleteGlobalPriority(pp.id)}
-      className="p-1 rounded hover:bg-red-50"
-    >
-      <X className="w-4 h-4 text-red-500" />
-    </button>
-  )
+                        {isAssigned ? (
+                          <Check className="w-4 h-4 text-green-600" />
+                        ) : (
+                          // <button
+                          //   onClick={removePriority}
+                          //   className="p-1 rounded hover:bg-red-50"
+                          // >
+                          //   <X className="w-4 h-4 text-red-500" />
+                          // </button>
 
 
 
+                          // <button
+                          //   onClick={() => {
+                          //     if (pp.id) deleteGlobalPriority(pp.id);
+                          //   }}
+                          //   className="p-1 rounded hover:bg-red-50"
+                          // >
+                          //   <X className="w-4 h-4 text-red-500" />
+                          // </button>
 
-      )}
-    </div>
-  );
-})
+
+                          !isAssigned &&
+                          pp.id && (
+                            <button
+                              onClick={() => deleteGlobalPriority(pp.id)}
+                              className="p-1 rounded hover:bg-red-50"
+                            >
+                              <X className="w-4 h-4 text-red-500" />
+                            </button>
+                          )
+
+
+
+
+                        )}
+                      </div>
+                    );
+                  })
 
 
 
@@ -1654,7 +1654,7 @@ palette.map((pp) => {
 
 
 
-              
+
 
               {/* <div className="flex items-center gap-2">
                 <div className="flex items-center gap-2 w-full">
@@ -1673,35 +1673,35 @@ palette.map((pp) => {
               </div> */}
 
 
-<button
-  type="button"
-  onClick={() => {
-  setOpenPopover(false);   // close dropdown
+              <button
+                type="button"
+                onClick={() => {
+                  setOpenPopover(false);   // close dropdown
 
- setOpenModal(true)
-    
-
-  }
-    
-   
-  }
-  className="flex items-center gap-2 w-full hover:bg-muted/20 rounded-md p-1"
->
-  <div className="h-6 w-6 rounded-full flex items-center justify-center bg-blue-600 text-white">
-    ＋
-  </div>
-
-  <div className="text-sm text-muted-foreground">
-    Add Priority
-  </div>
-</button>
+                  setOpenModal(true)
 
 
+                }
 
-<br />
+
+                }
+                className="flex items-center gap-2 w-full hover:bg-muted/20 rounded-md p-1"
+              >
+                <div className="h-6 w-6 rounded-full flex items-center justify-center bg-blue-600 text-white">
+                  ＋
+                </div>
+
+                <div className="text-sm text-muted-foreground">
+                  Add Priority
+                </div>
+              </button>
 
 
-{/* 
+
+              <br />
+
+
+              {/* 
  <div className="flex items-center gap-2">
                 <div className="flex items-center gap-2 w-full">
                   <button
@@ -1720,19 +1720,19 @@ palette.map((pp) => {
 
 
 
-<button
-  type="button"
-  onClick={removePriority}
-  className="flex items-center gap-2 w-full hover:bg-muted/20 rounded-md p-1"
->
-  <div className="h-6 w-6 rounded-full flex items-center justify-center bg-red-500 text-white">
-    -
-  </div>
+              <button
+                type="button"
+                onClick={removePriority}
+                className="flex items-center gap-2 w-full hover:bg-muted/20 rounded-md p-1"
+              >
+                <div className="h-6 w-6 rounded-full flex items-center justify-center bg-red-500 text-white">
+                  -
+                </div>
 
-  <div className="text-sm text-muted-foreground">
-    Remove Priority
-  </div>
-</button>
+                <div className="text-sm text-muted-foreground">
+                  Remove Priority
+                </div>
+              </button>
 
 
 
@@ -1751,21 +1751,21 @@ palette.map((pp) => {
               </div>
 
 
-<div className="mt-2 ml-16">
-  <select
-    value={deal.dealStage}
-    onChange={(e) =>
-      onStageChange(deal.id as any, e.target.value)
-    }
-    className="w-full text-xs border border-border rounded-md px-2 py-1 bg-white"
-  >
-    {stages.map((stage) => (
-      <option key={stage.id} value={stage.name}>
-        {stage.name}
-      </option>
-    ))}
-  </select>
-</div>
+              <div className="mt-2 ml-16">
+                <select
+                  value={deal.dealStage}
+                  onChange={(e) =>
+                    onStageChange(deal.id as any, e.target.value)
+                  }
+                  className="w-full text-xs border border-border rounded-md px-2 py-1 bg-white"
+                >
+                  {stages.map((stage) => (
+                    <option key={stage.id} value={stage.name}>
+                      {stage.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
             </div>
 

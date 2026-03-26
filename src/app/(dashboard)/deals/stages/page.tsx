@@ -155,55 +155,55 @@ export default function StagesPage() {
   }, [dealsData]);
 
 
-//  if (loading) {
-//      return (
-//       <div className="flex justify-center items-center min-h-screen text-lg font-semibold">
-//         Loading stages and deals...
-//       </div>
-//     );
-//   }
+  //  if (loading) {
+  //      return (
+  //       <div className="flex justify-center items-center min-h-screen text-lg font-semibold">
+  //         Loading stages and deals...
+  //       </div>
+  //     );
+  //   }
 
 
 
 
 
-if (loading) {
-  return (
-    <main className="container h-screen flex flex-col overflow-hidden p-4 space-y-4">
+  if (loading) {
+    return (
+      <main className="container h-screen flex flex-col overflow-hidden p-4 space-y-4">
 
-      {/* Top Filters */}
-      <div className="flex justify-between items-center">
-        <Skeleton width={250} height={30} />
-        <Skeleton width={120} height={30} />
-      </div>
+        {/* Top Filters */}
+        <div className="flex justify-between items-center">
+          <Skeleton width={250} height={30} />
+          <Skeleton width={120} height={30} />
+        </div>
 
-      {/* Board */}
-      <div className="flex gap-4 overflow-x-auto">
+        {/* Board */}
+        <div className="flex gap-4 overflow-x-auto">
 
-        {[...Array(4)].map((_, col) => (
-          <div
-            key={col}
-            className="min-w-[280px] bg-white border rounded-lg p-3 space-y-3"
-          >
-            {/* Column Header */}
-            <Skeleton width={120} height={20} />
+          {[...Array(4)].map((_, col) => (
+            <div
+              key={col}
+              className="min-w-[280px] bg-white border rounded-lg p-3 space-y-3"
+            >
+              {/* Column Header */}
+              <Skeleton width={120} height={20} />
 
-            {/* Cards */}
-            {[...Array(4)].map((_, i) => (
-              <div key={i} className="p-3 border rounded-md space-y-2">
-                <Skeleton height={15} />
-                <Skeleton width={100} height={12} />
-                <Skeleton width={80} height={12} />
-              </div>
-            ))}
-          </div>
-        ))}
+              {/* Cards */}
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="p-3 border rounded-md space-y-2">
+                  <Skeleton height={15} />
+                  <Skeleton width={100} height={12} />
+                  <Skeleton width={80} height={12} />
+                </div>
+              ))}
+            </div>
+          ))}
 
-      </div>
+        </div>
 
-    </main>
-  );
-}
+      </main>
+    );
+  }
 
 
 
@@ -334,12 +334,12 @@ if (loading) {
                   <SelectItem value="Marketing">Marketing</SelectItem>
                   <SelectItem value="Partnerships">Partnerships</SelectItem> */}
 
-    <SelectItem value="Default Pipeline">Default Pipeline</SelectItem>
-    <SelectItem value="Sales Pipeline">Sales Pipeline</SelectItem>
-    <SelectItem value="Enterprise Pipeline">Enterprise Pipeline</SelectItem>
-    <SelectItem value="Client Success Pipeline">Client Success Pipeline</SelectItem>
-    <SelectItem value="Finance Pipeline">Finance Pipeline</SelectItem>
-    <SelectItem value="Marketing Pipeline">Marketing Pipeline</SelectItem>
+                  <SelectItem value="Default Pipeline">Default Pipeline</SelectItem>
+                  <SelectItem value="Sales Pipeline">Sales Pipeline</SelectItem>
+                  <SelectItem value="Enterprise Pipeline">Enterprise Pipeline</SelectItem>
+                  <SelectItem value="Client Success Pipeline">Client Success Pipeline</SelectItem>
+                  <SelectItem value="Finance Pipeline">Finance Pipeline</SelectItem>
+                  <SelectItem value="Marketing Pipeline">Marketing Pipeline</SelectItem>
 
 
                 </>

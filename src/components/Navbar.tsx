@@ -14,7 +14,7 @@ const NAV_ITEMS: Record<string, string> = {
   "/leads/admin/get": "Leads",
   "/employees/leads/admin/get": "Leads",
   "/deals/get": "Deals",
-  "/deals/stages":"Kanban",
+  "/deals/stages": "Kanban",
   "/clients": "Client",
   "/work/project": "Project",
   "/employees/work/project": "Project",
@@ -43,7 +43,7 @@ const NAV_ITEMS: Record<string, string> = {
   "/settings/company-settings": "Company-settings",
   "/settings/profile-settings": "Profile-settings",
   "/employees/settings/profile-settings": "Profile-settings",
-  
+
 };
 
 interface EmployeeProfile {

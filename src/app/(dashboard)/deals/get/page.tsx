@@ -203,88 +203,88 @@ export const FiltersDrawer = ({
   setPriorityFilter: any;
 }) => {
 
-    // const [dateFilterOn, setDateFilterOn] = useState<"created" | "close">("created");
-    // const [dateFrom, setDateFrom] = useState<Date | undefined>();
-    // const [dateTo, setDateTo] = useState<Date | undefined>();
-    // const [dealStageFilter, setDealStageFilter] = useState("all");
-    // const [minValue, setMinValue] = useState("");
-    // const [maxValue, setMaxValue] = useState("");
-    // const [agentFilter, setAgentFilter] = useState("all");
-    // const [watcherFilter, setWatcherFilter] = useState("all");
-    // const [leadFilter, setLeadFilter] = useState("all");
-    // const [tagFilter, setTagFilter] = useState("all");
-    // const [priorityFilter, setPriorityFilter] = useState("all");
+  // const [dateFilterOn, setDateFilterOn] = useState<"created" | "close">("created");
+  // const [dateFrom, setDateFrom] = useState<Date | undefined>();
+  // const [dateTo, setDateTo] = useState<Date | undefined>();
+  // const [dealStageFilter, setDealStageFilter] = useState("all");
+  // const [minValue, setMinValue] = useState("");
+  // const [maxValue, setMaxValue] = useState("");
+  // const [agentFilter, setAgentFilter] = useState("all");
+  // const [watcherFilter, setWatcherFilter] = useState("all");
+  // const [leadFilter, setLeadFilter] = useState("all");
+  // const [tagFilter, setTagFilter] = useState("all");
+  // const [priorityFilter, setPriorityFilter] = useState("all");
 
 
 
 
 
   return (
-  <div className="fixed inset-0 z-50 flex">
-    {/* overlay */}
-    {/* <div
+    <div className="fixed inset-0 z-50 flex">
+      {/* overlay */}
+      {/* <div
       className="fixed inset-0 bg-black/30"
       onClick={() => setOpenFilters(false)}
     /> */}
 
-    <div
-  className="fixed inset-0 bg-black/30"
-  onClick={onClose}
-/>
+      <div
+        className="fixed inset-0 bg-black/30"
+        onClick={onClose}
+      />
 
-    {/* drawer */}
-    <div className="relative ml-auto h-full w-[340px] bg-white shadow-xl p-6 overflow-y-auto">
+      {/* drawer */}
+      <div className="relative ml-auto h-full w-[340px] bg-white shadow-xl p-6 overflow-y-auto">
 
-      {/* HEADER */}
-      <div className="flex items-center justify-between mb-6 border-b pb-4">
-        <div className="flex items-center gap-2 font-medium text-lg">
-          <SlidersHorizontal className="h-4 w-4" />
-          Filters
-        </div>
-        {/* <button
+        {/* HEADER */}
+        <div className="flex items-center justify-between mb-6 border-b pb-4">
+          <div className="flex items-center gap-2 font-medium text-lg">
+            <SlidersHorizontal className="h-4 w-4" />
+            Filters
+          </div>
+          {/* <button
           onClick={() => setOpenFilters(false)}
           className="text-gray-500 text-lg"
         >
           ×
         </button> */}
-        <button
-  onClick={onClose}
-  className="text-gray-500 text-lg"
->
-  ×
-</button>
-      </div>
+          <button
+            onClick={onClose}
+            className="text-gray-500 text-lg"
+          >
+            ×
+          </button>
+        </div>
 
-      {/* Date Filter On */}
-      <div className="mb-6">
-        <div className="text-sm mb-2">Date Filter On</div>
-        <Select value={dateFilterOn} onValueChange={(v) => setDateFilterOn(v as any)}>
-          <SelectTrigger className="bg-white">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="created">Created</SelectItem>
-            <SelectItem value="close">Expected Close</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+        {/* Date Filter On */}
+        <div className="mb-6">
+          <div className="text-sm mb-2">Date Filter On</div>
+          <Select value={dateFilterOn} onValueChange={(v) => setDateFilterOn(v as any)}>
+            <SelectTrigger className="bg-white">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="created">Created</SelectItem>
+              <SelectItem value="close">Expected Close</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
 
-      {/* Deal Stage */}
-      <div className="mb-6">
-        <div className="text-sm mb-2">Deal Stage</div>
-        <Select value={dealStageFilter} onValueChange={setDealStageFilter}>
-          <SelectTrigger className="bg-white">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All</SelectItem>
-            {/* {stages.map((stage) => (
+        {/* Deal Stage */}
+        <div className="mb-6">
+          <div className="text-sm mb-2">Deal Stage</div>
+          <Select value={dealStageFilter} onValueChange={setDealStageFilter}>
+            <SelectTrigger className="bg-white">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All</SelectItem>
+              {/* {stages.map((stage) => (
               <SelectItem key={stage} value={stage}>
                 {stage}
               </SelectItem>
             ))} */}
 
-{/* 
+              {/* 
 {stages?.length ? (
   stages.map((stage) => (
     <SelectItem key={stage} value={stage}>
@@ -297,135 +297,135 @@ export const FiltersDrawer = ({
 
 
 
-{stages.map((stage) => (
-  <SelectItem key={stage} value={stage}>
-    {stage}
-  </SelectItem>
-))}
+              {stages.map((stage) => (
+                <SelectItem key={stage} value={stage}>
+                  {stage}
+                </SelectItem>
+              ))}
 
 
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* Deals Value */}
-      <div className="mb-6">
-        <div className="text-sm mb-2">Deals Value</div>
-        <div className="flex items-center gap-2">
-          <Input
-            className="bg-white"
-            placeholder="Min"
-            type="number"
-            value={minValue}
-            onChange={(e) => setMinValue(e.target.value)}
-          />
-          <span className="text-sm text-muted-foreground">to</span>
-          <Input
-            className="bg-white"
-            placeholder="Max"
-            type="number"
-            value={maxValue}
-            onChange={(e) => setMaxValue(e.target.value)}
-          />
+            </SelectContent>
+          </Select>
         </div>
-      </div>
 
-      {/* Agent */}
-      <div className="mb-6">
-        <div className="text-sm mb-2">Agent</div>
-        <Select value={agentFilter} onValueChange={setAgentFilter}>
-          <SelectTrigger className="bg-white">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All</SelectItem>
-            {[...new Set(
-              (deals as Deal[])
-                .map((d) => d.dealAgentMeta?.name)
-                .filter(Boolean)
-            )].map((name) => (
-              <SelectItem key={name} value={name!}>
-                {name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+        {/* Deals Value */}
+        <div className="mb-6">
+          <div className="text-sm mb-2">Deals Value</div>
+          <div className="flex items-center gap-2">
+            <Input
+              className="bg-white"
+              placeholder="Min"
+              type="number"
+              value={minValue}
+              onChange={(e) => setMinValue(e.target.value)}
+            />
+            <span className="text-sm text-muted-foreground">to</span>
+            <Input
+              className="bg-white"
+              placeholder="Max"
+              type="number"
+              value={maxValue}
+              onChange={(e) => setMaxValue(e.target.value)}
+            />
+          </div>
+        </div>
 
-      {/* Deal Watcher */}
-      <div className="mb-6">
-        <div className="text-sm mb-2">Deal Watcher</div>
-        <Select value={watcherFilter} onValueChange={setWatcherFilter}>
-          <SelectTrigger className="bg-white">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All</SelectItem>
-            {[...new Map(
-              (deals as Deal[])
-                .flatMap((d) => d.dealWatchersMeta || [])
-                .map((w) => [w.employeeId, w])
-            ).values()].map((w) => (
-              <SelectItem key={w.employeeId} value={w.employeeId!}>
-                {w.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+        {/* Agent */}
+        <div className="mb-6">
+          <div className="text-sm mb-2">Agent</div>
+          <Select value={agentFilter} onValueChange={setAgentFilter}>
+            <SelectTrigger className="bg-white">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All</SelectItem>
+              {[...new Set(
+                (deals as Deal[])
+                  .map((d) => d.dealAgentMeta?.name)
+                  .filter(Boolean)
+              )].map((name) => (
+                <SelectItem key={name} value={name!}>
+                  {name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
 
-      {/* Lead */}
-      <div className="mb-6">
-        <div className="text-sm mb-2">Lead</div>
-        <Select value={leadFilter} onValueChange={setLeadFilter}>
-          <SelectTrigger className="bg-white">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All</SelectItem>
-            {[...new Map(
-              (deals as Deal[])
-                .filter((d) => d.leadId)
-                .map((d) => [d.leadId, d])
-            ).values()].map((d) => (
-              <SelectItem key={d.leadId} value={String(d.leadId)}>
-                {d.leadName}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+        {/* Deal Watcher */}
+        <div className="mb-6">
+          <div className="text-sm mb-2">Deal Watcher</div>
+          <Select value={watcherFilter} onValueChange={setWatcherFilter}>
+            <SelectTrigger className="bg-white">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All</SelectItem>
+              {[...new Map(
+                (deals as Deal[])
+                  .flatMap((d) => d.dealWatchersMeta || [])
+                  .map((w) => [w.employeeId, w])
+              ).values()].map((w) => (
+                <SelectItem key={w.employeeId} value={w.employeeId!}>
+                  {w.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
 
-      {/* Tags */}
-      <div className="mb-6">
-        <div className="text-sm mb-2">Tags</div>
-        <Select value={tagFilter} onValueChange={setTagFilter}>
-          <SelectTrigger className="bg-white">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All</SelectItem>
-            {[...new Set(
-              (deals as Deal[]).flatMap((d) => d.tags || [])
-            )].map((tag) => (
-              <SelectItem key={tag} value={tag}>
-                {tag}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+        {/* Lead */}
+        <div className="mb-6">
+          <div className="text-sm mb-2">Lead</div>
+          <Select value={leadFilter} onValueChange={setLeadFilter}>
+            <SelectTrigger className="bg-white">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All</SelectItem>
+              {[...new Map(
+                (deals as Deal[])
+                  .filter((d) => d.leadId)
+                  .map((d) => [d.leadId, d])
+              ).values()].map((d) => (
+                <SelectItem key={d.leadId} value={String(d.leadId)}>
+                  {d.leadName}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
 
-      {/* Priority */}
-      <div className="mb-8">
-        <div className="text-sm mb-2">Priority Status</div>
-        <Select value={priorityFilter} onValueChange={setPriorityFilter}>
-          <SelectTrigger className="bg-white">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All</SelectItem>
-            {/* {priorities.map((p) => (
+        {/* Tags */}
+        <div className="mb-6">
+          <div className="text-sm mb-2">Tags</div>
+          <Select value={tagFilter} onValueChange={setTagFilter}>
+            <SelectTrigger className="bg-white">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All</SelectItem>
+              {[...new Set(
+                (deals as Deal[]).flatMap((d) => d.tags || [])
+              )].map((tag) => (
+                <SelectItem key={tag} value={tag}>
+                  {tag}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Priority */}
+        <div className="mb-8">
+          <div className="text-sm mb-2">Priority Status</div>
+          <Select value={priorityFilter} onValueChange={setPriorityFilter}>
+            <SelectTrigger className="bg-white">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All</SelectItem>
+              {/* {priorities.map((p) => (
               <SelectItem
                 key={p.id}
                 value={String(p.status).toLowerCase()}
@@ -437,50 +437,51 @@ export const FiltersDrawer = ({
 
 
 
-{[
-  ...new Map(
-    priorities.map((p) => [
-      String(p.status).toLowerCase(),
-      p,
-    ])
-  ).values(),
-].map((p) => (
-  <SelectItem
-    key={p.status}
-    value={String(p.status).toLowerCase()}
-  >
-    {p.status}
-  </SelectItem>
-))}
+              {[
+                ...new Map(
+                  priorities.map((p) => [
+                    String(p.status).toLowerCase(),
+                    p,
+                  ])
+                ).values(),
+              ].map((p) => (
+                <SelectItem
+                  key={p.status}
+                  value={String(p.status).toLowerCase()}
+                >
+                  {p.status}
+                </SelectItem>
+              ))}
 
 
-          </SelectContent>
-        </Select>
-      </div>
+            </SelectContent>
+          </Select>
+        </div>
 
-      {/* Clear */}
-      <div className="flex justify-end">
-        <Button
-          className="px-6"
-          variant="outline"
-          onClick={() => {
-            setDateFilterOn("created");
-            setDealStageFilter("all");
-            setMinValue("");
-            setMaxValue("");
-            setAgentFilter("all");
-            setWatcherFilter("all");
-            setLeadFilter("all");
-            setTagFilter("all");
-            setPriorityFilter("all");
-          }}
-        >
-          Clear
-        </Button>
+        {/* Clear */}
+        <div className="flex justify-end">
+          <Button
+            className="px-6"
+            variant="outline"
+            onClick={() => {
+              setDateFilterOn("created");
+              setDealStageFilter("all");
+              setMinValue("");
+              setMaxValue("");
+              setAgentFilter("all");
+              setWatcherFilter("all");
+              setLeadFilter("all");
+              setTagFilter("all");
+              setPriorityFilter("all");
+            }}
+          >
+            Clear
+          </Button>
+        </div>
       </div>
     </div>
-  </div>
-)}
+  )
+}
 
 
 export default function DealsPage() {
@@ -514,7 +515,7 @@ export default function DealsPage() {
   const [openFollowup, setOpenFollowup] = useState(false);
   const [activeDeal, setActiveDeal] = useState<Deal | null>(null);
 
-// UI state for deal stage filter (not currently wired to API calls, but can be used to filter displayed results on client side)
+  // UI state for deal stage filter (not currently wired to API calls, but can be used to filter displayed results on client side)
   const [dealStageFilter, setDealStageFilter] = useState("all");
 
 
@@ -579,22 +580,22 @@ export default function DealsPage() {
   //   return Array.from(s.values()).sort();
   // }, [deals]);
 
- 
- const stages = useMemo(() => {
-  const apiStages = new Set<string>();
 
-  for (const d of deals as Deal[]) {
-    if (d.dealStage) apiStages.add(d.dealStage);
-  }
+  const stages = useMemo(() => {
+    const apiStages = new Set<string>();
 
-  // 🔥 merge default + api
-  return Array.from(
-    new Set([...DEFAULT_STAGES, ...Array.from(apiStages)])
-  );
-}, [deals]);
- 
- 
- 
+    for (const d of deals as Deal[]) {
+      if (d.dealStage) apiStages.add(d.dealStage);
+    }
+
+    // 🔥 merge default + api
+    return Array.from(
+      new Set([...DEFAULT_STAGES, ...Array.from(apiStages)])
+    );
+  }, [deals]);
+
+
+
   // derive pipeline values for the top nav dropdown (UI only)
   const pipelines = useMemo(() => {
     const s = new Set<string>();
@@ -638,11 +639,11 @@ export default function DealsPage() {
     const q = query.trim().toLowerCase();
 
     return (deals as Deal[]).filter((d) => {
-    
-const matchesStage =
-  dealStageFilter === "all" ||
-  String(d.dealStage || "").toLowerCase() ===
-    dealStageFilter.toLowerCase();
+
+      const matchesStage =
+        dealStageFilter === "all" ||
+        String(d.dealStage || "").toLowerCase() ===
+        dealStageFilter.toLowerCase();
 
 
 
@@ -768,85 +769,85 @@ const matchesStage =
 
 
 
-if (dealsLoading) {
-  return (
-    <main className="container mx-auto max-w-6xl px-4 py-8">
+  if (dealsLoading) {
+    return (
+      <main className="container mx-auto max-w-6xl px-4 py-8">
 
-      {/* Top bar skeleton */}
-      <div className="mb-4 flex justify-between items-center">
-        <Skeleton width={200} height={30} />
-        <Skeleton width={120} height={30} />
-      </div>
+        {/* Top bar skeleton */}
+        <div className="mb-4 flex justify-between items-center">
+          <Skeleton width={200} height={30} />
+          <Skeleton width={120} height={30} />
+        </div>
 
-      {/* Buttons */}
-      <div className="mb-6 flex gap-4">
-        <Skeleton width={120} height={35} />
-        <Skeleton width={120} height={35} />
-        <Skeleton width={120} height={35} />
-      </div>
+        {/* Buttons */}
+        <div className="mb-6 flex gap-4">
+          <Skeleton width={120} height={35} />
+          <Skeleton width={120} height={35} />
+          <Skeleton width={120} height={35} />
+        </div>
 
-      {/* Table */}
-      <div className="overflow-x-auto rounded-xl border">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              {[
-                "Deal",
-                "Lead",
-                "Contact",
-                "Value",
-                "Close",
-                "Followup",
-                "Agent",
-                "Watcher",
-                "Stage",
-                "Priority",
-                "Tags",
-                "Action",
-              ].map((h, i) => (
-                <TableHead key={i}>
-                  <Skeleton width={80} />
-                </TableHead>
-              ))}
-            </TableRow>
-          </TableHeader>
-
-          <TableBody>
-            {[...Array(6)].map((_, i) => (
-              <TableRow key={i}>
-                <TableCell>
-                  <div className="flex items-center gap-3">
-                    <Skeleton circle width={40} height={40} />
-                    <Skeleton width={120} />
-                  </div>
-                </TableCell>
-
-                <TableCell><Skeleton width={100} /></TableCell>
-                <TableCell><Skeleton width={120} /></TableCell>
-                <TableCell><Skeleton width={80} /></TableCell>
-                <TableCell><Skeleton width={90} /></TableCell>
-                <TableCell><Skeleton width={100} /></TableCell>
-
-                <TableCell>
-                  <div className="flex items-center gap-2">
-                    <Skeleton circle width={30} height={30} />
+        {/* Table */}
+        <div className="overflow-x-auto rounded-xl border">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                {[
+                  "Deal",
+                  "Lead",
+                  "Contact",
+                  "Value",
+                  "Close",
+                  "Followup",
+                  "Agent",
+                  "Watcher",
+                  "Stage",
+                  "Priority",
+                  "Tags",
+                  "Action",
+                ].map((h, i) => (
+                  <TableHead key={i}>
                     <Skeleton width={80} />
-                  </div>
-                </TableCell>
-
-                <TableCell><Skeleton width={100} /></TableCell>
-                <TableCell><Skeleton width={90} /></TableCell>
-                <TableCell><Skeleton width={90} /></TableCell>
-                <TableCell><Skeleton width={80} /></TableCell>
-                <TableCell><Skeleton width={30} /></TableCell>
+                  </TableHead>
+                ))}
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-    </main>
-  );
-}
+            </TableHeader>
+
+            <TableBody>
+              {[...Array(6)].map((_, i) => (
+                <TableRow key={i}>
+                  <TableCell>
+                    <div className="flex items-center gap-3">
+                      <Skeleton circle width={40} height={40} />
+                      <Skeleton width={120} />
+                    </div>
+                  </TableCell>
+
+                  <TableCell><Skeleton width={100} /></TableCell>
+                  <TableCell><Skeleton width={120} /></TableCell>
+                  <TableCell><Skeleton width={80} /></TableCell>
+                  <TableCell><Skeleton width={90} /></TableCell>
+                  <TableCell><Skeleton width={100} /></TableCell>
+
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <Skeleton circle width={30} height={30} />
+                      <Skeleton width={80} />
+                    </div>
+                  </TableCell>
+
+                  <TableCell><Skeleton width={100} /></TableCell>
+                  <TableCell><Skeleton width={90} /></TableCell>
+                  <TableCell><Skeleton width={90} /></TableCell>
+                  <TableCell><Skeleton width={80} /></TableCell>
+                  <TableCell><Skeleton width={30} /></TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      </main>
+    );
+  }
 
 
 
@@ -967,7 +968,7 @@ if (dealsLoading) {
 
   // DELETE deal
   const handleDeleteDeal = async (dealId: number | string) => {
-   
+
 
     try {
       console.log("delete devesh", dealId);
@@ -1000,7 +1001,7 @@ if (dealsLoading) {
         <div className="mb-4 rounded-md border bg-white py-2 px-4 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3 text-sm">
             <div className="text-xs text-muted-foreground">Duration</div>
-           
+
             <Popover>
               <PopoverTrigger asChild>
                 <Button
@@ -1146,17 +1147,17 @@ if (dealsLoading) {
               <Link href="/deals/create">+ Add Deal</Link>
             </Button>
 
-             <ImportButton
-    api="/deals/import/csv"
-    label="Import Deals"
-    onSuccess={() => mutateDeals()}
-  />
+            <ImportButton
+              api="/deals/import/csv"
+              label="Import Deals"
+              onSuccess={() => mutateDeals()}
+            />
 
-  <ExportButton
-  api="/deals"
-  label="Export Deals"
-  fileName="deals.csv"
-/>
+            <ExportButton
+              api="/deals"
+              label="Export Deals"
+              fileName="deals.csv"
+            />
           </div>
 
           <div className="flex w-full items-center gap-3 md:max-w-2xl md:justify-end">
@@ -1420,11 +1421,11 @@ if (dealsLoading) {
 
 
 
-{stages.map((s) => (
-  <SelectItem key={s} value={s}>
-    {s}
-  </SelectItem>
-))}
+                          {stages.map((s) => (
+                            <SelectItem key={s} value={s}>
+                              {s}
+                            </SelectItem>
+                          ))}
 
 
                         </SelectContent>
@@ -1540,7 +1541,7 @@ if (dealsLoading) {
                             </DropdownMenuItem>
 
 
-                           
+
                             <DropdownMenuItem
                               className="text-destructive focus:text-destructive"
                               onClick={() => handleDeleteDeal(deal.id)}
@@ -1573,7 +1574,7 @@ if (dealsLoading) {
                               Delete
                             </DropdownMenuItem>
                           </DropdownMenuContent>)
-                            }
+                          }
                         </DropdownMenu>
                       </div>
                     </TableCell>
@@ -1609,50 +1610,50 @@ if (dealsLoading) {
 
 
 
-{openFilters && (
-  // <FiltersDrawer
-  //   open={openFilters}
-  //   onClose={() => setOpenFilters(false)}
-  //   stages={stages}
-  //   deals={deals}
-  //   priorities={priorities}
-  // />
+      {openFilters && (
+        // <FiltersDrawer
+        //   open={openFilters}
+        //   onClose={() => setOpenFilters(false)}
+        //   stages={stages}
+        //   deals={deals}
+        //   priorities={priorities}
+        // />
 
 
 
-<FiltersDrawer
-  open={openFilters}
-  onClose={() => setOpenFilters(false)}
-  stages={stages}
-  deals={deals}
-  priorities={priorities}
+        <FiltersDrawer
+          open={openFilters}
+          onClose={() => setOpenFilters(false)}
+          stages={stages}
+          deals={deals}
+          priorities={priorities}
 
-  dateFilterOn={dateFilterOn}
-  setDateFilterOn={setDateFilterOn}
-  dateFrom={dateFrom}
-  setDateFrom={setDateFrom}
-  dateTo={dateTo}
-  setDateTo={setDateTo}
-  dealStageFilter={dealStageFilter}
-  setDealStageFilter={setDealStageFilter}
-  minValue={minValue}
-  setMinValue={setMinValue}
-  maxValue={maxValue}
-  setMaxValue={setMaxValue}
-  agentFilter={agentFilter}
-  setAgentFilter={setAgentFilter}
-  watcherFilter={watcherFilter}
-  setWatcherFilter={setWatcherFilter}
-  leadFilter={leadFilter}
-  setLeadFilter={setLeadFilter}
-  tagFilter={tagFilter}
-  setTagFilter={setTagFilter}
-  priorityFilter={priorityFilter}
-  setPriorityFilter={setPriorityFilter}
-/>
+          dateFilterOn={dateFilterOn}
+          setDateFilterOn={setDateFilterOn}
+          dateFrom={dateFrom}
+          setDateFrom={setDateFrom}
+          dateTo={dateTo}
+          setDateTo={setDateTo}
+          dealStageFilter={dealStageFilter}
+          setDealStageFilter={setDealStageFilter}
+          minValue={minValue}
+          setMinValue={setMinValue}
+          maxValue={maxValue}
+          setMaxValue={setMaxValue}
+          agentFilter={agentFilter}
+          setAgentFilter={setAgentFilter}
+          watcherFilter={watcherFilter}
+          setWatcherFilter={setWatcherFilter}
+          leadFilter={leadFilter}
+          setLeadFilter={setLeadFilter}
+          tagFilter={tagFilter}
+          setTagFilter={setTagFilter}
+          priorityFilter={priorityFilter}
+          setPriorityFilter={setPriorityFilter}
+        />
 
 
-)}
+      )}
 
 
       <AddFollowupModal
