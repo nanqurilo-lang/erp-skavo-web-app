@@ -111,6 +111,8 @@ export default function PaymentsSection({
 
   const [menuPosition, setMenuPosition] = useState<{ top: number; left: number } | null>(null);
 
+  const menuRef = useRef<HTMLDivElement | null>(null);
+
   const [invoices, setInvoices] = useState<{ id: number; invoiceNumber: string }[]>([]);
   const [clientIdField, setClientIdField] = useState<string>("");
 
@@ -156,6 +158,28 @@ export default function PaymentsSection({
 
     fetchInvoices();
   }, [projectId]);
+
+
+
+useEffect(() => {
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      menuRef.current &&
+      !menuRef.current.contains(event.target as Node)
+    ) {
+      setActiveMenu(null);
+      setMenuPosition(null);
+    }
+  };
+
+  if (activeMenu !== null) {
+    document.addEventListener("mousedown", handleClickOutside);
+  }
+
+  return () => {
+    document.removeEventListener("mousedown", handleClickOutside);
+  };
+}, [activeMenu]);
 
 
 
@@ -729,6 +753,7 @@ export default function PaymentsSection({
                           menuPosition &&
                           createPortal(
                             <div
+                            ref={menuRef}
                               style={{
                                 position: "absolute",
                                 top: menuPosition.top,

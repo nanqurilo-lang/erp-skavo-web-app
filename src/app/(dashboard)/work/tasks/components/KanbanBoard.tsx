@@ -14,7 +14,7 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ tasks }) => {
         const map: { [stage: string]: Task[] } = {};
 
         tasks.forEach((task) => {
-            const stage = task.taskStage?.name || "Uncategorized";
+            const stage = task.taskStage?.name || "Unassigned";
             if (!map[stage]) map[stage] = [];
             map[stage].push(task);
         });

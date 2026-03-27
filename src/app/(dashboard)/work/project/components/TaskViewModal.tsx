@@ -690,12 +690,12 @@ export default function TaskViewModal({
                       <button onClick={handleSendReminderMenu} className="w-full text-left px-3 py-2 hover:bg-gray-100 text-sm">
                         🔔 Send Reminder
                       </button>
-                      <button onClick={handleEditTask} className="w-full text-left px-3 py-2 hover:bg-gray-100 text-sm">
+                      {/* <button onClick={handleEditTask} className="w-full text-left px-3 py-2 hover:bg-gray-100 text-sm">
                         ✏️ Edit Task
-                      </button>
-                      <button onClick={handlePinTask} className="w-full text-left px-3 py-2 hover:bg-gray-100 text-sm">
+                      </button> */}
+                      {/* <button onClick={handlePinTask} className="w-full text-left px-3 py-2 hover:bg-gray-100 text-sm">
                         📌 Pin Task
-                      </button>
+                      </button> */}
                       <button onClick={handleCopyTaskLink} className="w-full text-left px-3 py-2 hover:bg-gray-100 text-sm">
                         🔗 Copy Task Link
                       </button>
@@ -703,7 +703,7 @@ export default function TaskViewModal({
                   )}
 
                   {/* placeholder to preserve layout */}
-                  <button onClick={onClose} className="p-2 rounded hover:bg-gray-100" />
+                  {/* <button onClick={onClose} className="p-2 rounded hover:bg-gray-100" /> */}
                 </div>
               </div>
 
