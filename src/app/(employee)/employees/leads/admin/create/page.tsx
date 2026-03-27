@@ -645,7 +645,7 @@ export function AddLeadModal({
   employees: Employee[];
 }) {
   const defaultPipelines = ["Default Pipeline", "Sales Pipeline", "Enterprise Pipeline"];
-  const defaultDealStages = ["Generated", "Qualification", "Proposal", "Win", "Lost"];
+  const defaultDealStages = ["Generated", "Qualified", "Proposal", "Win", "Lost"];
 
   // server-backed lists
   const [dealCategories, setDealCategories] = useState<DealCategoryItem[]>([]);

@@ -55,7 +55,7 @@ import ExportButton from "@/components/ExportButton";
 
 const DEFAULT_STAGES = [
   "generated",
-  "qualifications",
+  "qualified",
   "proposal",
   "Win",
   "Lost",

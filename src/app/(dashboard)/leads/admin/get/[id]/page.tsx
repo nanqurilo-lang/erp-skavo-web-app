@@ -759,7 +759,7 @@ function AddDealModal({
                       <option>Qualified</option>
                       <option>Generated</option>
                       <option>Proposal</option>
-                      <option>Won</option>
+                      <option>Win</option>
                       <option>Lost</option>
                     </select>
                     <div className="absolute left-3 top-3 w-2 h-2 rounded-full bg-sky-600"></div>
@@ -2430,7 +2430,7 @@ export default function LeadDetailPage() {
                                   <option value="Generated">Generated</option>
                                   <option value="Qualified">Qualified</option>
                                   <option value="Proposal">Proposal</option>
-                                  <option value="Won">Won</option>
+                                  <option value="Win">Win</option>
                                   <option value="Lost">Lost</option>
                                 </select>
                               </td>

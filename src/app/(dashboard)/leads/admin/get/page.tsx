@@ -174,7 +174,7 @@ export function AddLeadModal({
 
 const defaultPipelines = PIPELINES;
   // const defaultPipelines = ["Default Pipeline", "Sales Pipeline", "Enterprise Pipeline"];
-  const defaultDealStages = ["Generated", "Qualification", "Proposal", "Lost"];
+  const defaultDealStages = ["Generated", "Qualified", "Proposal", "Lost"];
 
   const [dealCategories, setDealCategories] = useState<DealCategoryItem[]>([]);
   const [leadSources, setLeadSources] = useState<LeadSourceItem[]>([]);
